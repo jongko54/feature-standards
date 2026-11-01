@@ -1,0 +1,92 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Feature Standards: browser-session-v1",
+    "version": "0.1.0",
+    "description": "실험적 단일 사용자·프로세스 메모리 세션 참조 규격. 세부 동작과 UTF-8 바이트 제한은 specification.md가 기준이다.",
+    "license": {"name": "MIT", "identifier": "MIT"}
+  },
+  "servers": [{"url": "http://127.0.0.1:8000", "description": "로컬 참조 서버"}],
+  "tags": [{"name": "auth", "description": "서버 저장 브라우저 세션"}, {"name": "health", "description": "프로세스 준비 상태"}],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "tags": ["auth"],
+        "summary": "자격 증명을 검증하고 세션을 교체한다",
+        "description": "Origin 정확 일치 필수. 실패 횟수는 TCP peer IP 기준. 기존 쿠키의 세션을 무효화하고 독립 CSRF 토큰을 발급한다.",
+        "security": [],
+        "parameters": [{"$ref": "#/components/parameters/Origin"}],
+        "requestBody": {"required": true, "description": "최대 4096바이트. 중복 키와 알 수 없는 필드를 거부한다.", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Credentials"}}}},
+        "responses": {
+          "200": {"description": "새 세션. Set-Cookie: fs_session; Path=/; HttpOnly; SameSite=Lax; Max-Age=TTL. Secure는 기본 활성화.", "headers": {"Set-Cookie": {"schema": {"type": "string"}}, "Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Session"}}}},
+          "400": {"$ref": "#/components/responses/InvalidRequest"},
+          "401": {"$ref": "#/components/responses/InvalidCredentials"},
+          "403": {"$ref": "#/components/responses/OriginDenied"},
+          "405": {"$ref": "#/components/responses/MethodNotAllowed"},
+          "413": {"$ref": "#/components/responses/TooLarge"},
+          "415": {"$ref": "#/components/responses/UnsupportedMediaType"},
+          "429": {"description": "RATE_LIMITED. 정해진 실패 횟수 후 유효한 자격 증명도 제한한다.", "headers": {"Retry-After": {"required": true, "schema": {"type": "integer", "minimum": 1}}, "Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "getSession",
+        "tags": ["auth"],
+        "summary": "현재 사용자와 세션 CSRF 토큰을 조회한다",
+        "description": "조회해도 절대 TTL은 연장하지 않는다.",
+        "security": [{"sessionCookie": []}],
+        "responses": {
+          "200": {"description": "유효한 세션", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Session"}}}},
+          "401": {"$ref": "#/components/responses/Unauthenticated"},
+          "405": {"$ref": "#/components/responses/MethodNotAllowed"}
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "tags": ["auth"],
+        "summary": "현재 세션을 서버에서 무효화하고 쿠키를 지운다",
+        "description": "Origin은 항상 필수이다. 유효한 세션에는 X-CSRF-Token도 필수이다. 세션이 없거나 만료되었으면 CSRF 토큰 없이 204를 반환한다.",
+        "security": [{"sessionCookie": []}, {}],
+        "parameters": [{"$ref": "#/components/parameters/Origin"}, {"name": "X-CSRF-Token", "in": "header", "required": false, "description": "유효한 세션일 때 필수. 해당 세션에서 발급한 csrfToken.", "schema": {"type": "string"}}],
+        "responses": {
+          "204": {"description": "멱등 로그아웃. 본문 없음. Set-Cookie로 동일 경로의 fs_session을 Max-Age=0으로 제거한다.", "headers": {"Set-Cookie": {"schema": {"type": "string"}}, "Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}},
+          "403": {"description": "ORIGIN_DENIED 또는 CSRF_INVALID. 기존 세션을 유지한다.", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+          "405": {"$ref": "#/components/responses/MethodNotAllowed"}
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "health",
+        "tags": ["health"],
+        "summary": "참조 구현의 준비 상태",
+        "security": [],
+        "responses": {"200": {"description": "준비 완료", "content": {"application/json": {"schema": {"type": "object", "required": ["status", "profile", "implementation"], "properties": {"status": {"const": "ok"}, "profile": {"const": "browser-session-v1"}, "implementation": {"type": "string"}}}}}}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {"sessionCookie": {"type": "apiKey", "in": "cookie", "name": "fs_session"}},
+    "parameters": {"Origin": {"name": "Origin", "in": "header", "required": true, "description": "AUTH_ALLOWED_ORIGIN과 정확히 일치해야 한다.", "schema": {"type": "string", "example": "http://127.0.0.1:5173"}}},
+    "headers": {"NoStore": {"schema": {"type": "string", "const": "no-store"}}, "NoSniff": {"schema": {"type": "string", "const": "nosniff"}}},
+    "schemas": {
+      "Credentials": {"type": "object", "additionalProperties": false, "required": ["email", "password"], "properties": {"email": {"type": "string", "minLength": 1, "description": "양끝 ASCII 공백 U+0009~U+000D 및 U+0020 제거 후 ASCII A~Z만 소문자화. 그 밖의 Unicode 보존. @ 필수. 정규화 후 UTF-8 기준 254바이트 이하.", "examples": ["demo@example.com"]}, "password": {"type": "string", "minLength": 1, "maxLength": 1024, "writeOnly": true, "description": "1~1024 UTF-8 바이트. 공백을 제거하지 않는다. 짝이 없는 surrogate escape는 거부한다."}}},
+      "User": {"type": "object", "additionalProperties": false, "required": ["id", "email"], "properties": {"id": {"type": "string", "const": "demo-user"}, "email": {"type": "string"}}},
+      "Session": {"type": "object", "additionalProperties": false, "required": ["user", "csrfToken"], "properties": {"user": {"$ref": "#/components/schemas/User"}, "csrfToken": {"type": "string", "minLength": 43, "description": "독립된 256비트 이상의 난수. 로그와 브라우저 영구 저장소에 기록하지 않는다."}}},
+      "Error": {"type": "object", "additionalProperties": false, "required": ["error"], "properties": {"error": {"type": "object", "additionalProperties": false, "required": ["code", "message"], "properties": {"code": {"type": "string", "enum": ["INVALID_REQUEST", "INVALID_CREDENTIALS", "UNAUTHENTICATED", "ORIGIN_DENIED", "CSRF_INVALID", "RATE_LIMITED", "REQUEST_TOO_LARGE", "UNSUPPORTED_MEDIA_TYPE", "METHOD_NOT_ALLOWED", "NOT_FOUND", "INTERNAL_ERROR"]}, "message": {"type": "string"}}}}}
+    },
+    "responses": {
+      "InvalidRequest": {"description": "INVALID_REQUEST", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "InvalidCredentials": {"description": "INVALID_CREDENTIALS. 계정 존재 여부와 무관하게 동일한 본문.", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "Unauthenticated": {"description": "UNAUTHENTICATED", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "OriginDenied": {"description": "ORIGIN_DENIED", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "MethodNotAllowed": {"description": "METHOD_NOT_ALLOWED", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "TooLarge": {"description": "REQUEST_TOO_LARGE", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}},
+      "UnsupportedMediaType": {"description": "UNSUPPORTED_MEDIA_TYPE", "headers": {"Cache-Control": {"$ref": "#/components/headers/NoStore"}, "X-Content-Type-Options": {"$ref": "#/components/headers/NoSniff"}}, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Error"}}}}
+    }
+  }
+}

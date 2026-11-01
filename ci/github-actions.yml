@@ -1,0 +1,57 @@
+name: Contract and browser verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: '0.10.4'
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: '1.26.x'
+          cache-dependency-path: implementations/go-net-http/go.sum
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: clients/react/package-lock.json
+      - name: Install Python and validator dependencies
+        run: |
+          uv sync --frozen --project implementations/python-fastapi
+          uv sync --frozen --project tools
+      - name: Validate OpenAPI and scenario coverage
+        run: uv run --frozen --project tools python tools/check_contract.py
+      - name: Test local process harness
+        run: python3 -m unittest discover -s tests -p test_runner.py -v
+      - name: Python tests and lint
+        run: |
+          uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
+          uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools
+      - name: Go tests and race detection
+        working-directory: implementations/go-net-http
+        run: go test -race ./...
+      - name: Install and build React client
+        working-directory: clients/react
+        run: |
+          npm ci
+          npm test
+          npm run build
+          npx playwright install --with-deps chromium
+      - name: Identical API and browser tests for both implementations
+        run: python3 tests/conformance.py --backend all --browser
+      - name: Whitespace check
+        run: git diff --check

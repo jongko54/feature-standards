@@ -1,0 +1,28 @@
+[project]
+name = "feature-standards-python-auth"
+version = "0.1.0"
+description = "browser-session-v1 FastAPI 참조 구현"
+requires-python = ">=3.12"
+dependencies = [
+  "argon2-cffi>=25.1.0,<26",
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.34,<1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16.0,<3",
+    "pytest>=8,<10",
+    "ruff>=0.12,<1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

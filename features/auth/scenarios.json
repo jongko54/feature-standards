@@ -1,0 +1,24 @@
+{
+  "profile": "browser-session-v1",
+  "scenarios": [
+    {"id": "AUTH-01", "test": "test_01_login_user_shape_and_cache", "description": "사용자 응답·CSRF 난수·캐시 방지"},
+    {"id": "AUTH-02", "test": "test_02_cookie_policy", "description": "쿠키 수명·경로·HttpOnly·SameSite"},
+    {"id": "AUTH-03", "test": "test_03_me_and_forged_session", "description": "내 정보·비로그인·변조 쿠키"},
+    {"id": "AUTH-04", "test": "test_04_email_normalization", "description": "이메일 공백 제거·소문자 정규화"},
+    {"id": "AUTH-05", "test": "test_05_generic_credentials_error", "description": "존재하지 않는 계정과 비밀번호 오류 응답 일치"},
+    {"id": "AUTH-06", "test": "test_06_origin_required_for_login", "description": "누락·악성·유사 도메인·null origin 거부"},
+    {"id": "AUTH-07", "test": "test_07_strict_json", "description": "중복 키·알 수 없는 필드·UTF-8·JSON 형식 거부"},
+    {"id": "AUTH-08", "test": "test_08_content_type_and_size", "description": "Content-Type 및 본문 크기 제한"},
+    {"id": "AUTH-09", "test": "test_09_utf8_field_limits", "description": "이메일·비밀번호 UTF-8 바이트 제한"},
+    {"id": "AUTH-10", "test": "test_10_password_is_not_trimmed", "description": "비밀번호 원문 공백 보존"},
+    {"id": "AUTH-11", "test": "test_11_session_rotation_revokes_previous_cookie", "description": "재로그인 시 세션·CSRF 교체 및 이전 세션 폐기"},
+    {"id": "AUTH-12", "test": "test_12_csrf_failure_preserves_session", "description": "CSRF 거부 후 세션 유지"},
+    {"id": "AUTH-13", "test": "test_13_logout_origin_failure_preserves_session", "description": "로그아웃 origin 거부 후 세션 유지"},
+    {"id": "AUTH-14", "test": "test_14_logout_revokes_stolen_cookie_and_is_idempotent", "description": "복제 쿠키 재사용 거부·멱등 로그아웃"},
+    {"id": "AUTH-15", "test": "test_15_logout_does_not_revoke_other_browser", "description": "다른 브라우저의 독립 세션 보존"},
+    {"id": "AUTH-16", "test": "test_16_csrf_is_bound_to_session", "description": "다른 세션의 CSRF 토큰 재사용 거부"},
+    {"id": "AUTH-17", "test": "test_17_methods_and_paths", "description": "메서드·경로 오류"},
+    {"id": "AUTH-18", "test": "test_18_absolute_expiry_is_not_extended_by_reads", "description": "조회에도 연장되지 않는 절대 만료"},
+    {"id": "AUTH-19", "test": "test_19_rate_limit_ignores_untrusted_forwarded_address", "description": "peer IP 실패 제한·재시도 시간·창 만료 후 복구"}
+  ]
+}
