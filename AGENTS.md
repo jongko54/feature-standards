@@ -1,7 +1,7 @@
 # Working agreements
 
 - 기본 설명과 문서는 한국어로 작성한다. 코드 식별자와 계약의 오류 코드는 영어를 사용한다.
-- `features/auth/specification.md`가 `browser-session-v1`의 기준이다. 계약 변경 시 명세, OpenAPI, 공통 테스트, 두 서버, React 클라이언트를 함께 확인한다.
+- `features/auth/specification.md`가 `browser-session-v1`의 기준이다. 계약 변경 시 명세, OpenAPI, 공통 테스트, 모든 서버 구현, React 클라이언트를 함께 확인한다.
 - 보안용 난수와 비밀번호 해싱은 검증된 라이브러리를 사용한다. 암호 알고리즘을 새로 만들지 않는다.
 - 구현별 자체 테스트와 `python3 tests/conformance.py --backend all`, 클라이언트 빌드 및 브라우저 테스트를 실행한다.
 - 테스트를 통과한 범위와 운영 환경에 필요한 추가 작업을 구분한다. 공식 보안 인증 또는 보안 감사 완료라고 표현하지 않는다.

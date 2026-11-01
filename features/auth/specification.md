@@ -4,7 +4,7 @@
 
 ## 설정과 실행
 
-- Python 구현은 `implementations/python-fastapi`, Go 구현은 `implementations/go-net-http`에 둔다.
+- 구현은 `implementations/python-fastapi`, `implementations/go-net-http`, `implementations/java-spring`, `implementations/rust-axum`에 둔다. 언어별 내부 구조와 달리 아래 HTTP 동작은 공통이다.
 - 서버는 `AUTH_HOST`(기본 `127.0.0.1`)와 `AUTH_PORT`(기본 `8000`)에 바인딩한다.
 - 데모는 명시적인 `AUTH_DEMO=true`에서만 켜진다. 이때 공개 테스트 계정은 `demo@example.com` / `correct-horse-battery-staple`이다.
 - 데모 밖에서는 `AUTH_USER_EMAIL`, `AUTH_USER_PASSWORD`가 필수이다. 비밀번호는 시작할 때 Argon2id로 해싱하고 원문을 로그에 출력하지 않는다. 이 단일 사용자 환경 설정은 참조용이며 운영 사용자 관리 API가 아니다.
@@ -55,7 +55,7 @@
 
 ## 수용 기준
 
-공통 API 테스트는 두 서버를 별도 프로세스로 시작하고 같은 시나리오를 실행한다. 로그인 성공·실패, 정규화, 입력 경계, origin, 쿠키 속성, 캐시 방지, 세션 갱신과 이전 쿠키 재사용, CSRF 실패 후 세션 유지, 독립 세션, 로그아웃 멱등성, 절대 만료, 로그인 제한, 메서드·경로 오류를 확인한다. 실제 브라우저 테스트는 각 서버에 같은 React 화면을 연결해 로그인·새로고침 유지·로그아웃·오류·만료 처리를 확인한다.
+공통 API 테스트는 네 서버를 별도 프로세스로 시작하고 같은 시나리오를 실행한다. 로그인 성공·실패, 정규화, 입력 경계, origin, 쿠키 속성, 캐시 방지, 세션 갱신과 이전 쿠키 재사용, CSRF 실패 후 세션 유지, 독립 세션, 로그아웃 멱등성, 절대 만료, 로그인 제한, 메서드·경로 오류를 확인한다. 실제 브라우저 테스트는 각 서버에 같은 React 화면을 연결해 로그인·새로고침 유지·로그아웃·오류·만료 처리를 확인한다.
 
 테스트 통과는 해당 프로필의 적합성을 뜻한다. 운영 보안 감사, 분산 환경 안정성, 외부 인증 제공자와의 호환성을 의미하지 않는다.
 

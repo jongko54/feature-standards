@@ -2,7 +2,7 @@
 
 **AI가 반복해서 구현하는 기능을 공통 명세·스택별 구현·동일한 검증 시나리오로 재사용합니다.**
 
-첫 기능은 로그인·로그아웃·내 정보 조회를 제공하는 **`auth / browser-session-v1`** 입니다. Python과 Go 서버는 같은 HTTP 계약을 구현하고, 하나의 React 클라이언트가 양쪽에 연결됩니다.
+첫 기능은 로그인·로그아웃·내 정보 조회를 제공하는 **`auth / browser-session-v1`** 입니다. Python·Go·Java·Rust 서버는 같은 HTTP 계약을 구현하고, 하나의 React 클라이언트가 각 서버에 연결됩니다.
 
 > 현재 버전 `0.1.0`은 실험적 참조 구현입니다. 단일 환경 설정 사용자와 프로세스 메모리 세션을 사용합니다. 운영 사용자 저장소·분산 세션·보안 감사는 포함하지 않습니다.
 
@@ -13,16 +13,17 @@
 | [인증 명세](features/auth/specification.md) / [OpenAPI 3.1](features/auth/openapi.json) | 구현 기준 | 요청·응답·오류·보안·실패 동작 |
 | [Python / FastAPI](implementations/python-fastapi) | 첫 참조 구현 | Argon2id, 세션, CSRF, 로그인 제한 |
 | [Go / net/http](implementations/go-net-http) | 첫 참조 구현 | 동일 HTTP 계약 |
+| [Java / Spring](implementations/java-spring) | 참조 구현 | 동일 HTTP 계약, Maven wrapper |
+| [Rust / Axum](implementations/rust-axum) | 참조 구현 | 동일 HTTP 계약, Cargo.lock |
 | [React / TypeScript](clients/react) | 공통 클라이언트 | 로그인, 복원, 상태 확인, 로그아웃, 오류·만료 UI |
-| [공통 테스트](tests/conformance.py) | 두 서버에 동일 적용 | [19개 시나리오](features/auth/scenarios.json) + Secure 쿠키 확인 |
+| [공통 테스트](tests/conformance.py) | 네 서버에 동일 적용 | [19개 시나리오](features/auth/scenarios.json) + Secure 쿠키 확인 |
 | [AI 적용 지침](skills/integrate-auth/SKILL.md) | 저장소와 함께 버전 관리 | 기존 프로젝트 조사·적용·검증 |
-| Java / Spring, Rust / Axum | 후속 계획 | 아직 구현·지원하지 않음 |
 
 ## 빠르게 실행하기
 
-필요 도구: Python 3.12 이상, [uv](https://docs.astral.sh/uv/), Go 1.26 이상, Node.js 22.12 이상, npm. 브라우저 테스트는 Node.js 24 LTS와 Chromium을 기준으로 합니다.
+선택한 서버의 도구만 준비하면 됩니다: Python 3.12 이상과 [uv](https://docs.astral.sh/uv/), Go 1.26 이상, Java 21 이상, 또는 Rust/Cargo 1.93.1 이상. React 화면에는 Node.js 22.12 이상과 npm이 필요합니다. 전체 검증은 네 도구 체인이 모두 필요하며, 브라우저 테스트는 Node.js 24와 Chromium을 기준으로 합니다.
 
-서버는 아래 두 구현 중 하나를 실행합니다. 데모 계정은 **`demo@example.com` / `correct-horse-battery-staple`** 이며 `AUTH_DEMO=true`에서만 활성화됩니다.
+서버는 아래 네 구현 중 하나를 실행합니다. 데모 계정은 **`demo@example.com` / `correct-horse-battery-staple`** 이며 `AUTH_DEMO=true`에서만 활성화됩니다.
 
 ```sh
 # 터미널 1: Python 서버 (http://127.0.0.1:8000)
@@ -34,6 +35,20 @@ AUTH_DEMO=true AUTH_COOKIE_SECURE=false uv run --frozen uvicorn app:app --no-pro
 # 또는 터미널 1: Go 서버 (http://127.0.0.1:8000)
 cd implementations/go-net-http
 AUTH_DEMO=true AUTH_COOKIE_SECURE=false go run .
+```
+
+```sh
+# 또는 터미널 1: Java 서버 (JDK 21+, http://127.0.0.1:8000)
+cd implementations/java-spring
+./mvnw -q -DskipTests package
+AUTH_DEMO=true AUTH_COOKIE_SECURE=false java -jar target/auth-server.jar
+```
+
+```sh
+# 또는 터미널 1: Rust 서버 (http://127.0.0.1:8000)
+cd implementations/rust-axum
+cargo build --locked
+AUTH_DEMO=true AUTH_COOKIE_SECURE=false target/debug/feature-standards-auth
 ```
 
 ```sh
@@ -53,10 +68,14 @@ npm run dev
 uv sync --frozen --project implementations/python-fastapi
 uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
 go -C implementations/go-net-http test -race ./...
+implementations/java-spring/mvnw -f implementations/java-spring/pom.xml test
+cargo test --locked --manifest-path implementations/rust-axum/Cargo.toml
 uv run --frozen --project tools python tools/check_contract.py
 python3 -m unittest discover -s tests -p test_runner.py -v
 python3 tests/conformance.py --backend all
 ```
+
+하나만 검증하려면 `--backend python`, `go`, `java`, `rust` 중 하나를 선택합니다. `--backend all`은 각 구현을 한 번 빌드하고 해당 산출물을 API·Secure 쿠키·브라우저 검사에 재사용합니다. Rust는 Cargo가 보고한 실제 실행 파일 경로를 사용해 외부 target-dir 설정에도 대응합니다.
 
 ```sh
 cd clients/react
@@ -68,7 +87,7 @@ cd ../..
 python3 tests/conformance.py --backend all --browser
 ```
 
-API 검증에는 로그인 성공·실패, 입력 경계, 로그인 CSRF, 쿠키 속성, 세션 교체, 복제한 쿠키 재사용, 잘못된 CSRF 이후 세션 유지, 독립 브라우저 세션, 로그아웃 멱등성, 절대 만료, peer IP 기반 제한이 포함됩니다. 브라우저 테스트는 양쪽 서버에 동일한 화면을 연결합니다. 실제 로그인·새로고침·로그아웃은 실제 서버를 호출하며, 일부 UI 오류 분기는 요청 경계에서 실패 응답을 주입합니다.
+API 검증에는 로그인 성공·실패, 입력 경계, 로그인 CSRF, 쿠키 속성, 세션 교체, 복제한 쿠키 재사용, 잘못된 CSRF 이후 세션 유지, 독립 브라우저 세션, 로그아웃 멱등성, 절대 만료, peer IP 기반 제한이 포함됩니다. 브라우저 테스트는 네 서버에 동일한 화면을 연결합니다. 실제 로그인·새로고침·로그아웃은 실제 서버를 호출하며, 일부 UI 오류 분기는 요청 경계에서 실패 응답을 주입합니다. 실제 실행 범위와 결과는 [2026-11-01 검증 기록](docs/validation-2026-11-01.md)에 정리했습니다.
 
 ### GitHub Actions 상태
 
@@ -97,6 +116,6 @@ API 검증에는 로그인 성공·실패, 입력 경계, 로그인 CSRF, 쿠키
 
 ## 다음 기능
 
-다음 단계는 이 계약을 통과하는 Java·Rust 구현입니다. 이후 회원가입·비밀번호 재설정·권한 관리·파일 업로드를 각각 독립된 명세와 테스트로 추가합니다. 구현되지 않은 기능은 지원 목록에 표시하지 않습니다.
+다음 단계는 회원가입·비밀번호 재설정·권한 관리·파일 업로드를 각각 독립된 명세와 테스트로 추가하는 것입니다. 구현되지 않은 기능은 지원 목록에 표시하지 않습니다.
 
 참여 방법은 [CONTRIBUTING.md](CONTRIBUTING.md), 보안 범위는 [SECURITY.md](SECURITY.md), 비교한 선행 프로젝트는 [docs/research.md](docs/research.md)를 확인하세요. 라이선스는 [MIT](LICENSE)입니다.

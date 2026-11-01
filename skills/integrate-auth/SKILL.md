@@ -1,6 +1,6 @@
 ---
 name: integrate-auth
-description: 이 저장소의 browser-session-v1 인증 계약을 Python·Go 서버와 React 프로젝트에 적용하고 공통 테스트로 검증한다. 기존 인증 흐름을 조사하거나 새로 통합할 때 사용한다.
+description: 이 저장소의 browser-session-v1 인증 계약을 Python·Go·Java·Rust 서버와 React 프로젝트에 적용하고 공통 테스트로 검증한다. 기존 인증 흐름을 조사하거나 새로 통합할 때 사용한다.
 ---
 
 # browser-session-v1 적용

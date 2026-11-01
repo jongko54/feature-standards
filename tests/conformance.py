@@ -23,6 +23,12 @@ ROOT = Path(__file__).resolve().parents[1]
 ORIGIN = "http://127.0.0.1:5173"
 EMAIL = "demo@example.com"
 PASSWORD = "correct-horse-battery-staple"
+BACKENDS = {
+    "python": "python-fastapi",
+    "go": "go-net-http",
+    "java": "java-spring",
+    "rust": "rust-axum",
+}
 
 
 class Client:
@@ -365,25 +371,44 @@ def stop(process):
             process.wait(timeout=5)
 
 
-@contextlib.contextmanager
-def server(backend, *, ttl=3, rate_window=3, secure=False):
-    """Launch task-owned processes only, on an ephemeral loopback port."""
-    port = free_port()
-    with tempfile.TemporaryDirectory(prefix="feature-standards-") as temp:
-        env = os.environ.copy()
-        env.update(
-            AUTH_HOST="127.0.0.1",
-            AUTH_PORT=str(port),
-            AUTH_DEMO="true",
-            AUTH_COOKIE_SECURE=str(secure).lower(),
-            AUTH_ALLOWED_ORIGIN=ORIGIN,
-            AUTH_SESSION_TTL_SECONDS=str(ttl),
-            AUTH_RATE_LIMIT_MAX="3",
-            AUTH_RATE_LIMIT_WINDOW_SECONDS=str(rate_window),
-        )
+def rust_executable(output):
+    """Use the executable Cargo actually built, including external target settings."""
+    for line in output.splitlines():
+        try:
+            message = json.loads(line)
+        except json.JSONDecodeError:
+            # Cargo cannot guarantee JSON output from procedural macros or tools.
+            print(line, file=sys.stderr)
+            continue
+        if not isinstance(message, dict):
+            continue
+        target = message.get("target", {})
+        if (
+            message.get("reason") == "compiler-artifact"
+            and target.get("name") == "feature-standards-auth"
+            and "bin" in target.get("kind", [])
+            and isinstance(message.get("executable"), str)
+            and message["executable"]
+        ):
+            return message["executable"]
+    raise RuntimeError(
+        "Cargo did not report the feature-standards-auth binary artifact"
+    )
+
+
+class BackendBuilds:
+    """Reuse successful builds within one invocation, with task-owned Go output."""
+
+    def __init__(self, directory):
+        self.directory = Path(directory)
+        self.commands = {}
+
+    def prepare(self, backend, port):
+        if backend not in BACKENDS:
+            raise ValueError(f"Unknown backend: {backend}")
+        workdir = ROOT / "implementations" / BACKENDS[backend]
         if backend == "python":
-            workdir = ROOT / "implementations/python-fastapi"
-            command = [
+            return workdir, [
                 "uv",
                 "run",
                 "--frozen",
@@ -395,13 +420,53 @@ def server(backend, *, ttl=3, rate_window=3, secure=False):
                 "--port",
                 str(port),
             ]
-        else:
-            workdir = ROOT / "implementations/go-net-http"
-            executable = str(Path(temp) / "auth-server")
-            subprocess.run(
-                ["go", "build", "-o", executable, "."], cwd=workdir, env=env, check=True
-            )
-            command = [executable]
+        if backend not in self.commands:
+            build_options = {}
+            if backend == "go":
+                executable = str(self.directory / "go-auth-server")
+                build = ["go", "build", "-o", executable, "."]
+                command = [executable]
+            elif backend == "java":
+                build = ["./mvnw", "-q", "-DskipTests", "package"]
+                java_home = os.environ.get("JAVA_HOME")
+                java = str(Path(java_home) / "bin/java") if java_home else "java"
+                command = [java, "-jar", "target/auth-server.jar"]
+            elif backend == "rust":
+                build = [
+                    "cargo",
+                    "build",
+                    "--locked",
+                    "--bin",
+                    "feature-standards-auth",
+                    "--message-format=json-render-diagnostics",
+                ]
+                # Keep rendered compiler diagnostics on inherited stderr.
+                build_options = {"stdout": subprocess.PIPE, "text": True}
+            result = subprocess.run(build, cwd=workdir, check=True, **build_options)
+            if backend == "rust":
+                command = [rust_executable(result.stdout)]
+            self.commands[backend] = command
+        return workdir, self.commands[backend]
+
+
+@contextlib.contextmanager
+def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None):
+    """Launch task-owned processes only, on an ephemeral loopback port."""
+    port = free_port()
+    with tempfile.TemporaryDirectory(prefix="feature-standards-") as temp:
+        builds = builds if builds is not None else BackendBuilds(temp)
+        workdir, command = builds.prepare(backend, port)
+        env = os.environ.copy()
+        env.update(
+            AUTH_HOST="127.0.0.1",
+            AUTH_PORT=str(port),
+            AUTH_DEMO="true",
+            AUTH_COOKIE_SECURE=str(secure).lower(),
+            AUTH_ALLOWED_ORIGIN=ORIGIN,
+            AUTH_SESSION_TTL_SECONDS=str(ttl),
+            AUTH_RATE_LIMIT_MAX="3",
+            AUTH_RATE_LIMIT_WINDOW_SECONDS=str(rate_window),
+        )
         with open(Path(temp) / "server.log", "w+") as log:
             process = subprocess.Popen(
                 command,
@@ -438,8 +503,8 @@ def run_contract(base):
     return result.wasSuccessful()
 
 
-def run_secure_cookie_check(backend):
-    with server(backend, secure=True) as base:
+def run_secure_cookie_check(backend, *, builds=None):
+    with server(backend, secure=True, builds=builds) as base:
         response = Client(base).login()
         assert response[0] == 200, response
         cookie = SimpleCookie()
@@ -456,13 +521,15 @@ def require_free_port(port):
         try:
             probe.bind(("127.0.0.1", port))
         except OSError as exc:
-            raise RuntimeError(f"Browser tests need a free loopback port {port}") from exc
+            raise RuntimeError(
+                f"Browser tests need a free loopback port {port}"
+            ) from exc
 
 
-def run_browser(backend):
+def run_browser(backend, *, builds=None):
     # Refuse to reuse somebody else's dev server and accidentally test the wrong backend.
     require_free_port(5173)
-    with server(backend, ttl=1800, rate_window=60) as base:
+    with server(backend, ttl=1800, rate_window=60, builds=builds) as base:
         env = os.environ.copy()
         env.update(AUTH_API_TARGET=base, BASE_URL=ORIGIN)
         with tempfile.TemporaryFile(mode="w+") as log:
@@ -509,7 +576,7 @@ def run_browser(backend):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--backend", choices=["python", "go", "all"], default="all")
+    parser.add_argument("--backend", choices=[*BACKENDS, "all"], default="all")
     parser.add_argument(
         "--base-url",
         help="Test a separately started server with demo fixture, TTL=3 and rate max/window=3",
@@ -527,13 +594,15 @@ def main():
     if args.base_url:
         return 0 if run_contract(args.base_url) else 1
     passed = True
-    for backend in ["python", "go"] if args.backend == "all" else [args.backend]:
-        print(f"\n=== {backend}: browser-session-v1 ===", flush=True)
-        with server(backend) as base:
-            passed = run_contract(base) and passed
-        run_secure_cookie_check(backend)
-        if args.browser:
-            run_browser(backend)
+    with tempfile.TemporaryDirectory(prefix="feature-standards-build-") as temp:
+        builds = BackendBuilds(temp)
+        for backend in BACKENDS if args.backend == "all" else [args.backend]:
+            print(f"\n=== {backend}: browser-session-v1 ===", flush=True)
+            with server(backend, builds=builds) as base:
+                passed = run_contract(base) and passed
+            run_secure_cookie_check(backend, builds=builds)
+            if args.browser:
+                run_browser(backend, builds=builds)
     return 0 if passed else 1
 
 
