@@ -4,10 +4,22 @@ import java.net.URI;
 import java.net.InetAddress;
 import java.util.function.Function;
 
-/** Validated, non-secret configuration. Plaintext passwords are not retained here. */
-record AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
-                  String email, long sessionTtl, int rateLimit, long rateWindow) {
-    static AuthConfig load(Function<String, String> env) {
+/** Validated configuration. The credential-bearing database URL is redacted from diagnostics. */
+public record AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
+                  String email, long sessionTtl, int rateLimit, long rateWindow, String store, String databaseUrl) {
+    public AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
+                      String email, long sessionTtl, int rateLimit, long rateWindow) {
+        this(host, port, demo, secure, origin, email, sessionTtl, rateLimit, rateWindow, "memory", null);
+    }
+    @Override public String toString() { return "AuthConfig[store=" + store + ", databaseUrl=<redacted>]"; }
+    public static AuthConfig load(Function<String, String> env) {
+        String store = value(env, "AUTH_STORE", "memory");
+        if (!store.equals("memory") && !store.equals("postgres")) throw invalid("AUTH_STORE must be memory or postgres");
+        String databaseUrl = null;
+        if (store.equals("postgres")) {
+            databaseUrl = value(env, "AUTH_DATABASE_URL", "");
+            PostgresConnectionFactory.validate(databaseUrl);
+        }
         boolean demo = bool(env, "AUTH_DEMO", false);
         boolean secure = bool(env, "AUTH_COOKIE_SECURE", true);
         String host = value(env, "AUTH_HOST", "127.0.0.1");
@@ -27,16 +39,16 @@ record AuthConfig(String host, int port, boolean demo, boolean secure, String or
                 || originHost.matches("127(?:\\.(?:[0-9]{1,3})){3}") && validIpv4(originHost);
         if (!secure && (!demo || !loopback)) throw invalid("AUTH_COOKIE_SECURE=false requires an explicit loopback demo");
         if (!demo && !uri.getScheme().equals("https")) throw invalid("non-demo mode requires an HTTPS origin");
-        String email = demo ? "demo@example.com" : Credentials.normalizeEmail(value(env, "AUTH_USER_EMAIL", ""));
-        String password = password(env, demo);
-        if (!Credentials.validEmail(email) || !Credentials.validPassword(password)) {
+        String email = store.equals("postgres") ? "" : demo ? "demo@example.com" : Credentials.normalizeEmail(value(env, "AUTH_USER_EMAIL", ""));
+        String password = store.equals("postgres") ? "" : password(env, demo);
+        if (store.equals("memory") && (!Credentials.validEmail(email) || !Credentials.validPassword(password))) {
             throw invalid("non-demo mode requires valid AUTH_USER_EMAIL and AUTH_USER_PASSWORD");
         }
         long ttl = positive(env, "AUTH_SESSION_TTL_SECONDS", 1800);
         long window = positive(env, "AUTH_RATE_LIMIT_WINDOW_SECONDS", 60);
         long max = positive(env, "AUTH_RATE_LIMIT_MAX", 5);
         if (max > Integer.MAX_VALUE) throw invalid("AUTH_RATE_LIMIT_MAX is outside the integer range");
-        return new AuthConfig(host, (int) port, demo, secure, origin, email, ttl, (int) max, window);
+        return new AuthConfig(host, (int) port, demo, secure, origin, email, ttl, (int) max, window, store, databaseUrl);
     }
 
     static String password(Function<String, String> env, boolean demo) {

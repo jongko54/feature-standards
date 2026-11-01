@@ -450,7 +450,7 @@ class BackendBuilds:
 
 
 @contextlib.contextmanager
-def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None):
+def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None, extra_env=None):
     """Launch task-owned processes only, on an ephemeral loopback port."""
     port = free_port()
     with tempfile.TemporaryDirectory(prefix="feature-standards-") as temp:
@@ -459,6 +459,7 @@ def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None):
         env = os.environ.copy()
         env.update(
             AUTH_HOST="127.0.0.1",
+            AUTH_STORE="memory",
             AUTH_PORT=str(port),
             AUTH_DEMO="true",
             AUTH_COOKIE_SECURE=str(secure).lower(),
@@ -467,6 +468,7 @@ def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None):
             AUTH_RATE_LIMIT_MAX="3",
             AUTH_RATE_LIMIT_WINDOW_SECONDS=str(rate_window),
         )
+        env.update(extra_env or {})
         with open(Path(temp) / "server.log", "w+") as log:
             process = subprocess.Popen(
                 command,
@@ -503,8 +505,8 @@ def run_contract(base):
     return result.wasSuccessful()
 
 
-def run_secure_cookie_check(backend, *, builds=None):
-    with server(backend, secure=True, builds=builds) as base:
+def run_secure_cookie_check(backend, *, builds=None, extra_env=None):
+    with server(backend, secure=True, builds=builds, extra_env=extra_env) as base:
         response = Client(base).login()
         assert response[0] == 200, response
         cookie = SimpleCookie()
@@ -526,10 +528,10 @@ def require_free_port(port):
             ) from exc
 
 
-def run_browser(backend, *, builds=None):
+def run_browser(backend, *, builds=None, extra_env=None):
     # Refuse to reuse somebody else's dev server and accidentally test the wrong backend.
     require_free_port(5173)
-    with server(backend, ttl=1800, rate_window=60, builds=builds) as base:
+    with server(backend, ttl=1800, rate_window=60, builds=builds, extra_env=extra_env) as base:
         env = os.environ.copy()
         env.update(AUTH_API_TARGET=base, BASE_URL=ORIGIN)
         with tempfile.TemporaryFile(mode="w+") as log:

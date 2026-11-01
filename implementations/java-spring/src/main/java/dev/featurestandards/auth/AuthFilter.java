@@ -14,11 +14,11 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 
 /** Own the small HTTP contract instead of inheriting framework-specific error/HEAD/OPTIONS responses. */
-final class AuthFilter implements Filter {
+public final class AuthFilter implements Filter {
     private static final ObjectMapper JSON = new ObjectMapper();
     private final AuthConfig config;
     private final AuthService service;
-    AuthFilter(AuthConfig config, AuthService service) { this.config = config; this.service = service; }
+    public AuthFilter(AuthConfig config, AuthService service) { this.config = config; this.service = service; }
 
     @Override public void doFilter(ServletRequest input, ServletResponse output, FilterChain chain) throws IOException {
         var request = (HttpServletRequest) input;
@@ -41,7 +41,7 @@ final class AuthFilter implements Filter {
         if (method.equals("POST") && !config.origin().equals(singleHeader(request, "Origin"))) {
             error(response, 403, "ORIGIN_DENIED"); return;
         }
-        switch (path) {
+        try { switch (path) {
             case "/auth/login" -> login(request, response);
             case "/auth/me" -> {
                 var session = service.session(cookie(request));
@@ -55,8 +55,15 @@ final class AuthFilter implements Filter {
                 response.setHeader("Set-Cookie", cookieHeader("", 0));
                 response.setStatus(204);
             }
-            case "/healthz" -> json(response, 200, Map.of("status", "ok", "profile", "browser-session-v1", "implementation", "java-spring"));
+            case "/healthz" -> {
+                service.checkReady();
+                json(response, 200, Map.of("status", "ok", "profile", config.store().equals("postgres") ? "browser-session-v2" : "browser-session-v1", "implementation", "java-spring"));
+            }
             default -> throw new IllegalStateException();
+        } } catch (StorageUnavailableException ex) {
+            response.setHeader("Cache-Control", "no-store");
+            response.setHeader("X-Content-Type-Options", "nosniff");
+            error(response, 503, "STORAGE_UNAVAILABLE");
         }
     }
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -97,7 +104,7 @@ final class AuthFilter implements Filter {
         return "fs_session=" + value + "; Path=/; Max-Age=" + maxAge + "; HttpOnly; SameSite=Lax" + (config.secure() ? "; Secure" : "");
     }
     private void user(HttpServletResponse response, AuthService.Session session) throws IOException {
-        json(response, 200, Map.of("user", Map.of("id", "demo-user", "email", config.email()), "csrfToken", session.csrfToken()));
+        json(response, 200, Map.of("user", session.user(), "csrfToken", session.csrfToken()));
     }
     private static void error(HttpServletResponse response, int status, String code) throws IOException {
         json(response, status, Map.of("error", Map.of("code", code, "message", code)));

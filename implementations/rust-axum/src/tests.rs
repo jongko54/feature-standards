@@ -5,10 +5,11 @@ use std::collections::HashMap;
 use std::sync::atomic::{AtomicU64, Ordering};
 use tower::ServiceExt;
 
-const ORIGIN: &str = "http://127.0.0.1:5173";
-const GOOD: &str = r#"{"email":"demo@example.com","password":"correct-horse-battery-staple"}"#;
+pub(super) const ORIGIN: &str = "http://127.0.0.1:5173";
+pub(super) const GOOD: &str =
+    r#"{"email":"demo@example.com","password":"correct-horse-battery-staple"}"#;
 
-fn config(extra: &[(&str, &str)]) -> Result<Config, String> {
+pub(super) fn config(extra: &[(&str, &str)]) -> Result<Config, String> {
     let mut values = HashMap::from([
         ("AUTH_DEMO", "true"),
         ("AUTH_COOKIE_SECURE", "false"),
@@ -22,7 +23,7 @@ async fn setup(extra: &[(&str, &str)]) -> Router {
     app(config(extra).unwrap()).await.unwrap()
 }
 
-fn request(method: &str, path: &str, body: impl Into<Body>) -> Request<Body> {
+pub(super) fn request(method: &str, path: &str, body: impl Into<Body>) -> Request<Body> {
     let mut req = Request::builder()
         .method(method)
         .uri(path)
@@ -35,7 +36,7 @@ fn request(method: &str, path: &str, body: impl Into<Body>) -> Request<Body> {
     req
 }
 
-async fn send(
+pub(super) async fn send(
     router: &Router,
     req: Request<Body>,
 ) -> (StatusCode, HeaderMap, serde_json::Value, Vec<u8>) {
@@ -50,7 +51,7 @@ async fn send(
     (status, headers, json, bytes)
 }
 
-fn cookie(headers: &HeaderMap) -> String {
+pub(super) fn cookie(headers: &HeaderMap) -> String {
     headers["set-cookie"]
         .to_str()
         .unwrap()
@@ -488,4 +489,42 @@ async fn unicode_configuration_and_paired_surrogates_authenticate_without_case_f
         send(&router, request("POST", "/auth/login", body)).await.0,
         StatusCode::OK
     );
+}
+
+#[test]
+fn postgres_configuration_uses_database_credentials_without_demo_user() {
+    assert!(config(&[("AUTH_STORE", "sqlite")]).is_err());
+    assert!(config(&[("AUTH_STORE", "postgres")]).is_err());
+    assert!(
+        config(&[
+            ("AUTH_STORE", "postgres"),
+            (
+                "AUTH_DATABASE_URL",
+                "postgresql://localhost/feature_standards_test_rust?sslmode=disable"
+            ),
+            ("AUTH_DEMO", "false"),
+            ("AUTH_COOKIE_SECURE", "true"),
+            ("AUTH_ALLOWED_ORIGIN", "https://app.example.com"),
+        ])
+        .is_ok()
+    );
+}
+
+#[tokio::test]
+async fn injected_memory_service_is_shared_without_http_state() {
+    let mut settings = config(&[]).unwrap();
+    let store = Arc::new(MemoryStore::new(&mut settings).await.unwrap());
+    let service = AuthService::new(store);
+    service.ready().await.unwrap();
+    let router = app_with_service(settings, service.clone());
+    let (_, headers, response, _) = send(&router, request("POST", "/auth/login", GOOD)).await;
+    let token = cookie(&headers).split_once('=').unwrap().1.to_owned();
+    let session = service.me(token.clone()).await.unwrap();
+    assert_eq!(session.user.id, "demo-user");
+    assert_eq!(session.csrf_token, response["csrfToken"]);
+    service
+        .logout(token.clone(), Some(session.csrf_token))
+        .await
+        .unwrap();
+    assert_eq!(service.me(token).await, Err(AuthError::Unauthenticated));
 }

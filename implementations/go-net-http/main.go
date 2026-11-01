@@ -21,7 +21,8 @@ func main() {
 	if err != nil {
 		log.Fatal("could not initialize authentication server")
 	}
-	config.Password = ""
+	defer app.Close()
+	config.Password, config.DatabaseURL = "", ""
 	server := &http.Server{
 		Addr:              net.JoinHostPort(config.Host, config.Port),
 		Handler:           app,
@@ -39,7 +40,7 @@ func main() {
 		defer cancel()
 		_ = server.Shutdown(shutdown)
 	}()
-	log.Printf("go-net-http listening on %s (browser-session-v1; memory store)", server.Addr)
+	log.Printf("go-net-http listening on %s (%s store)", server.Addr, config.Store)
 	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatal(err)
 	}

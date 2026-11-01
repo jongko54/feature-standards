@@ -1,6 +1,6 @@
 # React 인증 참조 클라이언트
 
-같은 `browser-session-v1` 계약을 제공하는 Python·Go 서버에 연결하는 React/TypeScript 화면이다. 로그인, 초기 세션 복원, 수동 세션 확인, 로그아웃과 오류 처리를 포함한다. 세션 ID는 HttpOnly 쿠키로만 전달하고 CSRF 토큰은 React 메모리에만 둔다. 브라우저 저장소에는 토큰을 저장하지 않는다.
+같은 `browser-session-v1` 또는 PostgreSQL `browser-session-v2` 계약을 제공하는 Python·Go·Java·Rust 서버에 연결하는 React/TypeScript 화면이다. 로그인, 초기 세션 복원, 수동 세션 확인, 로그아웃과 오류 처리를 포함한다. 세션 ID는 HttpOnly 쿠키로만 전달하고 CSRF 토큰은 React 메모리에만 둔다. 브라우저 저장소에는 토큰을 저장하지 않는다.
 
 ## 로컬 실행
 
@@ -13,7 +13,11 @@ AUTH_API_TARGET=http://127.0.0.1:8000 npm run dev
 
 `http://127.0.0.1:5173`으로 접속한다. Vite는 `/auth`와 `/healthz`를 선택한 서버로 프록시한다. `Origin`은 원래 브라우저 주소로 유지한다. 서버만 교체하면 동일한 UI를 사용할 수 있다.
 
-데모 계정은 `demo@example.com` / `correct-horse-battery-staple`이다. 공개된 테스트 자격 증명이며 데모 모드를 명시적으로 켠 서버에서만 동작한다.
+데모 계정은 `demo@example.com` / `correct-horse-battery-staple`이다. v1은 명시적 데모 모드에서 제공하며, v2는 별도 seed 도구로 직접 생성해야 한다. v2 앱은 데모 모드에서도 DB 계정을 자동 생성하지 않는다.
+
+## 다른 프로젝트에서 가져오기
+
+`package.json`에서 `@feature-standards/react-auth`를 이 디렉터리의 file dependency로 지정하고 `@feature-standards/react-auth/api`에서 `authApi`, `createAuthApi`, `AuthSession`, `ApiError`를 import할 수 있다. API 모듈은 React 화면과 분리되어 있다. 실제 별도 프로젝트 통합은 [소비 앱 예제](../../examples/consumer-python-react/README.md)를 참고한다. npm 레지스트리 게시물은 아니며 이 checkout의 소스를 사용한다.
 
 ## 검증
 

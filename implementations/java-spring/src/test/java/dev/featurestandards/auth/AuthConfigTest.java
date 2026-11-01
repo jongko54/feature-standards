@@ -8,6 +8,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.*;
 
 class AuthConfigTest {
+    @Test void postgresDoesNotRequireOrUseAnEnvironmentUser() {
+        var config = AuthConfig.load(Map.of("AUTH_STORE", "postgres", "AUTH_DATABASE_URL",
+                "postgresql://example:secret@localhost/feature_standards_test_java?sslmode=disable",
+                "AUTH_ALLOWED_ORIGIN", "https://example.com")::get);
+        assertThat(config.email()).isEmpty();
+        assertThat(config.toString()).doesNotContain("secret", "postgresql://");
+    }
+    @Test void rejectsUnknownStoreAndMissingDatabaseUrl() {
+        assertInvalid("AUTH_STORE", "sqlite");
+        assertThatThrownBy(() -> AuthConfig.load(Map.of("AUTH_STORE", "postgres", "AUTH_DEMO", "true")::get))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
     @Test void explicitDemoRequired() {
         assertThatThrownBy(() -> AuthConfig.load(Map.<String, String>of()::get)).isInstanceOf(IllegalArgumentException.class);
         var demo = AuthConfig.load(Map.of("AUTH_DEMO", "true")::get);

@@ -1,8 +1,8 @@
 package main
 
 import (
+	"context"
 	"crypto/rand"
-	"crypto/subtle"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -25,6 +25,7 @@ import (
 
 type Config struct {
 	Host, Port, Email, Password, Origin string
+	Store, DatabaseURL                  string
 	Demo, Secure                        bool
 	SessionTTL, RateWindow              time.Duration
 	RateLimit                           int
@@ -32,6 +33,7 @@ type Config struct {
 
 type Server struct {
 	config       Config
+	store        AuthStore
 	now          func() time.Time
 	mu           sync.Mutex
 	sessions     map[string]session
@@ -40,10 +42,13 @@ type Server struct {
 	passwordHash []byte
 }
 
-type session struct {
+type Session struct {
+	User      map[string]string
 	CSRF      string
 	ExpiresAt time.Time
 }
+
+type session = Session
 
 type failure struct {
 	Count     int
@@ -94,6 +99,19 @@ func normalizeEmail(value string) string {
 // LoadConfig rejects unsafe defaults outside an explicitly enabled local demo.
 func LoadConfig() (Config, error) {
 	c := Config{Host: env("AUTH_HOST", "127.0.0.1"), Port: env("AUTH_PORT", "8000"), Origin: env("AUTH_ALLOWED_ORIGIN", "http://127.0.0.1:5173")}
+	c.Store = "memory"
+	if value, exists := os.LookupEnv("AUTH_STORE"); exists {
+		c.Store = value
+	}
+	if c.Store != "memory" && c.Store != "postgres" {
+		return c, errors.New("AUTH_STORE must be memory or postgres")
+	}
+	if c.Store == "postgres" {
+		c.DatabaseURL = os.Getenv("AUTH_DATABASE_URL")
+		if !strings.HasPrefix(c.DatabaseURL, "postgresql://") && !strings.HasPrefix(c.DatabaseURL, "postgres://") {
+			return c, errors.New("AUTH_DATABASE_URL must be a PostgreSQL URI")
+		}
+	}
 	var err error
 	if c.Demo, err = envBool("AUTH_DEMO", false); err != nil {
 		return c, err
@@ -123,7 +141,9 @@ func LoadConfig() (Config, error) {
 	if !c.Demo && origin.Scheme != "https" {
 		return c, errors.New("non-demo mode requires an HTTPS origin")
 	}
-	if c.Demo {
+	if c.Store == "postgres" {
+		c.Email, c.Password = "", ""
+	} else if c.Demo {
 		c.Email, c.Password = "demo@example.com", "correct-horse-battery-staple"
 	} else {
 		c.Email, c.Password = normalizeEmail(os.Getenv("AUTH_USER_EMAIL")), os.Getenv("AUTH_USER_PASSWORD")
@@ -147,15 +167,36 @@ func LoadConfig() (Config, error) {
 }
 
 func NewServer(config Config) (*Server, error) {
+	if config.Store != "" && config.Store != "memory" && config.Store != "postgres" {
+		return nil, errors.New("AUTH_STORE must be memory or postgres")
+	}
+	if config.Store == "postgres" {
+		store, err := newPostgresStore(config)
+		if err != nil {
+			return nil, err
+		}
+		return NewServerWithStore(config, store), nil
+	}
 	salt := make([]byte, 16)
 	if _, err := rand.Read(salt); err != nil {
 		return nil, err
 	}
-	// RFC 9106's memory-constrained recommendation: Argon2id, 64 MiB, 3 passes.
 	hash := argon2.IDKey([]byte(config.Password), salt, 3, 64*1024, 4, 32)
 	config.Password = ""
-	return &Server{config: config, now: time.Now, sessions: make(map[string]session), failures: make(map[string]failure), salt: salt, passwordHash: hash}, nil
+	s := NewServerWithStore(config, nil)
+	s.salt, s.passwordHash = salt, hash
+	s.sessions, s.failures = make(map[string]session), make(map[string]failure)
+	s.store = &memoryStore{server: s}
+	return s, nil
 }
+
+// NewServerWithStore injects an atomic storage adapter without exposing SQL to HTTP.
+func NewServerWithStore(config Config, store AuthStore) *Server {
+	config.Password, config.DatabaseURL = "", ""
+	return &Server{config: config, store: store, now: time.Now}
+}
+
+func (s *Server) Close() { s.store.Close() }
 
 func writeJSON(w http.ResponseWriter, status int, body any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -199,7 +240,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	case "/auth/logout":
 		s.logout(w, r)
 	case "/healthz":
-		writeJSON(w, 200, map[string]string{"status": "ok", "profile": "browser-session-v1", "implementation": "go-net-http"})
+		if err := s.store.Ready(r.Context()); err != nil {
+			writeAuthError(w, err)
+			return
+		}
+		profile := "browser-session-v1"
+		if s.config.Store == "postgres" {
+			profile = "browser-session-v2"
+		}
+		writeJSON(w, 200, map[string]string{"status": "ok", "profile": profile, "implementation": "go-net-http"})
 	}
 }
 
@@ -355,77 +404,68 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "INVALID_REQUEST")
 		return
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	now := s.now()
-	s.prune(now)
-	ip := peerIP(r)
-	failureRecord := s.failures[ip]
-	if failureRecord.Count >= s.config.RateLimit {
-		retry := int(math.Ceil(failureRecord.ExpiresAt.Sub(now).Seconds()))
-		if retry < 1 {
-			retry = 1
-		}
-		w.Header().Set("Retry-After", strconv.Itoa(retry))
-		writeError(w, http.StatusTooManyRequests, "RATE_LIMITED")
-		return
-	}
-	// Serialize verification to bound Argon2 memory use and make rate limits atomic.
-	derived := argon2.IDKey([]byte(password), s.salt, 3, 64*1024, 4, 32)
-	passwordValid := subtle.ConstantTimeCompare(derived, s.passwordHash) == 1
-	if !passwordValid || email != s.config.Email {
-		if failureRecord.Count == 0 {
-			failureRecord.ExpiresAt = now.Add(s.config.RateWindow)
-		}
-		failureRecord.Count++
-		s.failures[ip] = failureRecord
-		writeError(w, http.StatusUnauthorized, "INVALID_CREDENTIALS")
-		return
-	}
-	token, err := randomToken()
+	token, value, err := s.store.Login(r.Context(), peerIP(r), email, password, sessionToken(r))
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "INTERNAL_ERROR")
+		writeAuthError(w, err)
 		return
 	}
-	csrf, err := randomToken()
-	if err != nil {
-		writeError(w, http.StatusInternalServerError, "INTERNAL_ERROR")
-		return
-	}
-	delete(s.failures, ip)
-	delete(s.sessions, sessionToken(r))
-	s.sessions[token] = session{CSRF: csrf, ExpiresAt: now.Add(s.config.SessionTTL)}
 	s.setCookie(w, token, false)
-	s.writeUser(w, csrf)
+	s.writeUser(w, value)
 }
 
-func (s *Server) writeUser(w http.ResponseWriter, csrf string) {
-	writeJSON(w, http.StatusOK, map[string]any{"user": map[string]string{"id": "demo-user", "email": s.config.Email}, "csrfToken": csrf})
+func (s *Server) writeUser(w http.ResponseWriter, value Session) {
+	writeJSON(w, http.StatusOK, map[string]any{"user": value.User, "csrfToken": value.CSRF})
 }
 
 func (s *Server) me(w http.ResponseWriter, r *http.Request) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.prune(s.now())
-	value, ok := s.sessions[sessionToken(r)]
-	if !ok {
-		writeError(w, http.StatusUnauthorized, "UNAUTHENTICATED")
+	value, err := s.store.Current(r.Context(), sessionToken(r))
+	if err != nil {
+		writeAuthError(w, err)
 		return
 	}
-	s.writeUser(w, value.CSRF)
+	s.writeUser(w, value)
 }
 
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	s.prune(s.now())
-	token := sessionToken(r)
-	value, ok := s.sessions[token]
-	if ok && (len(r.Header.Values("X-CSRF-Token")) != 1 || subtle.ConstantTimeCompare([]byte(r.Header.Get("X-CSRF-Token")), []byte(value.CSRF)) != 1) {
-		writeError(w, http.StatusForbidden, "CSRF_INVALID")
+	csrf := ""
+	if len(r.Header.Values("X-CSRF-Token")) == 1 {
+		csrf = r.Header.Get("X-CSRF-Token")
+	}
+	if err := s.store.Logout(r.Context(), sessionToken(r), csrf); err != nil {
+		writeAuthError(w, err)
 		return
 	}
-	delete(s.sessions, token)
 	s.setCookie(w, "", true)
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// AuthStore operations own the complete transaction and return only committed results.
+type AuthStore interface {
+	Login(context.Context, string, string, string, string) (string, Session, error)
+	Current(context.Context, string) (Session, error)
+	Logout(context.Context, string, string) error
+	Ready(context.Context) error
+	Close()
+}
+
+type authFailure struct {
+	Status int
+	Code   string
+	Retry  int
+}
+
+func (e *authFailure) Error() string          { return e.Code }
+func authError(status int, code string) error { return &authFailure{Status: status, Code: code} }
+func storageError() error                     { return authError(503, "STORAGE_UNAVAILABLE") }
+func writeAuthError(w http.ResponseWriter, err error) {
+	var failure *authFailure
+	if !errors.As(err, &failure) {
+		failure = &authFailure{Status: 500, Code: "INTERNAL_ERROR"}
+	}
+	if failure.Retry > 0 {
+		w.Header().Set("Retry-After", strconv.Itoa(failure.Retry))
+	}
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	writeError(w, failure.Status, failure.Code)
 }

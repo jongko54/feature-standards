@@ -297,3 +297,18 @@ def test_expired_records_are_pruned(configured):
     assert state.get_session(token) is None
     assert state.sessions == {}
     assert state.failures == {}
+
+
+def test_unsupported_store_is_rejected(configured, monkeypatch):
+    monkeypatch.setenv("AUTH_STORE", "unsupported")
+    with pytest.raises(ValueError, match="AUTH_STORE"):
+        with TestClient(create_app()):
+            pass
+
+
+def test_postgres_requires_database_url(configured, monkeypatch):
+    monkeypatch.setenv("AUTH_STORE", "postgres")
+    monkeypatch.delenv("AUTH_DATABASE_URL", raising=False)
+    with pytest.raises(ValueError, match="AUTH_DATABASE_URL"):
+        with TestClient(create_app()):
+            pass

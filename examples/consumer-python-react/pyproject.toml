@@ -1,0 +1,8 @@
+[project]
+name = "feature-standards-consumer-example"
+version = "0.2.0"
+requires-python = ">=3.12"
+dependencies = ["feature-standards-python-auth", "uvicorn"]
+
+[tool.uv.sources]
+feature-standards-python-auth = { path = "../../implementations/python-fastapi" }

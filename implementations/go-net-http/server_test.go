@@ -350,3 +350,11 @@ func TestHTTPIntegration(t *testing.T) {
 		t.Fatalf("HTTP login: %d %s", resp.StatusCode, body)
 	}
 }
+
+func TestUnsupportedStoreRejected(t *testing.T) {
+	t.Setenv("AUTH_STORE", "unsupported")
+	t.Setenv("AUTH_DEMO", "true")
+	if _, err := LoadConfig(); err == nil {
+		t.Fatal("unsupported store accepted")
+	}
+}

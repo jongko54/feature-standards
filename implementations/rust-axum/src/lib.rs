@@ -10,15 +10,25 @@ use serde::Deserialize;
 use serde_json::json;
 use std::collections::HashMap;
 use std::error::Error;
-use std::net::{IpAddr, SocketAddr};
-use std::sync::{Arc, Mutex};
+use std::net::SocketAddr;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
-use subtle::ConstantTimeEq;
-use tokio::sync::Semaphore;
 use zeroize::Zeroizing;
+
+mod memory;
+mod postgres;
+mod store;
+
+pub use memory::MemoryStore;
+pub use postgres::PostgresStore;
+pub use store::{
+    AuthError, AuthService, AuthStore, LoginInput, LoginSession, SessionUser, StoreFuture,
+};
 
 const BODY_LIMIT: usize = 4096;
 const CONFIG_KEYS: &[&str] = &[
+    "AUTH_STORE",
+    "AUTH_DATABASE_URL",
     "AUTH_HOST",
     "AUTH_PORT",
     "AUTH_DEMO",
@@ -34,6 +44,8 @@ const CONFIG_KEYS: &[&str] = &[
 pub struct Config {
     pub host: String,
     pub port: u16,
+    store: String,
+    database_url: Option<String>,
     email: String,
     password: String,
     origin: String,
@@ -84,7 +96,20 @@ impl Config {
         if !demo && origin_url.scheme() != "https" {
             return Err("non-demo mode requires an HTTPS origin".into());
         }
-        let (email, password) = if demo {
+        let store = lookup("AUTH_STORE").unwrap_or_else(|| "memory".into());
+        if store != "memory" && store != "postgres" {
+            return Err("AUTH_STORE must be memory or postgres".into());
+        }
+        let database_url = if store == "postgres" {
+            let value = lookup("AUTH_DATABASE_URL").ok_or("AUTH_DATABASE_URL is required")?;
+            postgres::validate_url(&value)?;
+            Some(value)
+        } else {
+            None
+        };
+        let (email, password) = if store == "postgres" {
+            (String::new(), String::new())
+        } else if demo {
             (
                 "demo@example.com".into(),
                 "correct-horse-battery-staple".into(),
@@ -95,7 +120,9 @@ impl Config {
                 lookup("AUTH_USER_PASSWORD").unwrap_or_default(),
             )
         };
-        if !valid_email(&email) || password.is_empty() || password.len() > 1024 {
+        if store == "memory"
+            && (!valid_email(&email) || password.is_empty() || password.len() > 1024)
+        {
             return Err(
                 "valid AUTH_USER_EMAIL and AUTH_USER_PASSWORD are required outside demo mode"
                     .into(),
@@ -115,6 +142,8 @@ impl Config {
         Ok(Self {
             host,
             port,
+            store,
+            database_url,
             email,
             password,
             origin,
@@ -240,37 +269,7 @@ fn decode_credentials(body: &[u8]) -> Result<Credentials, ()> {
     Ok(credentials)
 }
 
-#[derive(Clone)]
-struct Session {
-    csrf: String,
-    expires: Instant,
-}
-struct Failure {
-    count: u64,
-    expires: Instant,
-}
-#[derive(Default)]
-struct Store {
-    sessions: HashMap<String, Session>,
-    failures: HashMap<IpAddr, Failure>,
-}
-
-impl Store {
-    fn prune(&mut self, now: Instant) {
-        self.sessions.retain(|_, session| now < session.expires);
-        self.failures.retain(|_, failure| now < failure.expires);
-    }
-}
-
 type Clock = Arc<dyn Fn() -> Instant + Send + Sync>;
-struct Auth {
-    config: Config,
-    salt: [u8; 16],
-    password_hash: [u8; 32],
-    store: Mutex<Store>,
-    hash_slots: Arc<Semaphore>,
-    clock: Clock,
-}
 
 fn derive(password: &[u8], salt: &[u8; 16]) -> Result<[u8; 32], ()> {
     let params = Params::new(64 * 1024, 3, 4, Some(32)).map_err(|_| ())?;
@@ -281,29 +280,29 @@ fn derive(password: &[u8], salt: &[u8; 16]) -> Result<[u8; 32], ()> {
     Ok(derived)
 }
 
+struct HttpState {
+    config: Config,
+    service: AuthService,
+}
+
 pub async fn app(config: Config) -> Result<Router, String> {
     app_with_clock(config, Arc::new(Instant::now)).await
 }
 
 async fn app_with_clock(mut config: Config, clock: Clock) -> Result<Router, String> {
-    let mut salt = [0; 16];
-    getrandom::fill(&mut salt).map_err(|_| "system random generator unavailable")?;
-    let password = Zeroizing::new(std::mem::take(&mut config.password));
-    let password_hash = tokio::task::spawn_blocking(move || derive(password.as_bytes(), &salt))
-        .await
-        .map_err(|_| "password hashing task failed")?
-        .map_err(|_| "password hashing failed")?;
-    let state = Arc::new(Auth {
-        config,
-        salt,
-        password_hash,
-        store: Mutex::new(Store::default()),
-        hash_slots: Arc::new(Semaphore::new(1)),
-        clock,
-    });
-    // Explicit dispatch keeps framework 404/405/body rejections and implicit HEAD
-    // behavior from changing this profile's error envelopes.
-    Ok(Router::new().fallback(dispatch).with_state(state))
+    let store: Arc<dyn AuthStore> = if config.store == "postgres" {
+        Arc::new(PostgresStore::connect(&config).await?)
+    } else {
+        Arc::new(MemoryStore::with_clock(&mut config, clock).await?)
+    };
+    Ok(app_with_service(config, AuthService::new(store)))
+}
+
+/// Inject a reusable authentication service without coupling the HTTP adapter to storage.
+pub fn app_with_service(config: Config, service: AuthService) -> Router {
+    Router::new()
+        .fallback(dispatch)
+        .with_state(Arc::new(HttpState { config, service }))
 }
 
 fn error(status: StatusCode, code: &str) -> Response {
@@ -334,22 +333,16 @@ fn session_token(headers: &HeaderMap) -> String {
     String::new()
 }
 
-async fn dispatch(State(state): State<Arc<Auth>>, request: Request) -> Response {
+async fn dispatch(State(state): State<Arc<HttpState>>, request: Request) -> Response {
     let auth_path = request.uri().path().starts_with("/auth/");
     let mut response = dispatch_inner(state, request).await;
     if auth_path {
-        response
-            .headers_mut()
-            .insert("cache-control", HeaderValue::from_static("no-store"));
-        response.headers_mut().insert(
-            "x-content-type-options",
-            HeaderValue::from_static("nosniff"),
-        );
+        security_headers(&mut response);
     }
     response
 }
 
-async fn dispatch_inner(state: Arc<Auth>, request: Request) -> Response {
+async fn dispatch_inner(state: Arc<HttpState>, request: Request) -> Response {
     let expected = match request.uri().path() {
         "/auth/login" | "/auth/logout" => Method::POST,
         "/auth/me" | "/healthz" => Method::GET,
@@ -374,16 +367,34 @@ async fn dispatch_inner(state: Arc<Auth>, request: Request) -> Response {
     }
     match request.uri().path() {
         "/auth/login" => login(state, request).await,
-        "/auth/me" => state.me(request.headers()),
-        "/auth/logout" => state.logout(request.headers()),
-        _ => {
-            Json(json!({"status":"ok","profile":"browser-session-v1","implementation":"rust-axum"}))
-                .into_response()
+        "/auth/me" => match state.service.me(session_token(request.headers())).await {
+            Ok(session) => Json(session).into_response(),
+            Err(err) => auth_error(err),
+        },
+        "/auth/logout" => {
+            let result = state.service.logout(session_token(request.headers()),
+                single_header(request.headers(), "x-csrf-token").map(str::to_owned)).await;
+            match result {
+                Ok(()) => {
+                    let mut response = StatusCode::NO_CONTENT.into_response();
+                    set_cookie(&state.config, &mut response, "", true);
+                    response
+                }
+                Err(err) => auth_error(err),
+            }
         }
+        _ => match state.service.ready().await {
+            Ok(()) => Json(json!({"status":"ok","profile":state.service.profile(),"implementation":"rust-axum"})).into_response(),
+            Err(err) => {
+                let mut response = auth_error(err);
+                security_headers(&mut response);
+                response
+            }
+        },
     }
 }
 
-async fn login(state: Arc<Auth>, request: Request) -> Response {
+async fn login(state: Arc<HttpState>, request: Request) -> Response {
     let media = single_header(request.headers(), "content-type")
         .and_then(|value| value.parse::<mime::Mime>().ok());
     if media.is_none_or(|value| value.type_() != mime::APPLICATION || value.subtype() != mime::JSON)
@@ -424,127 +435,64 @@ async fn login(state: Arc<Auth>, request: Request) -> Response {
         Ok(credentials) => credentials,
         Err(()) => return error(StatusCode::BAD_REQUEST, "INVALID_REQUEST"),
     };
-    let permit = match state.hash_slots.clone().acquire_owned().await {
-        Ok(permit) => permit,
-        Err(_) => return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"),
-    };
-    // The permit stays in the blocking job even if the HTTP future is cancelled.
-    // This serializes check/verify/record without holding the store lock during hashing.
-    tokio::task::spawn_blocking(move || {
-        let _permit = permit;
-        state.authenticate(peer, credentials, old_token)
-    })
-    .await
-    .unwrap_or_else(|_| error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"))
+    match state
+        .service
+        .login(LoginInput {
+            peer,
+            email: credentials.email,
+            password: credentials.password,
+            old_token,
+        })
+        .await
+    {
+        Ok((session, token)) => {
+            let mut response = Json(session).into_response();
+            set_cookie(&state.config, &mut response, &token, false);
+            response
+        }
+        Err(err) => auth_error(err),
+    }
 }
 
-impl Auth {
-    fn authenticate(&self, peer: IpAddr, credentials: Credentials, old_token: String) -> Response {
-        let now = (self.clock)();
-        {
-            let Ok(mut store) = self.store.lock() else {
-                return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
-            };
-            store.prune(now);
-            if let Some(failure) = store
-                .failures
-                .get(&peer)
-                .filter(|failure| failure.count >= self.config.rate_max)
-            {
-                let retry = failure
-                    .expires
-                    .saturating_duration_since(now)
-                    .as_secs()
-                    .saturating_add(1);
-                let mut response = error(StatusCode::TOO_MANY_REQUESTS, "RATE_LIMITED");
-                if let Ok(value) = retry.to_string().parse() {
-                    response.headers_mut().insert("retry-after", value);
-                }
-                return response;
-            }
-        }
-        let derived = match derive(credentials.password.as_bytes(), &self.salt) {
-            Ok(hash) => Zeroizing::new(hash),
-            Err(()) => return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"),
-        };
-        let password_valid = bool::from(derived.as_ref().ct_eq(self.password_hash.as_slice()));
-        let now = (self.clock)();
-        let Ok(mut store) = self.store.lock() else {
-            return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
-        };
-        store.prune(now);
-        if !password_valid || credentials.email != self.config.email {
-            let record = store.failures.entry(peer).or_insert(Failure {
-                count: 0,
-                expires: now + self.config.rate_window,
-            });
-            record.count = record.count.saturating_add(1);
-            return error(StatusCode::UNAUTHORIZED, "INVALID_CREDENTIALS");
-        }
-        let (Ok(token), Ok(csrf)) = (random_token(), random_token()) else {
-            return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
-        };
-        store.failures.remove(&peer);
-        store.sessions.remove(&old_token);
-        store.sessions.insert(
-            token.clone(),
-            Session {
-                csrf: csrf.clone(),
-                expires: now + self.config.session_ttl,
-            },
-        );
-        let mut response = self.user(&csrf);
-        self.set_cookie(&mut response, &token, false);
-        response
+fn auth_error(err: AuthError) -> Response {
+    let (status, code) = match err {
+        AuthError::InvalidCredentials => (StatusCode::UNAUTHORIZED, "INVALID_CREDENTIALS"),
+        AuthError::Unauthenticated => (StatusCode::UNAUTHORIZED, "UNAUTHENTICATED"),
+        AuthError::CsrfInvalid => (StatusCode::FORBIDDEN, "CSRF_INVALID"),
+        AuthError::RateLimited(_) => (StatusCode::TOO_MANY_REQUESTS, "RATE_LIMITED"),
+        AuthError::StorageUnavailable => (StatusCode::SERVICE_UNAVAILABLE, "STORAGE_UNAVAILABLE"),
+        AuthError::Internal => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"),
+    };
+    let mut response = error(status, code);
+    if let AuthError::RateLimited(retry) = err
+        && let Ok(value) = retry.to_string().parse()
+    {
+        response.headers_mut().insert("retry-after", value);
     }
+    response
+}
 
-    fn user(&self, csrf: &str) -> Response {
-        Json(json!({"user":{"id":"demo-user","email":self.config.email},"csrfToken":csrf}))
-            .into_response()
-    }
+fn security_headers(response: &mut Response) {
+    response
+        .headers_mut()
+        .insert("cache-control", HeaderValue::from_static("no-store"));
+    response.headers_mut().insert(
+        "x-content-type-options",
+        HeaderValue::from_static("nosniff"),
+    );
+}
 
-    fn set_cookie(&self, response: &mut Response, token: &str, logout: bool) {
-        let max_age = if logout {
-            0
-        } else {
-            self.config.session_ttl.as_secs()
-        };
-        let secure = if self.config.secure { "; Secure" } else { "" };
-        let cookie = format!(
-            "fs_session={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={max_age}{secure}"
-        );
-        if let Ok(cookie) = HeaderValue::from_str(&cookie) {
-            response.headers_mut().insert("set-cookie", cookie);
-        }
-    }
-
-    fn me(&self, headers: &HeaderMap) -> Response {
-        let Ok(mut store) = self.store.lock() else {
-            return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
-        };
-        store.prune((self.clock)());
-        match store.sessions.get(&session_token(headers)) {
-            Some(session) => self.user(&session.csrf),
-            None => error(StatusCode::UNAUTHORIZED, "UNAUTHENTICATED"),
-        }
-    }
-
-    fn logout(&self, headers: &HeaderMap) -> Response {
-        let Ok(mut store) = self.store.lock() else {
-            return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
-        };
-        store.prune((self.clock)());
-        let token = session_token(headers);
-        if let Some(session) = store.sessions.get(&token) {
-            let supplied = single_header(headers, "x-csrf-token").unwrap_or("");
-            if !bool::from(supplied.as_bytes().ct_eq(session.csrf.as_bytes())) {
-                return error(StatusCode::FORBIDDEN, "CSRF_INVALID");
-            }
-        }
-        store.sessions.remove(&token);
-        let mut response = StatusCode::NO_CONTENT.into_response();
-        self.set_cookie(&mut response, "", true);
-        response
+fn set_cookie(config: &Config, response: &mut Response, token: &str, logout: bool) {
+    let max_age = if logout {
+        0
+    } else {
+        config.session_ttl.as_secs()
+    };
+    let secure = if config.secure { "; Secure" } else { "" };
+    let cookie =
+        format!("fs_session={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={max_age}{secure}");
+    if let Ok(cookie) = HeaderValue::from_str(&cookie) {
+        response.headers_mut().insert("set-cookie", cookie);
     }
 }
 
@@ -556,3 +504,6 @@ fn random_token() -> Result<String, ()> {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod postgres_tests;

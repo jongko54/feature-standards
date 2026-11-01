@@ -1,6 +1,6 @@
 # Java / Spring Boot 참조 구현
 
-`browser-session-v1`의 Java 구현이다. Java 21 이상과 Maven wrapper를 사용한다. Spring Boot 3.5.16의 내장 Tomcat, Spring Security Crypto 6.5.11의 `Argon2PasswordEncoder`, Bouncy Castle 1.86을 사용한다. HTTP 동작의 기준은 [공통 명세](../../features/auth/specification.md)이다.
+`browser-session-v1`(기본 메모리)과 `browser-session-v2`(PostgreSQL)의 Java 구현이다. Java 21 이상과 Maven wrapper를 사용한다. Spring Boot 3.5.16의 내장 Tomcat, Spring Security Crypto 6.5.11의 `Argon2PasswordEncoder`, Bouncy Castle 1.86, PostgreSQL JDBC 42.7.14를 사용한다. HTTP 동작의 기준은 [v1 공통 명세](../../features/auth/specification.md)와 [v2 저장소 계약](../../features/auth/postgres-session-v2.md)이다.
 
 ## 빌드와 실행
 
@@ -17,9 +17,38 @@ AUTH_DEMO=true AUTH_HOST=127.0.0.1 AUTH_PORT=8000 \
 
 빌드 산출물의 이름은 `target/auth-server.jar`로 고정한다. 데모는 `AUTH_DEMO=true`에서만 활성화되며 공개 계정은 `demo@example.com` / `correct-horse-battery-staple`이다. React 개발 서버의 `/auth` 프록시를 사용한다. CORS를 제공하지 않는다.
 
-비데모 실행에는 `AUTH_USER_EMAIL`, `AUTH_USER_PASSWORD`, HTTPS `AUTH_ALLOWED_ORIGIN`이 필요하며 secure 쿠키를 끌 수 없다. 비밀번호를 시작 시 Argon2id로 해싱한다. 서버 상태에는 원문 비밀번호를 보관하지 않는다. 잘못된 설정은 포트를 열기 전에 거절한다. `AUTH_HOST`와 `AUTH_PORT`가 바인딩을 정한다.
+메모리의 비데모 실행에는 `AUTH_USER_EMAIL`, `AUTH_USER_PASSWORD`, HTTPS `AUTH_ALLOWED_ORIGIN`이 필요하며 secure 쿠키를 끌 수 없다. 비밀번호를 시작 시 Argon2id로 해싱한다. 서버 상태에는 원문 비밀번호를 보관하지 않는다. 잘못된 설정은 포트를 열기 전에 거절한다. `AUTH_HOST`와 `AUTH_PORT`가 바인딩을 정한다.
 
 다른 환경 변수는 `AUTH_SESSION_TTL_SECONDS`(1800), `AUTH_RATE_LIMIT_MAX`(5), `AUTH_RATE_LIMIT_WINDOW_SECONDS`(60)이며 양의 정수만 받는다. `AUTH_COOKIE_SECURE`는 기본 `true`, origin은 기본 `http://127.0.0.1:5173`이다. `false`는 명시적 데모의 loopback origin에서만 허용된다. 자세한 경계는 공통 명세를 따른다.
+
+## PostgreSQL 실행과 재사용
+
+`AUTH_STORE=postgres`와 `AUTH_DATABASE_URL`로 선택한다. URL은 `postgresql://user:percent-encoded-password@host:5432/database?sslmode=...` 형식이며 JDBC URL로 변환한다. URI 사용자 정보의 percent encoding과 `sslmode`, `sslcert`, `sslkey`, `sslrootcert`, `sslpassword`, `ssl`, `user`, `password`, `application_name`, `connect_timeout` 옵션을 받는다. 별도 schema 선택은 허용하지 않는다. DB 연결·인증 대기는 5초, socket·SQL 제한은 15초로 고정되어 URI로 비활성화할 수 없다. URL과 JDBC 오류 원문은 오류 응답과 예외의 cause에 포함하지 않는다.
+
+스키마는 서버 실행 전에 루트의 명시적 도구로 준비한다. `AUTH_DATABASE_URL`은 별도로 환경에 설정하며 아래 명령에는 값을 출력하지 않는다.
+
+```sh
+# 저장소 루트에서, 명시적 마이그레이션
+uv run --project tools python tools/auth_db.py migrate
+# 공개 데모 계정이 필요한 로컬 테스트에서만 실행
+uv run --project tools python tools/auth_db.py seed-demo --confirm-demo
+
+cd implementations/java-spring
+AUTH_STORE=postgres AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
+  AUTH_ALLOWED_ORIGIN=http://127.0.0.1:5173 java -jar target/auth-server.jar
+```
+
+DB 모드에서는 `AUTH_USER_EMAIL`과 `AUTH_USER_PASSWORD`를 요구하거나 사용하지 않는다. `AUTH_DEMO=true`도 HTTP·쿠키 예외만 허용하며 사용자를 만들거나 해시를 덮어쓰지 않는다. 시작 시 schema version 1과 연결을 검사하며 자동 DDL, seed, 메모리 fallback은 없다. `/healthz`는 DB 준비 상태를 확인하고 `browser-session-v2`를 반환한다. 요청 중 저장소 실패는 쿠키를 발급하지 않는 일반 503 `STORAGE_UNAVAILABLE` 응답이다.
+
+`dev.featurestandards.auth.AuthService`는 Servlet에 의존하지 않는다. `AuthService.create(config, memoryPassword, clock)`으로 저장소를 선택하거나 `new AuthService(authStore)`로 `AuthStore`를 주입한다. `MemoryAuthStore`와 `PostgresAuthStore`도 공개 생성자를 제공한다. `login(peer, previousToken, email, password)`은 `Login`, `session(token)`은 사용자 정보를 가진 `Session` 또는 null, `logout(token, csrf)`는 CSRF 검사 결과를 반환한다. `AuthConfig.load(env)`는 설정을 검증한다. 별도 Spring 앱은 `new AuthFilter(config, service)`를 등록할 수 있다. DB 연결 경계는 `PostgresAuthStore(config, connections)`로 주입할 수 있으며 `connections`는 요청마다 독립적인 `java.sql.Connection`을 제공한다.
+
+PostgreSQL은 사용자별 PHC와 enabled 상태를 조회하고 세션 토큰의 SHA-256만 bytea로 저장한다. 로그인은 공통 advisory transaction lock 아래에서 DB 시각·실패 창·성공 시 실패 제거·이전 세션 교체·세션 생성을 처리한다. 로그아웃은 세션 행을 `FOR UPDATE`로 잠그고 CSRF를 비교한다. 사용자가 비활성화되어도 만료 전 저장 세션에는 정확한 CSRF가 필요하며, 올바른 CSRF로 삭제할 수 있다. 로그인·조회는 비활성 사용자를 거절한다. 결과와 쿠키는 commit 성공 후에만 반환한다. 조회는 절대 만료를 연장하지 않는다.
+
+자체 DB 테스트는 이미 마이그레이션된 전용 loopback DB를 명시적으로 선택할 때만 실행된다. **해당 DB의 auth 사용자·세션·실패 기록을 초기화**하며 DB 이름은 `feature_standards_test`로 시작해야 한다.
+
+```sh
+AUTH_TEST_DATABASE_URL="$AUTH_DATABASE_URL" ./mvnw -q test
+```
 
 ## 구현과 검증 범위
 
@@ -30,11 +59,12 @@ AUTH_DEMO=true AUTH_HOST=127.0.0.1 AUTH_PORT=8000 \
 - TCP peer IP로 실패를 제한한다. `server.forward-headers-strategy=none`으로 `X-Forwarded-For`와 `Forwarded`를 신뢰하지 않는다. 프록시 뒤에서는 모든 사용자가 프록시 IP의 제한을 공유하므로 별도의 신뢰 프록시 정책이 필요하다.
 - 자체 JUnit 테스트는 설정 거절, Unicode/JSON 경계, 실제 Argon2id 검증, 가상 시계 만료·제한 창, 실제 내장 Tomcat HTTP의 origin·쿠키·CSRF·세션 무효화·절대 만료·제한 응답을 검증한다. 공통 API와 React 브라우저 적합성 검사는 저장소 공통 harness가 수행한다.
 
-사용자는 한 명이며 사용자 해시·세션·실패 기록은 프로세스 메모리에만 있다. 재시작하면 세션과 실패 기록이 사라지고 여러 인스턴스가 상태를 공유하지 않는다. 만료 기록은 다음 인증 요청 때 정리한다. 세션 수와 peer 수의 별도 상한, 영속 사용자 저장소, TLS 종료, 분산 제한, 다중 인스턴스 운영 정책은 제공하지 않는다. 적합성 테스트 통과는 운영 보안 감사 완료를 뜻하지 않는다.
+메모리 모드 사용자는 한 명이며 사용자 해시·세션·실패 기록은 프로세스 메모리에만 있다. 재시작하면 메모리 상태가 사라진다. PostgreSQL 모드는 같은 DB를 사용하는 인스턴스와 언어 간에 상태를 공유한다. 세션 수·peer 수의 별도 상한, TLS 종료와 운영 DB 권한·용량 정책은 제공하지 않는다. 적합성 테스트 통과는 운영 보안 감사 완료를 뜻하지 않는다.
 
 ## 버전과 API 근거
 
 - [Spring Boot 3.5.16 시스템 요구 사항](https://docs.spring.io/spring-boot/3.5/system-requirements.html): Java 17 이상 지원 중 이 참조 구현의 빌드 대상은 Java 21이다. 공식 문서의 안정 유지보수 버전과 Maven Central 아티팩트를 확인하고 고정했다.
 - [Spring Security Argon2](https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-argon2): Bouncy Castle 기반 `Argon2PasswordEncoder`.
 - [Apache Maven Wrapper](https://maven.apache.org/tools/wrapper/): Maven 및 wrapper 버전과 배포 체크섬 고정.
+- [PostgreSQL JDBC](https://jdbc.postgresql.org/): 안정 릴리스 42.7.14 고정. [연결 문서](https://jdbc.postgresql.org/documentation/use/)의 JDBC URL·Properties와 유한 connect/socket timeout을 따른다.
 - [RFC 9106 권장 매개변수](https://www.rfc-editor.org/rfc/rfc9106.html#section-7.4): 메모리 제약 환경의 Argon2id 매개변수.
