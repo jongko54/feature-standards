@@ -91,7 +91,7 @@ API 검증에는 로그인 성공·실패, 입력 경계, 로그인 CSRF, 쿠키
 
 ### GitHub Actions 상태
 
-[CI 템플릿](ci/github-actions.yml)에 같은 검증 명령을 준비했습니다. 현재 저장소에는 자동 실행 워크플로가 활성화되어 있지 않습니다. 최초 게시에 사용한 GitHub 인증이 `workflow` 쓰기 권한을 갖지 않아 템플릿으로 보존했습니다. 워크플로 파일 쓰기가 허용된 환경에서 이 파일을 `.github/workflows/ci.yml`에 배치하면 push·PR 시 실행할 수 있습니다. 로컬 테스트 통과와 원격 CI 통과는 별개입니다.
+[CI 워크플로](.github/workflows/ci.yml)는 push·PR·수동 실행에서 네 서버와 React를 검증합니다. [원격 실행 결과](https://github.com/jongko54/feature-standards/actions)에서 커밋별 상태를 확인할 수 있습니다. [CI 템플릿](ci/github-actions.yml)은 같은 정의를 보존합니다. 워크플로를 바꾸면 두 파일을 함께 갱신합니다. 로컬 테스트 통과와 원격 CI 통과는 별개입니다.
 
 ## 표준을 관리하는 방식
 
