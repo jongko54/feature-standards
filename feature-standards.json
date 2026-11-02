@@ -290,9 +290,9 @@
         "browser-session-v3"
       ],
       "package": {
-        "kind": "npm-file",
+        "kind": "npm",
         "name": "@ugauga/feature-standards-react-auth/api",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

@@ -1,6 +1,6 @@
 # 별도 Python + React 소비 앱
 
-인증 코드를 복사하지 않고 두 의존성을 가져오는 예제다. Python은 `pyproject.toml`의 path source에서 `feature-standards-python-auth` wheel을 설치하고 `create_app`, `current_user`를 import한다. React는 npm file dependency의 `@ugauga/feature-standards-react-auth/api`를 import한다. 저장소 밖으로 옮길 때는 두 경로를 원본 checkout 또는 자체 패키지 출처로 맞춘다. 패키지 레지스트리에 게시한 버전은 아니다.
+인증 코드를 복사하지 않고 두 의존성을 가져오는 예제다. Python은 `pyproject.toml`의 path source에서 `feature-standards-python-auth` wheel을 설치하고 `create_app`, `current_user`를 import한다. React는 현재 checkout의 npm file dependency에서 `@ugauga/feature-standards-react-auth/api`를 import한다. 공개 npm 버전은 `npm install @ugauga/feature-standards-react-auth@0.1.0`으로 설치할 수 있다. 이 예제는 현재 소스를 검증하도록 file dependency를 유지하며, 저장소 밖으로 옮길 때 Python 경로와 React 패키지 출처를 맞춘다. [배포 검증 기록](../../docs/npm-release.md)을 참고한다.
 
 `/api/profile`은 이 프로젝트가 추가한 보호 API다. `Depends(current_user)`가 공통 저장소의 세션을 검증하고 인증된 사용자만 반환한다. 앱에서 사용자를 seed하거나 별도 세션 저장소를 만들지 않는다.
 

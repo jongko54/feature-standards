@@ -27,7 +27,7 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack rust --prof
 
 [Go](../examples/consumer-go/README.md), [Java](../examples/consumer-java/README.md), [Rust](../examples/consumer-rust/README.md)는 인증 구현을 복사하지 않는 독립 프로젝트다. 메모리 v1에서 익명 요청·로그인·보호 API·CSRF 거절·로그아웃·이전 쿠키 거절을 실행한다. Python+React는 기존 PostgreSQL 소비 앱의 브라우저 검사를 유지한다. Go·Java·Rust 소비 앱의 PostgreSQL·실제 화면 통합까지 검증했다는 의미는 아니다.
 
-참조 서버의 v1/v2/v3 API·브라우저와 언어 간 상태·경합 검증은 기존 공통 harness가 담당한다. 레지스트리 게시·보안 감사·운영 SMTP 수신 성공은 별도 범위다.
+참조 서버의 v1/v2/v3 API·브라우저와 언어 간 상태·경합 검증은 기존 공통 harness가 담당한다. React API의 npm 게시·설치 상태는 [배포 기록](npm-release.md)을 확인한다. 서버 패키지의 레지스트리 게시·보안 감사·운영 SMTP 수신 성공은 별도 범위다.
 
 ## 실제 AI 통합 평가
 

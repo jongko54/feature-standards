@@ -117,7 +117,7 @@ AI와 도구는 루트 `feature-standards.json`에서 스택과 프로필을 선
 | Rust | path crate, `AuthService::from_config`·`current_user` | [Rust](examples/consumer-rust/README.md) |
 | React | `@ugauga/feature-standards-react-auth/api` | [Python+React](examples/consumer-python-react/README.md) |
 
-독립 Go·Java·Rust 소비 검사는 메모리 v1의 보호 API·세션 폐기를 실제 실행합니다. 해당 예제의 PostgreSQL v2/v3·브라우저 검증을 대신하지 않습니다. 참조 서버들의 공통 v1/v2/v3 검사는 별도 CI 단계입니다. 이 패키지들은 레지스트리에 게시되지 않았습니다.
+독립 Go·Java·Rust 소비 검사는 메모리 v1의 보호 API·세션 폐기를 실제 실행합니다. 해당 예제의 PostgreSQL v2/v3·브라우저 검증을 대신하지 않습니다. 참조 서버들의 공통 v1/v2/v3 검사는 별도 CI 단계입니다. 서버 패키지는 로컬 소비 예제로 제공하며, React API는 [npm 0.1.0](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth)에 공개했습니다. [배포·설치 검증 기록](docs/npm-release.md)을 확인합니다.
 
 Python 배포 이름은 `feature-standards-python-auth`, import 이름은 `feature_auth`입니다. [Python 프로젝트](implementations/python-fastapi/pyproject.toml)는 실제 wheel 빌드 설정을 제공하고, [소비 예제](examples/consumer-python-react/pyproject.toml)는 uv path dependency로 설치합니다. 공개 경계는 `create_app()`과 `current_user(request)`입니다.
 
@@ -136,6 +136,10 @@ def profile(user: Annotated[dict[str, str], Depends(current_user)]):
 
 React 소비 앱은 공개 export를 사용합니다.
 
+```sh
+npm install @ugauga/feature-standards-react-auth
+```
+
 ```ts
 import { createAuthApi, type AuthSession } from '@ugauga/feature-standards-react-auth/api';
 
@@ -143,7 +147,7 @@ const auth = createAuthApi();
 const session: AuthSession | null = await auth.me();
 ```
 
-[별도 예제](examples/consumer-python-react/README.md)는 보호 API, 로그인·새로고침 복원·로그아웃, 두 번째 사용자 분리를 다룹니다. 패키지 설치와 실행 절차는 [v2 안내](docs/postgres-v2.md#별도-소비-앱)를 확인합니다. npm 레지스트리나 PyPI에 게시되었다는 의미는 아닙니다.
+[별도 예제](examples/consumer-python-react/README.md)는 보호 API, 로그인·새로고침 복원·로그아웃, 두 번째 사용자 분리를 다룹니다. 체크아웃의 현재 소스를 검증하도록 React file dependency를 사용하며 npm 설치와는 별도입니다. Python wheel은 로컬 의존성으로 제공합니다. 실행 절차는 [v2 안내](docs/postgres-v2.md#별도-소비-앱)를 확인합니다.
 
 ## 같은 기준으로 검증하기
 

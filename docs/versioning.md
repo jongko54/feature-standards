@@ -4,6 +4,7 @@
 
 | 대상 | 버전 | 의미 |
 |---|---|---|
+| React npm API 패키지 | `0.1.0` | `@ugauga/feature-standards-react-auth`, ESM JavaScript·타입 선언; [배포 기록](npm-release.md) |
 | v1 OpenAPI `info.version` | `0.1.0` | 기존 단일 사용자·메모리 계약 |
 | 기본 프로필 | `browser-session-v1` | `AUTH_STORE=memory` |
 | v2 OpenAPI `info.version` | `0.2.0` | PostgreSQL 사용자·공유 세션·실패 기록·503 확장 |

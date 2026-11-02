@@ -1,0 +1,30 @@
+{
+  "package": "@ugauga/feature-standards-react-auth",
+  "version": "0.1.0",
+  "dist_tag": "latest",
+  "access": "public",
+  "npm_url": "https://www.npmjs.com/package/@ugauga/feature-standards-react-auth",
+  "registry": "https://registry.npmjs.org/",
+  "tarball": "https://registry.npmjs.org/@ugauga/feature-standards-react-auth/-/feature-standards-react-auth-0.1.0.tgz",
+  "integrity": "sha512-WVOPNTI7gpp/IZRf6Ylj3OZSpdBmR12xUNHSQZRsQNwkJ87/KYLN6qxun/06mkuWoGLoQOsjMeqZJWYA3Dc00A==",
+  "tarball_bytes": 4782,
+  "file_count": 5,
+  "source_commit": "b39110b06343da741ab41c0a18ca5e4017f19c28",
+  "verified_at": "2026-11-02T16:13:41Z",
+  "verification": {
+    "registry_version": true,
+    "reviewed_tarball_matches_registry": true,
+    "anonymous_metadata_access": true,
+    "anonymous_tarball_download": true,
+    "fresh_registry_install": true,
+    "installed_lockfile_integrity": true,
+    "esm_root_and_api_exports": true,
+    "runtime_api_contract_smoke": true,
+    "typescript_strict_nodenext": true,
+    "prepublish_consumer_browser_scenarios_passed": 3
+  },
+  "source_ci": {
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41476781454"
+  }
+}

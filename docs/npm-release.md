@@ -1,6 +1,6 @@
 # React 인증 API npm 배포
 
-패키지는 `@ugauga/feature-standards-react-auth`이며 ESM 루트와 `/api` export를 제공한다. npm 계정 `ugauga`의 scope를 사용한다. 기존 `@feature-standards` 조직이 없어 내부 checkout 이름을 실제 게시 가능한 이름으로 옮겼다. 인증 HTTP 계약과 API 함수 동작은 유지한다.
+패키지는 `@ugauga/feature-standards-react-auth`이며 ESM 루트와 `/api` export를 제공한다. npm 계정 `ugauga`의 scope를 사용한다. 현재 계정에서 기존 `@feature-standards` scope 조회가 404로 반환되어, 확인된 개인 scope로 내부 checkout 이름을 옮겼다. 인증 HTTP 계약과 API 함수 동작은 유지한다.
 
 ## 배포본
 
@@ -22,4 +22,20 @@ npm run check:package
 
 ## 상태
 
-현재 문서는 배포 후보의 준비·검증 절차를 기록한다. npm 게시 성공은 registry 확인 후 갱신한다.
+2026-11-03 KST, [npm 0.1.0](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth) 공개와 `latest=0.1.0`을 확인했다. npm의 접수 성공 후 처리 시간이 있었으며, 실제 registry에 version·dist가 나타난 뒤 검증했다. [기계 판독 receipt](npm-release-0.1.0.json)를 함께 보관한다.
+
+- 배포 source commit: `b39110b06343da741ab41c0a18ca5e4017f19c28`
+- 배포 tarball: 4,782 bytes, 파일 5개
+- registry dist integrity: `sha512-WVOPNTI7gpp/IZRf6Ylj3OZSpdBmR12xUNHSQZRsQNwkJ87/KYLN6qxun/06mkuWoGLoQOsjMeqZJWYA3Dc00A==`
+- 인증 헤더 없이 metadata·tarball 다운로드 성공, 버전·원본 바이트 일치
+- 검증한 tarball·registry dist·새 설치의 package-lock integrity 일치
+- 별도 프로젝트에 실제 npm registry 버전 설치 성공
+- 루트·`/api` ESM export 동일성과 로그인·로그아웃 요청·오류 처리 확인
+- 설치된 선언 파일을 사용하는 TypeScript strict/NodeNext 검사 통과
+- source commit의 [전체 CI 통과](https://github.com/jongko54/feature-standards/actions/runs/41476781454)
+
+```sh
+npm install @ugauga/feature-standards-react-auth
+```
+
+로컬 tarball 설치와 실제 registry 설치를 각각 확인했으며, 위 게시물은 API 클라이언트다. 참조 화면은 저장소에서 실행한다. 이후 버전은 기존 npm 버전을 덮어쓰지 않고 새 버전으로 게시한다.

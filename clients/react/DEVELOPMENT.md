@@ -31,7 +31,7 @@ VITE_AUTH_ACCOUNT_LIFECYCLE=true npm run build
 
 ## 다른 프로젝트에서 가져오기
 
-`package.json`에서 `@ugauga/feature-standards-react-auth`를 이 디렉터리의 file dependency로 지정하고 `@ugauga/feature-standards-react-auth/api`에서 `authApi`, `createAuthApi`, `AuthSession`, `ApiError`를 import할 수 있다. API 모듈은 React 화면과 분리되어 있다. 실제 별도 프로젝트 통합은 [소비 앱 예제](../../examples/consumer-python-react/README.md)를 참고한다. npm 레지스트리 게시물은 아니며 이 checkout의 소스를 사용한다.
+`package.json`에서 `@ugauga/feature-standards-react-auth`를 이 디렉터리의 file dependency로 지정하고 `@ugauga/feature-standards-react-auth/api`에서 `authApi`, `createAuthApi`, `AuthSession`, `ApiError`를 import할 수 있다. API 모듈은 React 화면과 분리되어 있다. 실제 별도 프로젝트 통합은 [소비 앱 예제](../../examples/consumer-python-react/README.md)를 참고한다. 공개 npm 배포본은 `npm install @ugauga/feature-standards-react-auth@0.1.0`으로 설치하며, file dependency는 이 checkout의 현재 소스를 검증하는 용도다. [배포 기록](../../docs/npm-release.md)에 실제 registry 설치 결과가 있다.
 
 ## 검증
 
