@@ -188,14 +188,34 @@ def _package(root: Path, stack: dict) -> None:
     else:
         package = json.loads((directory / "package.json").read_text())
         entrypoint = checked_path(root, stack["entrypoints"][0]["path"])
+        # A published library exports emitted JS and declarations, not its TS source.
+        compiler = json.loads((directory / "tsconfig.lib.json").read_text())[
+            "compilerOptions"
+        ]
+        source_root = (directory / compiler["rootDir"]).resolve()
+        emitted = (
+            (directory / compiler["outDir"] / entrypoint.relative_to(source_root))
+            .with_suffix(".js")
+            .resolve()
+        )
+        if not emitted.is_relative_to(directory.resolve()) or not compiler.get(
+            "declaration"
+        ):
+            raise ValueError(
+                "Catalog npm library requires local JS and declaration output"
+            )
         exports = [
             name
             for name, target in package.get("exports", {}).items()
-            if (directory / target).resolve() == entrypoint
+            if isinstance(target, dict)
+            and isinstance(target.get("import"), str)
+            and isinstance(target.get("types"), str)
+            and (directory / target["import"]).resolve() == emitted
+            and (directory / target["types"]).resolve() == emitted.with_suffix(".d.ts")
         ]
-        if len(exports) != 1:
+        if "./api" not in exports:
             raise ValueError("Catalog package requires a matching npm API export")
-        expected = package["name"] + exports[0][1:]
+        expected = package["name"] + "/api"
     if stack["package"]["name"] != expected:
         raise ValueError(f"Catalog package coordinate mismatch: {stack['id']}")
 

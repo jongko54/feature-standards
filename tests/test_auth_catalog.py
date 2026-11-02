@@ -2,13 +2,15 @@
 
 import copy
 import json
+import shutil
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from auth_catalog import load_catalog, select, validate_catalog
+from auth_catalog import _package, load_catalog, select, validate_catalog
 
 
 class CatalogTests(unittest.TestCase):
@@ -55,6 +57,24 @@ class CatalogTests(unittest.TestCase):
 
     def test_output_is_serializable(self):
         json.dumps(select(self.catalog, "python", "browser-session-v1"))
+
+    def test_rejects_drift_in_emitted_npm_javascript_or_types(self):
+        stack = next(s for s in self.catalog["stacks"] if s["id"] == "react")
+        for field, wrong in (
+            ("import", "./lib/missing.js"),
+            ("types", "./lib/missing.d.ts"),
+        ):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                directory = root / stack["root"]
+                (directory / "src").mkdir(parents=True)
+                for relative in ("package.json", "tsconfig.lib.json", "src/api.ts"):
+                    shutil.copy2(ROOT / stack["root"] / relative, directory / relative)
+                metadata = json.loads((directory / "package.json").read_text())
+                metadata["exports"]["./api"][field] = wrong
+                (directory / "package.json").write_text(json.dumps(metadata))
+                with self.assertRaisesRegex(ValueError, "npm API export"):
+                    _package(root, stack)
 
     def test_rejects_account_profile_using_memory_storage(self):
         broken = copy.deepcopy(self.catalog)

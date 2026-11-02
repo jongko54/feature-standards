@@ -128,6 +128,7 @@ jobs:
           npm ci
           npm test
           npm run build
+          npm run check:package
           npx playwright install --with-deps chromium
       - name: Identical API and browser tests for all four implementations
         run: python3 tests/conformance.py --backend all --browser

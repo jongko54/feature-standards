@@ -16,5 +16,7 @@ coverage.out
 eval-results/
 /implementations/go-net-http/go-net-http
 /examples/consumer-go/consumer-go
+/clients/react/lib/
+/clients/react/*.tgz
 bin/
 target/

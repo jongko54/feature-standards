@@ -76,7 +76,7 @@ uv run --frozen --project tools python tests/account_conformance.py --browser
 
 - [Python 의존성](../examples/consumer-python-react/pyproject.toml)은 `feature-standards-python-auth`를 uv path dependency로 설치합니다. [wheel 설정](../implementations/python-fastapi/pyproject.toml)의 실제 import 패키지는 `feature_auth`이며 `create_app`과 `current_user`를 공개합니다.
 - [보호 API](../examples/consumer-python-react/app.py)는 `Depends(current_user)`로 `/api/profile`을 보호합니다. 인증된 user dict를 받고 401·503은 공통 오류 계약을 사용합니다.
-- [React 소비 코드](../examples/consumer-python-react/src/main.tsx)는 `@feature-standards/react-auth/api`에서 `authApi`와 `AuthSession`을 import합니다. [export 정의](../clients/react/package.json)는 `./api`를 가리킵니다.
+- [React 소비 코드](../examples/consumer-python-react/src/main.tsx)는 `@ugauga/feature-standards-react-auth/api`에서 `authApi`와 `AuthSession`을 import합니다. [export 정의](../clients/react/package.json)는 `./api`를 가리킵니다.
 
 의존성과 브라우저를 준비합니다.
 

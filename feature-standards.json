@@ -291,7 +291,7 @@
       ],
       "package": {
         "kind": "npm-file",
-        "name": "@feature-standards/react-auth/api",
+        "name": "@ugauga/feature-standards-react-auth/api",
         "published": false
       },
       "entrypoints": [

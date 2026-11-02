@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import { authApi, type AuthSession } from '@feature-standards/react-auth/api';
+import { authApi, type AuthSession } from '@ugauga/feature-standards-react-auth/api';
 
 function App() {
   const [session, setSession] = useState<AuthSession | null>(null);

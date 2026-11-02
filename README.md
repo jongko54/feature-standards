@@ -17,7 +17,7 @@
 | [PostgreSQL DDL](features/auth/postgres/001_initial.sql) / [명시적 DB 도구](tools/auth_db.py) | schema version 1 마이그레이션과 별도 데모 seed |
 | [Python / FastAPI](implementations/python-fastapi) | `feature_auth` 설치 패키지, 앱 factory와 인증 dependency |
 | [Go / net/http](implementations/go-net-http), [Java / Spring](implementations/java-spring), [Rust / Axum](implementations/rust-axum) | HTTP 어댑터와 서비스·저장소 경계 |
-| [React / TypeScript](clients/react/README.md) | 공통 화면과 `@feature-standards/react-auth/api` export |
+| [React / TypeScript](clients/react/README.md) | 공통 화면과 `@ugauga/feature-standards-react-auth/api` export |
 | [별도 Python+React 소비 프로젝트](examples/consumer-python-react/README.md) | 인증 코드를 복사하지 않고 패키지를 가져오는 보호 API 예제 |
 | [AI 적용 지침](skills/integrate-auth/SKILL.md) | 대상 프로젝트 조사·적용·검증 |
 | [통합 manifest](feature-standards.json) / [AI 통합 안내](docs/ai-integration.md) | 5개 스택의 공개 API·프로필·의존성·소비 예제·검증 명령 |
@@ -115,7 +115,7 @@ AI와 도구는 루트 `feature-standards.json`에서 스택과 프로필을 선
 | Go | `auth` 패키지, `NewServer`·`CurrentUser` | [Go](examples/consumer-go/README.md) |
 | Java | 일반 `library` classifier JAR, `AuthService`·`AuthFilter` | [Java](examples/consumer-java/README.md) |
 | Rust | path crate, `AuthService::from_config`·`current_user` | [Rust](examples/consumer-rust/README.md) |
-| React | `@feature-standards/react-auth/api` | [Python+React](examples/consumer-python-react/README.md) |
+| React | `@ugauga/feature-standards-react-auth/api` | [Python+React](examples/consumer-python-react/README.md) |
 
 독립 Go·Java·Rust 소비 검사는 메모리 v1의 보호 API·세션 폐기를 실제 실행합니다. 해당 예제의 PostgreSQL v2/v3·브라우저 검증을 대신하지 않습니다. 참조 서버들의 공통 v1/v2/v3 검사는 별도 CI 단계입니다. 이 패키지들은 레지스트리에 게시되지 않았습니다.
 
@@ -137,7 +137,7 @@ def profile(user: Annotated[dict[str, str], Depends(current_user)]):
 React 소비 앱은 공개 export를 사용합니다.
 
 ```ts
-import { createAuthApi, type AuthSession } from '@feature-standards/react-auth/api';
+import { createAuthApi, type AuthSession } from '@ugauga/feature-standards-react-auth/api';
 
 const auth = createAuthApi();
 const session: AuthSession | null = await auth.me();
