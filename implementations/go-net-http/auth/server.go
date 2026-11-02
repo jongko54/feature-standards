@@ -1,4 +1,4 @@
-package main
+package auth
 
 import (
 	"context"
@@ -454,6 +454,26 @@ func (s *Server) me(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.writeUser(w, value)
+}
+
+// CurrentUser resolves the request's server-side session for a protected route.
+// On failure it writes the same safe HTTP error as /auth/me and returns false;
+// the caller must return immediately. The returned identity is a copy, so a
+// consumer cannot mutate session state. This authenticates a request; business
+// authorization and Origin/CSRF checks for consumer mutations remain its concern.
+func (s *Server) CurrentUser(w http.ResponseWriter, r *http.Request) (map[string]string, bool) {
+	w.Header().Set("Cache-Control", "no-store")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	value, err := s.store.Current(r.Context(), sessionToken(r))
+	if err != nil {
+		writeAuthError(w, err)
+		return nil, false
+	}
+	user := make(map[string]string, len(value.User))
+	for key, value := range value.User {
+		user[key] = value
+	}
+	return user, true
 }
 
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) {

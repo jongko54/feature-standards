@@ -105,6 +105,15 @@ Argon2id PHC는 v=19, m=65536, t=3, p=4, 16바이트 salt, 32바이트 hash와
 HTTP 어댑터는 SQL을 알지 않고 `LoginSession`/`AuthError`를 공통 응답으로 변환한다.
 주입한 사용자 정의 저장소의 시작 준비 검사는 호출자가 `service.ready().await`로 수행한다.
 
+별도 앱은 `AuthService::from_config(&mut Config).await`로 `app`과 같은 저장소 선택·시작
+검사를 재사용할 수 있다. 메모리 설정 비밀번호는 해싱 시 소비하므로 한 번만 초기화한다.
+`current_user(&AuthService, &HeaderMap).await`는 `/auth/me`와 같은 저장소에서 사용자만
+조회하고, 익명·만료·폐기는 401, 저장소 장애는 503과 `no-store`/`nosniff`를 반환한다.
+상태 변경 제품 API의 Origin·CSRF·권한 검사는 별도로 필요하다.
+독립 Cargo path dependency와 보호 API의 실제 통합 예제는
+[`examples/consumer-rust`](../../examples/consumer-rust/README.md)를 참고한다.
+라이브러리의 `publish = false`는 유지하며 crates.io 게시를 의미하지 않는다.
+
 실제 PostgreSQL 자체 테스트는 명시적인 폐기 가능 DB에서만 실행한다. DB 이름은
 `feature_standards_test`로 시작해야 한다. 이 테스트는 해당 DB를 migrate하고 테스트
 사용자/세션/실패 기록을 초기화하므로 앱 DB와 공유하면 안 된다.

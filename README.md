@@ -20,6 +20,7 @@
 | [React / TypeScript](clients/react/README.md) | 공통 화면과 `@feature-standards/react-auth/api` export |
 | [별도 Python+React 소비 프로젝트](examples/consumer-python-react/README.md) | 인증 코드를 복사하지 않고 패키지를 가져오는 보호 API 예제 |
 | [AI 적용 지침](skills/integrate-auth/SKILL.md) | 대상 프로젝트 조사·적용·검증 |
+| [통합 manifest](feature-standards.json) / [AI 통합 안내](docs/ai-integration.md) | 5개 스택의 공개 API·프로필·의존성·소비 예제·검증 명령 |
 
 v2의 구성은 [PostgreSQL 사용 안내](docs/postgres-v2.md), v3의 마이그레이션·메일·TLS·검증 범위는 [계정 사용 안내](docs/account-v3.md), 호환성 정책은 [버전 문서](docs/versioning.md)를 따릅니다.
 
@@ -105,6 +106,18 @@ uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
 이메일은 DB outbox에 저장합니다. [선택 SMTP 워커](tools/mail_worker.py)는 별도 SMTP 설정으로 TLS 전달·재시도·claim/ACK를 처리합니다. 실제 제공자 계정과 발신 주소는 자동 설정하지 않으며, 현재 운영 외부 발송을 실행했다는 의미는 아닙니다. [로컬 수신 도구](tools/mail_capture.py)는 아직 SMTP가 소유하지 않은 테스트 메시지만 새 mode 0600 파일로 옮깁니다. outbox와 수신 파일의 원문 token은 민감한 bearer credential입니다. 자세한 migration·환경변수·운영 경계는 [SMTP 안내](docs/smtp-delivery.md)를 따릅니다.
 
 ## 다른 프로젝트에서 사용하기
+
+AI와 도구는 루트 `feature-standards.json`에서 스택과 프로필을 선택합니다. 예를 들어 `uv run --frozen --project tools python tools/auth_catalog.py --stack go --profile browser-session-v1`은 필요한 명세·공개 API·예제·명령만 JSON으로 반환하며 명령을 실행하지 않습니다. `.agents/skills/integrate-auth`는 원본 스킬을 가리키므로 Codex가 저장소에서 자동 발견할 수 있습니다. 실제 모델 통합 평가 방법과 측정 범위는 [AI 통합 안내](docs/ai-integration.md)를 따릅니다.
+
+| 스택 | 재사용 경계 | 별도 소비 프로젝트 |
+|---|---|---|
+| Python | wheel, `create_app`·`current_user` | [Python+React](examples/consumer-python-react/README.md) |
+| Go | `auth` 패키지, `NewServer`·`CurrentUser` | [Go](examples/consumer-go/README.md) |
+| Java | 일반 `library` classifier JAR, `AuthService`·`AuthFilter` | [Java](examples/consumer-java/README.md) |
+| Rust | path crate, `AuthService::from_config`·`current_user` | [Rust](examples/consumer-rust/README.md) |
+| React | `@feature-standards/react-auth/api` | [Python+React](examples/consumer-python-react/README.md) |
+
+독립 Go·Java·Rust 소비 검사는 메모리 v1의 보호 API·세션 폐기를 실제 실행합니다. 해당 예제의 PostgreSQL v2/v3·브라우저 검증을 대신하지 않습니다. 참조 서버들의 공통 v1/v2/v3 검사는 별도 CI 단계입니다. 이 패키지들은 레지스트리에 게시되지 않았습니다.
 
 Python 배포 이름은 `feature-standards-python-auth`, import 이름은 `feature_auth`입니다. [Python 프로젝트](implementations/python-fastapi/pyproject.toml)는 실제 wheel 빌드 설정을 제공하고, [소비 예제](examples/consumer-python-react/pyproject.toml)는 uv path dependency로 설치합니다. 공개 경계는 `create_app()`과 `current_user(request)`입니다.
 

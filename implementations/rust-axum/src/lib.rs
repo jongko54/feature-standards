@@ -378,12 +378,25 @@ pub async fn app(config: Config) -> Result<Router, String> {
 }
 
 async fn app_with_clock(mut config: Config, clock: Clock) -> Result<Router, String> {
+    let service = service_with_clock(&mut config, clock).await?;
+    Ok(app_with_service(config, service))
+}
+
+impl AuthService {
+    /// Open the selected store with the same startup checks as `app`.
+    /// Memory mode consumes the configured password to avoid retaining plaintext.
+    pub async fn from_config(config: &mut Config) -> Result<Self, String> {
+        service_with_clock(config, Arc::new(Instant::now)).await
+    }
+}
+
+async fn service_with_clock(config: &mut Config, clock: Clock) -> Result<AuthService, String> {
     let store: Arc<dyn AuthStore> = if config.store == "postgres" {
-        Arc::new(PostgresStore::connect(&config).await?)
+        Arc::new(PostgresStore::connect(config).await?)
     } else {
-        Arc::new(MemoryStore::with_clock(&mut config, clock).await?)
+        Arc::new(MemoryStore::with_clock(config, clock).await?)
     };
-    Ok(app_with_service(config, AuthService::new(store)))
+    Ok(AuthService::new(store))
 }
 
 /// Inject a reusable authentication service without coupling the HTTP adapter to storage.
@@ -391,6 +404,24 @@ pub fn app_with_service(config: Config, service: AuthService) -> Router {
     Router::new()
         .fallback(dispatch)
         .with_state(Arc::new(HttpState { config, service }))
+}
+
+/// Resolve a protected read request through the same store as `/auth/me`.
+/// Errors retain the contract's fail-closed status and non-cacheable response headers.
+/// State-changing application routes must additionally enforce Origin and CSRF.
+pub async fn current_user(
+    service: &AuthService,
+    headers: &HeaderMap,
+) -> Result<SessionUser, Response> {
+    service
+        .me(session_token(headers))
+        .await
+        .map(|session| session.user)
+        .map_err(|err| {
+            let mut response = auth_error(err);
+            security_headers(&mut response);
+            response
+        })
 }
 
 fn error(status: StatusCode, code: &str) -> Response {

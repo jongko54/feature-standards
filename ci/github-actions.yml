@@ -68,6 +68,7 @@ jobs:
         run: |
           uv run --frozen --project tools python tools/check_contract.py
           uv run --frozen --project tools python tools/check_mail_contract.py
+          uv run --frozen --project tools python tools/auth_catalog.py --check
       - name: Test local process harness
         run: uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Test account schema transactions in a dedicated database
@@ -113,6 +114,14 @@ jobs:
           cargo test --locked postgres_accounts_registration -- --ignored
       - name: Test Rust PostgreSQL TLS certificates and downgrade refusal
         run: python3 implementations/rust-axum/tests/postgres_tls.py
+      - name: Verify independent Go Java and Rust library consumers
+        run: |
+          go -C examples/consumer-go test -race ./...
+          implementations/java-spring/mvnw -q -f implementations/java-spring/pom.xml -DskipTests install
+          implementations/java-spring/mvnw -q -f examples/consumer-java/pom.xml package
+          cargo fmt --all --manifest-path examples/consumer-rust/Cargo.toml -- --check
+          cargo clippy --locked --manifest-path examples/consumer-rust/Cargo.toml --all-targets -- -D warnings
+          cargo test --locked --manifest-path examples/consumer-rust/Cargo.toml
       - name: Install and build React client
         working-directory: clients/react
         run: |

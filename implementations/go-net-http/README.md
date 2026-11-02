@@ -21,6 +21,32 @@ go vet ./...
 go build -o bin/auth-server .
 ```
 
+## 다른 Go 프로젝트에서 사용하기
+
+실행 진입점은 루트 `main.go`이며 `go run .`과 기존 공통 검증 명령은 유지한다. 인증 구현은 import 가능한 [`auth`](auth) 패키지에 있다. 공개 진입점은 `auth.LoadConfig()`, `auth.NewServer(config)`, `auth.NewServerWithStore(config, store)`, `(*Server).CurrentUser(w, r)`, `(*Server).Close()`이다.
+
+```go
+import "github.com/jongko54/feature-standards/implementations/go-net-http/auth"
+
+// config는 auth.LoadConfig()로 검증한 설정을 사용한다.
+server, err := auth.NewServer(config)
+// err 처리 후 앱 종료 시 server.Close()를 호출한다.
+mux.Handle("/auth/", server)
+mux.Handle("/healthz", server)
+mux.HandleFunc("GET /api/profile", func(w http.ResponseWriter, r *http.Request) {
+    user, ok := server.CurrentUser(w, r)
+    if !ok { return } // 이미 안전한 401/503/500 응답을 기록했다.
+    // user의 복사본으로 프로젝트의 읽기 전용 응답을 만든다.
+    _ = user
+})
+```
+
+`CurrentUser`는 `fs_session` 쿠키를 같은 저장소에서 조회하며 실패 시 identity를 반환하지 않는다. 반환 map을 바꿔도 세션에 저장된 identity는 바뀌지 않는다. 보호 응답에는 `no-store`와 `nosniff`를 설정한다. 이 API는 요청의 인증만 담당하며, 소비 앱의 업무 권한과 상태 변경 API의 Origin·CSRF 검증은 소비 앱에서 별도로 적용해야 한다. 예제는 `GET /api/profile`만 추가한다.
+
+외부 `AuthStore`는 `auth.UnauthenticatedError()`·`InvalidCredentialsError()`·`CSRFInvalidError()`·`StorageUnavailableError()`·`RateLimitedError(retryAfterSeconds)`로 고정된 계약 오류를 반환할 수 있다. 선택적 `AccountStore`의 잘못된 확인·재설정 token에는 `InvalidTokenError()`를 사용한다. 임의 HTTP 상태·오류 코드·진단 문자열을 전달하는 API는 제공하지 않는다. 오류를 `%w`로 감싸도 HTTP 응답은 계약 코드만 사용하며 내부 진단을 드러내지 않는다. 알 수 없는 오류는 identity·쿠키 없는 `500 INTERNAL_ERROR`로 닫힌다. `auth_test`의 외부 패키지 검사가 공개 경계의 400·401·403·429·503과 wrapping 후 비노출을 검증한다.
+
+[독립 Go 소비 프로젝트](../../examples/consumer-go/README.md)는 별도 `go.mod`와 로컬 `replace`로 이 패키지를 참조하고, 실제 loopback HTTP로 로그인·보호 API·잘못된 CSRF·로그아웃·복사한 이전 쿠키 거절과 독립 세션 보존을 검사한다. 인증 소스를 복사하지 않으며 공개 모듈 버전을 배포했다는 의미는 아니다. 메모리 검증과 PostgreSQL/v3 검증의 범위는 해당 문서를 따른다.
+
 ## 구현 범위
 
 - Origin 검증, 독립 CSRF 토큰, `HttpOnly`/`SameSite=Lax` 쿠키, 서버 세션 파기와 절대 만료를 제공한다.

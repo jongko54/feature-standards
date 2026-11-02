@@ -170,6 +170,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "argon2-cffi" },
+    { name = "jsonschema" },
     { name = "openapi-spec-validator" },
     { name = "psycopg", extra = ["binary"] },
 ]
@@ -177,6 +178,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "argon2-cffi", specifier = ">=25.1,<26" },
+    { name = "jsonschema", specifier = ">=4.26,<5" },
     { name = "openapi-spec-validator", specifier = ">=0.7.2,<1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
 ]

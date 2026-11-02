@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "feature": {
+      "const": "auth"
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "specification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "openapi": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenarios": {
+            "type": "string",
+            "minLength": 1
+          },
+          "guide": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environment": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "migrations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cwd": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "argv": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "cwd",
+                "argv"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "specification",
+          "openapi",
+          "scenarios",
+          "guide",
+          "environment",
+          "migrations",
+          "checks"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "stacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "enum": [
+              "backend",
+              "client"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "minLength": 1
+          },
+          "framework": {
+            "type": "string",
+            "minLength": 1
+          },
+          "root": {
+            "type": "string",
+            "minLength": 1
+          },
+          "guide": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "package": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "published": {
+                "const": false
+              }
+            },
+            "required": [
+              "kind",
+              "name",
+              "published"
+            ],
+            "additionalProperties": false
+          },
+          "entrypoints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "symbol": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "path",
+                "symbol"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "consumer": {
+            "type": "string",
+            "minLength": 1
+          },
+          "install": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cwd": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "argv": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "cwd",
+                "argv"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "cwd": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "argv": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "cwd",
+                "argv"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "language",
+          "framework",
+          "root",
+          "guide",
+          "profiles",
+          "package",
+          "entrypoints",
+          "consumer",
+          "install",
+          "checks"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "addons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requires_profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "specification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "guide": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenarios": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entrypoint": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "requires_profile",
+          "specification",
+          "guide",
+          "scenarios",
+          "entrypoint"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "feature",
+    "profiles",
+    "stacks",
+    "addons"
+  ],
+  "additionalProperties": false
+}

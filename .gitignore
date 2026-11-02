@@ -13,5 +13,8 @@ playwright-report/
 .DS_Store
 *.log
 coverage.out
+eval-results/
+/implementations/go-net-http/go-net-http
+/examples/consumer-go/consumer-go
 bin/
 target/

@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "feature": "auth",
+  "profiles": [
+    {
+      "id": "browser-session-v1",
+      "specification": "features/auth/specification.md",
+      "openapi": "features/auth/openapi.json",
+      "scenarios": "features/auth/scenarios.json",
+      "guide": "README.md",
+      "environment": {
+        "AUTH_STORE": "memory",
+        "AUTH_ACCOUNT_LIFECYCLE": "false"
+      },
+      "migrations": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tests/conformance.py",
+            "--backend",
+            "all",
+            "--browser"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "browser-session-v2",
+      "specification": "features/auth/postgres-session-v2.md",
+      "openapi": "features/auth/openapi-v2.json",
+      "scenarios": "features/auth/scenarios-v2.json",
+      "guide": "docs/postgres-v2.md",
+      "environment": {
+        "AUTH_STORE": "postgres",
+        "AUTH_ACCOUNT_LIFECYCLE": "false"
+      },
+      "migrations": [
+        "features/auth/postgres/001_initial.sql"
+      ],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "uv",
+            "run",
+            "--frozen",
+            "--project",
+            "tools",
+            "python",
+            "tests/postgres_conformance.py",
+            "--browser"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "browser-session-v3",
+      "specification": "features/auth/account-session-v3.md",
+      "openapi": "features/auth/openapi-v3.json",
+      "scenarios": "features/auth/scenarios-v3.json",
+      "guide": "docs/account-v3.md",
+      "environment": {
+        "AUTH_STORE": "postgres",
+        "AUTH_ACCOUNT_LIFECYCLE": "true"
+      },
+      "migrations": [
+        "features/auth/postgres/001_initial.sql",
+        "features/auth/postgres/002_accounts.sql"
+      ],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "uv",
+            "run",
+            "--frozen",
+            "--project",
+            "tools",
+            "python",
+            "tests/account_conformance.py",
+            "--browser"
+          ]
+        }
+      ]
+    }
+  ],
+  "stacks": [
+    {
+      "id": "python",
+      "role": "backend",
+      "language": "Python",
+      "framework": "FastAPI",
+      "root": "implementations/python-fastapi",
+      "guide": "implementations/python-fastapi/README.md",
+      "profiles": [
+        "browser-session-v1",
+        "browser-session-v2",
+        "browser-session-v3"
+      ],
+      "package": {
+        "kind": "wheel",
+        "name": "feature-standards-python-auth",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "implementations/python-fastapi/feature_auth/__init__.py",
+          "symbol": "create_app; current_user"
+        }
+      ],
+      "consumer": "examples/consumer-python-react",
+      "install": [
+        {
+          "cwd": "examples/consumer-python-react",
+          "argv": [
+            "uv",
+            "sync",
+            "--frozen"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "uv",
+            "run",
+            "--frozen",
+            "--project",
+            "implementations/python-fastapi",
+            "pytest",
+            "implementations/python-fastapi/tests"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go",
+      "role": "backend",
+      "language": "Go",
+      "framework": "net/http",
+      "root": "implementations/go-net-http",
+      "guide": "implementations/go-net-http/README.md",
+      "profiles": [
+        "browser-session-v1",
+        "browser-session-v2",
+        "browser-session-v3"
+      ],
+      "package": {
+        "kind": "go-module",
+        "name": "github.com/jongko54/feature-standards/implementations/go-net-http/auth",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "implementations/go-net-http/auth/server.go",
+          "symbol": "LoadConfig; NewServer; Server.CurrentUser"
+        }
+      ],
+      "consumer": "examples/consumer-go",
+      "install": [
+        {
+          "cwd": "examples/consumer-go",
+          "argv": [
+            "go",
+            "mod",
+            "download"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "cwd": "examples/consumer-go",
+          "argv": [
+            "go",
+            "test",
+            "-race",
+            "./..."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "java",
+      "role": "backend",
+      "language": "Java",
+      "framework": "Spring Boot",
+      "root": "implementations/java-spring",
+      "guide": "implementations/java-spring/README.md",
+      "profiles": [
+        "browser-session-v1",
+        "browser-session-v2",
+        "browser-session-v3"
+      ],
+      "package": {
+        "kind": "maven-library-classifier",
+        "name": "dev.featurestandards:java-spring-auth:jar:library:1.0.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "implementations/java-spring/src/main/java/dev/featurestandards/auth/AuthService.java",
+          "symbol": "AuthService.create"
+        }
+      ],
+      "consumer": "examples/consumer-java",
+      "install": [
+        {
+          "cwd": ".",
+          "argv": [
+            "implementations/java-spring/mvnw",
+            "-q",
+            "-f",
+            "implementations/java-spring/pom.xml",
+            "-DskipTests",
+            "install"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "implementations/java-spring/mvnw",
+            "-q",
+            "-f",
+            "examples/consumer-java/pom.xml",
+            "test"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rust",
+      "role": "backend",
+      "language": "Rust",
+      "framework": "Axum",
+      "root": "implementations/rust-axum",
+      "guide": "implementations/rust-axum/README.md",
+      "profiles": [
+        "browser-session-v1",
+        "browser-session-v2",
+        "browser-session-v3"
+      ],
+      "package": {
+        "kind": "cargo-path",
+        "name": "feature-standards-auth",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "implementations/rust-axum/src/lib.rs",
+          "symbol": "Config; AuthService; app_with_service; current_user"
+        }
+      ],
+      "consumer": "examples/consumer-rust",
+      "install": [
+        {
+          "cwd": "examples/consumer-rust",
+          "argv": [
+            "cargo",
+            "build",
+            "--locked"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "cwd": "examples/consumer-rust",
+          "argv": [
+            "cargo",
+            "test",
+            "--locked"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react",
+      "role": "client",
+      "language": "TypeScript",
+      "framework": "React",
+      "root": "clients/react",
+      "guide": "clients/react/README.md",
+      "profiles": [
+        "browser-session-v1",
+        "browser-session-v2",
+        "browser-session-v3"
+      ],
+      "package": {
+        "kind": "npm-file",
+        "name": "@feature-standards/react-auth/api",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "clients/react/src/api.ts",
+          "symbol": "createAuthApi; AuthSession"
+        }
+      ],
+      "consumer": "examples/consumer-python-react",
+      "install": [
+        {
+          "cwd": "clients/react",
+          "argv": [
+            "npm",
+            "ci"
+          ]
+        }
+      ],
+      "checks": [
+        {
+          "cwd": "clients/react",
+          "argv": [
+            "npm",
+            "test"
+          ]
+        },
+        {
+          "cwd": "clients/react",
+          "argv": [
+            "npm",
+            "run",
+            "build"
+          ]
+        }
+      ]
+    }
+  ],
+  "addons": [
+    {
+      "id": "mail-delivery-v1",
+      "requires_profile": "browser-session-v3",
+      "specification": "features/auth/mail-delivery-v1.md",
+      "guide": "docs/smtp-delivery.md",
+      "scenarios": "features/auth/mail-scenarios.json",
+      "entrypoint": "tools/mail_worker.py"
+    }
+  ]
+}

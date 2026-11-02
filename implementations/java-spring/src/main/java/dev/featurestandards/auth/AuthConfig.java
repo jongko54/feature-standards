@@ -65,7 +65,7 @@ public record AuthConfig(String host, int port, boolean demo, boolean secure, St
         return new AuthConfig(host, (int) port, demo, secure, origin, email, ttl, (int) max, window, store, databaseUrl, lifecycle);
     }
 
-    static String password(Function<String, String> env, boolean demo) {
+    public static String password(Function<String, String> env, boolean demo) {
         return demo ? "correct-horse-battery-staple" : value(env, "AUTH_USER_PASSWORD", "");
     }
 

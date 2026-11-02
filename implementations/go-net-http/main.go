@@ -10,14 +10,16 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/jongko54/feature-standards/implementations/go-net-http/auth"
 )
 
 func main() {
-	config, err := LoadConfig()
+	config, err := auth.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	app, err := NewServer(config)
+	app, err := auth.NewServer(config)
 	if err != nil {
 		log.Fatal("could not initialize authentication server")
 	}

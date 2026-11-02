@@ -42,6 +42,12 @@ DB 모드에서는 `AUTH_USER_EMAIL`과 `AUTH_USER_PASSWORD`를 요구하거나 
 
 `dev.featurestandards.auth.AuthService`는 Servlet에 의존하지 않는다. `AuthService.create(config, memoryPassword, clock)`으로 저장소를 선택하거나 `new AuthService(authStore)`로 `AuthStore`를 주입한다. `MemoryAuthStore`와 `PostgresAuthStore`도 공개 생성자를 제공한다. `login(peer, previousToken, email, password)`은 `Login`, `session(token)`은 사용자 정보를 가진 `Session` 또는 null, `logout(token, csrf)`는 CSRF 검사 결과를 반환한다. `AuthConfig.load(env)`는 설정을 검증한다. 별도 Spring 앱은 `new AuthFilter(config, service)`를 등록할 수 있다. DB 연결 경계는 `PostgresAuthStore(config, connections)`로 주입할 수 있으며 `connections`는 요청마다 독립적인 `java.sql.Connection`을 제공한다.
 
+### 라이브러리로 가져오기
+
+`./mvnw -q install -DskipTests`는 기존 실행 파일 `target/auth-server.jar`와 일반 클래스 경로의 `target/auth-server-library.jar`를 함께 빌드하고 로컬 Maven 캐시에 설치한다. 다른 프로젝트는 `dev.featurestandards:java-spring-auth:1.0.0:jar:library`를 의존성으로 지정한다. 일반 JAR에는 참조 서버의 `AuthApplication`과 `application.properties`를 넣지 않으므로 소비 앱의 component scan·설정을 덮어쓰지 않는다. Maven Central 게시를 수행하지 않는다.
+
+공개 `AuthConfig.password(env, demo)`는 메모리 사용 시 참조 구현과 같은 비밀번호 선택 규칙을 제공한다. PostgreSQL 모드는 비밀번호 인자를 null로 전달하며 기존 설정·schema 검사를 사용한다. Servlet 어댑터를 재사용할 때 `AuthFilter`를 `/auth/*`, `/healthz`에 등록하고 소비 앱의 경로는 해당 앱에서 처리한다. 보호 API는 `AuthService.session(token)`의 유효 세션만 사용하고 저장소 실패를 성공이나 익명 상태로 감추지 않는다. 실제 별도 의존성 설치·보호 API·로그아웃 후 쿠키 폐기는 [Java 소비 예제](../../examples/consumer-java/README.md)에서 검증한다.
+
 PostgreSQL은 사용자별 PHC와 enabled 상태를 조회하고 세션 토큰의 SHA-256만 bytea로 저장한다. 로그인은 공통 advisory transaction lock 아래에서 DB 시각·실패 창·성공 시 실패 제거·이전 세션 교체·세션 생성을 처리한다. 로그아웃은 세션 행을 `FOR UPDATE`로 잠그고 CSRF를 비교한다. 사용자가 비활성화되어도 만료 전 저장 세션에는 정확한 CSRF가 필요하며, 올바른 CSRF로 삭제할 수 있다. 로그인·조회는 비활성 사용자를 거절한다. 결과와 쿠키는 commit 성공 후에만 반환한다. 조회는 절대 만료를 연장하지 않는다.
 
 자체 DB 테스트는 이미 마이그레이션된 전용 loopback DB를 명시적으로 선택할 때만 실행된다. **해당 DB의 auth 사용자·세션·실패 기록을 초기화**하며 DB 이름은 `feature_standards_test`로 시작해야 한다.
