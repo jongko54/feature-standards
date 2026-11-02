@@ -15,9 +15,10 @@ from psycopg import sql
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from auth_db import migrate, migrate_accounts, seed_demo
+from auth_db import migrate, migrate_accounts, migrate_mail_delivery, seed_demo
 
 LANGUAGES = ("python", "go", "java", "rust")
+MAIL_DATABASES = ("worker", "capture", "integration")
 
 
 def fixture_urls(raw_url: str, prefix: str) -> tuple[str, dict[str, str]]:
@@ -26,7 +27,7 @@ def fixture_urls(raw_url: str, prefix: str) -> tuple[str, dict[str, str]]:
         raise ValueError(
             "Fixture DB prefix must be an ASCII feature_standards_test name"
         )
-    if len(prefix) + len("_v3_") + max(map(len, LANGUAGES)) > 63:
+    if len(prefix) + len("_mail_") + max(map(len, MAIL_DATABASES)) > 63:
         raise ValueError("Fixture database names must fit PostgreSQL's 63-byte limit")
     parts = urlsplit(base_url)
     targets = {
@@ -48,12 +49,27 @@ def account_fixture_urls(base_url: str, prefix: str) -> dict[str, str]:
     }
 
 
+def mail_fixture_urls(base_url: str, prefix: str) -> dict[str, str]:
+    parts = urlsplit(base_url)
+    return {
+        name: assert_test_database(
+            urlunsplit(parts._replace(path=f"/{prefix}_mail_{name}"))
+        )
+        for name in MAIL_DATABASES
+    }
+
+
 def prepare(raw_url: str, prefix: str) -> None:
     # Validate every target before the first connection or SQL statement.
     base_url, targets = fixture_urls(raw_url, prefix)
     account_targets = account_fixture_urls(base_url, prefix)
+    mail_targets = mail_fixture_urls(base_url, prefix)
     with psycopg.connect(base_url, autocommit=True, connect_timeout=3) as conn:
-        for url in (*targets.values(), *account_targets.values()):
+        for url in (
+            *targets.values(),
+            *account_targets.values(),
+            *mail_targets.values(),
+        ):
             name = urlsplit(url).path[1:]
             exists = conn.execute(
                 "SELECT 1 FROM pg_database WHERE datname=%s", (name,)
@@ -71,6 +87,10 @@ def prepare(raw_url: str, prefix: str) -> None:
         seed_demo(url)
     for url in account_targets.values():
         migrate_accounts(url)
+        seed_demo(url)
+    for url in mail_targets.values():
+        migrate_accounts(url)
+        migrate_mail_delivery(url)
         seed_demo(url)
 
 
@@ -92,9 +112,7 @@ def main() -> int:
             "PostgreSQL fixture preparation failed; connection details are not displayed."
         )
         return 1
-    print(
-        "PostgreSQL v2/v3 schemas and demo fixtures are ready in isolated language and SQL test DBs."
-    )
+    print("PostgreSQL v2/v3/mail schemas and fixtures are ready in isolated test DBs.")
     return 0
 
 

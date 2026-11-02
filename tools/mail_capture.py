@@ -30,6 +30,9 @@ def capture(url: str, destination: Path, origin: str) -> int:
             os.fdopen(fd, "w") as sink,
             psycopg.connect(url, connect_timeout=3) as conn,
         ):
+            has_delivery = conn.execute(
+                "SELECT to_regclass('feature_auth.mail_delivery') IS NOT NULL"
+            ).fetchone()[0]
             conn.execute(
                 "UPDATE feature_auth.mail_outbox SET token=NULL WHERE expires_at<=clock_timestamp()"
             )
@@ -39,6 +42,15 @@ def capture(url: str, destination: Path, origin: str) -> int:
                 "ORDER BY id FOR UPDATE SKIP LOCKED"
             ).fetchall()
             for message_id, kind, recipient, token in messages:
+                # The parent lock precedes this new READ COMMITTED snapshot, just as
+                # SMTP claims lock parent before sidecar. Never steal a worker's retry.
+                if has_delivery:
+                    delivery = conn.execute(
+                        "SELECT state FROM feature_auth.mail_delivery WHERE outbox_id=%s",
+                        (message_id,),
+                    ).fetchone()
+                    if delivery and delivery[0] != "pending":
+                        continue
                 route = "/verify-email" if kind == "verify" else "/reset-password"
                 sink.write(
                     json.dumps(

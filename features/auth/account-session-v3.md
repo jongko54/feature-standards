@@ -36,7 +36,7 @@ token 검증 테이블에는 SHA-256(UTF-8 token) 32byte만 저장한다. 확인
 
 ## 메일 전달 경계
 
-mail_outbox는 발송 종류·수신자·유효기간과 전달할 원문 token을 가진 트랜잭션 queue이다. 인증용 account_tokens의 해시 저장과 구분한다. outbox의 원문 token은 민감한 bearer credential이며 공개 HTTP·로그·CI artifact에 출력하면 안 된다. 실제 외부 발송은 하지 않는다. 로컬 수신 도구는 검사된 전용 DB의 queue만 읽어 mode 0600의 새 파일에 저장·fsync한 뒤 queue의 원문을 제거한다. fsync 후 COMMIT 결과가 불명확하면 파일을 보존하고 메시지 id로 중복을 구분한다. DB와 수신 파일은 운영에서 별도 접근 권한·암호화·보존 정책이 필요하다. 이 참조 queue는 at-least-once이다.
+mail_outbox는 발송 종류·수신자·유효기간과 전달할 원문 token을 가진 트랜잭션 queue이다. 인증용 account_tokens의 해시 저장과 구분한다. outbox의 원문 token은 민감한 bearer credential이며 공개 HTTP·로그·CI artifact에 출력하면 안 된다. API 서버는 직접 발송하지 않는다. 선택적 `mail-delivery-v1.md`의 확장 migration과 SMTP 워커를 명시적으로 설정하면 외부 중계 서버로 전달할 수 있다. 로컬 수신 도구는 검사된 전용 DB의 SMTP 소유권 없는 queue만 읽어 mode 0600의 새 파일에 저장·fsync한 뒤 queue의 원문을 제거한다. fsync 후 COMMIT 결과가 불명확하면 파일을 보존하고 메시지 id로 중복을 구분한다. DB와 수신 파일은 운영에서 별도 접근 권한·암호화·보존 정책이 필요하다. 이 참조 queue는 at-least-once이다.
 
 확인/재설정 링크는 설정한 신뢰 origin의 URL fragment에 token을 담는다. React는 fragment를 메모리로 읽은 뒤 주소에서 지우며 자동 확인 요청을 보내지 않는다. 사용자가 버튼을 눌러 POST로 확인한다. 비밀번호·token을 localStorage/sessionStorage에 저장하지 않는다.
 

@@ -13,6 +13,7 @@
 | [v1 명세](features/auth/specification.md) / [OpenAPI](features/auth/openapi.json) / [19개 시나리오](features/auth/scenarios.json) | 환경 설정 사용자 한 명과 프로세스 메모리 세션, 기본 프로필 |
 | [v2 명세](features/auth/postgres-session-v2.md) / [OpenAPI](features/auth/openapi-v2.json) / [근거 맵](features/auth/scenarios-v2.json) | PostgreSQL 사용자·세션·실패 기록, 트랜잭션·장애 계약 |
 | [v3 명세](features/auth/account-session-v3.md) / [OpenAPI](features/auth/openapi-v3.json) / [근거 맵](features/auth/scenarios-v3.json) | 가입·이메일 확인·비밀번호 재설정과 트랜잭션 outbox |
+| [SMTP 전달 계약](features/auth/mail-delivery-v1.md) / [실행 안내](docs/smtp-delivery.md) / [근거 맵](features/auth/mail-scenarios.json) | 선택 워커, 검증된 TLS, 제한된 재시도와 fenced ACK |
 | [PostgreSQL DDL](features/auth/postgres/001_initial.sql) / [명시적 DB 도구](tools/auth_db.py) | schema version 1 마이그레이션과 별도 데모 seed |
 | [Python / FastAPI](implementations/python-fastapi) | `feature_auth` 설치 패키지, 앱 factory와 인증 dependency |
 | [Go / net/http](implementations/go-net-http), [Java / Spring](implementations/java-spring), [Rust / Axum](implementations/rust-axum) | HTTP 어댑터와 서비스·저장소 경계 |
@@ -101,7 +102,7 @@ uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
 
 서버에 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`와 `AUTH_DATABASE_URL`을 전달하고, React 개발 서버에 `VITE_AUTH_ACCOUNT_LIFECYCLE=true`를 지정합니다. 기본 false는 기존 화면과 프로필을 유지합니다. 신규 계정은 이메일 확인 전 로그인할 수 없고, 비밀번호 재설정은 모든 기존 세션을 원자적으로 폐기합니다. 관리자 비활성 상태는 확인·재설정으로 바뀌지 않습니다.
 
-이메일은 DB outbox에 저장합니다. 외부 SMTP를 발송하지 않으며, [로컬 수신 도구](tools/mail_capture.py)는 작업 전용 DB의 메시지를 새 mode 0600 파일로 옮깁니다. outbox와 수신 파일의 원문 token은 민감한 bearer credential입니다. 공개 HTTP 수신함이나 로그로 노출하지 않습니다. 자세한 실행은 [v3 안내](docs/account-v3.md)를 따릅니다.
+이메일은 DB outbox에 저장합니다. [선택 SMTP 워커](tools/mail_worker.py)는 별도 SMTP 설정으로 TLS 전달·재시도·claim/ACK를 처리합니다. 실제 제공자 계정과 발신 주소는 자동 설정하지 않으며, 현재 운영 외부 발송을 실행했다는 의미는 아닙니다. [로컬 수신 도구](tools/mail_capture.py)는 아직 SMTP가 소유하지 않은 테스트 메시지만 새 mode 0600 파일로 옮깁니다. outbox와 수신 파일의 원문 token은 민감한 bearer credential입니다. 자세한 migration·환경변수·운영 경계는 [SMTP 안내](docs/smtp-delivery.md)를 따릅니다.
 
 ## 다른 프로젝트에서 사용하기
 
@@ -132,6 +133,8 @@ const session: AuthSession | null = await auth.me();
 [별도 예제](examples/consumer-python-react/README.md)는 보호 API, 로그인·새로고침 복원·로그아웃, 두 번째 사용자 분리를 다룹니다. 패키지 설치와 실행 절차는 [v2 안내](docs/postgres-v2.md#별도-소비-앱)를 확인합니다. npm 레지스트리나 PyPI에 게시되었다는 의미는 아닙니다.
 
 ## 같은 기준으로 검증하기
+
+SMTP 확장의 실제 실행 범위는 [SMTP 검증 기록](docs/validation-smtp-2026-11-02.md)에 정리했습니다.
 
 저장소 루트에서 실행합니다. 계약 검사는 스키마와 테스트 소스의 연결을 검증하며 서버 동작을 실행하지 않습니다.
 
@@ -169,7 +172,7 @@ uv run --frozen --project tools python tests/consumer_conformance.py
 
 ### GitHub Actions
 
-[CI 워크플로](.github/workflows/ci.yml)와 [동일 템플릿](ci/github-actions.yml)은 PostgreSQL 18.6 서비스, 언어별 schema 1·2 분리 DB 자체 테스트, v1·v2·v3 API·브라우저, 계정 경합·SQL gateway, Rust TLS, 별도 소비 앱을 실행하도록 정의되어 있습니다. 워크플로를 바꾸면 두 파일을 함께 갱신합니다. 정의가 존재하는 상태와 [해당 커밋의 원격 실행 성공](https://github.com/jongko54/feature-standards/actions)은 구분해야 합니다.
+[CI 워크플로](.github/workflows/ci.yml)와 [동일 템플릿](ci/github-actions.yml)은 PostgreSQL 18.6 서비스, 언어별 schema 1·2 분리 DB 자체 테스트, v1·v2·v3 API·브라우저, 계정 경합·SQL gateway, Rust TLS, 별도 소비 앱과 SMTP 전달·캡처 경합을 실행하도록 정의되어 있습니다. 메일 검사에는 worker/capture/integration DB를 각각 사용합니다. 워크플로를 바꾸면 두 파일을 함께 갱신합니다. 정의가 존재하는 상태와 [해당 커밋의 원격 실행 성공](https://github.com/jongko54/feature-standards/actions)은 구분해야 합니다.
 
 ## API와 적용 경계
 
@@ -182,6 +185,6 @@ uv run --frozen --project tools python tests/consumer_conformance.py
 
 상태 변경에는 정확한 Origin이 필요합니다. v2의 만료 전 저장 세션은 사용자의 enabled 여부와 무관하게 로그아웃 CSRF를 요구합니다. 잘못된 CSRF는 세션을 유지하며, DB 실패를 로그아웃 성공으로 표현하지 않습니다. 쿠키의 `Secure` 기본값은 활성화입니다.
 
-메모리 상태는 재시작하면 사라지고, v2/v3는 같은 DB의 세션과 실패 기록을 공유합니다. reverse proxy 뒤에서는 peer IP가 프록시로 보입니다. 운영 적용에는 DB 권한·백업·용량, 신뢰 프록시, HTTPS, 비밀 관리·관측과 outbox 접근·암호화·보존 검토가 필요합니다. 역할 관리·MFA·외부 메일 발송은 제공하지 않습니다.
+메모리 상태는 재시작하면 사라지고, v2/v3는 같은 DB의 세션과 실패 기록을 공유합니다. reverse proxy 뒤에서는 peer IP가 프록시로 보입니다. 운영 적용에는 DB 권한·백업·용량, 신뢰 프록시, HTTPS, 비밀 관리·관측과 outbox 접근·암호화·보존 검토가 필요합니다. 역할 관리·MFA는 제공하지 않습니다. SMTP 어댑터의 DATA 수락과 DB ACK는 실제 수신함 도착과 구분합니다.
 
 명세는 저장소의 실험적 규약이며 공인 국제 표준이 아닙니다. 기존 v1 검증 기록은 [2026-11-01 문서](docs/validation-2026-11-01.md), 참여 방법은 [CONTRIBUTING.md](CONTRIBUTING.md), 보안 범위는 [SECURITY.md](SECURITY.md), 선행 프로젝트는 [연구 문서](docs/research.md)를 확인합니다. 라이선스는 [MIT](LICENSE)입니다.

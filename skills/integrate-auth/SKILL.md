@@ -19,6 +19,8 @@ v1은 단일 사용자·메모리 저장소이고 v2/v3는 공통 PostgreSQL의 
 
 v3 계정 작업은 같은 트랜잭션에서 `account_reserve`를 해싱보다 먼저 실행하고, 허용된 요청만 PHC와 token을 만들어 `account_apply`에 전달한다. 이관된 `enabled`는 관리자 허용과 이메일 확인의 DB 불변식이며 확인·재설정이 관리자 차단을 해제하면 안 된다. `mail_outbox`는 원문 capability를 가지므로 인증용 token 해시 테이블과 구분한다. `tools/mail_capture.py`는 검사된 로컬 테스트 DB에서 새 mode 0600 파일로만 수신하고 외부 메일을 발송하지 않는다. 수신 파일을 로그·이슈·CI artifact로 노출하지 않는다.
 
+SMTP 전달이 요청되면 `features/auth/mail-delivery-v1.md`, `docs/smtp-delivery.md`를 읽고 선택적 `003_mail_delivery.sql`과 `tools/mail_worker.py`를 사용한다. API 프로세스는 직접 발송하지 않는다. 기존 계정 schema 2를 바꾸지 않고 독립 addon을 적용하며, TLS·단일 수신자·SMTPUTF8·lease/claim fence·유한 재시도를 보존한다. 실제 서버·발신 주소·인증은 배포 설정으로 주입한다. 테스트는 loopback SMTP만 사용하고, SMTP 수락·DB ACK·실제 수신함 도착을 서로 다른 상태로 기록한다. 캡처는 SMTP가 소유한 leased/retry 메시지를 가져가지 않는다.
+
 Python은 `feature-standards-python-auth`를 설치하고 `feature_auth.create_app`, `current_user`를 사용한다. React API 모듈은 `@feature-standards/react-auth/api`에서 가져온다. 실제 의존성 설정과 보호 API 예제는 `examples/consumer-python-react/`를 참고하며 설치 경로·원본 커밋을 기록한다. PyPI·npm에 게시된 패키지라고 가정하지 않는다.
 
 검증은 `tests/conformance.py`의 같은 시나리오를 사용한다. 이 저장소 참조 구현의 검증은 `python3 tests/conformance.py --backend all --browser`이다. 대상 앱은 격리된 테스트 환경에서 데모 fixture와 테스트 TTL/rate 설정을 주입하고 `--base-url`로 API 테스트를 실행한다. 대상 앱의 실제 화면은 그 프로젝트의 브라우저 테스트로 따로 검증한다. 참조 클라이언트의 테스트가 대상 앱의 화면 검증을 대신하지 않는다. 운영 서버에 테스트 계정을 만들거나 부하·실패 시도를 보내지 않는다. 실제 사용자 저장소에서는 대상 프로젝트 테스트도 함께 실행한다.
@@ -28,3 +30,5 @@ v2에는 `uv run --frozen --project tools python tests/postgres_conformance.py -
 v3는 `uv run --frozen --project tools python tests/account_conformance.py --browser`로 실제 API·언어 간 계정 상태·로그인/reset 경합과 로컬 수신 링크를 이용한 화면 흐름을 검증한다. 같은 테스트 DB 제한과 초기화 경계가 적용된다. `clients/react/playwright.accounts.config.ts`는 기존 v1/v2 브라우저 검사와 분리된 계정 흐름 설정이다. 원격 Rust TLS 변경은 `implementations/rust-axum/tests/postgres_tls.py`의 전용 SSL PostgreSQL fixture로 체인·hostname·평문 다운그레이드 거절을 확인한다.
 
 결과에 계약 버전, 통합한 출처 커밋, 변경 지점, 실제 검증 명령과 결과, 미검증 범위를 남긴다. 테스트 통과를 보안 감사나 운영 준비 완료로 확대하지 않는다. 복사본은 자동 업데이트되지 않으므로 다음 변경은 원본 커밋 diff와 회귀 검증으로 반영한다.
+
+메일 확장은 `tools/check_mail_contract.py`로 정적 맵을 검사하고 `tests/mail_conformance.py`로 네 언어의 실제 TLS SMTP·캡처/claim 경합을 실행한다. 운영 DB나 실제 수신자에 이 테스트 하네스를 실행하지 않는다.

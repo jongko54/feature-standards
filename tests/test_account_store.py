@@ -89,7 +89,8 @@ class AccountStoreContract(unittest.TestCase):
             self.query("SELECT password_hash FROM feature_auth.users"), [(PHC,)]
         )
         self.assertEqual(
-            self.query("SELECT token FROM feature_auth.mail_outbox"), [(token,)]
+            self.query("SELECT token=%s FROM feature_auth.mail_outbox", (token,)),
+            [(True,)],
         )
 
     def test_verification_single_use_and_kind_binding(self):
@@ -101,7 +102,7 @@ class AccountStoreContract(unittest.TestCase):
             self.query("SELECT enabled FROM feature_auth.users"), [(True,)]
         )
         self.assertEqual(
-            self.query("SELECT token FROM feature_auth.mail_outbox"), [(None,)]
+            self.query("SELECT token IS NULL FROM feature_auth.mail_outbox"), [(True,)]
         )
 
     def test_expiry_and_disabled_admin_preserve_token(self):
@@ -141,7 +142,8 @@ class AccountStoreContract(unittest.TestCase):
         fresh = secrets.token_urlsafe(32)
         self.assertEqual(self.apply("verify-request", token=fresh), 0)
         self.assertEqual(
-            self.query("SELECT token FROM feature_auth.mail_outbox"), [(old,)]
+            self.query("SELECT token=%s FROM feature_auth.mail_outbox", (old,)),
+            [(True,)],
         )
         self.query(
             "UPDATE feature_auth.account_mail_limits SET sent_at=clock_timestamp()-interval '61 seconds' RETURNING user_id"
@@ -277,9 +279,9 @@ class AccountStoreContract(unittest.TestCase):
             self.assertEqual(stat.S_IMODE(destination.stat().st_mode), 0o600)
             self.assertEqual(
                 self.query(
-                    "SELECT token,delivered_at IS NOT NULL FROM feature_auth.mail_outbox"
+                    "SELECT token IS NULL,delivered_at IS NOT NULL FROM feature_auth.mail_outbox"
                 ),
-                [(None, True)],
+                [(True, True)],
             )
             self.assertEqual(
                 capture(

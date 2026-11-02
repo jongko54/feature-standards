@@ -52,6 +52,26 @@ def migrate_accounts(url: str) -> None:
         conn.execute((ROOT / "features/auth/postgres/002_accounts.sql").read_text())
 
 
+def migrate_mail_delivery(url: str) -> None:
+    # The optional extension leaves the account schema version unchanged.
+    with connect(url) as conn:
+        if conn.execute(
+            "SELECT version FROM feature_auth.schema_version"
+        ).fetchall() != [(2,)]:
+            raise ValueError("Mail delivery requires account schema 2")
+        exists = conn.execute(
+            "SELECT to_regclass('feature_auth.mail_delivery_schema_version')"
+        ).fetchone()[0]
+        if exists and conn.execute(
+            "SELECT version FROM feature_auth.mail_delivery_schema_version"
+        ).fetchall() != [(1,)]:
+            raise ValueError("Unsupported mail delivery schema")
+    with psycopg.connect(url, autocommit=True, connect_timeout=3) as conn:
+        conn.execute(
+            (ROOT / "features/auth/postgres/003_mail_delivery.sql").read_text()
+        )
+
+
 def seed_demo(url: str) -> None:
     hasher = PasswordHasher(
         time_cost=3, memory_cost=65536, parallelism=4, salt_len=16, hash_len=32
@@ -78,7 +98,8 @@ def seed_demo(url: str) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "command", choices=["migrate", "migrate-accounts", "seed-demo", "status"]
+        "command",
+        choices=["migrate", "migrate-accounts", "migrate-mail", "seed-demo", "status"],
     )
     parser.add_argument(
         "--confirm-demo",
@@ -100,6 +121,11 @@ def main() -> int:
         elif args.command == "migrate-accounts":
             migrate_accounts(url)
             print("PostgreSQL account schema version 2 is ready.")
+        elif args.command == "migrate-mail":
+            migrate_mail_delivery(url)
+            print(
+                "Mail delivery extension version 1 is ready; account schema remains 2."
+            )
         elif args.command == "seed-demo":
             seed_demo(url)
             print("Public demo fixtures ensured; existing accounts unchanged.")

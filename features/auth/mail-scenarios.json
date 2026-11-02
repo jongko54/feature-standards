@@ -1,0 +1,249 @@
+{
+  "profile": "mail-delivery-v1",
+  "base_schema_version": 2,
+  "delivery_schema_version": 1,
+  "contract": "features/auth/mail-delivery-v1.md",
+  "migration": "features/auth/postgres/003_mail_delivery.sql",
+  "backends": [
+    "python",
+    "go",
+    "java",
+    "rust"
+  ],
+  "terminal_error_codes": [
+    "INTERNAL",
+    "EXPIRED",
+    "SUPERSEDED",
+    "DISABLED",
+    "ATTEMPTS_EXHAUSTED"
+  ],
+  "note": "Static source map; scenario counts do not establish execution or external inbox delivery.",
+  "suites": [
+    {
+      "id": "smtp-settings",
+      "source": "tests/test_smtp_transport.py",
+      "class": "SMTPConfiguration",
+      "cases": [
+        {
+          "id": "SMTP-SETTINGS-01",
+          "test": "test_remote_plaintext_and_header_injection_rejected"
+        },
+        {
+          "id": "SMTP-SETTINGS-02",
+          "test": "test_secure_defaults_and_redacted_credentials"
+        }
+      ]
+    },
+    {
+      "id": "smtp-wire",
+      "source": "tests/test_smtp_transport.py",
+      "class": "SMTPWire",
+      "cases": [
+        {
+          "id": "SMTP-WIRE-01",
+          "test": "test_authentication_failure_is_sanitized"
+        },
+        {
+          "id": "SMTP-WIRE-02",
+          "test": "test_direct_tls_and_reset_message"
+        },
+        {
+          "id": "SMTP-WIRE-03",
+          "test": "test_disconnect_after_data_is_retryable_with_stable_id"
+        },
+        {
+          "id": "SMTP-WIRE-04",
+          "test": "test_header_injection_is_rejected_before_connecting"
+        },
+        {
+          "id": "SMTP-WIRE-05",
+          "test": "test_missing_smtputf8_is_permanent"
+        },
+        {
+          "id": "SMTP-WIRE-06",
+          "test": "test_quit_failure_does_not_revoke_known_acceptance"
+        },
+        {
+          "id": "SMTP-WIRE-07",
+          "test": "test_stalled_data_acknowledgement_has_a_finite_timeout"
+        },
+        {
+          "id": "SMTP-WIRE-08",
+          "test": "test_starttls_authentication_and_fragment_links"
+        },
+        {
+          "id": "SMTP-WIRE-09",
+          "test": "test_starttls_is_required_before_auth"
+        },
+        {
+          "id": "SMTP-WIRE-10",
+          "test": "test_temporary_and_permanent_data_rejections"
+        },
+        {
+          "id": "SMTP-WIRE-11",
+          "test": "test_temporary_and_permanent_recipient_failures"
+        },
+        {
+          "id": "SMTP-WIRE-12",
+          "test": "test_unicode_mailbox_uses_smtputf8"
+        },
+        {
+          "id": "SMTP-WIRE-13",
+          "test": "test_wrong_ca_and_hostname_fail_without_data"
+        }
+      ]
+    },
+    {
+      "id": "worker-settings",
+      "source": "tests/test_mail_worker.py",
+      "class": "WorkerSettingsTests",
+      "cases": [
+        {
+          "id": "WORKER-SETTINGS-01",
+          "test": "test_plain_loopback_requires_demo_and_explicit_tls_policy"
+        },
+        {
+          "id": "WORKER-SETTINGS-02",
+          "test": "test_routing_overrides_and_short_leases_are_rejected"
+        },
+        {
+          "id": "WORKER-SETTINGS-03",
+          "test": "test_tls_is_required_for_remote_databases"
+        }
+      ]
+    },
+    {
+      "id": "worker-postgres",
+      "source": "tests/test_mail_worker.py",
+      "class": "MailWorkerPostgresTests",
+      "cases": [
+        {
+          "id": "WORKER-POSTGRES-01",
+          "test": "test_account_disabled_during_transport_failure_is_cancelled"
+        },
+        {
+          "id": "WORKER-POSTGRES-02",
+          "test": "test_claim_commit_failure_never_starts_smtp"
+        },
+        {
+          "id": "WORKER-POSTGRES-03",
+          "test": "test_concurrent_claims_have_one_winner"
+        },
+        {
+          "id": "WORKER-POSTGRES-04",
+          "test": "test_consume_after_claim_is_detected_before_smtp"
+        },
+        {
+          "id": "WORKER-POSTGRES-05",
+          "test": "test_exhausted_lease_does_not_remain_leased_forever"
+        },
+        {
+          "id": "WORKER-POSTGRES-06",
+          "test": "test_expired_consumed_and_disabled_capabilities_are_not_sent"
+        },
+        {
+          "id": "WORKER-POSTGRES-07",
+          "test": "test_expired_lease_reclaims_and_stale_ack_is_fenced"
+        },
+        {
+          "id": "WORKER-POSTGRES-08",
+          "test": "test_failed_ack_retries_same_message_id_after_lease"
+        },
+        {
+          "id": "WORKER-POSTGRES-09",
+          "test": "test_last_unknown_transport_failure_is_failed_not_retried"
+        },
+        {
+          "id": "WORKER-POSTGRES-10",
+          "test": "test_one_delivery_is_accepted_then_acknowledged_and_redacted"
+        },
+        {
+          "id": "WORKER-POSTGRES-11",
+          "test": "test_permanent_failure_clears_capability_without_delivery_claim"
+        },
+        {
+          "id": "WORKER-POSTGRES-12",
+          "test": "test_reissue_between_claim_and_send_cancels_old_work"
+        },
+        {
+          "id": "WORKER-POSTGRES-13",
+          "test": "test_retry_keeps_delivery_id_and_obeys_due_time"
+        },
+        {
+          "id": "WORKER-POSTGRES-14",
+          "test": "test_send_failure_diagnostics_never_reach_metadata"
+        },
+        {
+          "id": "WORKER-POSTGRES-15",
+          "test": "test_unavailable_database_is_sanitized"
+        },
+        {
+          "id": "WORKER-POSTGRES-16",
+          "test": "test_uncertain_ack_commit_does_not_record_smtp_failure"
+        }
+      ]
+    },
+    {
+      "id": "capture-postgres",
+      "source": "tests/test_mail_capture_delivery.py",
+      "class": "CaptureDeliveryContract",
+      "cases": [
+        {
+          "id": "CAPTURE-POSTGRES-01",
+          "test": "test_leased_message_is_reserved_for_smtp"
+        },
+        {
+          "id": "CAPTURE-POSTGRES-02",
+          "test": "test_migration_rerun_preserves_delivery_identity_and_lease"
+        },
+        {
+          "id": "CAPTURE-POSTGRES-03",
+          "test": "test_retry_message_remains_with_smtp"
+        },
+        {
+          "id": "CAPTURE-POSTGRES-04",
+          "test": "test_unclaimed_pending_message_can_be_captured"
+        }
+      ]
+    },
+    {
+      "id": "mail-integration",
+      "source": "tests/mail_conformance.py",
+      "class": "MailDeliveryContract",
+      "cases": [
+        {
+          "id": "MAIL-INTEGRATION-01",
+          "test": "test_01_all_languages_deliver_verify_and_reset_over_tls"
+        },
+        {
+          "id": "MAIL-INTEGRATION-02",
+          "test": "test_02_temporary_failure_retries_with_stable_identity"
+        },
+        {
+          "id": "MAIL-INTEGRATION-03",
+          "test": "test_03_permanent_failure_never_claims_delivery"
+        },
+        {
+          "id": "MAIL-INTEGRATION-04",
+          "test": "test_04_consumption_after_claim_prevents_smtp"
+        },
+        {
+          "id": "MAIL-INTEGRATION-05",
+          "test": "test_05_reissue_during_smtp_does_not_ack_replacement"
+        },
+        {
+          "id": "MAIL-INTEGRATION-06",
+          "test": "test_06_capture_and_smtp_race_have_one_consumer"
+        },
+        {
+          "id": "MAIL-INTEGRATION-07",
+          "test": "test_07_concurrent_smtp_workers_send_once"
+        },
+        {
+          "id": "MAIL-INTEGRATION-08",
+          "test": "test_08_uncertain_smtp_acceptance_retries_same_message_id"
+        }
+      ]
+    }
+  ]
+}

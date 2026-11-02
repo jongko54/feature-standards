@@ -52,7 +52,7 @@ v1/v2에서는 새 경로가 404이다. v3의 모든 계정 경로는 정확한 
 
 ## 로컬 메일 수신
 
-외부 SMTP나 공개 HTTP 수신함은 제공하지 않는다. `account_tokens`와 달리 `mail_outbox`는 전달할 원문 capability를 보관한다. DB 접근과 수신 파일을 별도 민감 데이터로 다루고 운영의 역할 분리·암호화·보존 정책을 준비해야 한다.
+기본 계정 API는 outbox에 기록하며 별도의 [SMTP 전달 워커](smtp-delivery.md)를 선택할 수 있다. 전달은 명시적 addon migration·SMTP 설정·워커 실행이 필요하고 운영 제공자 계정을 자동 생성하거나 외부 발송을 실행하지 않는다. 공개 HTTP 수신함은 없다. `account_tokens`와 달리 `mail_outbox`는 전달할 원문 capability를 보관한다. DB 접근과 수신 파일을 별도 민감 데이터로 다루고 운영의 역할 분리·암호화·보존 정책을 준비해야 한다.
 
 로컬 데모 DB 이름도 `feature_standards_test*`이고 loopback·명시적 포트·sslmode=disable이어야 캡처 도구를 사용할 수 있다. `FEATURE_STANDARDS_TEST_DATABASE_URL`에 그 작업 전용 URI를 설정한다. 도구는 기존 파일·symlink를 덮어쓰지 않고 새 mode 0600 파일에만 기록한다.
 
@@ -60,7 +60,7 @@ v1/v2에서는 새 경로가 404이다. v3의 모든 계정 경로는 정확한 
 uv run --frozen --project tools python tools/mail_capture.py --output /tmp/feature-auth-mail.jsonl
 ```
 
-파일을 로컬 편집기로 열어 확인/재설정 링크를 사용한다. 파일을 로그·이슈·CI artifact에 올리지 않는다. 캡처 후 outbox 원문은 제거하고 전달 시각을 기록한다. 소비·만료된 원문도 제거한다. 로컬 queue는 at-least-once이므로 메시지 id로 중복을 구분한다. 링크는 URL fragment에 token을 넣으며 React가 메모리로 읽은 뒤 주소에서 지운다. 페이지 로드만으로 확인하지 않고 사용자의 버튼으로 POST한다. 브라우저 영구 저장소에는 token을 남기지 않는다.
+파일을 로컬 편집기로 열어 확인/재설정 링크를 사용한다. 파일을 로그·이슈·CI artifact에 올리지 않는다. SMTP addon이 있으면 캡처는 아직 claim되지 않은 pending 메시지만 소비하고 leased/retry/terminal 메시지를 가져가지 않는다. 캡처 후 outbox 원문은 제거하고 전달 시각을 기록한다. 소비·만료된 원문도 제거한다. 로컬 queue는 at-least-once이므로 메시지 id로 중복을 구분한다. 링크는 URL fragment에 token을 넣으며 React가 메모리로 읽은 뒤 주소에서 지운다. 페이지 로드만으로 확인하지 않고 사용자의 버튼으로 POST한다. 브라우저 영구 저장소에는 token을 남기지 않는다. SMTP의 DATA 수락·DB ACK와 실제 수신함 도착은 별개다.
 
 ## Rust PostgreSQL TLS
 
