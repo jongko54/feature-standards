@@ -107,7 +107,7 @@ uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
 
 ## 다른 프로젝트에서 사용하기
 
-AI와 도구는 루트 `feature-standards.json`에서 스택과 프로필을 선택합니다. 예를 들어 `uv run --frozen --project tools python tools/auth_catalog.py --stack go --profile browser-session-v1`은 필요한 명세·공개 API·예제·명령만 JSON으로 반환하며 명령을 실행하지 않습니다. `.agents/skills/integrate-auth`는 원본 스킬을 가리키므로 Codex가 저장소에서 자동 발견할 수 있습니다. 실제 모델 통합 평가 방법과 측정 범위는 [AI 통합 안내](docs/ai-integration.md)를 따릅니다.
+AI와 도구는 루트 `feature-standards.json`에서 스택과 프로필을 선택합니다. 예를 들어 `uv run --frozen --project tools python tools/auth_catalog.py --stack go --profile browser-session-v1`은 필요한 명세·공개 API·예제·명령만 JSON으로 반환하며 명령을 실행하지 않습니다. `.agents/skills/integrate-auth`는 원본 스킬을 가리키므로 Codex가 저장소에서 자동 발견할 수 있습니다. 실제 모델 통합은 네 백엔드×두 조건 8/8 성공했으며, 시간·토큰 절감 효과는 입증하지 못했습니다. [실행 근거](docs/validation-ai-2026-11-03.md)와 [AI 통합 안내](docs/ai-integration.md)를 확인합니다.
 
 | 스택 | 재사용 경계 | 별도 소비 프로젝트 |
 |---|---|---|

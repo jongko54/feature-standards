@@ -1,0 +1,212 @@
+{
+  "evaluation": "auth-v1-independent-consumer-smoke",
+  "date": "2026-11-03",
+  "platform": "macOS arm64",
+  "python": "3.13.13",
+  "runs_per_stack_and_condition": 1,
+  "implementation_sha256": "83831aad7ab4308f26fc8f90cc248c4502939c561fdeef3b21dca2ff8f4e483b",
+  "scope": "Four backend consumers; no React model task, v2/v3 model task, model-ID verification or statistical performance claim.",
+  "pilot": "Earlier Python pair on 6c7d50f passed before snapshot reference closure was repaired; excluded from these eight runs.",
+  "runs": [
+    {
+      "stack": "python",
+      "condition": "baseline",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "c7e0e00a9174c8b20ec49ad6fd1aedd26850b7a59a0a9192081a91475d7cba9c",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 40.178,
+      "elapsed_seconds": 42.191,
+      "http_checks": 19,
+      "command_count": 5,
+      "usage": {
+        "input_tokens": 145627,
+        "cached_input_tokens": 112896,
+        "output_tokens": 1298
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 0,
+        "manifest": 0
+      }
+    },
+    {
+      "stack": "python",
+      "condition": "skill",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "a4191baa926d3adb5d92b2da295414b6117a7409d3421c8d0c1b159cae2e5c47",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 54.424,
+      "elapsed_seconds": 57.556,
+      "http_checks": 19,
+      "command_count": 5,
+      "usage": {
+        "input_tokens": 156968,
+        "cached_input_tokens": 103808,
+        "output_tokens": 1939
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 1,
+        "manifest": 2
+      }
+    },
+    {
+      "stack": "go",
+      "condition": "baseline",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "c7e0e00a9174c8b20ec49ad6fd1aedd26850b7a59a0a9192081a91475d7cba9c",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 57.087,
+      "elapsed_seconds": 58.434,
+      "http_checks": 19,
+      "command_count": 5,
+      "usage": {
+        "input_tokens": 230451,
+        "cached_input_tokens": 210944,
+        "output_tokens": 1962
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 0,
+        "manifest": 0
+      }
+    },
+    {
+      "stack": "go",
+      "condition": "skill",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "a4191baa926d3adb5d92b2da295414b6117a7409d3421c8d0c1b159cae2e5c47",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 50.927,
+      "elapsed_seconds": 52.519,
+      "http_checks": 19,
+      "command_count": 7,
+      "usage": {
+        "input_tokens": 230198,
+        "cached_input_tokens": 204672,
+        "output_tokens": 1986
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 1,
+        "manifest": 2
+      }
+    },
+    {
+      "stack": "java",
+      "condition": "baseline",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "c7e0e00a9174c8b20ec49ad6fd1aedd26850b7a59a0a9192081a91475d7cba9c",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 80.286,
+      "elapsed_seconds": 104.529,
+      "http_checks": 19,
+      "command_count": 5,
+      "usage": {
+        "input_tokens": 170119,
+        "cached_input_tokens": 149376,
+        "output_tokens": 3553
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 0,
+        "manifest": 0
+      }
+    },
+    {
+      "stack": "java",
+      "condition": "skill",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "a4191baa926d3adb5d92b2da295414b6117a7409d3421c8d0c1b159cae2e5c47",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 94.376,
+      "elapsed_seconds": 118.854,
+      "http_checks": 19,
+      "command_count": 7,
+      "usage": {
+        "input_tokens": 242942,
+        "cached_input_tokens": 216704,
+        "output_tokens": 3720
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 1,
+        "manifest": 1
+      }
+    },
+    {
+      "stack": "rust",
+      "condition": "baseline",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "c7e0e00a9174c8b20ec49ad6fd1aedd26850b7a59a0a9192081a91475d7cba9c",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 40.549,
+      "elapsed_seconds": 52.766,
+      "http_checks": 19,
+      "command_count": 4,
+      "usage": {
+        "input_tokens": 123662,
+        "cached_input_tokens": 99712,
+        "output_tokens": 1862
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 0,
+        "manifest": 0
+      }
+    },
+    {
+      "stack": "rust",
+      "condition": "skill",
+      "source_commit": "61185fa05b65211ef3ba8e7a31aa1235c196c08b",
+      "source_dirty": false,
+      "cli_version": "codex-cli 0.166.0",
+      "baseline_ref": "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9",
+      "snapshot_sha256": "a4191baa926d3adb5d92b2da295414b6117a7409d3421c8d0c1b159cae2e5c47",
+      "passed": true,
+      "source_unchanged": true,
+      "agent_seconds": 52.177,
+      "elapsed_seconds": 61.929,
+      "http_checks": 19,
+      "command_count": 5,
+      "usage": {
+        "input_tokens": 200107,
+        "cached_input_tokens": 158720,
+        "output_tokens": 2111
+      },
+      "model_id": null,
+      "command_path_references": {
+        "skill": 1,
+        "manifest": 1
+      }
+    }
+  ]
+}
