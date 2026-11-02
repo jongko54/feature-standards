@@ -435,7 +435,10 @@ def reuse_check(generated: Path, stack: str, source: dict, commit: str) -> None:
                 raise EvalError("copied-source-file")
             sources.append(data.decode("utf-8"))
             if path.suffix == ".py":
-                python_trees.append(ast.parse(data))
+                try:
+                    python_trees.append(ast.parse(data))
+                except SyntaxError as exc:
+                    raise EvalError("generated-python-syntax") from exc
     text = "\n".join(sources)
     if stack == "python":
         used = set()

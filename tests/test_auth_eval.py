@@ -386,6 +386,22 @@ class AuthEvalTests(unittest.TestCase):
             ):
                 auth_eval.reuse_check(generated, "python", {}, commit)
 
+    def test_generated_python_syntax_failure_has_safe_code(self):
+        generated = self.root / "generated"
+        generated.mkdir()
+        commit = "a" * 40
+        auth_eval.write_json(
+            generated / "integration.json",
+            {
+                "stack": "python",
+                "profile": "browser-session-v1",
+                "source_commit": commit,
+            },
+        )
+        (generated / "app.py").write_text("def incomplete(\n")
+        with self.assertRaisesRegex(auth_eval.EvalError, "^generated-python-syntax$"):
+            auth_eval.reuse_check(generated, "python", {}, commit)
+
     def fixture_repo(self):
         root = self.root / "source"
         root.mkdir()
