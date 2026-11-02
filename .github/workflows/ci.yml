@@ -11,7 +11,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 45
     env:
       FEATURE_STANDARDS_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test?sslmode=disable
     services:
@@ -68,31 +68,42 @@ jobs:
         run: uv run --frozen --project tools python tools/check_contract.py
       - name: Test local process harness
         run: uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Test account schema transactions in a dedicated database
+        env:
+          AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_sql?sslmode=disable
+        run: uv run --frozen --project tools python -m unittest discover -s tests -p test_account_store.py -v
       - name: Python tests and lint
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_python?sslmode=disable
+          AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_python?sslmode=disable
         run: |
           uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
           uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools
       - name: Go tests and race detection
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_go?sslmode=disable
+          AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_go?sslmode=disable
         working-directory: implementations/go-net-http
         run: go test -race ./...
       - name: Java tests
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_java?sslmode=disable
+          AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_java?sslmode=disable
         working-directory: implementations/java-spring
         run: ./mvnw -q test
       - name: Rust tests and lint
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_rust?sslmode=disable
+          AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_rust?sslmode=disable
         working-directory: implementations/rust-axum
         run: |
           cargo fmt --all -- --check
           cargo clippy --locked --all-targets -- -D warnings
           cargo test --locked
-          cargo test --locked -- --ignored
+          cargo test --locked postgres_real_transactions -- --ignored
+          cargo test --locked postgres_accounts_registration -- --ignored
+      - name: Test Rust PostgreSQL TLS certificates and downgrade refusal
+        run: python3 implementations/rust-axum/tests/postgres_tls.py
       - name: Install and build React client
         working-directory: clients/react
         run: |
@@ -103,14 +114,16 @@ jobs:
       - name: Identical API and browser tests for all four implementations
         run: python3 tests/conformance.py --backend all --browser
       - name: PostgreSQL API and browser tests across all implementations
-        run: uv run --project tools python tests/postgres_conformance.py --browser
+        run: uv run --frozen --project tools python tests/postgres_conformance.py --browser
+      - name: Account API browser and mixed-language transaction tests
+        run: uv run --frozen --project tools python tests/account_conformance.py --browser
       - name: Install and build Python and React consumer application
         working-directory: examples/consumer-python-react
         run: |
           npm ci
           npm run build
       - name: Consumer integration and browser tests
-        run: uv run --project tools python tests/consumer_conformance.py
+        run: uv run --frozen --project tools python tests/consumer_conformance.py
       - name: Verify checked-in workflow template matches
         run: cmp .github/workflows/ci.yml ci/github-actions.yml
       - name: Whitespace check

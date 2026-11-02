@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { ApiError, authApi, type AuthSession } from './api';
+import { accountsEnabled } from './AccountPage';
 
 type Action = 'restore' | 'login' | 'logout' | 'refresh' | null;
 
@@ -89,7 +90,7 @@ export function App() {
     <main className="shell">
       <header className="page-header">
         <a className="wordmark" href="/" aria-label="Feature Standards 홈"><span className="wordmark-icon" aria-hidden="true">F</span> Feature Standards</a>
-        <span className="version">browser-session-v1</span>
+        <span className="version">{accountsEnabled ? 'browser-session-v3' : '브라우저 세션'}</span>
       </header>
       <section className="intro" aria-labelledby="page-title">
         <p className="eyebrow">AUTH / REFERENCE CLIENT</p>
@@ -124,6 +125,7 @@ export function App() {
           {error && <p className="error" role="alert">{error}</p>}
         </div>
         <button className="text-button" type="button" onClick={() => void refresh()} disabled={busy}>{action === 'refresh' ? '세션 확인 중…' : '세션 상태 확인'}<span aria-hidden="true"> ↗</span></button>
+        {accountsEnabled && <nav className="account-links"><a href="/register">회원가입</a><a href="/verify-email">이메일 확인</a><a href="/forgot-password">비밀번호 재설정</a></nav>}
       </section>
       <footer className="footer"><span className="footer-dot" aria-hidden="true" />토큰은 브라우저 저장소에 저장하지 않습니다.<span className="footer-divider">·</span><span>실험적 참조 구현</span></footer>
     </main>

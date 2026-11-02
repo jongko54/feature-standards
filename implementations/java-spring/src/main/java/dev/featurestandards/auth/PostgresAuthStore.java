@@ -12,20 +12,26 @@ import java.time.Instant;
 public final class PostgresAuthStore implements AuthStore {
     @FunctionalInterface public interface Connections { Connection open() throws SQLException; }
     @FunctionalInterface private interface Transaction<T> { T run(Connection connection) throws SQLException; }
+    @FunctionalInterface interface Passwords { String encode(String password); }
     private final AuthConfig config;
     private final Connections connections;
+    private final Passwords passwords;
 
     public PostgresAuthStore(AuthConfig config) { this(config, new PostgresConnectionFactory(config.databaseUrl())); }
     public PostgresAuthStore(AuthConfig config, Connections connections) {
+        this(config, connections, PasswordHashes::encode);
+    }
+    PostgresAuthStore(AuthConfig config, Connections connections, Passwords passwords) {
         this.config = config;
         this.connections = java.util.Objects.requireNonNull(connections);
+        this.passwords = java.util.Objects.requireNonNull(passwords);
         checkReady();
     }
     @Override public void checkReady() {
         try (Connection connection = connections.open();
              PreparedStatement statement = prepare(connection, "SELECT version FROM feature_auth.schema_version");
              ResultSet result = statement.executeQuery()) {
-            if (!result.next() || result.getInt(1) != 1 || result.next()) throw new StorageUnavailableException();
+            if (!result.next() || result.getInt(1) != (config.accountLifecycle() ? 2 : 1) || result.next()) throw new StorageUnavailableException();
         } catch (SQLException ex) { throw new StorageUnavailableException(); }
     }
     @Override public AuthService.Login login(String peer, String previous, String email, String password) {
@@ -123,6 +129,33 @@ public final class PostgresAuthStore implements AuthStore {
                 if (session.expiresAt().isAfter(now) && !Tokens.equal(session.csrfToken(), csrf)) return false;
                 delete(connection, hash);
                 return true;
+            }
+        });
+    }
+    @Override public int account(String action, String peer, String email, String token, String password) {
+        if (!config.accountLifecycle()) throw new StorageUnavailableException();
+        return transaction(connection -> {
+            try (var reserve = prepare(connection, "SELECT feature_auth.account_reserve(?, ?)")) {
+                reserve.setString(1, action); reserve.setString(2, peer);
+                try (var result = reserve.executeQuery()) {
+                    if (!result.next()) throw new StorageUnavailableException();
+                    int retry = result.getInt(1);
+                    if (result.wasNull() || retry < 0 || result.next()) throw new StorageUnavailableException();
+                    if (retry > 0) return retry;
+                }
+            }
+            String passwordHash = action.equals("register") || action.equals("reset-confirm") ? passwords.encode(password) : "";
+            String capability = action.equals("register") || action.equals("verify-request") || action.equals("reset-request")
+                    ? Tokens.random() : token;
+            try (var statement = prepare(connection, "SELECT feature_auth.account_apply(?, ?, ?, ?, ?)")) {
+                statement.setString(1, action); statement.setString(2, peer); statement.setString(3, email);
+                statement.setString(4, capability); statement.setString(5, passwordHash);
+                try (var result = statement.executeQuery()) {
+                    if (!result.next()) throw new StorageUnavailableException();
+                    int outcome = result.getInt(1);
+                    if (result.wasNull() || outcome < -1 || result.next()) throw new StorageUnavailableException();
+                    return outcome;
+                }
             }
         });
     }

@@ -1,6 +1,6 @@
 # Rust / Axum
 
-`browser-session-v1`(기본 메모리)과 `browser-session-v2`(PostgreSQL)의 Rust 참조 구현이다. HTTP 동작의 기준은
+`browser-session-v1`(기본 메모리), `browser-session-v2`(PostgreSQL), 선택 계정 생명주기 `browser-session-v3`의 Rust 참조 구현이다. HTTP 동작의 기준은
 [`features/auth/specification.md`](../../features/auth/specification.md)이다.
 Rust 1.93.1에서 빌드·검증한다. 직접 의존성과 전이 의존성의 정확한 버전은
 `Cargo.lock`으로 고정하며 CI와 로컬 실행은 `--locked`를 사용한다.
@@ -66,12 +66,22 @@ AUTH_STORE=postgres AUTH_DATABASE_URL="$AUTH_TEST_DATABASE_URL" \
   target/debug/feature-standards-auth
 ```
 
-이 빌드는 [tokio-postgres 0.7.18](https://docs.rs/tokio-postgres/0.7.18/tokio_postgres/)
-`NoTls`를 사용하므로 **loopback 호스트와 명시적인 `sslmode=disable` URI만 허용**한다.
+이 빌드는 [tokio-postgres 0.7.18](https://docs.rs/tokio-postgres/0.7.18/tokio_postgres/)과
+공식 [postgres-native-tls 0.5.3](https://docs.rs/postgres-native-tls/0.5.3/postgres_native_tls/)를 사용한다.
+원격 연결은 **`sslmode=verify-full`**로 인증서 체인과 호스트 이름을 모두 검증하며 TLS 1.2 이상을 요구한다.
+`sslrootcert`를 생략하면 플랫폼의 신뢰 루트를 사용하고, 명시하면 해당 PEM CA 인증서만 신뢰한다.
+경로는 URI query 값으로 인코딩한다. CA 파일을 읽거나 파싱할 수 없으면 바인딩 전에 시작을 거절한다.
+
+```text
+postgresql://auth_user@db.example.com:5432/auth?sslmode=verify-full&sslrootcert=%2Fetc%2Fauth%2Froot.pem
+```
+
+`sslmode=disable` 평문 예외는 기존 loopback URI에서만 허용한다.
 예: `postgresql://localhost/feature_standards_test_rust?sslmode=disable`.
-쿼리의 host/hostaddr 재정의도 거부한다. 원격 운영 DB와 TLS 연결은 현재 지원하지 않는다.
-인증서 검증을 임의로 해제하거나 요구된 TLS를 평문으로 낮추지 않는다. 원격 지원은 별도
-TLS 어댑터와 인증서/호스트 검증, DB 인증·권한·용량 검토가 필요하다.
+`require`·`prefer`·`verify-ca`, 중복 옵션, query의 host/hostaddr/port/sslnegotiation 재정의는 거절한다.
+tokio-postgres 내부에는 검증된 TLS connector와 강제 `Require` 모드를 함께 전달하며,
+외부 설정의 `verify-full`을 약한 검증으로 바꾸거나 TLS 거절 때 평문으로 재시도하지 않는다.
+DB 인증·최소 권한·용량·백업·운영 네트워크 검토는 별도이다.
 연결 시도는 5초, 요청 DB 작업과 대기열은 각각 10초, SQL/잠금 대기는 8초로 제한한다.
 DB 작업은 최대 8개 연결을 사용하며 DB 오류 원문·URI를 출력하지 않는다.
 `/healthz`도 DB 준비 상태를 검사한다. 런타임 저장소 실패는 쿠키 없이 일반
@@ -109,3 +119,50 @@ AUTH_TEST_DATABASE_URL='postgresql://localhost/feature_standards_test_rust?sslmo
 공유 IP 제한의 동시 원자성, DB 테이블 가용성 실패 시 503과 시작 실패를 확인한다.
 서로 다른 언어/실제 프로세스 재시작·PostgreSQL 중단·React 통합은 루트 공통 runner의
 검증 범위다.
+
+## 계정 생명주기 v3
+
+[`account-session-v3.md`](../../features/auth/account-session-v3.md)를 따른다.
+서버를 중지하고 `002_accounts.sql`을 명시적으로 적용한 schema version 2에서
+`AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`를 지정한다. 기본 false는 기존 v1/v2이며,
+잘못된 boolean 또는 true+memory는 시작 전에 거절한다. v2는 schema 2를 거절한다.
+
+가입·이메일 확인 요청·확인·비밀번호 재설정 요청·확인의 다섯 POST 경로는 v3에서만 제공한다.
+Origin·엄격한 JSON·입력 길이·일반 오류·no-store/nosniff를 유지하며 자동 로그인이나 쿠키 발급을 하지 않는다.
+신규 비밀번호는 15 Unicode scalar 이상·UTF-8 1024바이트 이하이며 공백과 NUL을 보존한다.
+계정 이메일은 기존 ASCII 정규화 후 내부 ASCII 공백·제어 문자를 거절한다.
+
+`AccountInput`과 `AuthStore::account`가 HTTP와 저장소를 분리한다. 트랜잭션에서 먼저
+`feature_auth.account_reserve`로 공유 제한을 확인한다. 제한된 요청은 해싱·난수 생성 없이
+COMMIT하고 429를 반환한다. 허용된 요청만 새 PHC·난수를 만들고 같은 트랜잭션에서
+`feature_auth.account_apply`를 호출하며, 예약을 한 번 소비하므로 요청을 중복 집계하지 않는다.
+성공 응답은 COMMIT 이후에만 반환한다.
+잘못된 token의 400과 rate limit의 429도 SQL의 기록을 commit한 뒤 반환한다.
+로그인은 사용자 `FOR SHARE` 잠금을 유지하므로 재설정의 세션 일괄 폐기와 직렬화된다.
+메일은 트랜잭션 outbox에 들어가며 이 서버가 실제 외부 이메일을 발송하지 않는다.
+
+```sh
+AUTH_ACCOUNT_TEST_DATABASE_URL="$SCHEMA_2_TEST_DATABASE_URL" \
+  cargo test --locked postgres_accounts_registration -- --ignored
+```
+
+전용 실제 DB 검사는 가입·중복 가입 비밀번호 보존·미확인 로그인 거절·확인 token 단일 사용,
+독립 세션 두 개·재설정 후 이전 쿠키와 비밀번호 거절·새 비밀번호 로그인,
+지연된 COMMIT 오류의 rollback·공유 요청 제한을 확인한다. 해싱 작업이 이미 대기 중이어도
+제한된 가입·재설정 요청은 해싱 큐에 들어가지 않고 429를 반환하는지 검사한다.
+
+## TLS 실제 검증
+
+OpenSSL CLI와 SSL 지원 PostgreSQL 서버 바이너리가 필요하다. 하네스는 전용 임시 경로·포트의
+TLS/평문 서버 두 개와 2일 수명의 임시 CA를 생성하고 소유 프로세스를 종료한다.
+운영 DB나 기존 데이터 경로를 사용하지 않으며 `PG*` 환경 설정도 첫 작업 전에 거절한다.
+
+```sh
+FEATURE_STANDARDS_TLS_PG_BIN=/path/to/ssl-enabled/postgresql/bin \
+  python3 tests/postgres_tls.py
+```
+
+명시적 경로가 없으면 PATH 또는 Ubuntu `/usr/lib/postgresql/*/bin`을 찾는다.
+신뢰 CA의 실제 암호화(`pg_stat_ssl`), 다른 CA 거절, 호스트 불일치 거절,
+준비된 평문 DB에 대한 TLS downgrade 거절을 검증한다. 기본 `cargo test`에서 제외되는
+실제 DB 테스트는 각 fixture에 맞는 위 명령으로 따로 실행한다.

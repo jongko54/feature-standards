@@ -4,7 +4,7 @@
 
 첫 기능은 로그인·로그아웃·내 정보 조회를 제공하는 인증입니다. Python·Go·Java·Rust 서버는 같은 HTTP 동작을 구현하고, 하나의 React 클라이언트가 각 서버에 연결됩니다.
 
-**0.2.0 PostgreSQL 확장**을 제공합니다. 기본값인 메모리 `browser-session-v1`을 유지하며, `AUTH_STORE=postgres`로 공유 저장소 `browser-session-v2`를 선택합니다. 실제 로컬 실행 범위는 [검증 기록](docs/validation-2026-11-02.md), 커밋별 원격 결과는 [Actions](https://github.com/jongko54/feature-standards/actions)에서 확인합니다. 운영 보안 감사를 받은 제품은 아닙니다.
+**0.3.0 계정 생명주기 확장**을 제공합니다. 기본 메모리 `browser-session-v1`, PostgreSQL `browser-session-v2`를 유지하며, `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`로 가입·이메일 확인·비밀번호 재설정을 제공하는 `browser-session-v3`를 선택합니다. 실제 로컬 실행 범위는 [v3 검증 기록](docs/validation-2026-11-02-accounts-v3.md), 커밋별 원격 결과는 [Actions](https://github.com/jongko54/feature-standards/actions)에서 확인합니다. 운영 보안 감사를 받은 제품은 아닙니다.
 
 ## 제공 범위
 
@@ -12,6 +12,7 @@
 |---|---|
 | [v1 명세](features/auth/specification.md) / [OpenAPI](features/auth/openapi.json) / [19개 시나리오](features/auth/scenarios.json) | 환경 설정 사용자 한 명과 프로세스 메모리 세션, 기본 프로필 |
 | [v2 명세](features/auth/postgres-session-v2.md) / [OpenAPI](features/auth/openapi-v2.json) / [근거 맵](features/auth/scenarios-v2.json) | PostgreSQL 사용자·세션·실패 기록, 트랜잭션·장애 계약 |
+| [v3 명세](features/auth/account-session-v3.md) / [OpenAPI](features/auth/openapi-v3.json) / [근거 맵](features/auth/scenarios-v3.json) | 가입·이메일 확인·비밀번호 재설정과 트랜잭션 outbox |
 | [PostgreSQL DDL](features/auth/postgres/001_initial.sql) / [명시적 DB 도구](tools/auth_db.py) | schema version 1 마이그레이션과 별도 데모 seed |
 | [Python / FastAPI](implementations/python-fastapi) | `feature_auth` 설치 패키지, 앱 factory와 인증 dependency |
 | [Go / net/http](implementations/go-net-http), [Java / Spring](implementations/java-spring), [Rust / Axum](implementations/rust-axum) | HTTP 어댑터와 서비스·저장소 경계 |
@@ -19,7 +20,7 @@
 | [별도 Python+React 소비 프로젝트](examples/consumer-python-react/README.md) | 인증 코드를 복사하지 않고 패키지를 가져오는 보호 API 예제 |
 | [AI 적용 지침](skills/integrate-auth/SKILL.md) | 대상 프로젝트 조사·적용·검증 |
 
-v2의 구성과 테스트 범위는 [PostgreSQL 사용 안내](docs/postgres-v2.md), 호환성 정책은 [버전 문서](docs/versioning.md)를 따릅니다.
+v2의 구성은 [PostgreSQL 사용 안내](docs/postgres-v2.md), v3의 마이그레이션·메일·TLS·검증 범위는 [계정 사용 안내](docs/account-v3.md), 호환성 정책은 [버전 문서](docs/versioning.md)를 따릅니다.
 
 ## 빠르게 실행하기
 
@@ -86,7 +87,21 @@ AUTH_STORE=postgres AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
 
 앱은 **자동 DDL·seed·메모리 fallback을 하지 않습니다.** DB 모드의 `AUTH_DEMO=true`는 로컬 HTTP·쿠키 예외만 허용하며, 계정을 만들거나 비밀번호를 바꾸지 않습니다. `AUTH_USER_EMAIL`과 `AUTH_USER_PASSWORD`도 DB 모드에서는 사용하지 않습니다. seed는 기존 사용자와 비밀번호를 덮어쓰지 않습니다.
 
-네 언어의 공통 로컬 URI는 명시적인 `sslmode=disable`을 사용합니다. 현재 Rust PostgreSQL 어댑터는 loopback 평문 테스트 연결만 지원하며 원격 DB와 TLS는 지원하지 않습니다. 다른 구현의 TLS 옵션도 원격 운영 DB 검증 완료를 뜻하지 않습니다.
+네 언어의 공통 로컬 URI는 명시적인 `sslmode=disable`을 사용합니다. Rust 원격 연결은 `sslmode=verify-full`로 인증서 체인과 hostname을 검증하며, 명시적 `sslrootcert` 또는 플랫폼 신뢰 루트를 사용합니다. 약한 모드와 TLS 거절 후 평문 재시도는 허용하지 않습니다. 실제 운영 DB의 인증·권한·용량 검토는 별도 범위입니다.
+
+### 계정 생명주기 선택
+
+v3는 schema 2를 사용합니다. 기존 schema 1 서버를 먼저 중단하고 백업·권한을 확인한 뒤 명시적으로 이관합니다. 새 DB도 같은 도구가 schema 1을 만든 후 2로 올립니다.
+
+```sh
+uv run --frozen --project tools python tools/auth_db.py migrate-accounts
+# 공개 테스트 계정이 필요한 로컬 DB에서만:
+uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
+```
+
+서버에 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`와 `AUTH_DATABASE_URL`을 전달하고, React 개발 서버에 `VITE_AUTH_ACCOUNT_LIFECYCLE=true`를 지정합니다. 기본 false는 기존 화면과 프로필을 유지합니다. 신규 계정은 이메일 확인 전 로그인할 수 없고, 비밀번호 재설정은 모든 기존 세션을 원자적으로 폐기합니다. 관리자 비활성 상태는 확인·재설정으로 바뀌지 않습니다.
+
+이메일은 DB outbox에 저장합니다. 외부 SMTP를 발송하지 않으며, [로컬 수신 도구](tools/mail_capture.py)는 작업 전용 DB의 메시지를 새 mode 0600 파일로 옮깁니다. outbox와 수신 파일의 원문 token은 민감한 bearer credential입니다. 공개 HTTP 수신함이나 로그로 노출하지 않습니다. 자세한 실행은 [v3 안내](docs/account-v3.md)를 따릅니다.
 
 ## 다른 프로젝트에서 사용하기
 
@@ -123,6 +138,7 @@ const session: AuthSession | null = await auth.me();
 ```sh
 uv run --frozen --project tools python tools/check_contract.py
 uv run --frozen --project tools python tools/generate_openapi_v2.py --check
+uv run --frozen --project tools python tools/generate_openapi_v3.py --check
 uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
 
 uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
@@ -140,6 +156,7 @@ v2 전체 검사는 `initdb`·`pg_ctl`이 있는 PostgreSQL 서버 바이너리 
 ```sh
 # PATH의 PostgreSQL 서버 바이너리로 전용 임시 DB를 시작·종료
 uv run --frozen --project tools python tests/postgres_conformance.py --browser
+uv run --frozen --project tools python tests/account_conformance.py --browser
 
 # 별도 Python/React 예제 의존성 준비
 uv sync --frozen --project examples/consumer-python-react
@@ -152,7 +169,7 @@ uv run --frozen --project tools python tests/consumer_conformance.py
 
 ### GitHub Actions
 
-[CI 워크플로](.github/workflows/ci.yml)와 [동일 템플릿](ci/github-actions.yml)은 PostgreSQL 18.6 서비스, 언어별 분리 DB 자체 테스트, v1·v2 공통 API·브라우저, 별도 소비 앱을 실행하도록 정의되어 있습니다. 워크플로를 바꾸면 두 파일을 함께 갱신합니다. 정의가 존재하는 상태와 [해당 커밋의 원격 실행 성공](https://github.com/jongko54/feature-standards/actions)은 구분해야 합니다.
+[CI 워크플로](.github/workflows/ci.yml)와 [동일 템플릿](ci/github-actions.yml)은 PostgreSQL 18.6 서비스, 언어별 schema 1·2 분리 DB 자체 테스트, v1·v2·v3 API·브라우저, 계정 경합·SQL gateway, Rust TLS, 별도 소비 앱을 실행하도록 정의되어 있습니다. 워크플로를 바꾸면 두 파일을 함께 갱신합니다. 정의가 존재하는 상태와 [해당 커밋의 원격 실행 성공](https://github.com/jongko54/feature-standards/actions)은 구분해야 합니다.
 
 ## API와 적용 경계
 
@@ -165,6 +182,6 @@ uv run --frozen --project tools python tests/consumer_conformance.py
 
 상태 변경에는 정확한 Origin이 필요합니다. v2의 만료 전 저장 세션은 사용자의 enabled 여부와 무관하게 로그아웃 CSRF를 요구합니다. 잘못된 CSRF는 세션을 유지하며, DB 실패를 로그아웃 성공으로 표현하지 않습니다. 쿠키의 `Secure` 기본값은 활성화입니다.
 
-메모리 상태는 재시작하면 사라지고, v2는 같은 DB의 세션과 실패 기록을 공유합니다. reverse proxy 뒤에서는 peer IP가 프록시로 보입니다. 운영 적용에는 DB 인증·TLS·권한·백업·용량, 신뢰 프록시, HTTPS, 비밀 관리·관측·보안 검토가 필요합니다. 회원가입·비밀번호 재설정·역할 관리는 제공하지 않습니다.
+메모리 상태는 재시작하면 사라지고, v2/v3는 같은 DB의 세션과 실패 기록을 공유합니다. reverse proxy 뒤에서는 peer IP가 프록시로 보입니다. 운영 적용에는 DB 권한·백업·용량, 신뢰 프록시, HTTPS, 비밀 관리·관측과 outbox 접근·암호화·보존 검토가 필요합니다. 역할 관리·MFA·외부 메일 발송은 제공하지 않습니다.
 
 명세는 저장소의 실험적 규약이며 공인 국제 표준이 아닙니다. 기존 v1 검증 기록은 [2026-11-01 문서](docs/validation-2026-11-01.md), 참여 방법은 [CONTRIBUTING.md](CONTRIBUTING.md), 보안 범위는 [SECURITY.md](SECURITY.md), 선행 프로젝트는 [연구 문서](docs/research.md)를 확인합니다. 라이선스는 [MIT](LICENSE)입니다.

@@ -9,6 +9,10 @@ final class PasswordHashes {
     private static final Pattern PHC = Pattern.compile(
             "^\\$argon2id\\$v=19\\$m=65536,t=3,p=4\\$([A-Za-z0-9+/]{22})\\$([A-Za-z0-9+/]{43})$");
     private static final String DUMMY = ENCODER.encode("feature-auth-dummy-password");
+    static synchronized String encode(String password) {
+        try { return ENCODER.encode(password); }
+        catch (RuntimeException ex) { throw new StorageUnavailableException(); }
+    }
     // Bound expensive verification memory across connections in this JVM.
     static synchronized boolean matches(String password, String hash) {
         String actual = hash == null ? DUMMY : hash;

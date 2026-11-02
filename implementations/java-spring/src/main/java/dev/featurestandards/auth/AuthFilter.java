@@ -31,7 +31,7 @@ public final class AuthFilter implements Filter {
         String method = switch (path) {
             case "/auth/login", "/auth/logout" -> "POST";
             case "/auth/me", "/healthz" -> "GET";
-            default -> null;
+            default -> config.accountLifecycle() && accountAction(path) != null ? "POST" : null;
         };
         if (method == null) { error(response, 404, "NOT_FOUND"); return; }
         if (!request.getMethod().equals(method)) {
@@ -57,9 +57,9 @@ public final class AuthFilter implements Filter {
             }
             case "/healthz" -> {
                 service.checkReady();
-                json(response, 200, Map.of("status", "ok", "profile", config.store().equals("postgres") ? "browser-session-v2" : "browser-session-v1", "implementation", "java-spring"));
+                json(response, 200, Map.of("status", "ok", "profile", config.profile(), "implementation", "java-spring"));
             }
-            default -> throw new IllegalStateException();
+            default -> account(request, response, accountAction(path));
         } } catch (StorageUnavailableException ex) {
             response.setHeader("Cache-Control", "no-store");
             response.setHeader("X-Content-Type-Options", "nosniff");
@@ -67,16 +67,8 @@ public final class AuthFilter implements Filter {
         }
     }
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try {
-            String header = singleHeader(request, "Content-Type");
-            if (header == null) throw new IllegalArgumentException();
-            MediaType type = MediaType.parseMediaType(header);
-            if (!type.getType().equalsIgnoreCase("application") || !type.getSubtype().equalsIgnoreCase("json")) {
-                throw new IllegalArgumentException();
-            }
-        } catch (IllegalArgumentException ex) { error(response, 415, "UNSUPPORTED_MEDIA_TYPE"); return; }
-        byte[] body = request.getInputStream().readNBytes(4097);
-        if (body.length > 4096) { error(response, 413, "REQUEST_TOO_LARGE"); return; }
+        byte[] body = jsonBody(request, response);
+        if (body == null) return;
         Credentials credentials;
         try { credentials = Credentials.decode(body); }
         catch (IllegalArgumentException ex) { error(response, 400, "INVALID_REQUEST"); return; }
@@ -90,6 +82,44 @@ public final class AuthFilter implements Filter {
             response.setHeader("Set-Cookie", cookieHeader(result.token(), config.sessionTtl()));
             user(response, result.session());
         }
+    }
+    private static byte[] jsonBody(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            String header = singleHeader(request, "Content-Type");
+            if (header == null) throw new IllegalArgumentException();
+            MediaType type = MediaType.parseMediaType(header);
+            if (!type.getType().equalsIgnoreCase("application") || !type.getSubtype().equalsIgnoreCase("json")) {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException ex) { error(response, 415, "UNSUPPORTED_MEDIA_TYPE"); return null; }
+        byte[] body = request.getInputStream().readNBytes(4097);
+        if (body.length > 4096) { error(response, 413, "REQUEST_TOO_LARGE"); return null; }
+        return body;
+    }
+    private void account(HttpServletRequest request, HttpServletResponse response, String action) throws IOException {
+        byte[] body = jsonBody(request, response);
+        if (body == null) return;
+        AccountInput input;
+        try { input = AccountInput.decode(action, body); }
+        catch (IllegalArgumentException ex) { error(response, 400, "INVALID_REQUEST"); return; }
+        int result = service.account(action, request.getRemoteAddr(), input.email(), input.token(), input.password());
+        if (result > 0) {
+            response.setHeader("Retry-After", Integer.toString(result));
+            error(response, 429, "RATE_LIMITED");
+        } else if (result == -1) error(response, 400, "INVALID_TOKEN");
+        else if (result != 0) throw new StorageUnavailableException();
+        else if (action.endsWith("confirm")) response.setStatus(204);
+        else json(response, 202, Map.of("status", "accepted"));
+    }
+    private static String accountAction(String path) {
+        return switch (path) {
+            case "/auth/register" -> "register";
+            case "/auth/email-verification/request" -> "verify-request";
+            case "/auth/email-verification/confirm" -> "verify-confirm";
+            case "/auth/password-reset/request" -> "reset-request";
+            case "/auth/password-reset/confirm" -> "reset-confirm";
+            default -> null;
+        };
     }
     private static String singleHeader(HttpServletRequest request, String name) {
         var values = Collections.list(request.getHeaders(name));

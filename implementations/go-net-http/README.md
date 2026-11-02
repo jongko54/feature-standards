@@ -1,6 +1,6 @@
 # Go / net/http 참조 구현
 
-`browser-session-v1` 메모리 모드와 [PostgreSQL v2](../../features/auth/postgres-session-v2.md)를 제공한다. HTTP는 표준 라이브러리, 비밀번호 해싱은 공식 `golang.org/x/crypto/argon2`의 Argon2id를 사용한다. 구현 계약은 [공통 명세](../../features/auth/specification.md)에 있다.
+`browser-session-v1` 메모리, [PostgreSQL v2](../../features/auth/postgres-session-v2.md), 선택적 [계정 생명주기 v3](../../features/auth/account-session-v3.md)를 제공한다. HTTP는 표준 라이브러리, 비밀번호 해싱은 공식 `golang.org/x/crypto/argon2`의 Argon2id를 사용한다. 구현 계약은 [공통 명세](../../features/auth/specification.md)에 있다.
 
 ## 실행
 
@@ -51,6 +51,19 @@ HTTP는 `AuthStore`의 `Login`, `Current`, `Logout`, `Ready`를 사용하며 SQL
 ```sh
 AUTH_TEST_DATABASE_URL='postgresql://user@127.0.0.1/feature_standards_test?sslmode=disable' \
 go test -race ./...
+```
+
+## 계정 생명주기 v3
+
+기존 v2 DB와 분리한 DB에 명시적으로 `002_accounts.sql`을 적용하고 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`로 선택한다. v3는 schema 2, 기본 false인 v2는 schema 1을 요구한다. true+메모리와 빈 값·true/false 이외의 설정은 시작 전에 거절하며 앱이 마이그레이션·seed를 실행하지 않는다.
+
+5개 계정 POST 경로는 [v3 계약](../../features/auth/account-session-v3.md)의 엄격한 JSON·Origin·새 비밀번호·token 규칙을 적용한다. 기존 프로필에서는 경로가 404이다. 선택적 `AccountStore`는 같은 트랜잭션의 공통 `account_reserve`로 peer 예산을 먼저 예약한 뒤, 허용된 요청만 새 PHC·난수 token 생성과 `account_apply`를 실행한다. 소진된 요청은 Argon2를 실행하지 않는다. 커밋 성공 이후에만 202·204 또는 token/rate 결과를 반환한다. 로그인은 사용자 행 `FOR SHARE`를 검증부터 커밋까지 유지해 reset과 직렬화한다. outbox는 민감한 queue이며 실제 외부 메일은 발송하지 않는다.
+
+자체 v3 검사는 schema2의 작업 전용 DB를 초기화하므로 기존 `AUTH_TEST_DATABASE_URL`(v2)과 분리한다.
+
+```sh
+AUTH_ACCOUNT_TEST_DATABASE_URL='postgresql://user@127.0.0.1:5432/feature_standards_test_v3_go?sslmode=disable' \
+go test -race ./... -run TestPostgresAccount
 ```
 
 ## 의존성 근거

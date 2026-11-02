@@ -50,6 +50,33 @@ PostgreSQL은 사용자별 PHC와 enabled 상태를 조회하고 세션 토큰�
 AUTH_TEST_DATABASE_URL="$AUTH_DATABASE_URL" ./mvnw -q test
 ```
 
+## 계정 생명주기 v3
+
+명시적으로 schema 2로 마이그레이션한 별도 DB에서 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`를 지정한다. 기본 false는 기존 v1/v2이며 true+memory와 잘못된 boolean(빈 문자열 포함)은 시작 전에 거절한다. v3는 schema 2만, v2는 schema 1만 허용한다. 기준 계약은 [account-session-v3.md](../../features/auth/account-session-v3.md)이다. `/healthz`는 `browser-session-v3`를 반환한다.
+
+선택한 프로필에서만 다음 POST 경로를 제공하며 기존 프로필에는 404를 반환한다. 모든 요청은 기존 Origin·JSON·본문 제한과 no-store/nosniff 규칙을 따른다. 어떤 계정 경로도 세션 쿠키를 발급하거나 자동 로그인하지 않는다.
+
+| 경로 | JSON 필드 | 성공 |
+|---|---|---|
+| `/auth/register` | email, password | 일반 202 accepted |
+| `/auth/email-verification/request` | email | 동일 202 |
+| `/auth/email-verification/confirm` | token | 본문 없는 204 |
+| `/auth/password-reset/request` | email | 동일 202 |
+| `/auth/password-reset/confirm` | token, password | 본문 없는 204 |
+
+신규·재설정 비밀번호는 Unicode scalar 15개 이상, UTF-8 1024byte 이하이며 공백을 보존한다. 기존 로그인 규칙은 바뀌지 않는다. 계정 이메일은 ASCII 정규화 후 내부 ASCII 제어 문자·공백을 거절한다. JSON 중복·추가 키·잘못된 UTF-8·짝 없는 surrogate도 거절한다. 잘못된 형식은 `400 INVALID_REQUEST`, 올바른 형식의 무효·만료·재사용 토큰은 `400 INVALID_TOKEN`이다.
+
+서비스의 `account(action, peer, email, token, password)`는 검증한 입력을 저장소에 전달한다. PostgreSQL 저장소는 같은 트랜잭션에서 `feature_auth.account_reserve`로 공유 제한을 먼저 검사하고, 허용된 요청만 기존 암호 라이브러리로 신규 PHC와 token을 생성한다. `account_apply`가 예약을 한 번 소비하며 결과는 commit 뒤에 반환한다. 제한된 요청은 비밀번호를 해싱하지 않는다. DB 실패는 일반 503이며 비밀번호·세션·토큰·outbox 변경이 함께 rollback된다. 로그인은 사용자 `FOR SHARE` 잠금을 해시 검증부터 commit까지 유지해 비밀번호 재설정과 직렬화한다.
+
+schema 2의 `enabled`는 관리자 허용과 이메일 확인 여부로 계산된다. 확인·재설정이 관리자 비활성을 해제하지 않는다. 메일은 공통 DB outbox에 쌓이며 이 Java 어댑터는 외부 메일을 보내지 않는다. token 검증 테이블과 달리 outbox에는 전달할 원문 capability가 있으므로 민감 정보로 다룬다. 보존·로컬 수신 절차는 공통 계약을 따른다.
+
+자체 v3 검사는 `AUTH_ACCOUNT_TEST_DATABASE_URL`의 별도 schema-2 DB를 초기화한다. 기존 `AUTH_TEST_DATABASE_URL`은 schema-1 전용 DB로 유지한다. 두 URL에 같은 DB를 지정하면 안 된다.
+
+```sh
+# 각각 미리 마이그레이션한 작업 전용 DB를 환경에 설정한 뒤:
+./mvnw -q test
+```
+
 ## 구현과 검증 범위
 
 - Servlet filter가 메서드·경로·오류·캐시 헤더를 명시적으로 처리한다. Spring의 기본 로그인 화면이나 자동 CORS 응답을 추가하지 않는다.

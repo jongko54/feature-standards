@@ -22,13 +22,15 @@ mod store;
 pub use memory::MemoryStore;
 pub use postgres::PostgresStore;
 pub use store::{
-    AuthError, AuthService, AuthStore, LoginInput, LoginSession, SessionUser, StoreFuture,
+    AccountAction, AccountInput, AuthError, AuthService, AuthStore, LoginInput, LoginSession,
+    SessionUser, StoreFuture,
 };
 
 const BODY_LIMIT: usize = 4096;
 const CONFIG_KEYS: &[&str] = &[
     "AUTH_STORE",
     "AUTH_DATABASE_URL",
+    "AUTH_ACCOUNT_LIFECYCLE",
     "AUTH_HOST",
     "AUTH_PORT",
     "AUTH_DEMO",
@@ -46,6 +48,7 @@ pub struct Config {
     pub port: u16,
     store: String,
     database_url: Option<String>,
+    account_lifecycle: bool,
     email: String,
     password: String,
     origin: String,
@@ -100,6 +103,14 @@ impl Config {
         if store != "memory" && store != "postgres" {
             return Err("AUTH_STORE must be memory or postgres".into());
         }
+        let account_lifecycle = boolean(
+            lookup("AUTH_ACCOUNT_LIFECYCLE"),
+            false,
+            "AUTH_ACCOUNT_LIFECYCLE",
+        )?;
+        if account_lifecycle && store != "postgres" {
+            return Err("AUTH_ACCOUNT_LIFECYCLE=true requires AUTH_STORE=postgres".into());
+        }
         let database_url = if store == "postgres" {
             let value = lookup("AUTH_DATABASE_URL").ok_or("AUTH_DATABASE_URL is required")?;
             postgres::validate_url(&value)?;
@@ -144,6 +155,7 @@ impl Config {
             port,
             store,
             database_url,
+            account_lifecycle,
             email,
             password,
             origin,
@@ -236,6 +248,82 @@ fn valid_email(value: &str) -> bool {
 struct RawCredentials {
     email: String,
     password: String,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawEmail {
+    email: String,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawToken {
+    token: String,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawReset {
+    token: String,
+    password: String,
+}
+
+struct AccountCredentials {
+    email: String,
+    token: String,
+    password: Zeroizing<String>,
+}
+
+fn decode_account(body: &[u8], action: AccountAction) -> Result<AccountCredentials, ()> {
+    if body
+        .iter()
+        .find(|byte| !matches!(byte, b' ' | b'\t' | b'\r' | b'\n'))
+        != Some(&b'{')
+    {
+        return Err(());
+    }
+    let mut credentials = AccountCredentials {
+        email: String::new(),
+        token: String::new(),
+        password: Zeroizing::new(String::new()),
+    };
+    match action {
+        AccountAction::Register => {
+            let raw: RawCredentials = serde_json::from_slice(body).map_err(|_| ())?;
+            credentials.email = normalize_email(&raw.email);
+            credentials.password = Zeroizing::new(raw.password);
+        }
+        AccountAction::VerifyRequest | AccountAction::ResetRequest => {
+            let raw: RawEmail = serde_json::from_slice(body).map_err(|_| ())?;
+            credentials.email = normalize_email(&raw.email);
+        }
+        AccountAction::VerifyConfirm => {
+            let raw: RawToken = serde_json::from_slice(body).map_err(|_| ())?;
+            credentials.token = raw.token;
+        }
+        AccountAction::ResetConfirm => {
+            let raw: RawReset = serde_json::from_slice(body).map_err(|_| ())?;
+            credentials.token = raw.token;
+            credentials.password = Zeroizing::new(raw.password);
+        }
+    }
+    if !action.confirms()
+        && (!valid_email(&credentials.email)
+            || credentials
+                .email
+                .bytes()
+                .any(|byte| byte <= 32 || byte == 127))
+        || action.confirms()
+            && (credentials.token.len() != 43
+                || !credentials
+                    .token
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'-')))
+        || action.requires_password()
+            && (credentials.password.chars().count() < 15 || credentials.password.len() > 1024)
+    {
+        return Err(());
+    }
+    Ok(credentials)
 }
 
 struct Credentials {
@@ -343,9 +431,15 @@ async fn dispatch(State(state): State<Arc<HttpState>>, request: Request) -> Resp
 }
 
 async fn dispatch_inner(state: Arc<HttpState>, request: Request) -> Response {
+    let account_action = if state.config.account_lifecycle {
+        AccountAction::from_path(request.uri().path())
+    } else {
+        None
+    };
     let expected = match request.uri().path() {
         "/auth/login" | "/auth/logout" => Method::POST,
         "/auth/me" | "/healthz" => Method::GET,
+        _ if account_action.is_some() => Method::POST,
         _ => return error(StatusCode::NOT_FOUND, "NOT_FOUND"),
     };
     if *request.method() != expected {
@@ -364,6 +458,9 @@ async fn dispatch_inner(state: Arc<HttpState>, request: Request) -> Response {
         && single_header(request.headers(), "origin") != Some(state.config.origin.as_str())
     {
         return error(StatusCode::FORBIDDEN, "ORIGIN_DENIED");
+    }
+    if let Some(action) = account_action {
+        return account(state, request, action).await;
     }
     match request.uri().path() {
         "/auth/login" => login(state, request).await,
@@ -454,11 +551,69 @@ async fn login(state: Arc<HttpState>, request: Request) -> Response {
     }
 }
 
+async fn account(state: Arc<HttpState>, request: Request, action: AccountAction) -> Response {
+    let media = single_header(request.headers(), "content-type")
+        .and_then(|value| value.parse::<mime::Mime>().ok());
+    if media.is_none_or(|value| value.type_() != mime::APPLICATION || value.subtype() != mime::JSON)
+    {
+        return error(StatusCode::UNSUPPORTED_MEDIA_TYPE, "UNSUPPORTED_MEDIA_TYPE");
+    }
+    let Some(peer) = request
+        .extensions()
+        .get::<ConnectInfo<SocketAddr>>()
+        .map(|info| info.0.ip())
+    else {
+        return error(StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR");
+    };
+    if request
+        .headers()
+        .get("content-length")
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.parse::<u64>().ok())
+        .is_some_and(|length| length > BODY_LIMIT as u64)
+    {
+        return error(StatusCode::PAYLOAD_TOO_LARGE, "REQUEST_TOO_LARGE");
+    }
+    let bytes = match to_bytes(request.into_body(), BODY_LIMIT).await {
+        Ok(bytes) => bytes,
+        Err(err) => {
+            return if err
+                .source()
+                .is_some_and(|source| source.is::<http_body_util::LengthLimitError>())
+            {
+                error(StatusCode::PAYLOAD_TOO_LARGE, "REQUEST_TOO_LARGE")
+            } else {
+                error(StatusCode::BAD_REQUEST, "INVALID_REQUEST")
+            };
+        }
+    };
+    let credentials = match decode_account(&bytes, action) {
+        Ok(credentials) => credentials,
+        Err(()) => return error(StatusCode::BAD_REQUEST, "INVALID_REQUEST"),
+    };
+    match state
+        .service
+        .account(AccountInput {
+            action,
+            peer,
+            email: credentials.email,
+            token: credentials.token,
+            password: credentials.password,
+        })
+        .await
+    {
+        Ok(()) if action.confirms() => StatusCode::NO_CONTENT.into_response(),
+        Ok(()) => (StatusCode::ACCEPTED, Json(json!({"status":"accepted"}))).into_response(),
+        Err(err) => auth_error(err),
+    }
+}
+
 fn auth_error(err: AuthError) -> Response {
     let (status, code) = match err {
         AuthError::InvalidCredentials => (StatusCode::UNAUTHORIZED, "INVALID_CREDENTIALS"),
         AuthError::Unauthenticated => (StatusCode::UNAUTHORIZED, "UNAUTHENTICATED"),
         AuthError::CsrfInvalid => (StatusCode::FORBIDDEN, "CSRF_INVALID"),
+        AuthError::InvalidToken => (StatusCode::BAD_REQUEST, "INVALID_TOKEN"),
         AuthError::RateLimited(_) => (StatusCode::TOO_MANY_REQUESTS, "RATE_LIMITED"),
         AuthError::StorageUnavailable => (StatusCode::SERVICE_UNAVAILABLE, "STORAGE_UNAVAILABLE"),
         AuthError::Internal => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR"),
@@ -507,3 +662,6 @@ mod tests;
 
 #[cfg(test)]
 mod postgres_tests;
+
+#[cfg(test)]
+mod accounts_tests;

@@ -103,6 +103,8 @@ async fn blackhole(stop_at: StopAt) -> (PostgresStore, Blackhole) {
             "postgresql://fixture@{address}/feature_standards_test?sslmode=disable"
         ))
         .unwrap(),
+        tls: None,
+        account_lifecycle: false,
         hash_slots: Arc::new(Semaphore::new(1)),
         db_slots: Semaphore::new(8),
         dummy: StoredHash {

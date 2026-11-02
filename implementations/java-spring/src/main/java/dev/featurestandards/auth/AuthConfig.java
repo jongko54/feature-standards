@@ -6,15 +6,29 @@ import java.util.function.Function;
 
 /** Validated configuration. The credential-bearing database URL is redacted from diagnostics. */
 public record AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
-                  String email, long sessionTtl, int rateLimit, long rateWindow, String store, String databaseUrl) {
+                  String email, long sessionTtl, int rateLimit, long rateWindow, String store, String databaseUrl,
+                  boolean accountLifecycle) {
+    public AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
+                      String email, long sessionTtl, int rateLimit, long rateWindow, String store, String databaseUrl) {
+        this(host, port, demo, secure, origin, email, sessionTtl, rateLimit, rateWindow, store, databaseUrl, false);
+    }
     public AuthConfig(String host, int port, boolean demo, boolean secure, String origin,
                       String email, long sessionTtl, int rateLimit, long rateWindow) {
         this(host, port, demo, secure, origin, email, sessionTtl, rateLimit, rateWindow, "memory", null);
     }
     @Override public String toString() { return "AuthConfig[store=" + store + ", databaseUrl=<redacted>]"; }
+    public String profile() {
+        return accountLifecycle ? "browser-session-v3" : store.equals("postgres") ? "browser-session-v2" : "browser-session-v1";
+    }
     public static AuthConfig load(Function<String, String> env) {
         String store = value(env, "AUTH_STORE", "memory");
         if (!store.equals("memory") && !store.equals("postgres")) throw invalid("AUTH_STORE must be memory or postgres");
+        String lifecycleRaw = env.apply("AUTH_ACCOUNT_LIFECYCLE");
+        if (lifecycleRaw != null && !lifecycleRaw.equals("true") && !lifecycleRaw.equals("false")) {
+            throw invalid("AUTH_ACCOUNT_LIFECYCLE must be true or false");
+        }
+        boolean lifecycle = "true".equals(lifecycleRaw);
+        if (lifecycle && !store.equals("postgres")) throw invalid("AUTH_ACCOUNT_LIFECYCLE requires postgres");
         String databaseUrl = null;
         if (store.equals("postgres")) {
             databaseUrl = value(env, "AUTH_DATABASE_URL", "");
@@ -48,7 +62,7 @@ public record AuthConfig(String host, int port, boolean demo, boolean secure, St
         long window = positive(env, "AUTH_RATE_LIMIT_WINDOW_SECONDS", 60);
         long max = positive(env, "AUTH_RATE_LIMIT_MAX", 5);
         if (max > Integer.MAX_VALUE) throw invalid("AUTH_RATE_LIMIT_MAX is outside the integer range");
-        return new AuthConfig(host, (int) port, demo, secure, origin, email, ttl, (int) max, window, store, databaseUrl);
+        return new AuthConfig(host, (int) port, demo, secure, origin, email, ttl, (int) max, window, store, databaseUrl, lifecycle);
     }
 
     static String password(Function<String, String> env, boolean demo) {

@@ -460,6 +460,7 @@ def server(backend, *, ttl=3, rate_window=3, secure=False, builds=None, extra_en
         env.update(
             AUTH_HOST="127.0.0.1",
             AUTH_STORE="memory",
+            AUTH_ACCOUNT_LIFECYCLE="false",
             AUTH_PORT=str(port),
             AUTH_DEMO="true",
             AUTH_COOKIE_SECURE=str(secure).lower(),
@@ -528,12 +529,17 @@ def require_free_port(port):
             ) from exc
 
 
-def run_browser(backend, *, builds=None, extra_env=None):
+def run_browser(
+    backend, *, builds=None, extra_env=None, client_env=None, playwright_config=None
+):
     # Refuse to reuse somebody else's dev server and accidentally test the wrong backend.
     require_free_port(5173)
-    with server(backend, ttl=1800, rate_window=60, builds=builds, extra_env=extra_env) as base:
+    with server(
+        backend, ttl=1800, rate_window=60, builds=builds, extra_env=extra_env
+    ) as base:
         env = os.environ.copy()
         env.update(AUTH_API_TARGET=base, BASE_URL=ORIGIN)
+        env.update(client_env or {})
         with tempfile.TemporaryFile(mode="w+") as log:
             process = subprocess.Popen(
                 [
@@ -561,7 +567,12 @@ def run_browser(backend, *, builds=None, extra_env=None):
                     try:
                         if Client(ORIGIN).request("GET", "/healthz")[0] == 200:
                             subprocess.run(
-                                ["npm", "run", "test:e2e"],
+                                ["npm", "run", "test:e2e"]
+                                + (
+                                    ["--", "--config", playwright_config]
+                                    if playwright_config
+                                    else []
+                                ),
                                 cwd=ROOT / "clients/react",
                                 env=env,
                                 check=True,

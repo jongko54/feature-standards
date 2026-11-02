@@ -21,7 +21,7 @@ function isSession(value: unknown): value is AuthSession {
 }
 
 export function createAuthApi(fetcher: Fetch = fetch) {
-  async function request(path: string, options: RequestInit = {}): Promise<unknown> {
+  async function request(path: string, options: RequestInit = {}, expectedStatus?: number): Promise<unknown> {
     const response = await fetcher(path, { ...options, credentials: 'same-origin', cache: 'no-store' });
     let body: unknown;
     if (response.status !== 204) {
@@ -36,6 +36,7 @@ export function createAuthApi(fetcher: Fetch = fetch) {
       const retryAfter = Number.isSafeInteger(seconds) && seconds > 0 ? Math.min(seconds, 86400) : 0;
       throw new ApiError(response.status, code, retryAfter);
     }
+    if (expectedStatus !== undefined && response.status !== expectedStatus) throw new ApiError(response.status, 'INVALID_RESPONSE');
     return body;
   }
 
@@ -63,7 +64,31 @@ export function createAuthApi(fetcher: Fetch = fetch) {
     async logout(csrfToken: string): Promise<void> {
       await request('/auth/logout', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken } });
     },
+    async register(email: string, password: string): Promise<void> {
+      await account('/auth/register', { email, password }, true);
+    },
+    async requestVerification(email: string): Promise<void> {
+      await account('/auth/email-verification/request', { email }, true);
+    },
+    async confirmVerification(token: string): Promise<void> {
+      await account('/auth/email-verification/confirm', { token });
+    },
+    async requestPasswordReset(email: string): Promise<void> {
+      await account('/auth/password-reset/request', { email }, true);
+    },
+    async confirmPasswordReset(token: string, password: string): Promise<void> {
+      await account('/auth/password-reset/confirm', { token, password });
+    },
   };
+
+  async function account(path: string, body: object, accepted = false): Promise<void> {
+    const result = await request(path, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    }, accepted ? 202 : 204);
+    if (accepted && (!result || typeof result !== 'object'
+      || !('status' in result) || result.status !== 'accepted')) throw new ApiError(202, 'INVALID_RESPONSE');
+    if (!accepted && result !== undefined) throw new ApiError(204, 'INVALID_RESPONSE');
+  }
 }
 
 export const authApi = createAuthApi();

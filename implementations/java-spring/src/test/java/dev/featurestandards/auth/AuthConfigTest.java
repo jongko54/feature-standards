@@ -8,6 +8,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.*;
 
 class AuthConfigTest {
+    @Test void lifecycleRequiresPostgresAndStrictBoolean() {
+        assertInvalid("AUTH_ACCOUNT_LIFECYCLE", "true");
+        assertInvalid("AUTH_ACCOUNT_LIFECYCLE", "TRUE");
+    }
     @Test void postgresDoesNotRequireOrUseAnEnvironmentUser() {
         var config = AuthConfig.load(Map.of("AUTH_STORE", "postgres", "AUTH_DATABASE_URL",
                 "postgresql://example:secret@localhost/feature_standards_test_java?sslmode=disable",

@@ -1,12 +1,15 @@
 use crate::{
-    AuthError, AuthStore, Config, LoginInput, LoginSession, SessionUser, StoreFuture, derive,
-    random_token,
+    AccountInput, AuthError, AuthStore, Config, LoginInput, LoginSession, SessionUser, StoreFuture,
+    derive, random_token,
 };
 use base64::{Engine, engine::general_purpose::STANDARD_NO_PAD};
+use native_tls::{Certificate, TlsConnector};
+use postgres_native_tls::MakeTlsConnector;
 use sha2::{Digest, Sha256};
 use std::{
     future::Future,
     ops::{Deref, DerefMut},
+    path::PathBuf,
     sync::Arc,
     time::Duration,
 };
@@ -23,6 +26,19 @@ const UNAVAILABLE: AuthError = AuthError::StorageUnavailable;
 struct RequestClient {
     client: Client,
     connection_task: JoinHandle<()>,
+}
+impl RequestClient {
+    fn new(
+        client: Client,
+        connection: impl Future<Output = Result<(), tokio_postgres::Error>> + Send + 'static,
+    ) -> Self {
+        Self {
+            client,
+            connection_task: tokio::spawn(async move {
+                let _ = connection.await;
+            }),
+        }
+    }
 }
 impl Deref for RequestClient {
     type Target = Client;
@@ -41,12 +57,20 @@ impl Drop for RequestClient {
     }
 }
 
-/// This build deliberately supports only explicit plaintext loopback test connections.
-/// NoTls is never used against a remote host or as a fallback from required TLS.
-pub(crate) fn validate_url(value: &str) -> Result<PgConfig, String> {
-    let invalid =
-        || "AUTH_DATABASE_URL must be a loopback PostgreSQL URI with sslmode=disable".to_string();
-    let uri = url::Url::parse(value).map_err(|_| invalid())?;
+struct DatabaseOptions {
+    config: PgConfig,
+    verified_tls: bool,
+    root_certificate: Option<PathBuf>,
+}
+
+/// Enforce the public URI policy before adapting it to tokio-postgres's TLS modes.
+/// The native TLS connector keeps both certificate and hostname checks enabled.
+fn database_options(value: &str) -> Result<DatabaseOptions, String> {
+    let invalid = || {
+        "AUTH_DATABASE_URL requires sslmode=verify-full, or explicit loopback sslmode=disable"
+            .to_string()
+    };
+    let mut uri = url::Url::parse(value).map_err(|_| invalid())?;
     if !matches!(uri.scheme(), "postgres" | "postgresql") || uri.fragment().is_some() {
         return Err(invalid());
     }
@@ -61,20 +85,73 @@ pub(crate) fn validate_url(value: &str) -> Result<PgConfig, String> {
         Some(url::Host::Ipv6(ip)) => ip.is_loopback(),
         None => false,
     };
-    let mut ssl = uri.query_pairs().filter(|(key, _)| key == "sslmode");
-    if !loopback || ssl.next().is_none_or(|(_, mode)| mode != "disable") || ssl.next().is_some() {
-        return Err(invalid());
+    let mut options = std::collections::HashMap::new();
+    for (key, value) in uri.query_pairs() {
+        if matches!(
+            key.as_ref(),
+            "host" | "hostaddr" | "port" | "sslnegotiation"
+        ) || key.starts_with("ssl") && !matches!(key.as_ref(), "sslmode" | "sslrootcert")
+            || options
+                .insert(key.into_owned(), value.into_owned())
+                .is_some()
+        {
+            return Err(invalid());
+        }
     }
-    // Disallow query host/hostaddr overrides that could bypass the URI host check.
-    if uri
-        .query_pairs()
-        .any(|(key, _)| matches!(key.as_ref(), "host" | "hostaddr" | "sslnegotiation"))
+    let verified_tls = match options.get("sslmode").map(String::as_str) {
+        Some("verify-full") => true,
+        Some("disable") if loopback => false,
+        _ => return Err(invalid()),
+    };
+    let root_certificate = options.get("sslrootcert").map(PathBuf::from);
+    if root_certificate
+        .as_ref()
+        .is_some_and(|path| path.as_os_str().is_empty())
+        || !verified_tls && root_certificate.is_some()
     {
         return Err(invalid());
     }
-    let mut config: PgConfig = value.parse().map_err(|_| invalid())?;
+    // tokio-postgres itself supports disable/prefer/require, but no verify-full or
+    // sslrootcert. Only the connector may perform verification; Require forbids fallback.
+    uri.query_pairs_mut()
+        .clear()
+        .extend_pairs(
+            options
+                .iter()
+                .filter(|(key, _)| !matches!(key.as_str(), "sslmode" | "sslrootcert")),
+        )
+        .append_pair("sslmode", if verified_tls { "require" } else { "disable" });
+    let mut config: PgConfig = uri.as_str().parse().map_err(|_| invalid())?;
+    if config.get_hosts().len() != 1 || !config.get_hostaddrs().is_empty() {
+        return Err(invalid());
+    }
     config.connect_timeout(Duration::from_secs(5));
-    Ok(config)
+    Ok(DatabaseOptions {
+        config,
+        verified_tls,
+        root_certificate,
+    })
+}
+
+pub(crate) fn validate_url(value: &str) -> Result<PgConfig, String> {
+    database_options(value).map(|options| options.config)
+}
+
+fn tls_connector(options: &DatabaseOptions) -> Result<Option<TlsConnector>, String> {
+    if !options.verified_tls {
+        return Ok(None);
+    }
+    let unavailable = || "authentication TLS trust configuration unavailable".to_string();
+    let mut builder = TlsConnector::builder();
+    builder.min_protocol_version(Some(native_tls::Protocol::Tlsv12));
+    if let Some(path) = &options.root_certificate {
+        let pem = std::fs::read(path).map_err(|_| unavailable())?;
+        let certificate = Certificate::from_pem(&pem).map_err(|_| unavailable())?;
+        builder
+            .disable_built_in_roots(true)
+            .add_root_certificate(certificate);
+    }
+    builder.build().map(Some).map_err(|_| unavailable())
 }
 
 #[derive(Clone)]
@@ -128,6 +205,8 @@ fn session(row: &Row) -> LoginSession {
 /// All SQL is confined to this store; no application-start DDL or user seeding occurs.
 pub struct PostgresStore {
     config: PgConfig,
+    tls: Option<TlsConnector>,
+    account_lifecycle: bool,
     hash_slots: Arc<Semaphore>,
     db_slots: Semaphore,
     dummy: StoredHash,
@@ -137,12 +216,13 @@ pub struct PostgresStore {
 }
 impl PostgresStore {
     pub async fn connect(config: &Config) -> Result<Self, String> {
-        let pg = validate_url(
+        let options = database_options(
             config
                 .database_url
                 .as_deref()
                 .ok_or("AUTH_DATABASE_URL is required")?,
         )?;
+        let tls = tls_connector(&options)?;
         let dummy = tokio::task::spawn_blocking(|| {
             let mut salt = [0; 16];
             getrandom::fill(&mut salt).map_err(|_| UNAVAILABLE)?;
@@ -155,7 +235,9 @@ impl PostgresStore {
         .map_err(|_| "authentication store unavailable")?
         .map_err(|_| "authentication store unavailable")?;
         let store = Self {
-            config: pg,
+            config: options.config,
+            tls,
+            account_lifecycle: config.account_lifecycle,
             hash_slots: Arc::new(Semaphore::new(1)),
             db_slots: Semaphore::new(8),
             dummy,
@@ -171,12 +253,16 @@ impl PostgresStore {
         Ok(store)
     }
     async fn client(&self) -> Result<RequestClient, AuthError> {
-        let (client, connection) = self.config.connect(NoTls).await.map_err(|_| UNAVAILABLE)?;
-        let client = RequestClient {
-            client,
-            connection_task: tokio::spawn(async move {
-                let _ = connection.await;
-            }),
+        let client = if let Some(tls) = &self.tls {
+            let (client, connection) = self
+                .config
+                .connect(MakeTlsConnector::new(tls.clone()))
+                .await
+                .map_err(|_| UNAVAILABLE)?;
+            RequestClient::new(client, connection)
+        } else {
+            let (client, connection) = self.config.connect(NoTls).await.map_err(|_| UNAVAILABLE)?;
+            RequestClient::new(client, connection)
         };
         // The owner exists before SET so setup failure or cancellation also closes IO.
         client
@@ -213,6 +299,27 @@ impl PostgresStore {
             let actual =
                 Zeroizing::new(derive(password.as_bytes(), &hash.salt).map_err(|_| UNAVAILABLE)?);
             Ok(bool::from(actual.as_ref().ct_eq(hash.hash.as_slice())))
+        })
+        .await
+        .map_err(|_| UNAVAILABLE)?
+    }
+    async fn hash_password(&self, password: Zeroizing<String>) -> Result<String, AuthError> {
+        let permit = self
+            .hash_slots
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(|_| UNAVAILABLE)?;
+        tokio::task::spawn_blocking(move || {
+            let _permit = permit;
+            let mut salt = [0; 16];
+            getrandom::fill(&mut salt).map_err(|_| UNAVAILABLE)?;
+            let hash = Zeroizing::new(derive(password.as_bytes(), &salt).map_err(|_| UNAVAILABLE)?);
+            Ok(format!(
+                "$argon2id$v=19$m=65536,t=3,p=4${}${}",
+                STANDARD_NO_PAD.encode(salt),
+                STANDARD_NO_PAD.encode(hash.as_ref())
+            ))
         })
         .await
         .map_err(|_| UNAVAILABLE)?
@@ -283,13 +390,18 @@ impl PostgresStore {
 }
 impl AuthStore for PostgresStore {
     fn profile(&self) -> &'static str {
-        "browser-session-v2"
+        if self.account_lifecycle {
+            "browser-session-v3"
+        } else {
+            "browser-session-v2"
+        }
     }
     fn ready(&self) -> StoreFuture<'_, ()> {
         Box::pin(self.bounded(async {
             let client = self.client().await?;
             let row = client.query_one("SELECT count(*)::bigint AS count, min(version) AS minimum, max(version) AS maximum FROM feature_auth.schema_version", &[]).await.map_err(|_| UNAVAILABLE)?;
-            if row.get::<_, i64>("count") != 1 || row.get::<_, Option<i32>>("minimum") != Some(1) || row.get::<_, Option<i32>>("maximum") != Some(1) { return Err(UNAVAILABLE); }
+            let expected = if self.account_lifecycle { 2 } else { 1 };
+            if row.get::<_, i64>("count") != 1 || row.get::<_, Option<i32>>("minimum") != Some(expected) || row.get::<_, Option<i32>>("maximum") != Some(expected) { return Err(UNAVAILABLE); }
             Ok(())
         }))
     }
@@ -320,11 +432,124 @@ impl AuthStore for PostgresStore {
             Ok(())
         }))
     }
+    fn account(&self, input: AccountInput) -> StoreFuture<'_, ()> {
+        Box::pin(self.bounded(async move {
+            if !self.account_lifecycle {
+                return Err(AuthError::Internal);
+            }
+            let mut client = self.client().await?;
+            let tx = client.transaction().await.map_err(|_| UNAVAILABLE)?;
+            let peer = input.peer.to_string();
+            let retry: i32 = tx
+                .query_one(
+                    "SELECT feature_auth.account_reserve($1,$2)",
+                    &[&input.action.as_str(), &peer],
+                )
+                .await
+                .map_err(|_| UNAVAILABLE)?
+                .try_get(0)
+                .map_err(|_| UNAVAILABLE)?;
+            if retry < 0 {
+                return Err(UNAVAILABLE);
+            }
+            if retry > 0 {
+                tx.commit().await.map_err(|_| UNAVAILABLE)?;
+                return Err(AuthError::RateLimited(retry as u64));
+            }
+            // Keep the reservation and advisory lock in this same transaction.
+            // Rejected requests never enqueue Argon2 work or generate a capability.
+            let hash = if input.action.requires_password() {
+                self.hash_password(input.password).await?
+            } else {
+                String::new()
+            };
+            let token = if input.action.confirms() {
+                input.token
+            } else {
+                random_token().map_err(|_| UNAVAILABLE)?
+            };
+            let code: i32 = tx
+                .query_one(
+                    "SELECT feature_auth.account_apply($1,$2,$3,$4,$5)",
+                    &[&input.action.as_str(), &peer, &input.email, &token, &hash],
+                )
+                .await
+                .map_err(|_| UNAVAILABLE)?
+                .try_get(0)
+                .map_err(|_| UNAVAILABLE)?;
+            if code < -1 {
+                return Err(UNAVAILABLE);
+            }
+            // Rejected tokens and rate-limit counters are committed too.
+            tx.commit().await.map_err(|_| UNAVAILABLE)?;
+            match code {
+                0 => Ok(()),
+                -1 => Err(AuthError::InvalidToken),
+                seconds => Err(AuthError::RateLimited(seconds as u64)),
+            }
+        }))
+    }
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
+    pub(crate) async fn assert_limited_accounts_skip_busy_hasher(uri: &str) {
+        let settings = crate::tests::config(&[
+            ("AUTH_STORE", "postgres"),
+            ("AUTH_DATABASE_URL", uri),
+            ("AUTH_ACCOUNT_LIFECYCLE", "true"),
+        ])
+        .unwrap();
+        let store = PostgresStore::connect(&settings).await.unwrap();
+        let client = store.client().await.unwrap();
+        for action in [
+            crate::AccountAction::Register,
+            crate::AccountAction::ResetConfirm,
+        ] {
+            client.execute(
+                "INSERT INTO feature_auth.account_attempts(peer,action,hits,expires_at) VALUES ('127.0.0.88',$1,10,clock_timestamp()+interval '60 seconds') ON CONFLICT(peer,action) DO UPDATE SET hits=10,expires_at=EXCLUDED.expires_at",
+                &[&action.as_str()],
+            ).await.unwrap();
+        }
+        // An existing password job occupies the sole hash slot. Already-limited
+        // requests must still complete, proving they never enter the hash queue.
+        let busy_hasher = store.hash_slots.clone().acquire_owned().await.unwrap();
+        for action in [
+            crate::AccountAction::Register,
+            crate::AccountAction::ResetConfirm,
+        ] {
+            let result = tokio::time::timeout(
+                Duration::from_secs(2),
+                store.account(crate::AccountInput {
+                    action,
+                    peer: "127.0.0.88".parse().unwrap(),
+                    email: "over-limit@example.com".into(),
+                    token: "A".repeat(43),
+                    password: Zeroizing::new("valid-overlimit-password".into()),
+                }),
+            )
+            .await
+            .expect("rate-limited request waited for busy password hashing");
+            assert!(matches!(result, Err(AuthError::RateLimited(seconds)) if seconds > 0));
+            assert_eq!(client.query_one(
+                "SELECT hits FROM feature_auth.account_attempts WHERE peer='127.0.0.88' AND action=$1",
+                &[&action.as_str()],
+            ).await.unwrap().get::<_,i32>(0), 10);
+        }
+        drop(busy_hasher);
+        assert_eq!(
+            client
+                .query_one(
+                    "SELECT count(*) FROM feature_auth.users WHERE email='over-limit@example.com'",
+                    &[]
+                )
+                .await
+                .unwrap()
+                .get::<_, i64>(0),
+            0
+        );
+    }
     #[test]
     fn phc_contract_rejects_unsupported_costs_and_noncanonical_base64() {
         let salt = STANDARD_NO_PAD.encode([7; 16]);
@@ -364,6 +589,28 @@ mod tests {
         }
     }
     #[test]
+    fn url_accepts_verified_tls_without_weakening_plaintext_policy() {
+        for uri in [
+            "postgresql://db.example.com/test?sslmode=verify-full",
+            "postgresql://localhost/test?sslmode=verify-full&sslrootcert=%2Ftmp%2Froot.pem",
+            "postgresql://127.0.0.1:5432/test?sslmode=verify-full",
+        ] {
+            assert!(validate_url(uri).is_ok(), "verified TLS URI was rejected");
+        }
+        for uri in [
+            "postgresql://db.example.com/test?sslmode=require",
+            "postgresql://db.example.com/test?sslmode=prefer",
+            "postgresql://db.example.com/test?sslmode=verify-ca",
+            "postgresql://db.example.com/test?sslmode=verify-full&host=localhost",
+            "postgresql://db.example.com/test?sslmode=verify-full&hostaddr=127.0.0.1",
+            "postgresql://db.example.com/test?sslmode=verify-full&sslnegotiation=direct",
+            "postgresql://db.example.com/test?sslmode=verify-full&sslmode=disable",
+            "postgresql://localhost/test?sslmode=disable&sslrootcert=%2Ftmp%2Froot.pem",
+        ] {
+            assert!(validate_url(uri).is_err(), "unsafe TLS URI was accepted");
+        }
+    }
+    #[test]
     fn session_hash_is_sha256_of_utf8_cookie() {
         assert_eq!(
             token_hash("abc"),
@@ -379,3 +626,7 @@ mod tests {
 #[cfg(test)]
 #[path = "postgres_connection_tests.rs"]
 mod connection_tests;
+
+#[cfg(test)]
+#[path = "postgres_tls_tests.rs"]
+mod tls_tests;

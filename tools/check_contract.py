@@ -1,4 +1,4 @@
-"""Validate both OpenAPI profiles and exact mappings to checked-in test declarations."""
+"""Validate all OpenAPI profiles and exact mappings to checked-in test declarations."""
 
 from __future__ import annotations
 
@@ -15,6 +15,13 @@ from openapi_spec_validator import validate
 
 ROOT = Path(__file__).resolve().parents[1]
 PATHS = {"/auth/login", "/auth/me", "/auth/logout", "/healthz"}
+ACCOUNT_ENDPOINTS = {
+    "/auth/register": ("Register", {"email", "password"}),
+    "/auth/email-verification/request": ("AccountEmail", {"email"}),
+    "/auth/email-verification/confirm": ("AccountToken", {"token"}),
+    "/auth/password-reset/request": ("AccountEmail", {"email"}),
+    "/auth/password-reset/confirm": ("ResetPassword", {"token", "password"}),
+}
 SUITE_BINDINGS = {
     "common-http": ("unittest", "tests/conformance.py", "AuthContract", "each-backend"),
     "shared-postgres": (
@@ -37,6 +44,39 @@ SUITE_BINDINGS = {
         "separate-consumer",
     ),
 }
+V3_BINDINGS = {
+    "common-http": ("unittest", "tests/conformance.py", "AuthContract", "each-backend"),
+    "account-http": (
+        "unittest",
+        "tests/account_conformance.py",
+        "AccountContract",
+        "each-backend",
+    ),
+    "shared-accounts": (
+        "unittest-prefix",
+        "tests/account_conformance.py",
+        "SharedAccounts",
+        "mixed-backends",
+    ),
+    "account-browser": (
+        "playwright",
+        "clients/react/account-tests/accounts.spec.ts",
+        None,
+        "each-backend",
+    ),
+    "account-sql": (
+        "unittest",
+        "tests/test_account_store.py",
+        "AccountStoreContract",
+        "dedicated-database",
+    ),
+    "rust-tls": (
+        "rust-test",
+        "implementations/rust-axum/src/postgres_tls_tests.rs",
+        None,
+        "isolated-tls-fixture",
+    ),
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -56,7 +96,10 @@ def load_module(name: str, relative: str):
 def validate_profile(spec: dict, *, version: str, profile: str) -> None:
     validate(spec)
     require(spec["info"]["version"] == version, f"{profile}: release version drift")
-    require(set(spec["paths"]) == PATHS, f"{profile}: endpoint drift")
+    expected_paths = (
+        PATHS | set(ACCOUNT_ENDPOINTS) if profile == "browser-session-v3" else PATHS
+    )
+    require(set(spec["paths"]) == expected_paths, f"{profile}: endpoint drift")
     require(
         spec["components"]["securitySchemes"]["sessionCookie"]["name"] == "fs_session",
         f"{profile}: cookie name drift",
@@ -69,7 +112,7 @@ def validate_profile(spec: dict, *, version: str, profile: str) -> None:
         == profile,
         f"{profile}: health profile drift",
     )
-    if profile == "browser-session-v2":
+    if profile in ("browser-session-v2", "browser-session-v3"):
         user_id = spec["components"]["schemas"]["User"]["properties"]["id"]
         require(
             "const" not in user_id and user_id["type"] == "string",
@@ -90,6 +133,54 @@ def validate_profile(spec: dict, *, version: str, profile: str) -> None:
                 == {"$ref": "#/components/responses/StorageUnavailable"},
                 f"v2 storage response missing: {method} {path}",
             )
+    if profile == "browser-session-v3":
+        require(spec.get("x-database-schema-version") == 2, "v3 schema version drift")
+        require("INVALID_TOKEN" in codes, "v3 token error code missing")
+        for path, (schema_name, fields) in ACCOUNT_ENDPOINTS.items():
+            operation = spec["paths"][path]["post"]
+            require(set(spec["paths"][path]) == {"post"}, f"v3 method drift: {path}")
+            require(
+                operation["security"] == [], f"v3 must not require a session: {path}"
+            )
+            require(
+                operation["parameters"] == [{"$ref": "#/components/parameters/Origin"}],
+                f"v3 origin drift: {path}",
+            )
+            require(
+                operation["requestBody"]["content"]["application/json"]["schema"]
+                == {"$ref": f"#/components/schemas/{schema_name}"},
+                f"v3 body schema drift: {path}",
+            )
+            schema = spec["components"]["schemas"][schema_name]
+            require(
+                schema["additionalProperties"] is False
+                and set(schema["required"]) == fields
+                and set(schema["properties"]) == fields,
+                f"v3 body fields drift: {path}",
+            )
+            success = "204" if path.endswith("/confirm") else "202"
+            responses = operation["responses"]
+            require(
+                set(responses)
+                == {success, "400", "403", "405", "413", "415", "429", "503"},
+                f"v3 response drift: {path}",
+            )
+            require(
+                "Set-Cookie" not in responses[success].get("headers", {}),
+                f"v3 must not issue a session: {path}",
+            )
+            require(
+                responses["503"]
+                == {"$ref": "#/components/responses/StorageUnavailable"},
+                f"v3 storage response missing: {path}",
+            )
+        password = spec["components"]["schemas"]["Register"]["properties"]["password"]
+        require(
+            password["minLength"] == 15 and password["maxLength"] == 1024,
+            "v3 password limits drift",
+        )
+        token = spec["components"]["schemas"]["AccountToken"]["properties"]["token"]
+        require(token["pattern"] == "^[A-Za-z0-9_-]{43}$", "v3 capability format drift")
 
 
 def testcase_names(module, name: str) -> set[str]:
@@ -231,18 +322,111 @@ def validate_v2_manifest(manifest: dict, common, postgres) -> tuple[int, int]:
     return logical, expanded
 
 
+def validate_v3_manifest(
+    manifest: dict, common, accounts, sql_tests
+) -> tuple[int, int]:
+    require(
+        manifest["profile"] == "browser-session-v3" and manifest["version"] == "0.3.0",
+        "v3 profile/version drift",
+    )
+    require(manifest["schema_version"] == 2, "v3 manifest schema version drift")
+    backends = set(common.BACKENDS)
+    require(
+        set(manifest["backends"]) == backends
+        and len(manifest["backends"]) == len(backends),
+        "v3 backend drift",
+    )
+    suites = manifest["suites"]
+    require(
+        {suite["id"] for suite in suites} == set(V3_BINDINGS)
+        and len(suites) == len(V3_BINDINGS),
+        "v3 suite drift",
+    )
+    ids = [case["id"] for suite in suites for case in suite["cases"]]
+    require(len(ids) == len(set(ids)), "v3 scenario IDs must be unique")
+    modules = {
+        "tests/conformance.py": common,
+        "tests/account_conformance.py": accounts,
+        "tests/test_account_store.py": sql_tests,
+    }
+    logical = expanded = 0
+    for suite in suites:
+        require(
+            (suite["kind"], suite["source"], suite.get("class"), suite["scope"])
+            == V3_BINDINGS[suite["id"]],
+            f"{suite['id']}: source/runner drift",
+        )
+        actual = case_names(suite)
+        if suite["kind"] == "unittest":
+            expected = testcase_names(modules[suite["source"]], suite["class"])
+        elif suite["kind"] == "unittest-prefix":
+            require(suite["prefix"] == "mixed_", "v3 mixed loader prefix drift")
+            loader = unittest.TestLoader()
+            loader.testMethodPrefix = suite["prefix"]
+            expected = set(loader.getTestCaseNames(accounts.SharedAccounts))
+            # The mixed suite deliberately excludes inherited HTTP tests.
+            require(
+                not expected.intersection(testcase_names(accounts, "AccountContract")),
+                "v3 mixed suite repeats inherited HTTP tests",
+            )
+            tree = ast.parse((ROOT / suite["source"]).read_text())
+            require(
+                any(
+                    isinstance(node, ast.Call)
+                    and isinstance(node.func, ast.Attribute)
+                    and node.func.attr == "startswith"
+                    and node.args
+                    and isinstance(node.args[0], ast.Constant)
+                    and node.args[0].value == "mixed_"
+                    for node in ast.walk(tree)
+                ),
+                "v3 mixed runner no longer selects its mapped prefix",
+            )
+        elif suite["kind"] == "playwright":
+            expected = playwright_names(suite["source"])
+        else:
+            source = (ROOT / suite["source"]).read_text()
+            expected = set(
+                re.findall(
+                    r"#\[tokio::test\]\s*#\[ignore[^\n]*\]\s*async fn (\w+)\(", source
+                )
+            )
+            require(
+                expected == {"postgres_tls_certificate_boundaries"},
+                "TLS fixture test declaration drift",
+            )
+            require(
+                suite["runner"] == "implementations/rust-axum/tests/postgres_tls.py",
+                "TLS runner drift",
+            )
+            require((ROOT / suite["runner"]).is_file(), "TLS fixture runner missing")
+        require(
+            actual == expected,
+            f"{suite['id']}: actual declarations differ from manifest",
+        )
+        logical += len(actual)
+        expanded += len(actual) * (
+            len(backends) if suite["scope"] == "each-backend" else 1
+        )
+    return logical, expanded
+
+
 def main() -> int:
     # postgres_conformance imports conformance/pg_support, and both use tools/auth_db.
-    for relative in ("tests", "tools"):
+    for relative in (".", "tests", "tools"):
         path = str(ROOT / relative)
         if path not in sys.path:
             sys.path.insert(0, path)
     common = load_module("conformance", "tests/conformance.py")
     postgres = load_module("postgres_conformance", "tests/postgres_conformance.py")
+    accounts = load_module("account_conformance", "tests/account_conformance.py")
+    sql_tests = load_module("test_account_store", "tests/test_account_store.py")
     v1 = json.loads((ROOT / "features/auth/openapi.json").read_text())
     v2 = json.loads((ROOT / "features/auth/openapi-v2.json").read_text())
+    v3 = json.loads((ROOT / "features/auth/openapi-v3.json").read_text())
     validate_profile(v1, version="0.1.0", profile="browser-session-v1")
     validate_profile(v2, version="0.2.0", profile="browser-session-v2")
+    validate_profile(v3, version="0.3.0", profile="browser-session-v3")
     manifest = json.loads((ROOT / "features/auth/scenarios.json").read_text())
     require(manifest["profile"] == "browser-session-v1", "v1 scenario profile drift")
     mapped = [row["test"] for row in manifest["scenarios"]]
@@ -264,12 +448,31 @@ def main() -> int:
     require(
         case_names(common_suite) == set(mapped), "v2 must reuse every v1 HTTP scenario"
     )
+    v3_generator = importlib.import_module("generate_openapi_v3")
+    require(
+        v3 == v3_generator.build_spec(v2),
+        "v3 OpenAPI generator drift; regenerate openapi-v3.json",
+    )
+    v3_manifest = json.loads((ROOT / "features/auth/scenarios-v3.json").read_text())
+    v3_logical, v3_expanded = validate_v3_manifest(
+        v3_manifest, common, accounts, sql_tests
+    )
+    v3_common = next(
+        suite for suite in v3_manifest["suites"] if suite["id"] == "common-http"
+    )
+    require(
+        case_names(v3_common) == set(mapped), "v3 must reuse every v1 HTTP scenario"
+    )
     print(f"browser-session-v1: OpenAPI 3.1 valid; {len(mapped)} HTTP methods mapped.")
     print(
         f"browser-session-v2: OpenAPI 3.1 valid; {logical} source scenarios mapped "
         f"({expanded} scheduled checks with backend expansion; not execution results)."
     )
-    print("v2 OpenAPI generator drift check passed.")
+    print(
+        f"browser-session-v3: OpenAPI 3.1 valid; {v3_logical} source scenarios mapped "
+        f"({v3_expanded} scheduled checks with backend expansion; not execution results)."
+    )
+    print("v2/v3 OpenAPI generator drift checks passed.")
     return 0
 
 

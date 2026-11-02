@@ -1,0 +1,1132 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Feature Standards: browser-session-v3",
+    "version": "0.3.0",
+    "description": "명시적 schema 2의 선택적 계정 생명주기 참조 규격. account-session-v3.md가 가입·이메일 확인·비밀번호 재설정·outbox의 기준이다. 기존 v1/v2는 별도 프로필과 스키마에서 유지한다.",
+    "license": {
+      "name": "MIT",
+      "identifier": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000",
+      "description": "로컬 참조 서버"
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "서버 저장 브라우저 세션"
+    },
+    {
+      "name": "health",
+      "description": "PostgreSQL 연결과 schema version 1 준비 상태"
+    },
+    {
+      "name": "accounts",
+      "description": "명시적 계정 생명주기; 자동 로그인과 외부 메일 발송 없음"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "tags": [
+          "auth"
+        ],
+        "summary": "자격 증명을 검증하고 세션을 교체한다",
+        "description": "Origin 정확 일치 필수. DB의 정규화된 이메일과 enabled 사용자를 조회한다. 실패 제한은 PostgreSQL inet peer와 공통 advisory transaction lock을 사용한다. 실패 기록·성공 시 실패 제거·기존 요청 쿠키 세션 교체·새 세션 저장을 원자적으로 처리하고, COMMIT 성공 이후에만 사용자·독립 CSRF 토큰과 세션 쿠키를 반환한다. v3는 generated enabled로 이메일 확인·관리자 허용을 함께 검사한다. 사용자 FOR SHARE 잠금을 PHC 검증부터 새 세션 commit까지 유지해 reset과 직렬화한다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "최대 4096바이트. 중복 키와 알 수 없는 필드를 거부한다.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Credentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "새 세션. Set-Cookie: fs_session; Path=/; HttpOnly; SameSite=Lax; Max-Age=TTL. Secure는 기본 활성화.",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidCredentials"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 정해진 실패 횟수 후 유효한 자격 증명도 제한한다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "getSession",
+        "tags": [
+          "auth"
+        ],
+        "summary": "현재 사용자와 세션 CSRF 토큰을 조회한다",
+        "description": "SHA-256 토큰 해시와 enabled 사용자, DB 시각 기준 만료를 조회한다. 세션에 연결된 사용자 원본 id와 이메일을 반환하며 절대 TTL을 연장하지 않는다. v3의 generated enabled가 이메일 미확인·관리자 비활성을 차단한다.",
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "유효한 세션",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthenticated"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logout",
+        "tags": [
+          "auth"
+        ],
+        "summary": "현재 세션을 서버에서 무효화하고 쿠키를 지운다",
+        "description": "Origin은 항상 필수이다. FOR UPDATE로 잠근 만료 전 저장 세션은 사용자 enabled 여부와 무관하게 정확히 한 개의 일치하는 X-CSRF-Token을 요구한다. 실패 시 403으로 세션을 유지한다. 정확한 CSRF이면 삭제를 COMMIT한 뒤 204와 쿠키 제거를 반환한다. 세션 누락·만료는 CSRF 없이 멱등 204이며 DB 실패는 503이다.",
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "required": false,
+            "description": "만료 전 저장 세션에는 사용자 enabled 여부와 무관하게 필수. 해당 세션에서 발급한 csrfToken 한 개를 상수 시간으로 비교한다.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "멱등 로그아웃. 본문 없음. Set-Cookie로 동일 경로의 fs_session을 Max-Age=0으로 제거한다.",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            }
+          },
+          "403": {
+            "description": "ORIGIN_DENIED 또는 CSRF_INVALID. 기존 세션을 유지한다.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "operationId": "health",
+        "tags": [
+          "health"
+        ],
+        "summary": "PostgreSQL 저장소 준비 상태",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "준비 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "profile",
+                    "implementation"
+                  ],
+                  "properties": {
+                    "status": {
+                      "const": "ok"
+                    },
+                    "profile": {
+                      "const": "browser-session-v3"
+                    },
+                    "implementation": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        },
+        "description": "DB 연결과 schema version 2를 확인한다. 앱은 자동 DDL·seed를 하지 않는다."
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "register",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "가입 요청을 접수한다",
+        "description": "AUTH_ACCOUNT_LIFECYCLE=true 선택 시만 제공. 정확한 Origin·엄격 JSON·최대 4096byte가 필수이다. 동일 이메일/종류 메일 발급은 60초 cooldown이며 HTTP 응답은 동일하다. 확인 토큰 24시간, reset 토큰 15분 절대 만료·단일 사용이다. reset은 PHC 교체·전체 사용자 세션·reset 토큰 삭제를 원자적으로 commit한다. 관리자 비활성은 확인/재설정으로 해제하지 않는다. 토큰·링크를 HTTP로 반환하지 않는다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "동일한 일반 접수. 기존/없는/비활성 계정 정보를 드러내지 않고 Set-Cookie를 발급하지 않는다.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AccountBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 실제 TCP peer+action 기준 60초 10회. 계정 존재 여부와 관계없이 같은 정책이다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/email-verification/request": {
+      "post": {
+        "operationId": "requestEmailVerification",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "이메일 확인 메시지를 요청한다",
+        "description": "AUTH_ACCOUNT_LIFECYCLE=true 선택 시만 제공. 정확한 Origin·엄격 JSON·최대 4096byte가 필수이다. 동일 이메일/종류 메일 발급은 60초 cooldown이며 HTTP 응답은 동일하다. 확인 토큰 24시간, reset 토큰 15분 절대 만료·단일 사용이다. reset은 PHC 교체·전체 사용자 세션·reset 토큰 삭제를 원자적으로 commit한다. 관리자 비활성은 확인/재설정으로 해제하지 않는다. 토큰·링크를 HTTP로 반환하지 않는다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountEmail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "동일한 일반 접수. 기존/없는/비활성 계정 정보를 드러내지 않고 Set-Cookie를 발급하지 않는다.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AccountBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 실제 TCP peer+action 기준 60초 10회. 계정 존재 여부와 관계없이 같은 정책이다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/email-verification/confirm": {
+      "post": {
+        "operationId": "confirmEmailVerification",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "이메일 확인 토큰을 한 번 사용한다",
+        "description": "AUTH_ACCOUNT_LIFECYCLE=true 선택 시만 제공. 정확한 Origin·엄격 JSON·최대 4096byte가 필수이다. 동일 이메일/종류 메일 발급은 60초 cooldown이며 HTTP 응답은 동일하다. 확인 토큰 24시간, reset 토큰 15분 절대 만료·단일 사용이다. reset은 PHC 교체·전체 사용자 세션·reset 토큰 삭제를 원자적으로 commit한다. 관리자 비활성은 확인/재설정으로 해제하지 않는다. 토큰·링크를 HTTP로 반환하지 않는다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountToken"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "COMMIT 후 본문 없는 완료. 자동 로그인·Set-Cookie 없음.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AccountBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 실제 TCP peer+action 기준 60초 10회. 계정 존재 여부와 관계없이 같은 정책이다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/password-reset/request": {
+      "post": {
+        "operationId": "requestPasswordReset",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "비밀번호 재설정 메시지를 요청한다",
+        "description": "AUTH_ACCOUNT_LIFECYCLE=true 선택 시만 제공. 정확한 Origin·엄격 JSON·최대 4096byte가 필수이다. 동일 이메일/종류 메일 발급은 60초 cooldown이며 HTTP 응답은 동일하다. 확인 토큰 24시간, reset 토큰 15분 절대 만료·단일 사용이다. reset은 PHC 교체·전체 사용자 세션·reset 토큰 삭제를 원자적으로 commit한다. 관리자 비활성은 확인/재설정으로 해제하지 않는다. 토큰·링크를 HTTP로 반환하지 않는다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountEmail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "동일한 일반 접수. 기존/없는/비활성 계정 정보를 드러내지 않고 Set-Cookie를 발급하지 않는다.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AccountBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 실제 TCP peer+action 기준 60초 10회. 계정 존재 여부와 관계없이 같은 정책이다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    },
+    "/auth/password-reset/confirm": {
+      "post": {
+        "operationId": "confirmPasswordReset",
+        "tags": [
+          "accounts"
+        ],
+        "summary": "비밀번호와 모든 기존 세션을 교체한다",
+        "description": "AUTH_ACCOUNT_LIFECYCLE=true 선택 시만 제공. 정확한 Origin·엄격 JSON·최대 4096byte가 필수이다. 동일 이메일/종류 메일 발급은 60초 cooldown이며 HTTP 응답은 동일하다. 확인 토큰 24시간, reset 토큰 15분 절대 만료·단일 사용이다. reset은 PHC 교체·전체 사용자 세션·reset 토큰 삭제를 원자적으로 commit한다. 관리자 비활성은 확인/재설정으로 해제하지 않는다. 토큰·링크를 HTTP로 반환하지 않는다.",
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "COMMIT 후 본문 없는 완료. 자동 로그인·Set-Cookie 없음.",
+            "headers": {
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/AccountBadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/OriginDenied"
+          },
+          "405": {
+            "$ref": "#/components/responses/MethodNotAllowed"
+          },
+          "413": {
+            "$ref": "#/components/responses/TooLarge"
+          },
+          "415": {
+            "$ref": "#/components/responses/UnsupportedMediaType"
+          },
+          "429": {
+            "description": "RATE_LIMITED. 실제 TCP peer+action 기준 60초 10회. 계정 존재 여부와 관계없이 같은 정책이다.",
+            "headers": {
+              "Retry-After": {
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "Cache-Control": {
+                "$ref": "#/components/headers/NoStore"
+              },
+              "X-Content-Type-Options": {
+                "$ref": "#/components/headers/NoSniff"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/StorageUnavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "fs_session"
+      }
+    },
+    "parameters": {
+      "Origin": {
+        "name": "Origin",
+        "in": "header",
+        "required": true,
+        "description": "AUTH_ALLOWED_ORIGIN과 정확히 일치해야 한다.",
+        "schema": {
+          "type": "string",
+          "example": "http://127.0.0.1:5173"
+        }
+      }
+    },
+    "headers": {
+      "NoStore": {
+        "schema": {
+          "type": "string",
+          "const": "no-store"
+        }
+      },
+      "NoSniff": {
+        "schema": {
+          "type": "string",
+          "const": "nosniff"
+        }
+      }
+    },
+    "schemas": {
+      "Credentials": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "description": "양끝 ASCII 공백 U+0009~U+000D 및 U+0020 제거 후 ASCII A~Z만 소문자화. 그 밖의 Unicode 보존. @ 필수. 정규화 후 UTF-8 기준 254바이트 이하.",
+            "examples": [
+              "demo@example.com"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "writeOnly": true,
+            "description": "1~1024 UTF-8 바이트. 공백을 제거하지 않는다. 짝이 없는 surrogate escape는 거부한다."
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "feature_auth.users.id 원본 문자열. 계정마다 다르며 정규화하지 않는다.",
+            "examples": [
+              "demo-user",
+              "other-user"
+            ]
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "user",
+          "csrfToken"
+        ],
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "csrfToken": {
+            "type": "string",
+            "minLength": 43,
+            "description": "독립된 256비트 이상의 난수. 로그와 브라우저 영구 저장소에 기록하지 않는다."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_REQUEST",
+                  "INVALID_CREDENTIALS",
+                  "UNAUTHENTICATED",
+                  "ORIGIN_DENIED",
+                  "CSRF_INVALID",
+                  "RATE_LIMITED",
+                  "REQUEST_TOO_LARGE",
+                  "UNSUPPORTED_MEDIA_TYPE",
+                  "METHOD_NOT_ALLOWED",
+                  "NOT_FOUND",
+                  "INTERNAL_ERROR",
+                  "STORAGE_UNAVAILABLE",
+                  "INVALID_TOKEN"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Register": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "description": "양끝 ASCII 공백 제거·ASCII A-Z 소문자화 후 @ 필수·UTF-8 254byte 이하. 정규화 후 U+0000..U+0020 또는 U+007F가 남으면 거절한다."
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 1024,
+            "writeOnly": true,
+            "description": "Unicode scalar 15개 이상, UTF-8 1024byte 이하. 공백과 NUL을 보존한다. 기존 로그인 규칙은 유지한다."
+          }
+        }
+      },
+      "AccountEmail": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "description": "양끝 ASCII 공백 제거·ASCII A-Z 소문자화 후 @ 필수·UTF-8 254byte 이하. 정규화 후 U+0000..U+0020 또는 U+007F가 남으면 거절한다."
+          }
+        }
+      },
+      "AccountToken": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "token"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 43,
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "writeOnly": true,
+            "description": "32byte 난수의 base64url no-padding capability. 로그·영구 브라우저 저장소에 기록하지 않는다."
+          }
+        }
+      },
+      "ResetPassword": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "token",
+          "password"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 43,
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "writeOnly": true,
+            "description": "32byte 난수의 base64url no-padding capability. 로그·영구 브라우저 저장소에 기록하지 않는다."
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 1024,
+            "writeOnly": true,
+            "description": "Unicode scalar 15개 이상, UTF-8 1024byte 이하. 공백과 NUL을 보존한다. 기존 로그인 규칙은 유지한다."
+          }
+        }
+      },
+      "AccountAccepted": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "accepted"
+          }
+        }
+      }
+    },
+    "responses": {
+      "InvalidRequest": {
+        "description": "INVALID_REQUEST",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "InvalidCredentials": {
+        "description": "INVALID_CREDENTIALS. 계정 존재 여부와 무관하게 동일한 본문.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthenticated": {
+        "description": "UNAUTHENTICATED",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "OriginDenied": {
+        "description": "ORIGIN_DENIED",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "MethodNotAllowed": {
+        "description": "METHOD_NOT_ALLOWED",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "TooLarge": {
+        "description": "REQUEST_TOO_LARGE",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "UnsupportedMediaType": {
+        "description": "UNSUPPORTED_MEDIA_TYPE",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "StorageUnavailable": {
+        "description": "STORAGE_UNAVAILABLE. DB 연결·쿼리·커밋 실패 또는 지원하지 않는 저장 해시. URL·자격 증명·DB 오류 원문을 공개하지 않으며 Set-Cookie를 발급하지 않는다. 메모리 fallback 또는 로그아웃 성공으로 처리하지 않는다.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "STORAGE_UNAVAILABLE",
+                "message": "STORAGE_UNAVAILABLE"
+              }
+            }
+          }
+        }
+      },
+      "AccountBadRequest": {
+        "description": "INVALID_REQUEST: JSON·UTF-8·추가/중복 키·필드 정책 오류. INVALID_TOKEN: 올바른 형식의 토큰이 없거나 만료·재사용·종류 불일치·관리자 비활성이다.",
+        "headers": {
+          "Cache-Control": {
+            "$ref": "#/components/headers/NoStore"
+          },
+          "X-Content-Type-Options": {
+            "$ref": "#/components/headers/NoSniff"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-source-contract": "openapi-v2.json",
+  "x-scenario-manifest": "scenarios-v3.json",
+  "x-database-schema-version": 2,
+  "x-required-config": {
+    "AUTH_STORE": "postgres",
+    "AUTH_ACCOUNT_LIFECYCLE": "true"
+  }
+}

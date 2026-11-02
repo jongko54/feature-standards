@@ -50,6 +50,7 @@ class PostgresStore:
         self.ttl = settings.session_ttl
         self.limit = settings.rate_limit_max
         self.window = settings.rate_limit_window
+        self.account_lifecycle = settings.account_lifecycle
         self.hasher = PasswordHasher(
             time_cost=3, memory_cost=65536, parallelism=4, salt_len=16, hash_len=32
         )
@@ -77,11 +78,39 @@ class PostgresStore:
     def health(self) -> None:
         with self._connection() as conn:
             rows = conn.execute("SELECT version FROM feature_auth.schema_version").fetchall()
-            if rows != [(1,)]:
+            if rows != [(2 if self.account_lifecycle else 1,)]:
                 raise AuthError(503, "STORAGE_UNAVAILABLE")
 
     def close(self) -> None:
         pass
+
+    def account(self, action: str, peer: str, email: str, token: str, password: str) -> None:
+        if not self.account_lifecycle:
+            raise AuthError(404, "NOT_FOUND")
+        with self._connection() as conn:
+            outcome = conn.execute(
+                "SELECT feature_auth.account_reserve(%s,%s)", (action, peer)
+            ).fetchone()[0]
+            if not isinstance(outcome, int) or outcome < 0:
+                raise AuthError(503, "STORAGE_UNAVAILABLE")
+            if outcome == 0:
+                # Reserve the peer budget in this transaction before allocating Argon2 memory.
+                encoded = self.hasher.hash(password) if password else ""
+                if action in ("register", "verify-request", "reset-request"):
+                    token = secrets.token_urlsafe(32)
+                outcome = conn.execute(
+                    "SELECT feature_auth.account_apply(%s,%s,%s,%s,%s)",
+                    (action, peer, email, token, encoded),
+                ).fetchone()[0]
+        # The connection context commits before any semantic outcome reaches HTTP.
+        if not isinstance(outcome, int):
+            raise AuthError(503, "STORAGE_UNAVAILABLE")
+        if outcome == -1:
+            raise AuthError(400, "INVALID_TOKEN")
+        if outcome > 0:
+            raise AuthError(429, "RATE_LIMITED", {"Retry-After": str(outcome)})
+        if outcome != 0:
+            raise AuthError(503, "STORAGE_UNAVAILABLE")
 
     def authenticate(self, peer: str, email: str, password: str, old_token: str):
         outcome = None
@@ -107,7 +136,7 @@ class PostgresStore:
             else:
                 user = conn.execute(
                     "SELECT id, email, password_hash, enabled "
-                    "FROM feature_auth.users WHERE email = %s",
+                    "FROM feature_auth.users WHERE email = %s FOR SHARE",
                     (email,),
                 ).fetchone()
                 encoded = user[2] if user else self._dummy

@@ -1,0 +1,293 @@
+{
+  "profile": "browser-session-v3",
+  "version": "0.3.0",
+  "schema_version": 2,
+  "openapi": "features/auth/openapi-v3.json",
+  "backends": [
+    "python",
+    "go",
+    "java",
+    "rust"
+  ],
+  "note": "정적 소스 매핑이며 실행 성공을 뜻하지 않는다. mixed_04와 mixed_10은 같은 논리 시나리오 안에서 네 백엔드를 순회한다. SQL 및 TLS는 별도 fixture 검사다.",
+  "suites": [
+    {
+      "id": "common-http",
+      "kind": "unittest",
+      "source": "tests/conformance.py",
+      "scope": "each-backend",
+      "class": "AuthContract",
+      "cases": [
+        {
+          "id": "V3-COMMON-HTTP-01",
+          "test": "test_01_login_user_shape_and_cache"
+        },
+        {
+          "id": "V3-COMMON-HTTP-02",
+          "test": "test_02_cookie_policy"
+        },
+        {
+          "id": "V3-COMMON-HTTP-03",
+          "test": "test_03_me_and_forged_session"
+        },
+        {
+          "id": "V3-COMMON-HTTP-04",
+          "test": "test_04_email_normalization"
+        },
+        {
+          "id": "V3-COMMON-HTTP-05",
+          "test": "test_05_generic_credentials_error"
+        },
+        {
+          "id": "V3-COMMON-HTTP-06",
+          "test": "test_06_origin_required_for_login"
+        },
+        {
+          "id": "V3-COMMON-HTTP-07",
+          "test": "test_07_strict_json"
+        },
+        {
+          "id": "V3-COMMON-HTTP-08",
+          "test": "test_08_content_type_and_size"
+        },
+        {
+          "id": "V3-COMMON-HTTP-09",
+          "test": "test_09_utf8_field_limits"
+        },
+        {
+          "id": "V3-COMMON-HTTP-10",
+          "test": "test_10_password_is_not_trimmed"
+        },
+        {
+          "id": "V3-COMMON-HTTP-11",
+          "test": "test_11_session_rotation_revokes_previous_cookie"
+        },
+        {
+          "id": "V3-COMMON-HTTP-12",
+          "test": "test_12_csrf_failure_preserves_session"
+        },
+        {
+          "id": "V3-COMMON-HTTP-13",
+          "test": "test_13_logout_origin_failure_preserves_session"
+        },
+        {
+          "id": "V3-COMMON-HTTP-14",
+          "test": "test_14_logout_revokes_stolen_cookie_and_is_idempotent"
+        },
+        {
+          "id": "V3-COMMON-HTTP-15",
+          "test": "test_15_logout_does_not_revoke_other_browser"
+        },
+        {
+          "id": "V3-COMMON-HTTP-16",
+          "test": "test_16_csrf_is_bound_to_session"
+        },
+        {
+          "id": "V3-COMMON-HTTP-17",
+          "test": "test_17_methods_and_paths"
+        },
+        {
+          "id": "V3-COMMON-HTTP-18",
+          "test": "test_18_absolute_expiry_is_not_extended_by_reads"
+        },
+        {
+          "id": "V3-COMMON-HTTP-19",
+          "test": "test_19_rate_limit_ignores_untrusted_forwarded_address"
+        }
+      ]
+    },
+    {
+      "id": "account-http",
+      "kind": "unittest",
+      "source": "tests/account_conformance.py",
+      "scope": "each-backend",
+      "class": "AccountContract",
+      "cases": [
+        {
+          "id": "V3-ACCOUNT-HTTP-01",
+          "test": "test_01_register_verify_login"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-02",
+          "test": "test_02_duplicate_and_generic_requests"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-03",
+          "test": "test_03_strict_inputs_and_origin"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-04",
+          "test": "test_04_token_kind_expiry_and_replay"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-05",
+          "test": "test_05_reset_revokes_all_sessions"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-06",
+          "test": "test_06_admin_disabled_state_is_preserved"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-07",
+          "test": "test_07_cooldown_and_reissue"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-08",
+          "test": "test_08_peer_limit_ignores_forwarded_headers"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-09",
+          "test": "test_09_account_operations_do_not_authenticate"
+        },
+        {
+          "id": "V3-ACCOUNT-HTTP-10",
+          "test": "test_10_commit_failure_rolls_back"
+        }
+      ]
+    },
+    {
+      "id": "shared-accounts",
+      "kind": "unittest-prefix",
+      "source": "tests/account_conformance.py",
+      "scope": "mixed-backends",
+      "class": "SharedAccounts",
+      "prefix": "mixed_",
+      "cases": [
+        {
+          "id": "V3-SHARED-ACCOUNTS-01",
+          "test": "mixed_01_cross_language_lifecycle"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-02",
+          "test": "mixed_02_concurrent_verification_single_winner"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-03",
+          "test": "mixed_03_concurrent_reset_single_winner"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-04",
+          "test": "mixed_04_login_reset_lock_race"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-05",
+          "test": "mixed_05_generated_enabled_blocks_pending_users"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-06",
+          "test": "mixed_06_database_disconnect_preserves_capabilities"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-07",
+          "test": "mixed_07_peer_limit_shared_between_servers"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-08",
+          "test": "mixed_08_private_capture_and_no_public_mailbox"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-09",
+          "test": "mixed_09_token_lifetimes_and_hashes"
+        },
+        {
+          "id": "V3-SHARED-ACCOUNTS-10",
+          "test": "mixed_10_tokens_survive_process_restart"
+        }
+      ]
+    },
+    {
+      "id": "account-browser",
+      "kind": "playwright",
+      "source": "clients/react/account-tests/accounts.spec.ts",
+      "scope": "each-backend",
+      "cases": [
+        {
+          "id": "V3-ACCOUNT-BROWSER-01",
+          "test": "별도 가입·메일 확인·로그인·재설정으로 기존 세션을 폐기한다"
+        },
+        {
+          "id": "V3-ACCOUNT-BROWSER-02",
+          "test": "확인 링크는 자동 소비하지 않고 클릭한 뒤 재사용을 거절한다"
+        },
+        {
+          "id": "V3-ACCOUNT-BROWSER-03",
+          "test": "모바일 가입 입력 오류를 표시하고 페이지가 넘치지 않는다"
+        }
+      ]
+    },
+    {
+      "id": "account-sql",
+      "kind": "unittest",
+      "source": "tests/test_account_store.py",
+      "scope": "dedicated-database",
+      "class": "AccountStoreContract",
+      "cases": [
+        {
+          "id": "V3-ACCOUNT-SQL-01",
+          "test": "test_account_gateway_accepts_a_new_registration"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-02",
+          "test": "test_duplicate_never_replaces_password_or_reissues"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-03",
+          "test": "test_verification_single_use_and_kind_binding"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-04",
+          "test": "test_expiry_and_disabled_admin_preserve_token"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-05",
+          "test": "test_generic_unknown_requests_and_unverified_reset"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-06",
+          "test": "test_cooldown_and_reissue_invalidates_old_token"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-07",
+          "test": "test_reset_replaces_password_revokes_sessions_and_preserves_admin"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-08",
+          "test": "test_same_peer_rate_limit_is_shared"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-09",
+          "test": "test_rollback_does_not_leave_user_or_outbox"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-10",
+          "test": "test_migration_rerun_does_not_verify_pending_users"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-11",
+          "test": "test_reservation_is_consumed_once_and_is_transaction_local"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-12",
+          "test": "test_private_capture_preserves_file_when_commit_acknowledgement_is_lost"
+        },
+        {
+          "id": "V3-ACCOUNT-SQL-13",
+          "test": "test_capture_never_overwrites_an_existing_file"
+        }
+      ]
+    },
+    {
+      "id": "rust-tls",
+      "kind": "rust-test",
+      "source": "implementations/rust-axum/src/postgres_tls_tests.rs",
+      "scope": "isolated-tls-fixture",
+      "runner": "implementations/rust-axum/tests/postgres_tls.py",
+      "cases": [
+        {
+          "id": "V3-RUST-TLS-01",
+          "test": "postgres_tls_certificate_boundaries"
+        }
+      ]
+    }
+  ]
+}

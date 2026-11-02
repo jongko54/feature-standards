@@ -27,6 +27,7 @@ type Config struct {
 	Host, Port, Email, Password, Origin string
 	Store, DatabaseURL                  string
 	Demo, Secure                        bool
+	AccountLifecycle                    bool
 	SessionTTL, RateWindow              time.Duration
 	RateLimit                           int
 }
@@ -113,6 +114,15 @@ func LoadConfig() (Config, error) {
 		}
 	}
 	var err error
+	if c.AccountLifecycle, err = envBool("AUTH_ACCOUNT_LIFECYCLE", false); err != nil {
+		return c, err
+	}
+	if raw, exists := os.LookupEnv("AUTH_ACCOUNT_LIFECYCLE"); exists && raw != "true" && raw != "false" {
+		return c, errors.New("AUTH_ACCOUNT_LIFECYCLE must be true or false")
+	}
+	if c.AccountLifecycle && c.Store != "postgres" {
+		return c, errors.New("AUTH_ACCOUNT_LIFECYCLE requires postgres storage")
+	}
 	if c.Demo, err = envBool("AUTH_DEMO", false); err != nil {
 		return c, err
 	}
@@ -167,6 +177,9 @@ func LoadConfig() (Config, error) {
 }
 
 func NewServer(config Config) (*Server, error) {
+	if config.AccountLifecycle && config.Store != "postgres" {
+		return nil, errors.New("AUTH_ACCOUNT_LIFECYCLE requires postgres storage")
+	}
 	if config.Store != "" && config.Store != "memory" && config.Store != "postgres" {
 		return nil, errors.New("AUTH_STORE must be memory or postgres")
 	}
@@ -214,14 +227,24 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 	}
 	var method string
+	action, accountRoute := accountRoutes[r.URL.Path]
+	if accountRoute {
+		if !s.config.AccountLifecycle {
+			writeError(w, http.StatusNotFound, "NOT_FOUND")
+			return
+		}
+		method = "POST"
+	}
 	switch r.URL.Path {
 	case "/auth/login", "/auth/logout":
 		method = "POST"
 	case "/auth/me", "/healthz":
 		method = "GET"
 	default:
-		writeError(w, http.StatusNotFound, "NOT_FOUND")
-		return
+		if !accountRoute {
+			writeError(w, http.StatusNotFound, "NOT_FOUND")
+			return
+		}
 	}
 	if r.Method != method {
 		w.Header().Set("Allow", method)
@@ -230,6 +253,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	if method == "POST" && (len(r.Header.Values("Origin")) != 1 || r.Header.Get("Origin") != s.config.Origin) {
 		writeError(w, http.StatusForbidden, "ORIGIN_DENIED")
+		return
+	}
+	if accountRoute {
+		s.account(w, r, action)
 		return
 	}
 	switch r.URL.Path {
@@ -247,6 +274,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		profile := "browser-session-v1"
 		if s.config.Store == "postgres" {
 			profile = "browser-session-v2"
+		}
+		if s.config.AccountLifecycle {
+			profile = "browser-session-v3"
 		}
 		writeJSON(w, 200, map[string]string{"status": "ok", "profile": profile, "implementation": "go-net-http"})
 	}

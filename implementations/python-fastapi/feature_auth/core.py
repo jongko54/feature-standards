@@ -60,12 +60,16 @@ class Settings:
     rate_limit_window: int = 60
     store: str = "memory"
     database_url: str = field(default="", repr=False)
+    account_lifecycle: bool = False
 
     @classmethod
     def from_env(cls) -> Settings:
         store = os.environ.get("AUTH_STORE", "memory")
         if store not in ("memory", "postgres"):
             raise ValueError("AUTH_STORE must be memory or postgres")
+        account_lifecycle = env_bool("AUTH_ACCOUNT_LIFECYCLE", False)
+        if account_lifecycle and store != "postgres":
+            raise ValueError("AUTH_ACCOUNT_LIFECYCLE requires postgres storage")
         database_url = os.environ.get("AUTH_DATABASE_URL", "") if store == "postgres" else ""
         if store == "postgres" and not database_url.startswith(("postgresql://", "postgres://")):
             raise ValueError("AUTH_DATABASE_URL must be a PostgreSQL URI")
@@ -111,6 +115,7 @@ class Settings:
         return cls(
             store=store,
             database_url=database_url,
+            account_lifecycle=account_lifecycle,
             demo=demo,
             email=email,
             password=password,
@@ -159,8 +164,16 @@ class AuthService:
         self.settings = replace(settings, password="", database_url="")
         self.store = store
         self.profile = (
-            "browser-session-v2" if settings.store == "postgres" else "browser-session-v1"
+            "browser-session-v3"
+            if settings.account_lifecycle
+            else ("browser-session-v2" if settings.store == "postgres" else "browser-session-v1")
         )
+
+    def account(self, action: str, peer: str, email: str, token: str, password: str):
+        handler = getattr(self.store, "account", None)
+        if not self.settings.account_lifecycle or handler is None:
+            raise AuthError(404, "NOT_FOUND")
+        return handler(action, peer, email, token, password)
 
     def authenticate(self, peer: str, email: str, password: str, old_token: str):
         return self.store.authenticate(peer, email, password, old_token)

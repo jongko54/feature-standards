@@ -1,6 +1,6 @@
 # Python / FastAPI
 
-[`browser-session-v1`](../../features/auth/specification.md) 메모리 모드와 [`browser-session-v2`](../../features/auth/postgres-session-v2.md) PostgreSQL 모드를 제공한다. Python 3.12 이상과 [uv](https://docs.astral.sh/uv/)가 필요하다. 의존성은 `uv.lock`에 고정한다.
+[`browser-session-v1`](../../features/auth/specification.md) 메모리, [`browser-session-v2`](../../features/auth/postgres-session-v2.md) PostgreSQL, 선택적 [계정 생명주기 v3](../../features/auth/account-session-v3.md)를 제공한다. Python 3.12 이상과 [uv](https://docs.astral.sh/uv/)가 필요하다. 의존성은 `uv.lock`에 고정한다.
 
 ## 실행
 
@@ -80,6 +80,21 @@ def private(user: Annotated[dict, Depends(current_user)]):
 ```
 
 `current_user(request)`를 직접 호출할 수도 있다. 인증된 사용자 dict를 반환하며 인증 실패는 `401 UNAUTHENTICATED`, 저장소 실패는 `503 STORAGE_UNAVAILABLE`로 변환한다. 어댑터 주입은 `create_app(settings=..., store=...)`를 사용한다. 동일 서비스를 붙인 별도 FastAPI 앱에서는 이 패키지의 오류 처리와 lifespan도 통합해야 하므로 제공 factory 사용을 기본으로 한다.
+
+## 계정 생명주기 v3
+
+별도 전용 DB에 명시적으로 `002_accounts.sql`을 적용한 뒤 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`로 실행한다. 이 프로필은 schema 2를 요구하며 false(기본값)는 기존 schema 1의 v2를 유지한다. true와 메모리 조합, 빈 값이나 true/false 이외의 값은 시작 전에 거절한다. 앱은 자동 마이그레이션과 seed를 수행하지 않는다.
+
+5개 계정 경로는 [v3 계약](../../features/auth/account-session-v3.md)의 엄격한 입력 경계를 사용한다. 신규·재설정 비밀번호는 Unicode scalar 15개 이상, UTF-8 1024byte 이하이다. 가입·메일 요청은 계정 존재와 무관하게 일반 202이고 확인은 204이며, 자동 로그인과 세션 쿠키 발급은 없다. 기존 프로필에서는 새 경로를 404로 처리한다.
+
+`PostgresStore.account`는 같은 트랜잭션의 `feature_auth.account_reserve`로 peer 예산을 먼저 확인하고, 허용된 요청만 PHC·난수 token 생성과 공통 `feature_auth.account_apply`를 실행한다. 소진된 요청은 Argon2를 실행하지 않는다. 커밋한 뒤에만 결과를 반환한다. 로그인은 PHC 조회부터 커밋까지 사용자 행을 `FOR SHARE`로 잠가 비밀번호 재설정과 직렬화한다. outbox의 token은 민감한 발송 payload이며 HTTP와 로그에 출력하지 않는다. 실제 외부 메일 발송은 하지 않는다.
+
+v3 자체 DB 검사는 기존 v2 검사 DB와 분리한다. 각 검사는 전용 schema2 fixture의 계정·세션·outbox를 초기화한다.
+
+```sh
+AUTH_ACCOUNT_TEST_DATABASE_URL='postgresql://user@127.0.0.1:5432/feature_standards_test_v3_python?sslmode=disable' \
+uv run --frozen pytest -q tests/test_accounts_postgres.py
+```
 
 ## 참고
 

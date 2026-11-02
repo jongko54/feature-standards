@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse, Response
 from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException
 
+from .accounts import ACCOUNT_FIELDS, ACCOUNT_ROUTES, account_input
 from .core import (
     COOKIE_NAME,
     MAX_BODY_BYTES,
@@ -53,7 +54,7 @@ def invalid_constant(value: str) -> None:
     raise ValueError("Invalid JSON constant")
 
 
-async def read_credentials(request: Request) -> tuple[str, str]:
+async def read_object(request: Request, fields: set[str]) -> dict[str, str]:
     media_type = request.headers.get("content-type", "").split(";", 1)[0].strip().lower()
     if media_type != "application/json":
         raise AuthError(415, "UNSUPPORTED_MEDIA_TYPE")
@@ -66,10 +67,20 @@ async def read_credentials(request: Request) -> tuple[str, str]:
         data = json.loads(
             body.decode("utf-8"), object_pairs_hook=unique_object, parse_constant=invalid_constant
         )
-        if not isinstance(data, dict) or set(data) != {"email", "password"}:
+        if not isinstance(data, dict) or set(data) != fields:
             raise ValueError("Invalid object")
-        if not isinstance(data["email"], str) or not isinstance(data["password"], str):
+        if any(not isinstance(value, str) for value in data.values()):
             raise ValueError("Invalid field type")
+        for value in data.values():
+            value.encode("utf-8")
+        return data
+    except (ValueError, UnicodeError, RecursionError) as exc:
+        raise AuthError(400, "INVALID_REQUEST") from exc
+
+
+async def read_credentials(request: Request) -> tuple[str, str]:
+    data = await read_object(request, {"email", "password"})
+    try:
         email = normalize_email(data["email"])
         password = data["password"]
         if not valid_email(email) or not 1 <= len(password.encode("utf-8")) <= 1024:
@@ -115,6 +126,11 @@ def create_app(
 
     @application.middleware("http")
     async def auth_headers(request: Request, call_next):
+        if (
+            request.url.path in ACCOUNT_ROUTES
+            and not request.app.state.auth.settings.account_lifecycle
+        ):
+            return error_response(404, "NOT_FOUND")
         response = await call_next(request)
         if request.url.path.startswith("/auth/"):
             response.headers["Cache-Control"] = "no-store"
@@ -188,5 +204,28 @@ def create_app(
             samesite="lax",
         )
         return response
+
+    def account_endpoint(action: str):
+        async def endpoint(request: Request):
+            state: AuthService = request.app.state.auth
+            require_origin(request, state.settings)
+            data = await read_object(request, ACCOUNT_FIELDS[action])
+            email, token, password = account_input(action, data)
+            await run_in_threadpool(
+                state.account,
+                action,
+                request.client.host if request.client else "unknown",
+                email,
+                token,
+                password,
+            )
+            if action.endswith("confirm"):
+                return Response(status_code=204)
+            return JSONResponse({"status": "accepted"}, status_code=202)
+
+        return endpoint
+
+    for path, action in ACCOUNT_ROUTES.items():
+        application.add_api_route(path, account_endpoint(action), methods=["POST"])
 
     return application

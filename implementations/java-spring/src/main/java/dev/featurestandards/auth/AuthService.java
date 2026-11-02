@@ -30,5 +30,9 @@ public final class AuthService {
     }
     public Session session(String token) { return store.session(token); }
     public boolean logout(String token, String csrf) { return store.logout(token, csrf); }
+    public int account(String action, String peer, String email, String token, String password) {
+        var input = AccountInput.checked(action, email, token, password);
+        return store.account(action, peer, input.email(), input.token(), input.password());
+    }
     public void checkReady() { store.checkReady(); }
 }

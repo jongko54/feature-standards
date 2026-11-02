@@ -34,26 +34,52 @@ def migrate(url: str) -> None:
         conn.execute((ROOT / "features/auth/postgres/001_initial.sql").read_text())
 
 
+def migrate_accounts(url: str) -> None:
+    with connect(url) as conn:
+        exists = conn.execute(
+            "SELECT to_regclass('feature_auth.schema_version')"
+        ).fetchone()[0]
+        versions = (
+            conn.execute("SELECT version FROM feature_auth.schema_version").fetchall()
+            if exists
+            else []
+        )
+    if not exists:
+        migrate(url)
+    elif versions not in ([(1,)], [(2,)]):
+        raise ValueError("Unsupported schema version")
+    with psycopg.connect(url, autocommit=True, connect_timeout=3) as conn:
+        conn.execute((ROOT / "features/auth/postgres/002_accounts.sql").read_text())
+
+
 def seed_demo(url: str) -> None:
     hasher = PasswordHasher(
         time_cost=3, memory_cost=65536, parallelism=4, salt_len=16, hash_len=32
     )
     with connect(url) as conn:
-        if conn.execute(
+        version = conn.execute(
             "SELECT version FROM feature_auth.schema_version"
-        ).fetchall() != [(1,)]:
+        ).fetchall()
+        if version not in ([(1,)], [(2,)]):
             raise ValueError("Unsupported schema version")
         for user_id, email, password in DEMO_USERS:
+            statement = (
+                "INSERT INTO feature_auth.users(id,email,password_hash,email_verified_at) "
+                "VALUES (%s,%s,%s,clock_timestamp()) ON CONFLICT DO NOTHING"
+                if version == [(2,)]
+                else "INSERT INTO feature_auth.users(id,email,password_hash) VALUES (%s,%s,%s) ON CONFLICT DO NOTHING"
+            )
             conn.execute(
-                "INSERT INTO feature_auth.users(id,email,password_hash) VALUES (%s,%s,%s) "
-                "ON CONFLICT DO NOTHING",
+                statement,
                 (user_id, email, hasher.hash(password)),
             )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["migrate", "seed-demo", "status"])
+    parser.add_argument(
+        "command", choices=["migrate", "migrate-accounts", "seed-demo", "status"]
+    )
     parser.add_argument(
         "--confirm-demo",
         action="store_true",
@@ -71,6 +97,9 @@ def main() -> int:
         if args.command == "migrate":
             migrate(url)
             print("PostgreSQL auth schema version 1 is ready.")
+        elif args.command == "migrate-accounts":
+            migrate_accounts(url)
+            print("PostgreSQL account schema version 2 is ready.")
         elif args.command == "seed-demo":
             seed_demo(url)
             print("Public demo fixtures ensured; existing accounts unchanged.")

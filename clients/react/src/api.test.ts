@@ -61,3 +61,26 @@ test('unexpected or malformed successful payloads are rejected', async () => {
   const api = createAuthApi(async () => Response.json({ user: { id: 42 } }));
   await assert.rejects(api.me(), (error: unknown) => error instanceof ApiError && error.code === 'INVALID_RESPONSE');
 });
+
+test('account operations preserve capability and password in POST JSON only', async () => {
+  const calls: Array<[string, unknown]> = [];
+  const api = createAuthApi(async (url, options) => {
+    assert.equal(options?.method, 'POST');
+    assert.equal(options?.credentials, 'same-origin');
+    calls.push([url, JSON.parse(String(options?.body))]);
+    return url.endsWith('/confirm') ? new Response(null, { status: 204 })
+      : Response.json({ status: 'accepted' }, { status: 202 });
+  });
+  await api.register('한@example.com', ' a long password ');
+  await api.requestVerification('한@example.com');
+  await api.confirmVerification('secret-capability');
+  await api.requestPasswordReset('한@example.com');
+  await api.confirmPasswordReset('secret-capability', ' another password ');
+  assert.deepEqual(calls, [
+    ['/auth/register', { email: '한@example.com', password: ' a long password ' }],
+    ['/auth/email-verification/request', { email: '한@example.com' }],
+    ['/auth/email-verification/confirm', { token: 'secret-capability' }],
+    ['/auth/password-reset/request', { email: '한@example.com' }],
+    ['/auth/password-reset/confirm', { token: 'secret-capability', password: ' another password ' }],
+  ]);
+});

@@ -36,24 +36,29 @@ func verifyPHC(encoded, password string) (bool, error) {
 	return subtle.ConstantTimeCompare(hash, expected) == 1, nil
 }
 func newDummyPHC() (string, error) {
-	salt := make([]byte, 16)
 	password := make([]byte, 32)
-	if _, err := rand.Read(salt); err != nil {
-		return "", err
-	}
 	if _, err := rand.Read(password); err != nil {
 		return "", err
 	}
-	hash := argon2.IDKey(password, salt, 3, 65536, 4, 32)
+	return newPasswordPHC(string(password))
+}
+func newPasswordPHC(password string) (string, error) {
+	salt := make([]byte, 16)
+	if _, err := rand.Read(salt); err != nil {
+		return "", err
+	}
+	hash := argon2.IDKey([]byte(password), salt, 3, 65536, 4, 32)
 	return "$argon2id$v=19$m=65536,t=3,p=4$" + base64.RawStdEncoding.EncodeToString(salt) + "$" + base64.RawStdEncoding.EncodeToString(hash), nil
 }
 func hashToken(token string) []byte { value := sha256.Sum256([]byte(token)); return value[:] }
 
 type postgresStore struct {
-	pool        *pgxpool.Pool
-	ttl, window float64
-	limit       int
-	dummy       string
+	pool             *pgxpool.Pool
+	ttl, window      float64
+	limit            int
+	dummy            string
+	accountLifecycle bool
+	passwordHash     func(string) (string, error)
 }
 
 func newPostgresStore(config Config) (*postgresStore, error) {
@@ -79,7 +84,7 @@ func newPostgresStore(config Config) (*postgresStore, error) {
 		pool.Close()
 		return nil, storageError()
 	}
-	store := &postgresStore{pool: pool, ttl: config.SessionTTL.Seconds(), window: config.RateWindow.Seconds(), limit: config.RateLimit, dummy: dummy}
+	store := &postgresStore{pool: pool, ttl: config.SessionTTL.Seconds(), window: config.RateWindow.Seconds(), limit: config.RateLimit, dummy: dummy, accountLifecycle: config.AccountLifecycle, passwordHash: newPasswordPHC}
 	if err := store.Ready(ctx); err != nil {
 		pool.Close()
 		return nil, storageError()
@@ -91,7 +96,11 @@ func (p *postgresStore) Ready(parent context.Context) error {
 	ctx, cancel := context.WithTimeout(parent, 5*time.Second)
 	defer cancel()
 	var count, version int
-	if err := p.pool.QueryRow(ctx, "SELECT count(*), COALESCE(min(version),0) FROM feature_auth.schema_version").Scan(&count, &version); err != nil || count != 1 || version != 1 {
+	wanted := 1
+	if p.accountLifecycle {
+		wanted = 2
+	}
+	if err := p.pool.QueryRow(ctx, "SELECT count(*), COALESCE(min(version),0) FROM feature_auth.schema_version").Scan(&count, &version); err != nil || count != 1 || version != wanted {
 		return storageError()
 	}
 	return nil
@@ -132,7 +141,7 @@ func (p *postgresStore) Login(parent context.Context, peer, email, password, old
 	}
 	var id, userEmail, encoded string
 	var enabled bool
-	err = tx.QueryRow(ctx, "SELECT id,email,password_hash,enabled FROM feature_auth.users WHERE email=$1", email).Scan(&id, &userEmail, &encoded, &enabled)
+	err = tx.QueryRow(ctx, "SELECT id,email,password_hash,enabled FROM feature_auth.users WHERE email=$1 FOR SHARE", email).Scan(&id, &userEmail, &encoded, &enabled)
 	found := err == nil
 	if err != nil && !errors.Is(err, pgx.ErrNoRows) {
 		return "", Session{}, storageError()

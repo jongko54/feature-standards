@@ -2,6 +2,8 @@
 
 `browser-session-v2`는 DB 사용자·세션·실패 기록을 공유하는 선택 프로필입니다. 기본값인 메모리 `browser-session-v1`도 유지합니다. 동작 기준은 [v2 명세](../features/auth/postgres-session-v2.md)와 [DDL](../features/auth/postgres/001_initial.sql)이며, 이 문서는 실행·재사용·검증 경계를 설명합니다.
 
+가입·이메일 확인·비밀번호 재설정이 필요하면 별도 [v3 계약](../features/auth/account-session-v3.md)과 [실행 안내](account-v3.md)를 따릅니다. 기본 `AUTH_ACCOUNT_LIFECYCLE=false`는 v2/schema 1을 유지합니다.
+
 전용 로컬 PostgreSQL 18.6에서 실행한 결과는 [검증 기록](validation-2026-11-02.md)에 정리했습니다. 아래 표의 시나리오 수는 소스에 연결된 범위이며, 원격 CI와 운영 보안 감사 상태를 뜻하지 않습니다.
 
 ## 저장소 선택과 준비
@@ -45,7 +47,28 @@ DB 모드는 `AUTH_USER_EMAIL`·`AUTH_USER_PASSWORD`를 요구하지 않습니�
 
 로그아웃은 저장 세션 행을 `FOR UPDATE`로 잠급니다. 사용자 enabled 여부와 무관하게 아직 만료되지 않은 저장 세션에는 정확히 한 개의 일치하는 CSRF가 필요합니다. 누락·오류는 403이며 세션을 유지합니다. 올바른 CSRF이면 삭제를 commit한 뒤 204를 반환합니다. 사용자 비활성화는 로그인·조회에서 거절하며, 없는 세션·만료 세션의 로그아웃은 Origin 검증 후 멱등입니다.
 
-현재 Rust PostgreSQL 어댑터는 `NoTls` 기반 loopback+`sslmode=disable`만 허용합니다. 원격 DB와 TLS는 지원하지 않고 요구된 TLS를 평문으로 낮추지도 않습니다. 원격 지원에는 별도의 TLS 어댑터와 인증서·호스트 검증이 필요합니다. 다른 구현의 TLS 설정 가능 여부도 운영 DB의 인증·권한·백업·용량 검증을 대체하지 않습니다.
+현재 Rust PostgreSQL 어댑터는 원격 `sslmode=verify-full`에서 TLS 1.2 이상·인증서 체인·hostname을 검증합니다. `sslrootcert`가 없으면 플랫폼 신뢰 루트, 있으면 지정한 PEM CA만 신뢰합니다. `require`·`prefer`·`verify-ca` 등의 불완전한 외부 모드와 TLS 거절 뒤 평문 재시도는 허용하지 않습니다. 기존 평문은 명시적 loopback+`sslmode=disable`만 유지합니다. [TLS 설정·fixture 안내](account-v3.md#rust-postgresql-tls)는 운영 DB의 인증·권한·백업·용량 검증과 구분합니다.
+
+## 계정 생명주기 v3로 이관
+
+v1/v2를 유지하면서 계정 흐름이 필요한 DB만 schema 2로 이관합니다. 서버 중단과 DB 이관 범위를 확인한 뒤 `AUTH_DATABASE_URL`을 설정하고 명시적 도구를 실행합니다. 앱이 자동 DDL·seed를 수행하지 않습니다.
+
+```sh
+uv run --frozen --project tools python tools/auth_db.py migrate-accounts
+uv run --frozen --project tools python tools/auth_db.py status
+```
+
+이관 후 서버는 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`, React는 개발·빌드 시 `VITE_AUTH_ACCOUNT_LIFECYCLE=true`로 선택합니다. v3는 schema 2를 요구하며 v2는 schema 1만 허용합니다. 기존 관리자 허용은 `admin_enabled`로 옮기고 새 `enabled`는 관리자 허용과 이메일 확인을 함께 반영합니다. 새 계정은 확인 전 로그인할 수 없으며, 확인·재설정이 관리자 차단을 해제하지 않습니다.
+
+계정 작업은 같은 트랜잭션의 `account_reserve`로 peer 제한을 먼저 확인하고 허용된 요청만 PHC·token 생성과 `account_apply`를 수행합니다. 로그인은 사용자 잠금을 비밀번호 검증부터 커밋까지 유지하며, 재설정은 비밀번호 교체와 전체 사용자 세션 폐기를 함께 커밋합니다. [명세](../features/auth/account-session-v3.md)에 원자성과 실패 동작이 정의되어 있습니다.
+
+계정 메일은 민감한 원문 token을 포함한 outbox입니다. [로컬 수신 도구](../tools/mail_capture.py)는 검사된 작업 전용 DB에서 새 mode 0600 파일로만 옮기며 외부 메일을 발송하지 않습니다. 수신 파일을 로그·이슈·CI artifact에 올리지 않습니다. 실제 계정 API·혼합 언어·로컬 링크 브라우저 흐름은 아래 하네스로 검증합니다. 스키마를 초기화하므로 다른 테스트와 DB를 공유하지 않습니다.
+
+```sh
+uv run --frozen --project tools python tests/account_conformance.py --browser
+```
+
+언어별 자체 v3 검사는 `AUTH_ACCOUNT_TEST_DATABASE_URL`의 별도 schema-2 DB를 사용하고 기존 `AUTH_TEST_DATABASE_URL`의 schema-1 DB와 분리합니다. 세부 [가입·확인·재설정 및 메일 절차](account-v3.md)를 따릅니다.
 
 ## 별도 소비 앱
 
@@ -119,4 +142,4 @@ uv run --frozen --project tools python tests/postgres_conformance.py --browser
 
 개별 언어 테스트에는 `AUTH_TEST_DATABASE_URL`을 사용합니다. 공통 harness용 DB와 분리합니다. [CI 준비 도구](../tests/prepare_postgres.py)는 기준 DB와 언어별 DB를 명시적으로 migrate·seed하며 앱이 실행하는 로직은 아닙니다. 준비 후 구현별 자체 테스트 명령에 해당 DB를 전달하고, Rust의 실제 DB 검사는 `cargo test --locked -- --ignored`로 별도 실행합니다.
 
-[CI](../.github/workflows/ci.yml)는 PostgreSQL 18.6 서비스를 제공하고 언어별 DB, v1·v2 공통 API·브라우저와 소비 앱을 순서대로 검증하도록 정의되어 있습니다. [동일 템플릿](../ci/github-actions.yml)과 함께 유지합니다. 로컬 검증, 원격 커밋, 해당 SHA의 CI 성공, 패키지 게시, 실제 배포를 서로 다른 상태로 기록합니다.
+[CI](../.github/workflows/ci.yml)는 PostgreSQL 18.6 서비스를 제공하고 언어별 DB, v1·v2 회귀, v3 계정 API·브라우저, Rust TLS와 소비 앱을 검증하도록 정의되어 있습니다. [동일 템플릿](../ci/github-actions.yml)과 함께 유지합니다. 로컬 검증, 원격 커밋, 해당 SHA의 CI 성공, 패키지 게시, 실제 배포를 서로 다른 상태로 기록합니다.
