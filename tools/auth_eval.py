@@ -35,9 +35,24 @@ IGNORED_PARTS = {
     "test-results",
     "playwright-report",
 }
-SCOPES = {"implementations", "examples", "features", "skills", ".agents", "docs"}
+SCOPES = {
+    "implementations",
+    "examples",
+    "features",
+    "skills",
+    ".agents",
+    "docs",
+    "tests",
+    "clients",
+}
 ROOT_FILES = {"AGENTS.md", "README.md", "feature-standards.json"}
-TOOL_FILES = {"auth_catalog.py", "auth_db.py", "pyproject.toml", "uv.lock"}
+TOOL_FILES = {
+    "auth_catalog.py",
+    "auth_db.py",
+    "mail_worker.py",
+    "pyproject.toml",
+    "uv.lock",
+}
 
 
 class EvalError(Exception):

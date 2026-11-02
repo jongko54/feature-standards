@@ -464,6 +464,22 @@ class AuthEvalTests(unittest.TestCase):
         self.assertFalse((skill / "implementations/python-fastapi/.env").exists())
         self.assertEqual(stat.S_IMODE((skill / library).stat().st_mode) & 0o222, 0)
 
+    def test_real_skill_snapshot_catalog_is_loadable_and_selectable(self):
+        destination = self.root / "real-skill-snapshot"
+        auth_eval.snapshot(auth_eval.ROOT, destination, "skill")
+        spec = importlib.util.spec_from_file_location(
+            "snapshot_auth_catalog", destination / "tools/auth_catalog.py"
+        )
+        catalog_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(catalog_module)
+        catalog = catalog_module.load_catalog()
+        catalog_module.validate_catalog(catalog)
+        for stack in (*auth_eval.STACKS, "react"):
+            selected = catalog_module.select(catalog, stack, "browser-session-v1")
+            self.assertEqual(selected["stack"]["id"], stack)
+            for relative in selected["read"]:
+                self.assertTrue((destination / relative).is_file())
+
     def test_snapshot_rejects_absolute_symlink_even_to_source_inside_repo(self):
         root, _ = self.fixture_repo()
         (root / "skills/absolute.md").symlink_to(root / "README.md")
