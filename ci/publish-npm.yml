@@ -52,6 +52,8 @@ jobs:
           fi
           mkdir -p "$GITHUB_WORKSPACE/release"
           npm pack --pack-destination "$GITHUB_WORKSPACE/release"
+      - name: Test delayed registry availability and integrity checks
+        run: node --test tools/verify-npm-release.test.mjs
       - name: Validate the exact local tarball with the release CLI
         if: >-
           github.event_name == 'push' &&
@@ -78,7 +80,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'jongko54/feature-standards'
     needs: package
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 25
     environment: npm
     permissions:
       contents: read

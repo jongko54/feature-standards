@@ -72,6 +72,8 @@ jobs:
           uv run --frozen --project tools python tools/auth_catalog.py --check
       - name: Test local process harness
         run: uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Test delayed registry availability and integrity checks
+        run: node --test tools/verify-npm-release.test.mjs
       - name: Test account schema transactions in a dedicated database
         env:
           AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_sql?sslmode=disable
