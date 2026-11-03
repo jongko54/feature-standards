@@ -71,6 +71,8 @@ await auth.confirmPasswordReset(token, newPassword);
 
 ## Server and application setup
 
+The companion [Create Feature Auth CLI](https://github.com/jongko54/feature-standards/blob/main/docs/create-feature-auth.md) scaffolds a thin Python, Go, Java, or Rust server that reuses the same authentication contracts. It requires an explicit source checkout. Its temporary `--check` validates memory v1; PostgreSQL and account profiles require explicit database preparation. See the repository release receipts for the CLI's current npm publication status.
+
 Your application needs a server on the same origin that implements the endpoints above. Requests use relative paths, `credentials: 'same-origin'`, and `cache: 'no-store'`. The client sends JSON for account operations and login, and an `X-CSRF-Token` header for logout. The browser supplies Origin. The server must enforce Origin, CSRF, cookie policy, session revocation, and authorization.
 
 API errors use the shape `{ error: { code: string } }`. Inspect `ApiError.status`, `code`, and `retryAfter` to handle them. Retry-After is interpreted as an integer number of seconds. You can inject a fetch implementation with `createAuthApi(fetcher)` for testing.

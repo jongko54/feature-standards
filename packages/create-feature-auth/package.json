@@ -1,6 +1,6 @@
 {
   "name": "@ugauga/create-feature-auth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create thin authentication consumers from shared Feature Standards contracts",
   "type": "module",
   "license": "MIT",

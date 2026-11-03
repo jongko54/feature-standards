@@ -1,0 +1,103 @@
+name: Build and publish Rust authentication
+
+on:
+  push:
+    tags: [rust-auth-v*]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    if: github.repository == 'jongko54/feature-standards'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Resolve exact package
+        id: meta
+        run: python tools/release_metadata.py rust --github-output >> "$GITHUB_OUTPUT"
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install 1.93.1 --profile minimal --component rustfmt
+          rustup default 1.93.1
+      - name: Test and build the standalone crate
+        working-directory: implementations/rust-axum
+        run: |
+          cargo fmt --all -- --check
+          cargo test --locked
+          cargo package --locked --registry crates-io
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rust-auth
+          path: implementations/rust-axum/target/package/${{ steps.meta.outputs.name }}-${{ steps.meta.outputs.version }}.crate
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'push' && github.repository == 'jongko54/feature-standards'
+    needs: package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: crates-io
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Verify release tag and full source CI
+        id: meta
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/release_metadata.py rust --tag "$RELEASE_TAG" --github-output >> "$GITHUB_OUTPUT"
+          node tools/verify-release-ci.mjs
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install 1.93.1 --profile minimal
+          rustup default 1.93.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: rust-auth
+          path: ${{ runner.temp }}/rust-release-artifact
+      - name: Rebuild and compare the reviewed crate before authentication
+        working-directory: implementations/rust-axum
+        env:
+          PACKAGE_NAME: ${{ steps.meta.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          cargo package --locked --registry crates-io
+          cmp "target/package/$PACKAGE_NAME-$PACKAGE_VERSION.crate" "$RUNNER_TEMP/rust-release-artifact/$PACKAGE_NAME-$PACKAGE_VERSION.crate"
+      - name: Obtain a temporary crates.io publishing token
+        id: auth
+        uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1.0.6
+      - name: Publish with the configured crates.io trusted publisher
+        working-directory: implementations/rust-axum
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+        run: cargo publish --locked --registry crates-io
+      - name: Verify the public registry artifact
+        env:
+          PACKAGE_NAME: ${{ steps.meta.outputs.name }}
+          PACKAGE_VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          curl --fail --silent --show-error --location --retry 8 --retry-all-errors --retry-delay 5 \
+            "https://static.crates.io/crates/$PACKAGE_NAME/$PACKAGE_NAME-$PACKAGE_VERSION.crate" \
+            --output "$RUNNER_TEMP/rust-registry.crate"
+          cmp "$RUNNER_TEMP/rust-release-artifact/$PACKAGE_NAME-$PACKAGE_VERSION.crate" "$RUNNER_TEMP/rust-registry.crate"

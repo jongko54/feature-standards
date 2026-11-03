@@ -64,3 +64,9 @@ npm exec --yes --package=node@24 --package=npm@12.2.1 -- npm trust github \
 ```
 
 No long-lived NPM_TOKEN is added. The job publishes the exact built tarball and verifies registry version, SHA-512 integrity, and a public tarball download. Confirm activation with `npm trust list PACKAGE --json` and an actual tagged release before reporting automatic publication as complete. See the [npm trust command](https://docs.npmjs.com/cli/v12/commands/npm-trust/) and [trusted publishing guide](https://docs.npmjs.com/trusted-publishers/).
+
+## Prepared publisher-validation patches
+
+The checkout prepares API `0.1.2` and CLI `0.1.1`; these versions are not declared published until registry receipts are recorded. The API patch adds the companion server-generation guide without changing JavaScript or type declarations. The CLI patch fixes generated provenance to read the installed package version rather than a duplicated `0.1.0` literal, with a regression that fails before the fix.
+
+The first CLI `0.1.0` bootstrap can use the reviewed artifact from full-CI commit `eff0d9d6905de5d8729eef07771a5838ee36b1b3`. The package must exist before its npm trusted publisher is configured. Then the new version tags publish the prepared patches through OIDC after exact main source CI passes. Configure each publisher and complete its first successful OIDC publish promptly; npm currently requires validation within two days. Read the [official expiry and provenance guidance](https://docs.npmjs.com/trusted-publishers/#trusted-publisher-configuration-expiry). No existing publisher is revoked automatically.

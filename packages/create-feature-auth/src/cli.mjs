@@ -9,6 +9,7 @@ import { dirname, isAbsolute, join, parse, relative, resolve, sep } from 'node:p
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const PACKAGE_VERSION = JSON.parse(readFileSync(join(PACKAGE, 'package.json'), 'utf8')).version;
 export const STACKS = Object.freeze({
   python: 'implementations/python-fastapi',
   go: 'implementations/go-net-http',
@@ -154,7 +155,7 @@ export function generate(options) {
   }));
   prepared.set('project.mjs', readFileSync(join(PACKAGE, 'src/project.mjs'), 'utf8'));
   prepared.set('feature-auth.json', JSON.stringify({
-    generator: '@ugauga/create-feature-auth', generatorVersion: '0.1.0', stack: options.stack,
+    generator: '@ugauga/create-feature-auth', generatorVersion: PACKAGE_VERSION, stack: options.stack,
     profile: options.profile, source: plan.sourceRelative, sourceCommit: plan.sourceCommit,
     sourceManifestSha256: plan.manifestSha256,
   }, null, 2) + '\n');

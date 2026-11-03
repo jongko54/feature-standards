@@ -34,6 +34,8 @@ Configure the first release's PyPI pending trusted publisher with project `featu
 
 ## Java / Maven Central
 
+The [signed-bundle checker](maven-release.md) verifies a local fixture with a temporary test key and upload disabled. Its success is separate from account/namespace verification or Central acceptance.
+
 The `central-release` profile adds signing and Central Publishing; normal builds do not sign or upload. Verify the `io.github.jongko54` namespace, configure a `central` server in a private Maven settings file with a Central user token, and configure a GPG key in the local keyring. Keep credentials and keys outside the repository.
 
 ```sh
@@ -51,7 +53,7 @@ After account and email verification, run `cargo login` privately and publish fr
 cargo publish --locked --manifest-path implementations/rust-axum/Cargo.toml
 ```
 
-No long-lived Cargo token is added to CI. Trusted publishing can be configured after initial account/release setup; see [crates.io's guide](https://crates.io/docs/trusted-publishing). Packaging alone does not reserve the crate name or publish it.
+No long-lived Cargo token is added to CI. The [Rust release workflow and setup guide](rust-release.md) provide build-only dispatch, exact source/tag checks, temporary OIDC credentials and artifact comparisons. Trusted publishing still requires initial account/release setup; see [crates.io's guide](https://crates.io/docs/trusted-publishing). Packaging alone does not reserve the crate name or publish it.
 
 ## Go versioned module
 

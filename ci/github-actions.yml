@@ -127,6 +127,8 @@ jobs:
           uv build --project implementations/python-fastapi --out-dir dist/python
           uvx --from twine==7.0.0 twine check --strict dist/python/*
           cargo package --locked --manifest-path implementations/rust-axum/Cargo.toml
+      - name: Verify a signed Maven Central bundle without uploading
+        run: uv run --frozen --project tools python tools/check_maven_release.py
       - name: Install and build React client
         working-directory: clients/react
         run: |
@@ -166,5 +168,6 @@ jobs:
           cmp .github/workflows/ci.yml ci/github-actions.yml
           cmp .github/workflows/publish-npm.yml ci/publish-npm.yml
           cmp .github/workflows/publish-python.yml ci/publish-python.yml
+          cmp .github/workflows/publish-rust.yml ci/publish-rust.yml
       - name: Whitespace check
         run: git diff --check

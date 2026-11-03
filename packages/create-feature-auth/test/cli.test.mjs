@@ -20,6 +20,7 @@ test('all stacks and profiles generate only thin, relative consumers without con
       const result = generate(options(directory, { stack, profile, dest: target }));
       const metadata = JSON.parse(readFileSync(join(target, 'feature-auth.json'), 'utf8'));
       assert.equal(metadata.profile, profile);
+      assert.equal(metadata.generatorVersion, JSON.parse(readFileSync(join(ROOT, 'packages/create-feature-auth/package.json'), 'utf8')).version);
       assert.equal(resolve(target, metadata.source), ROOT);
       assert.match(metadata.sourceManifestSha256, /^[a-f0-9]{64}$/);
       assert.ok(result.files.includes('project.mjs'));

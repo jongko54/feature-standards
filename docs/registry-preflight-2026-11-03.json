@@ -1,0 +1,35 @@
+{
+  "base_commit": "6f5b29fd3dc33ba362ab740c86fb553b942303ae",
+  "artifacts": [
+    {
+      "file": "ugauga-feature-standards-react-auth-0.1.2.tgz",
+      "bytes": 4707,
+      "sha256": "222ae6aa40cf9015be27326920940e9ad60308a5d60f85dc104b3e2f82b59206",
+      "integrity": "sha512-GGSeeYHHAsjvSecRaowFRl7lKoz+8DqlR41olnmVaunbzQkof0NHXWcAvst/Sq38CxZIMyP5lwmxAJGf8sg+VQ==",
+      "registry_published_by_this_run": false
+    },
+    {
+      "file": "ugauga-create-feature-auth-0.1.1.tgz",
+      "bytes": 25911,
+      "sha256": "a29e62d0866fb7379ca05c87f8d636a480c679dabc9c664192781e8831a0795a",
+      "integrity": "sha512-3GOhLR9rGEBY0F3i3HzFeTvSiVNWLPJ1n1gwp1Lp+zKvFEsKOuyPF3V//5UMLx1yC1Fjvrv41euclQ/U7vttWQ==",
+      "registry_published_by_this_run": false
+    }
+  ],
+  "api_runtime_types_license_equal_0_1_1": true,
+  "installed_cli_version_provenance": "0.1.1",
+  "maven_fixture": {
+    "coordinates": "io.github.jongko54:java-spring-auth:1.0.0",
+    "artifacts": 5,
+    "verified_signatures": 5,
+    "verified_checksums": 20,
+    "bundle_files": 30,
+    "bundle_sha256": "5743dfe1fb3eca0b7af5cbab63ac3ffac4f418587c2a893f97bc730662dd5893",
+    "test_key_only": true,
+    "source_unchanged": true,
+    "central_requests": 0,
+    "published": false
+  },
+  "npm_login_completed": false,
+  "registry_trust_activation_verified": false
+}
