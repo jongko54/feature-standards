@@ -73,7 +73,7 @@ try {
   for (const args of [[], ['--publish'], ['--out-dir'], ['--out-dir', physical, '--publish']]) assert.equal(run(args).status, 1);
   assert.equal(run(['--help']).status, 0);
   assert.deepEqual(readFileSync(join(PACKAGE, 'package.json')), mainBefore);
-  assert.equal(main.version, '0.1.0');
-  assert.deepEqual(main.files, ['src/cli.mjs', 'src/index.mjs', 'snapshot', 'README.md', 'LICENSE']);
+  assert.match(main.version, /^\d+\.\d+\.\d+$/);
+  assert.deepEqual(main.files, ['src/cli.mjs', 'src/index.mjs', 'src/workflow.mjs', 'snapshot', 'README.md', 'LICENSE']);
   console.log(JSON.stringify({ package: receipt.package, version: receipt.version, tag: receipt.tag, files: 3, artifactVerified: true, noRuntimeOrSecrets: true, preservesExistingOutput: true, mainVersion: main.version, mainPackWhitelistUnchanged: true, published: false, sha256: receipt.sha256 }, null, 2));
 } finally { rmSync(scratch, { recursive: true, force: true }); }

@@ -132,11 +132,13 @@ node project.mjs check
 node project.mjs start
 \`\`\`
 
-The memory check uses a unique loopback port, public demo credentials, a local Origin and non-Secure cookies. It verifies anonymous rejection, login, protected identity, CSRF rejection, logout, and rejection of the copied old cookie. **It always exercises memory v1, even when this project selects v2 or v3.** It does not validate PostgreSQL or account lifecycle behavior. \`node project.mjs demo\` explicitly allows local HTTP while preserving the selected profile; database profiles still require your own database configuration.
+The check follows the recorded profile and returns a machine-readable receipt. v1 uses loopback memory sessions. v2/v3 require an explicitly exported \`FEATURE_STANDARDS_TEST_DATABASE_URL\` with an explicit loopback port and a \`feature_standards_test*\` database name. The role must be able to create/drop test databases. The checker creates a fresh random database, applies the selected schema and public demo fixtures there, runs the app, and drops only that owned database. It does not change the supplied database's tables or use \`AUTH_DATABASE_URL\` as a fallback. PostgreSQL \`PG*\` routing overrides are refused.
+
+Every profile checks anonymous access, login, protected identity, independent sessions, CSRF rejection, logout, and copied-cookie rejection. v2/v3 also restart the app and verify persisted sessions. v3 additionally checks registration, one-use email verification, password reset, invalidation of both existing sessions, token replay rejection, and login with the replacement password. Verification/reset capabilities stay in private local child pipes; no SMTP server is contacted. Checks do not exercise browser UI or production deployment. \`node project.mjs demo\` explicitly allows local HTTP while preserving the selected profile.
 
 Review .env.example and export settings explicitly. Normal start keeps Secure cookies enabled by default and requires configuration appropriate to your origin. The runner does not read .env automatically.
 
-For v2/v3, provision a dedicated database and explicitly run the source checkout's database tool. v2 uses \`migrate\`; v3 uses \`migrate-accounts\` and schema 2. The generator and runner never migrate, seed, or inspect a database. Use the source profile specification before changing an existing database. Add a reverse proxy and HTTPS for production use.
+For normal v2/v3 startup, provision a dedicated application database and explicitly run the source checkout's database tool. v2 uses \`migrate\`; v3 uses \`migrate-accounts\` and schema 2. Generation, build, start, and demo do not migrate or seed it. The separate \`check\` fixture applies DDL only inside the new database it owns. Use the source profile specification before changing an existing database. Add a reverse proxy and HTTPS for production use.
 
 \`check\` builds only this project and reads the chosen library source. Java uses a generated Maven overlay that references source directories without copying authentication source, with build output and its Maven repository under .feature-auth/. No source checkout files are edited. Building can download public language dependencies. Commands run code from your explicitly selected checkout; this tool is not a sandbox for untrusted code.
 `;
@@ -153,9 +155,11 @@ export function generate(options) {
     if (/\{\{[A-Z_]+\}\}/.test(contents)) throw new Error('unresolved-template-variable');
     return [name, contents];
   }));
-  prepared.set('project.mjs', readFileSync(join(PACKAGE, 'src/project.mjs'), 'utf8'));
+  for (const file of ['project.mjs', 'check-fixture.mjs', 'check-db.py']) {
+    prepared.set(file, readFileSync(join(PACKAGE, 'src', file), 'utf8'));
+  }
   prepared.set('feature-auth.json', JSON.stringify({
-    generator: '@ugauga/create-feature-auth', generatorVersion: PACKAGE_VERSION, stack: options.stack,
+    generator: '@ugauga/create-feature-auth', generatorVersion: PACKAGE_VERSION, checkProtocolVersion: 1, stack: options.stack,
     profile: options.profile, source: plan.sourceRelative, sourceCommit: plan.sourceCommit,
     sourceManifestSha256: plan.manifestSha256,
   }, null, 2) + '\n');
@@ -196,18 +200,23 @@ export function parseArguments(argv) {
 export async function main(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
   if (options.help) {
-    console.log('create-feature-auth --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--profile browser-session-v1|browser-session-v2|browser-session-v3] [--check]');
+    console.log('create-feature-auth --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--profile browser-session-v1|browser-session-v2|browser-session-v3] [--check]\n--check validates the selected profile; v2/v3 require FEATURE_STANDARDS_TEST_DATABASE_URL for isolated loopback database fixtures.');
     return;
   }
   const result = generate(options);
   if (options.check) {
     const runner = await import(pathToFileURL(join(result.destination, 'project.mjs')).href);
-    await runner.runProject('check', result.destination);
-    result.check = 'memory-v1-http-pass';
+    result.check = await runner.runProject('check', result.destination);
   }
   console.log(JSON.stringify(result, null, 2));
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(resolve(process.argv[1]))).href) {
+function invokedDirectly() {
+  if (!process.argv[1]) return false;
+  try { return import.meta.url === pathToFileURL(realpathSync(resolve(process.argv[1]))).href; }
+  catch { return false; }
+}
+
+if (invokedDirectly()) {
   main().catch(error => { console.error('create-feature-auth: ' + error.message); process.exitCode = 1; });
 }

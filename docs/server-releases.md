@@ -15,6 +15,24 @@ The Maven group changed from the unpublished `dev.featurestandards` coordinate t
 
 ## Build and verify
 
+The `feature-standards-v0.2.0` GitHub release is prepared to provide the server archives, original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` after the exact source CI passes. Check the actual release and receipt before using the URLs below. These assets are an alternative distribution path while language-registry account setup is pending; they do not establish publication on PyPI, Maven Central, or crates.io.
+
+After the release assets and checksums are verified, Python can install the wheel URL directly:
+
+```sh
+python -m pip install 'https://github.com/jongko54/feature-standards/releases/download/feature-standards-v0.2.0/feature_standards_python_auth-0.2.0-py3-none-any.whl'
+```
+
+For Java, download `java-spring-auth-1.0.0-library.jar` and `java-spring-auth-1.0.0.pom` from that release, then install the plain library with its dependency metadata:
+
+```sh
+mvn install:install-file \
+  -Dfile=java-spring-auth-1.0.0-library.jar \
+  -DpomFile=java-spring-auth-1.0.0.pom -Dclassifier=library
+```
+
+Consumers select `io.github.jongko54:java-spring-auth:1.0.0` with classifier `library`. The POM is required for transitive dependencies; the executable application JAR is not the library artifact. Rust consumers can extract the release's `feature-standards-auth-0.1.0.crate` into their own vendor directory and use the unpacked library as a Cargo path dependency. The [independent distribution checker](validation-server-distributions-2026-11-04.md) verifies that unpacked-crate consumption outside the original checkout. Keep the recorded version/checksum when vendoring; this is separate from crates.io version resolution.
+
 From the repository root:
 
 ```sh
@@ -25,6 +43,21 @@ cargo package --locked --manifest-path implementations/rust-axum/Cargo.toml
 ```
 
 Use a clean checkout for release artifacts. `cargo package --allow-dirty` is only for local precommit checks. Normal crate tests compile outside the monorepo; explicitly ignored DB tests need a full checkout and dedicated fixtures. Python sdists build wheels without repository tools. Installing or starting any server package performs no migration or seeding.
+
+### Test the actual local distributions in separate consumers
+
+The distribution checker snapshots the committed server and consumer paths into a private temporary directory. It builds a wheel/sdist, a normal Java library-classifier JAR, and a Cargo package, then removes its own private library source copies before testing consumers. It never edits the original checkout, publishes, connects to a database, or sends SMTP mail. The selected server/consumer paths must be committed; unrelated work elsewhere in the checkout is reported without being included in the snapshot.
+
+```sh
+# JDK 21+ must be selected through JAVA_HOME or PATH.
+uv run --frozen --project tools python tools/check_server_distributions.py
+# Individual stacks are also available:
+uv run --frozen --project tools python tools/check_server_distributions.py --stack python
+uv run --frozen --project tools python tools/check_server_distributions.py --stack java
+uv run --frozen --project tools python tools/check_server_distributions.py --stack rust
+```
+
+Python is installed into a fresh virtual environment and checked through its public imports, memory-service lifespan, and health function. Java uses blank Maven settings and a fresh private Maven repository; its consumer verifies the loaded `library` JAR and real loopback HTTP lifecycle. Rust's consumer depends on the unpacked `.crate`, with the private monorepo source copy removed, and runs its memory lifecycle test. Build dependency download caches may still be used by Cargo. These checks establish local artifact reuse, independently of registry account setup or public availability. The [2026-11-04 validation record](validation-server-distributions-2026-11-04.md) records the tested source, hashes, and public registry observations.
 
 ## Python trusted publisher
 

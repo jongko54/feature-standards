@@ -20,10 +20,13 @@ test('all stacks and profiles generate only thin, relative consumers without con
       const result = generate(options(directory, { stack, profile, dest: target }));
       const metadata = JSON.parse(readFileSync(join(target, 'feature-auth.json'), 'utf8'));
       assert.equal(metadata.profile, profile);
+      assert.equal(metadata.checkProtocolVersion, 1);
       assert.equal(metadata.generatorVersion, JSON.parse(readFileSync(join(ROOT, 'packages/create-feature-auth/package.json'), 'utf8')).version);
       assert.equal(resolve(target, metadata.source), ROOT);
       assert.match(metadata.sourceManifestSha256, /^[a-f0-9]{64}$/);
       assert.ok(result.files.includes('project.mjs'));
+      assert.ok(result.files.includes('check-fixture.mjs'));
+      assert.ok(result.files.includes('check-db.py'));
       assert.ok(!files(target).some(path => /(^|\/)(feature_auth|auth|tests|target|node_modules|__pycache__)(\/|$)/.test(path)));
       assert.ok(!files(target).includes('.env'));
       assert.match(readFileSync(join(target, '.env.example'), 'utf8'), /AUTH_DEMO=false/);
@@ -108,4 +111,13 @@ test('npm-style symlink executable actually runs the CLI and creates its project
     assert.ok(existsSync(join(directory, 'app/main.go')), 'symlink entry must generate the app');
     assert.equal(JSON.parse(result.stdout).stack, 'go');
   } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('public generator import works from stdin without trying to execute a nonexistent argv path', () => {
+  const module = new URL('../src/cli.mjs', import.meta.url).href;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-'], {
+    input: `const api = await import(${JSON.stringify(module)}); console.log(typeof api.generate);`, encoding: 'utf8',
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.stdout.trim(), 'function');
 });

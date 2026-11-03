@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+export { initFeature, checkProject } from './workflow.mjs';
 
 const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = path => JSON.parse(readFileSync(join(PACKAGE, path), 'utf8'));

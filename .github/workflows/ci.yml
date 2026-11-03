@@ -91,7 +91,7 @@ jobs:
           AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_python?sslmode=disable
         run: |
           uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
-          uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools
+          uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools packages/create-feature-auth/src/check-db.py packages/create-feature-auth/test/check_db.py
       - name: Go tests and race detection
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_go?sslmode=disable
@@ -130,6 +130,43 @@ jobs:
           uv build --project implementations/python-fastapi --out-dir dist/python
           uvx --from twine==7.0.0 twine check --strict dist/python/*
           cargo package --locked --manifest-path implementations/rust-axum/Cargo.toml
+      - name: Verify server archives in independent consumer projects
+        run: uv run --frozen --project tools python tools/check_server_distributions.py
+      - name: Preserve server distributions for an authenticated GitHub release
+        run: |
+          mkdir "$RUNNER_TEMP/server-distributions"
+          cp dist/python/*.whl dist/python/*.tar.gz "$RUNNER_TEMP/server-distributions/"
+          cp implementations/rust-axum/target/package/*.crate "$RUNNER_TEMP/server-distributions/"
+          cp LICENSE "$RUNNER_TEMP/server-distributions/"
+          python - <<'PY'
+          import json, os, pathlib, shutil, sys
+          sys.path.insert(0, 'tools')
+          from release_metadata import metadata
+          record = {
+              'schemaVersion': 1,
+              'repository': os.environ['GITHUB_REPOSITORY'],
+              'sourceCommit': os.environ['GITHUB_SHA'],
+              'packages': [metadata(target) for target in ('python', 'java', 'rust')],
+              'scope': 'Server archives built in source CI; public language registry publication is separate.',
+          }
+          directory = pathlib.Path(os.environ['RUNNER_TEMP']) / 'server-distributions'
+          java = metadata('java')
+          artifact = java['name'].split(':')[1]
+          libraries = list((pathlib.Path(java['directory']) / 'target').glob('*-library.jar'))
+          if len(libraries) != 1:
+              raise ValueError('one plain library classifier JAR is required')
+          shutil.copyfile(libraries[0], directory / f"{artifact}-{java['version']}-library.jar")
+          shutil.copyfile(pathlib.Path(java['directory']) / 'pom.xml', directory / f"{artifact}-{java['version']}.pom")
+          (directory / 'SOURCE.json').write_text(json.dumps(record, indent=2) + '\n')
+          PY
+          cd "$RUNNER_TEMP/server-distributions"
+          sha256sum *.whl *.tar.gz *-library.jar *.pom *.crate LICENSE SOURCE.json > SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: server-distributions
+          path: ${{ runner.temp }}/server-distributions/*
+          if-no-files-found: error
+          retention-days: 14
       - name: Verify a signed Maven Central bundle without uploading
         run: uv run --frozen --project tools python tools/check_maven_release.py
       - name: Install and build React client
@@ -159,13 +196,15 @@ jobs:
         run: uv run --frozen --project tools python tests/consumer_conformance.py
       - name: Independent consumers with PostgreSQL v2 v3 and real browser UI
         run: uv run --frozen --project tools python tests/consumer_profiles.py --browser
-      - name: Test and pack the authentication bootstrap CLI
+      - name: Test generated applications across all four stacks and three profiles
         working-directory: packages/create-feature-auth
         run: |
           npm ci
           npm test
           npm run check:generated
           npm pack --pack-destination "$RUNNER_TEMP"
+      - name: Verify generated database fixture cleanup and sentinel preservation
+        run: uv run --frozen --project tools python packages/create-feature-auth/test/check_db.py
       - name: Test and install the main feature catalog from its real tarball
         working-directory: packages/feature-standards
         run: |
@@ -173,6 +212,12 @@ jobs:
           npm test
           npm run check:pack
           npm run check:bootstrap
+      - name: Verify the installed main CLI through real generated applications
+        working-directory: packages/feature-standards
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          package_version=$(node -p 'require("./package.json").version')
+          node ../../tests/feature_workflow.mjs --tarball "$RUNNER_TEMP/feature-standards-$package_version.tgz"
       - name: Verify checked-in workflow template matches
         run: |
           cmp .github/workflows/ci.yml ci/github-actions.yml

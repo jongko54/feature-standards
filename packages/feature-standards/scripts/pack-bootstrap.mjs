@@ -35,7 +35,7 @@ Created by [jongko54](https://github.com/jongko54). Licensed under MIT.
 
 function checkedMetadata(main) {
   assert.equal(main.name, 'feature-standards', 'unexpected-main-package-name');
-  assert.equal(main.version, '0.1.0', 'unexpected-main-package-version');
+  assert.match(main.version, /^\d+\.\d+\.\d+$/, 'unexpected-main-package-version');
   assert.equal(main.license, 'MIT', 'unexpected-main-license');
   assert.deepEqual(main.author, { name: 'jongko54', url: 'https://github.com/jongko54' });
   assert.deepEqual(main.repository, {

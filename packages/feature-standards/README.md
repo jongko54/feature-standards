@@ -2,15 +2,15 @@
 
 Reusable feature standards for AI-assisted development across languages. **Authentication is the first and currently available feature**: Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum, and a React client, with three browser-session profiles.
 
-This main package distributes a curated contract snapshot and a read-only context selector. It gives an AI the selected specification, OpenAPI, scenarios, schema SQL, public API guides, and integration guidance. The API implementations, conformance harnesses, and optional consumer generator live in the [source repository](https://github.com/jongko54/feature-standards). The React runtime is a separate package.
+This main package distributes a curated contract snapshot, a read-only context selector, and explicit `init` / `check` entry points. It gives an AI the selected specification, OpenAPI, scenarios, schema SQL, public API guides, and integration guidance. Application generation delegates to an existing trusted source checkout; selected-profile checks execute the generated application's runner. The API implementations and conformance harnesses live in the [source repository](https://github.com/jongko54/feature-standards). The React runtime is a separate package.
 
 ## Use the CLI
 
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# Once this version's registry publication has been verified:
-npm install --save-dev feature-standards@0.1.0
+# 0.2.0 is prepared in source. Use this after its registry publication is verified:
+npm install --save-dev feature-standards@0.2.0
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
@@ -23,7 +23,26 @@ npx feature-standards context --feature auth --stack python --profile browser-se
 | Stack | `python`, `go`, `java`, `rust`, `react` |
 | Profile | `browser-session-v1`, `browser-session-v2`, `browser-session-v3` |
 
-v1 uses memory sessions. v2 uses PostgreSQL sessions. v3 adds registration, email verification, and password reset. SMTP delivery is an optional v3 addon with separate configuration. React is a client stack; the other four stacks are backends. Selecting a context performs no checks, migrations, dependency installation, generation, project edits, server startup, or model calls.
+v1 uses memory sessions. v2 uses PostgreSQL sessions. v3 adds registration, email verification, and password reset. SMTP delivery is an optional v3 addon with separate configuration. React is a client stack; the other four stacks are backends. `list` and `context` perform no checks, migrations, dependency installation, generation, project edits, server startup, or model calls.
+
+## Generate and check an application
+
+The explicit workflow commands require a trusted source checkout containing `@ugauga/create-feature-auth` version 0.2.0 or later. The source checkout is separate from this npm package. Existing targets, linked paths, unsupported selections, and older runners that only check memory v1 are refused.
+
+```sh
+feature-standards init --feature auth \
+  --source /absolute/physical/path/to/feature-standards \
+  --stack python --profile browser-session-v1 \
+  --dest /absolute/physical/path/to/new-app
+
+feature-standards check --project /absolute/physical/path/to/new-app
+```
+
+`init` creates a new application's glue and source-relative dependencies using the selected checkout's generator. It does not run builds or checks by default. Add `--check` to run the same selected-profile check immediately after creation. `check` explicitly executes trusted project code and its language toolchain; builds may download dependencies. These operations are not a sandbox for untrusted code. Neither command installs a server registry package, updates a project automatically, runs a production migration, or sends SMTP mail.
+
+For v2 and v3 checks, explicitly provide `FEATURE_STANDARDS_TEST_DATABASE_URL` for a dedicated loopback test database whose name starts with `feature_standards_test`. The checker creates and drops its own uniquely named database and applies fixtures only there. It does not use inherited `AUTH_DATABASE_URL` as its test target and does not alter the supplied base database. The account profile also exercises registration, verification, password reset, and session revocation through that isolated fixture. See the [generator guide](https://github.com/jongko54/feature-standards/blob/main/docs/create-feature-auth.md) for requirements and exact limits.
+
+Workflow results identify the actual stack and profile, passed checks, and whether an isolated database was used and cleaned up. The main CLI rejects mismatched profile or protocol receipts. Build output may precede the final JSON workflow result; `list` and `context` retain JSON-only output. A failed explicit check leaves the generated project available for inspection.
 
 ## Read the result
 
@@ -52,7 +71,17 @@ console.log(selected.packagedDocuments.specification.readPath);
 console.log(selected.sourceCheckout.entrypoints);
 ```
 
-Both exports synchronously read package-owned metadata. They do not search the caller's project or run returned commands.
+Both selection exports synchronously read package-owned metadata. They do not search the caller's project or run returned commands. The explicit asynchronous workflow exports use the same contracts as the CLI:
+
+```js
+import { initFeature, checkProject } from 'feature-standards';
+
+const project = await initFeature({
+  feature: 'auth', source: '/trusted/physical/checkout', stack: 'go',
+  profile: 'browser-session-v1', dest: '/physical/parent/new-app',
+});
+const receipt = await checkProject({ project: project.destination });
+```
 
 ## Work from the repository
 
@@ -65,8 +94,8 @@ npm --prefix packages/feature-standards test
 npm --prefix packages/feature-standards run check:pack
 ```
 
-`prepack` rebuilds `snapshot/` from an explicit positive file whitelist. Only the canonical manifest, contracts, schema SQL, selected guides, consumer READMEs, and integration skill references are copied. No implementation code, dependency trees, binaries, credentials, caches, model traces, or evaluation artifacts are bundled. The packed package includes the two runtime JavaScript files, its metadata, README, and MIT license. Its build/test scripts remain in the source repository.
+`prepack` rebuilds `snapshot/` from an explicit positive file whitelist. Only the canonical manifest, contracts, schema SQL, selected guides, consumer READMEs, and integration skill references are copied. No implementation code, dependency trees, binaries, credentials, caches, model traces, or evaluation artifacts are bundled. The packed package includes the three runtime JavaScript files, its metadata, README, and MIT license. Its build/test scripts remain in the source repository.
 
-`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 15 stack/profile contexts and Node exports. It does not exercise authentication backends. Local packing and offline installation are separate from verified npm publication.
+`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 15 stack/profile contexts and Node exports. It also checks the explicit workflow boundary against a synthetic trusted generator/runner fixture; this smoke check does not build or exercise authentication backends. Actual generated backend/profile checks are separate. Local packing and offline installation are separate from verified npm publication.
 
 Created by [jongko54](https://github.com/jongko54). [Source and issues](https://github.com/jongko54/feature-standards).

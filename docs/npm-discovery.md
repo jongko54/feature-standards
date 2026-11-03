@@ -30,7 +30,7 @@ node packages/feature-standards/src/cli.mjs context \
   --feature auth --stack python --profile browser-session-v1
 ```
 
-The main package includes curated contracts, a manifest, and stack guides. Its JSON output provides guidance and does not execute commands. Server runtime libraries and executable harnesses require the source checkout or their separate distributions. See the [main package guide](../packages/feature-standards/README.md) and [AI integration guide](ai-integration.md).
+The main package includes curated contracts, a manifest, and stack guides. `list` and `context` provide JSON guidance without executing commands. Prepared version `0.2.0` also adds explicit `init` and `check` commands using a trusted source checkout and generated project; the installed `0.1.0` catalog does not include those commands. Server runtime libraries and executable harnesses require the source checkout or their separate distributions. See the [main package guide](../packages/feature-standards/README.md) and [AI integration guide](ai-integration.md).
 
 The published main version was independently installed from the registry and all 15 contexts were checked. Its npm commands are:
 

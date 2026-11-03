@@ -5,6 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createCheckEnvironment, startDatabaseFixture } from './check-fixture.mjs';
 
 const STACKS = ['python', 'go', 'java', 'rust'];
 const PROFILES = ['browser-session-v1', 'browser-session-v2', 'browser-session-v3'];
@@ -119,50 +120,130 @@ async function freePort() {
 }
 
 async function check(config, environment) {
+  if (config.checkProtocolVersion !== 1) throw new Error('unsupported-check-protocol');
   const port = await freePort();
   const base = `http://127.0.0.1:${port}`;
-  const fixture = { ...environment };
-  for (const key of Object.keys(fixture)) if (key.startsWith('AUTH_')) delete fixture[key];
-  Object.assign(fixture, { AUTH_STORE: 'memory', AUTH_ACCOUNT_LIFECYCLE: 'false', AUTH_DEMO: 'true', AUTH_HOST: '127.0.0.1', AUTH_PORT: String(port), AUTH_ALLOWED_ORIGIN: base, AUTH_COOKIE_SECURE: 'false', AUTH_USER_EMAIL: 'demo@example.com', AUTH_USER_PASSWORD: 'correct-horse-battery-staple', AUTH_SESSION_TTL_SECONDS: '1800', AUTH_RATE_LIMIT_MAX: '20', AUTH_RATE_LIMIT_WINDOW_SECONDS: '60' });
-  await build(config, environment);
-  const [program, args] = startCommand(config, fixture);
-  const child = spawn(program, args, { cwd: config.directory, env: fixture, stdio: ['ignore', 'ignore', 'ignore'], detached: process.platform !== 'win32' });
-  let launchError = false;
-  child.once('error', () => { launchError = true; });
-  const interrupt = () => stop(child);
+  // Validate before compiling or making an administrative database connection.
+  const fixture = createCheckEnvironment(config, base, environment);
+  const checks = [];
+  let database;
+  let child;
+  const interrupt = () => { if (child) stop(child); };
   process.once('SIGINT', interrupt); process.once('SIGTERM', interrupt);
   const request = (path, options = {}) => fetch(base + path, { ...options, headers: { Origin: base, ...(options.headers || {}) }, signal: AbortSignal.timeout(3000), redirect: 'error' });
-  try {
+  const expect = (response, status, label) => { if (response.status !== status) throw new Error('check-' + label); return response; };
+  const post = (path, value, headers = {}) => request(path, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(value),
+  });
+  const login = async (email = 'demo@example.com', password = 'correct-horse-battery-staple') => {
+    const response = expect(await post('/auth/login', { email, password }), 200, 'login');
+    const session = await response.json();
+    const cookie = response.headers.get('set-cookie')?.split(';', 1)[0];
+    if (!/^fs_session=[A-Za-z0-9_-]{43}$/.test(cookie || '') || typeof session.csrfToken !== 'string' || !session.user) throw new Error('check-session-shape');
+    return { ...session, cookie };
+  };
+  const protectedIdentity = async session => {
+    const response = expect(await request('/api/profile', { headers: { Cookie: session.cookie } }), 200, 'profile');
+    assert.deepEqual((await response.json()).user, session.user, 'check-profile-identity');
+  };
+  const stopServer = async () => {
+    if (!child) return;
+    stop(child); await waitForExit(child); stop(child, 'SIGKILL'); child = undefined;
+  };
+  const startServer = async () => {
+    const [program, args] = startCommand(config, fixture);
+    child = spawn(program, args, { cwd: config.directory, env: fixture, stdio: ['ignore', 'ignore', 'ignore'], detached: process.platform !== 'win32' });
+    let launchError = false;
+    child.once('error', () => { launchError = true; });
     const deadline = Date.now() + 60000;
-    let ready = false;
     while (Date.now() < deadline) {
       if (launchError || child.exitCode !== null || child.signalCode !== null) throw new Error('check-server-exited');
       try {
         const response = await request('/healthz');
-        if (response.status === 200 && (await response.json()).profile === 'browser-session-v1') { ready = true; break; }
-      } catch { /* The child has not opened its listener yet. */ }
+        if (response.status === 200) {
+          const health = await response.json();
+          if (health.profile !== config.profile) throw new Error('check-selected-profile-mismatch');
+          return;
+        }
+      } catch (error) {
+        if (error.message === 'check-selected-profile-mismatch') throw error;
+        // The child has not opened its listener yet.
+      }
       await new Promise(resolveDelay => setTimeout(resolveDelay, 100));
     }
-    if (!ready) throw new Error('check-server-timeout');
-    const expect = (response, status, label) => { if (response.status !== status) throw new Error('check-' + label); };
+    throw new Error('check-server-timeout');
+  };
+  try {
+    if (config.profile !== 'browser-session-v1') {
+      database = await startDatabaseFixture(config, environment);
+      fixture.AUTH_DATABASE_URL = database.url;
+    }
+    await build(config, fixture);
+    await startServer();
+    checks.push('selected-profile-health');
     expect(await request('/api/profile'), 401, 'anonymous');
-    const response = await request('/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'demo@example.com', password: 'correct-horse-battery-staple' }) });
-    expect(response, 200, 'login');
-    const session = await response.json();
-    const cookie = response.headers.get('set-cookie')?.split(';', 1)[0];
-    if (!/^fs_session=[A-Za-z0-9_-]{43}$/.test(cookie || '') || typeof session.csrfToken !== 'string') throw new Error('check-session-shape');
-    const profile = await request('/api/profile', { headers: { Cookie: cookie } }); expect(profile, 200, 'profile');
-    assert.deepEqual((await profile.json()).user, session.user, 'check-profile-identity');
-    expect(await request('/auth/logout', { method: 'POST', headers: { Cookie: cookie, 'X-CSRF-Token': 'wrong' } }), 403, 'csrf');
-    expect(await request('/api/profile', { headers: { Cookie: cookie } }), 200, 'csrf-preserves-session');
-    expect(await request('/auth/logout', { method: 'POST', headers: { Cookie: cookie, 'X-CSRF-Token': session.csrfToken } }), 204, 'logout');
-    expect(await request('/api/profile', { headers: { Cookie: cookie } }), 401, 'copied-cookie');
-    expect(await request('/auth/me', { headers: { Cookie: cookie } }), 401, 'revoked-session');
-    console.log('Generated consumer: PASS (memory v1 HTTP lifecycle; selected profile ' + config.profile + ')');
+    expect(await request('/api/profile', { headers: { Cookie: 'fs_session=forged-consumer-cookie' } }), 401, 'forged-cookie');
+    checks.push('anonymous-and-forged-protected-access');
+    const first = await login();
+    const second = await login();
+    assert.notEqual(first.cookie, second.cookie, 'check-independent-cookies');
+    assert.notEqual(first.csrfToken, second.csrfToken, 'check-independent-csrf');
+    await protectedIdentity(first);
+    await protectedIdentity(second);
+    checks.push('login-shared-protected-identity', 'independent-sessions');
+    expect(await request('/auth/logout', { method: 'POST', headers: { Cookie: first.cookie, 'X-CSRF-Token': second.csrfToken } }), 403, 'csrf');
+    await protectedIdentity(first);
+    checks.push('csrf-rejection-preserves-session');
+    expect(await request('/auth/logout', { method: 'POST', headers: { Cookie: first.cookie, 'X-CSRF-Token': first.csrfToken } }), 204, 'logout');
+    expect(await request('/api/profile', { headers: { Cookie: first.cookie } }), 401, 'copied-cookie');
+    expect(await request('/auth/me', { headers: { Cookie: first.cookie } }), 401, 'revoked-session');
+    await protectedIdentity(second);
+    checks.push('server-logout-revokes-copied-cookie');
+    if (database) {
+      await stopServer();
+      await startServer();
+      await protectedIdentity(second);
+      checks.push('database-session-survives-server-restart');
+    }
+    if (config.profile === 'browser-session-v3') {
+      const email = 'generated-account@example.com';
+      const password = 'correct-horse-battery-staple';
+      const newPassword = 'generated-new-password-after-reset';
+      expect(await post('/auth/register', { email, password }), 202, 'register');
+      expect(await post('/auth/login', { email, password }), 401, 'unverified-login');
+      checks.push('registration-awaits-verification');
+      const verification = await database.token(email, 'verify');
+      expect(await post('/auth/email-verification/confirm', { token: verification }), 204, 'verification');
+      expect(await post('/auth/email-verification/confirm', { token: verification }), 400, 'verification-replay');
+      checks.push('email-verification-single-use');
+      const account = await login(email, password);
+      const independent = await login(email, password);
+      await protectedIdentity(account);
+      assert.equal(account.user.email, email, 'check-registered-identity');
+      expect(await post('/auth/password-reset/request', { email }), 202, 'reset-request');
+      const reset = await database.token(email, 'reset');
+      expect(await post('/auth/password-reset/confirm', { token: reset, password: newPassword }), 204, 'reset-confirm');
+      for (const session of [account, independent]) {
+        expect(await request('/api/profile', { headers: { Cookie: session.cookie } }), 401, 'reset-revokes-protected');
+        expect(await request('/auth/me', { headers: { Cookie: session.cookie } }), 401, 'reset-revokes-session');
+      }
+      checks.push('password-reset-revokes-all-sessions');
+      expect(await post('/auth/password-reset/confirm', { token: reset, password: newPassword }), 400, 'reset-replay');
+      expect(await post('/auth/login', { email, password }), 401, 'old-password');
+      await protectedIdentity(await login(email, newPassword));
+      checks.push('password-reset-single-use', 'new-password-authenticates');
+    }
   } finally {
     process.removeListener('SIGINT', interrupt); process.removeListener('SIGTERM', interrupt);
-    stop(child); await waitForExit(child); stop(child, 'SIGKILL');
+    await stopServer();
+    if (database) await database.close();
   }
+  return {
+    schemaVersion: 1, stack: config.stack, profile: config.profile, passed: true, checks,
+    database: database
+      ? { used: true, isolated: true, created: true, dropped: true, existingDatabaseModified: false }
+      : { used: false, isolated: false },
+  };
 }
 
 export async function runProject(mode, directory = dirname(fileURLToPath(import.meta.url))) {
@@ -177,5 +258,6 @@ export async function runProject(mode, directory = dirname(fileURLToPath(import.
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  runProject(process.argv[2]).catch(error => { console.error('feature-auth project: ' + error.message); process.exitCode = 1; });
+  runProject(process.argv[2]).then(result => { if (result) console.log(JSON.stringify(result, null, 2)); })
+    .catch(error => { console.error('feature-auth project: ' + error.message); process.exitCode = 1; });
 }

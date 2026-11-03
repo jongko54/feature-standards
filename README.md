@@ -20,6 +20,17 @@ npx feature-standards@0.1.0 context \
 
 Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. The CLI returns JSON context with separate bundled-document paths and source-checkout instructions; it does not install dependencies, generate applications, run servers, migrate databases, or execute tests.
 
+Version `0.2.0` adds explicit `init` and `check` commands. Until that version's registry release is recorded, run the new commands from the source checkout:
+
+```sh
+node packages/feature-standards/src/cli.mjs init \
+  --feature auth --source "$PWD" --stack python \
+  --profile browser-session-v1 --dest ../my-auth-app --check
+node packages/feature-standards/src/cli.mjs check --project ../my-auth-app
+```
+
+`init` creates a new application using the checkout's generator `0.2.0` or newer. `check` and `init --check` explicitly build and exercise that trusted application's selected profile. v1 uses a temporary memory server. v2/v3 require `FEATURE_STANDARDS_TEST_DATABASE_URL` pointing to a dedicated loopback test database with an explicit port and a `feature_standards_test*` name; the test role needs permission to create databases. Each check creates and drops its own UUID database, leaving the base database's schema and data unchanged. v2 verifies persistence across a server restart; v3 also verifies registration, email verification, password reset, and session revocation without sending SMTP mail. A JSON receipt identifies the profile and completed checks. See the [generation guide](docs/create-feature-auth.md).
+
 You can also build the documentation snapshot and run from a source checkout:
 
 ```sh
@@ -79,7 +90,7 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest ../my-auth-app --check
 ```
 
-Choose `python`, `go`, `java`, or `rust`. The destination must be new, outside the checkout, and under an existing physical parent directory. The generator reuses the chosen server library rather than copying its implementation. `--check` builds and exercises a temporary loopback **memory v1** application even when another profile is selected; it is not a v2/v3 database test. See the [generator guide](docs/create-feature-auth.md) for requirements, outputs, and explicit database setup.
+Choose `python`, `go`, `java`, or `rust`. The destination must be new, outside the checkout, and under an existing physical parent directory. The generator reuses the chosen server library rather than copying its implementation. In generator `0.2.0`, `--check` exercises the selected profile; database checks use a newly created, isolated test database and require explicit test configuration. Published generator `0.1.1` retains its earlier memory-v1-only check. See the [generator guide](docs/create-feature-auth.md) for requirements, outputs, and database setup.
 
 ### Run a local reference application
 

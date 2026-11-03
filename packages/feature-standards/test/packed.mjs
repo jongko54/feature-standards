@@ -6,10 +6,11 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SOURCE_FILES } from '../scripts/build.mjs';
+import { fixtureSource } from './workflow-fixture.mjs';
 
 const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const scratch = realpathSync(mkdtempSync(join(tmpdir(), 'feature-standards-pack-')));
-const expectedFiles = ['package.json', 'README.md', 'LICENSE', 'src/cli.mjs', 'src/index.mjs', 'snapshot/provenance.json', ...SOURCE_FILES.map(path => 'snapshot/' + path)].sort();
+const expectedFiles = ['package.json', 'README.md', 'LICENSE', 'src/cli.mjs', 'src/index.mjs', 'src/workflow.mjs', 'snapshot/provenance.json', ...SOURCE_FILES.map(path => 'snapshot/' + path)].sort();
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const run = (command, argv, cwd = PACKAGE, env = process.env) => {
   const result = spawnSync(command, argv, { cwd, env, encoding: 'utf8', timeout: 120000, maxBuffer: 8 * 1024 * 1024 });
@@ -39,7 +40,7 @@ try {
   assert.deepEqual(files(installed).sort(), expectedFiles);
   const metadata = JSON.parse(readFileSync(join(installed, 'package.json'), 'utf8'));
   assert.equal(metadata.name, 'feature-standards');
-  assert.equal(metadata.version, '0.1.0');
+  assert.equal(metadata.version, '0.2.0');
   assert.deepEqual(metadata.author, { name: 'jongko54', url: 'https://github.com/jongko54' });
   assert.equal(metadata.repository.directory, 'packages/feature-standards');
   for (const keyword of ['jongko54', 'ai', 'cross-language', 'contracts']) assert.ok(metadata.keywords.includes(keyword));
@@ -69,9 +70,20 @@ try {
   assert.equal(contexts, 15);
   const imported = JSON.parse(run(process.execPath, ['--input-type=module', '-e', "import { listFeatures, getContext } from 'feature-standards'; console.log(JSON.stringify({ feature: listFeatures().features[0].id, stack: getContext({ stack: 'rust' }).stack.id }));"], consumer));
   assert.deepEqual(imported, { feature: 'auth', stack: 'rust' });
+  const source = fixtureSource(join(scratch, 'trusted-source'));
+  const generated = join(scratch, 'generated-app');
+  const initialized = JSON.parse(run(bin, ['init', '--source', source, '--stack', 'python', '--profile', 'browser-session-v3', '--dest', generated], consumer));
+  assert.equal(initialized.profile, 'browser-session-v3');
+  assert.equal(initialized.check.executed, false);
+  assert.ok(!existsSync(join(generated, 'check-ran.txt')));
+  const checked = JSON.parse(run(bin, ['check', '--project', generated], consumer));
+  assert.equal(checked.profile, 'browser-session-v3');
+  assert.equal(checked.database.used, true);
+  assert.equal(checked.database.isolated, true);
+  run(process.execPath, ['--input-type=module', '-e', "import assert from 'node:assert/strict'; import {initFeature,checkProject} from 'feature-standards'; assert.equal(typeof initFeature,'function'); assert.equal(typeof checkProject,'function');"], consumer);
   const refused = spawnSync(bin, ['context', '--stack', 'go', '--feature', 'unsupported'], { cwd: consumer, encoding: 'utf8' });
   assert.equal(refused.status, 1);
   assert.equal(refused.stdout, '');
   assert.match(refused.stderr, /unsupported-feature/);
-  console.log(JSON.stringify({ package: metadata.name, version: metadata.version, files: expectedFiles.length, snapshotFiles: SOURCE_FILES.length, freshOfflineInstall: true, installedBin: true, contexts, nodeExports: true, authorAndKeywords: true, sha256: tarballSha256, sourceCommit: provenance.sourceCommit, sourceDirty: provenance.sourceDirty, snapshotDirty: provenance.snapshotDirty }, null, 2));
+  console.log(JSON.stringify({ package: metadata.name, version: metadata.version, files: expectedFiles.length, snapshotFiles: SOURCE_FILES.length, freshOfflineInstall: true, installedBin: true, contexts, nodeExports: true, explicitWorkflowFixture: true, realBackendTestedByThisSmoke: false, authorAndKeywords: true, sha256: tarballSha256, sourceCommit: provenance.sourceCommit, sourceDirty: provenance.sourceDirty, snapshotDirty: provenance.snapshotDirty }, null, 2));
 } finally { rmSync(scratch, { recursive: true, force: true }); }

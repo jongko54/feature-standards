@@ -54,7 +54,16 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack python --pr
 | 브라우저 인증 API 어댑터 | `@ugauga/feature-standards-react-auth` `0.1.4` 게시 확인 | [공개 API 안내](../clients/react/README.md), [게시 기록](npm-release.md) |
 | 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.1.1` 게시 확인 | [생성 도구 안내](create-feature-auth.md) |
 
-생성기는 명시적인 source checkout을 연결해 얇은 소비 앱을 만든다. 생성기의 HTTP check는 메모리 v1만 확인하며, 선택한 프로젝트 프로필이 v3여도 DB·계정 흐름 검증을 대신하지 않는다. 준비 버전, 로컬 tarball, registry 게시·설치, npm 검색 반영은 각각 다른 상태다. [jongko54 검색 안내](npm-discovery.md)를 함께 확인한다.
+생성기는 명시적인 source checkout을 연결해 얇은 소비 앱을 만든다. 게시된 생성기 `0.1.1`은 메모리 v1만 검사한다. 준비 중인 대표 CLI·생성기 `0.2.0`은 아래 명시적 명령에서 선택한 프로필을 검사한다. v2/v3에는 별도 `FEATURE_STANDARDS_TEST_DATABASE_URL`이 필요하며, 새 UUID 테스트 DB에서만 이관·fixture·검증을 실행하고 자신이 만든 DB를 정리한다. 원래 DB의 스키마와 데이터는 수정하지 않는다. v3는 가입·확인·재설정과 기존 세션 폐기를 검사하며 SMTP를 발송하지 않는다.
+
+```sh
+node packages/feature-standards/src/cli.mjs init \
+  --source "$PWD" --feature auth --stack python \
+  --profile browser-session-v1 --dest ../my-auth-app --check
+node packages/feature-standards/src/cli.mjs check --project ../my-auth-app
+```
+
+`list`/`context`는 계속 읽기 전용이다. `init`은 새 앱을 만들고 `check` 또는 `init --check`는 사용자가 지정한 신뢰된 소스와 도구 체인을 실행한다. 결과의 stack·profile·검사 목록과 DB 생성/정리 여부를 확인한다. 기존 `0.1.1` 생성 앱은 새 검사 프로토콜을 포함하지 않으므로 별도의 새 대상에 `0.2.0`으로 생성한다. 자세한 설정은 [생성기 안내](create-feature-auth.md)를 따른다. 준비 버전, 로컬 tarball, registry 게시·설치, npm 검색 반영은 각각 다른 상태다. [jongko54 검색 안내](npm-discovery.md)를 함께 확인한다.
 
 ## 재사용과 모델 평가의 근거
 
