@@ -20,7 +20,17 @@ npm run check:package
 
 게시 전 source commit을 만들고, 검증한 tarball을 `npm publish TARFILE --access public --tag latest`로 게시한다. npm이 요구하는 계정 인증·2FA는 사용자 계정에서 완료한다. 토큰을 저장소·CI 설정에 추가하지 않는다. 게시 후 registry의 version·dist integrity와 새 프로젝트 설치를 별도로 확인한다. 실제 게시 상태와 receipt는 아래에 기록한다.
 
-## 상태
+## 0.1.1 — English documentation patch
+
+The latest npm version is `0.1.1`. Both the project README and the package README are in English, and the package description has been refined. The registry README and description match the checked-in English source. [Verification receipt](npm-release-0.1.1.json).
+
+- Source commit: `8c71e7c938bbef7d955ae870e90c55cfeff53f32`
+- Tarball: 4,518 bytes, five files
+- The registry tarball matches the reviewed artifact's SHA-512 integrity.
+- A fresh registry installation passes root and `/api` ESM import and strict TypeScript checks.
+- Runtime JavaScript, type declarations, and the license are byte-identical to `0.1.0`.
+
+## 0.1.0 publication record
 
 2026-11-03 KST, [npm 0.1.0](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth) 공개와 `latest=0.1.0`을 확인했다. npm의 접수 성공 후 처리 시간이 있었으며, 실제 registry에 version·dist가 나타난 뒤 검증했다. [기계 판독 receipt](npm-release-0.1.0.json)를 함께 보관한다.
 

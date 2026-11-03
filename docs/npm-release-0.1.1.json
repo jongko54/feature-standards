@@ -1,0 +1,26 @@
+{
+  "package": "@ugauga/feature-standards-react-auth",
+  "version": "0.1.1",
+  "dist_tag": "latest",
+  "change": "English project and package READMEs, and a refined English package description. Runtime JavaScript, declarations and license are byte-identical to 0.1.0.",
+  "npm_url": "https://www.npmjs.com/package/@ugauga/feature-standards-react-auth",
+  "registry": "https://registry.npmjs.org/",
+  "tarball": "https://registry.npmjs.org/@ugauga/feature-standards-react-auth/-/feature-standards-react-auth-0.1.1.tgz",
+  "integrity": "sha512-CjOUgHOxvX0GbQzUD2F61olGIhe2ISzvucXQ3d00qRtMk1RwTfthVaxqctPmYlbYNADIhlwu987i3svqJstoEg==",
+  "tarball_bytes": 4518,
+  "file_count": 5,
+  "source_commit": "8c71e7c938bbef7d955ae870e90c55cfeff53f32",
+  "verified_at": "2026-11-03T02:37:19Z",
+  "verification": {
+    "registry_latest": true,
+    "registry_readme_matches_english_source": true,
+    "registry_description_matches_english_source": true,
+    "anonymous_tarball_integrity": true,
+    "fresh_registry_install": true,
+    "installed_lockfile_integrity": true,
+    "esm_root_and_api_exports": true,
+    "registry_runtime_smoke": true,
+    "typescript_strict_nodenext": true,
+    "runtime_declarations_license_unchanged_from_0_1_0": true
+  }
+}
