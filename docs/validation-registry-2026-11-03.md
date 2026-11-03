@@ -47,3 +47,5 @@ Independent npm12 code inspection confirmed that exec preserves process environm
 Final unauthenticated public checks remained API `0.1.1`, with no `0.1.3` version, and404 for the CLI, PyPI project, Rust crate and Maven coordinate. These attempts did not establish a new registry publication. Go `0.1.0` remains the previously verified release.
 
 The next required owner action is local npm login, followed by publisher configuration inspection/connection and the CLI bootstrap. PyPI specifically needs its matching pending publisher. Central and crates.io account setup remains as documented. Existing tags are retained, and failed publishing jobs can be resumed once those account conditions change. This final receipt-only update reuses the unchanged implementation checks; it does not claim a new full runtime CI run.
+
+One bounded retry reran only the failed npm publishing job with the same verified artifact. Attempt2 returned the same ENEEDAUTH, and the public registry still had no0.1.3. Repeated source tests or additional blind publishing retries cannot replace account authentication/configuration. No further publication retry was started.

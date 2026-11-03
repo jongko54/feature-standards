@@ -46,7 +46,9 @@
       "error_code": "ENEEDAUTH",
       "failure_stage": "tarball dry-run and exact main CI passed; OIDC returned no usable npm credential",
       "underlying_oidc_failure_reason": "not exposed by default npm log; publisher mismatch not confirmed",
-      "publication_verified": false
+      "publication_verified": false,
+      "workflow_attempts": 2,
+      "bounded_retry_result": "same ENEEDAUTH in second publishing-job attempt; no new package version observed"
     }
   ],
   "corrected_api_candidate": {
