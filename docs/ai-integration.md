@@ -6,9 +6,9 @@ Feature Standards의 목적은 여러 언어에서 같은 기능 계약을 찾�
 
 ## 주 진입점: 기능과 스택 문맥
 
-주 npm 패키지는 `feature-standards`이며 현재 checkout에서 `0.1.0`을 준비한다. 선별한 계약·manifest·스택 안내와 JSON CLI를 제공한다. 서버 런타임·소비 앱·실행 가능한 conformance 도구는 원본 checkout에 있으며, 이 문맥 패키지 설치만으로 각 언어의 런타임 라이브러리가 설치되지는 않는다.
+주 npm 패키지 `feature-standards@0.1.0`은 게시와 새 registry 설치를 확인했다. 선별한 계약·manifest·스택 안내와 JSON CLI를 제공한다. 서버 런타임·소비 앱·실행 가능한 conformance 도구는 원본 checkout에 있으며, 이 문맥 패키지 설치만으로 각 언어의 런타임 라이브러리가 설치되지는 않는다. [게시·설치·15개 문맥·검색 확인 기록](npm-product-release-2026-11-03.json)을 함께 확인한다.
 
-아직 npm 게시·새 registry 설치가 확인되지 않았다면 원본에서 실행한다.
+원본 checkout에서 실행할 수도 있다.
 
 ```sh
 npm --prefix packages/feature-standards run build
@@ -21,7 +21,7 @@ node packages/feature-standards/src/cli.mjs context \
 
 소스의 첫 실행 전 `build`는 배포할 문서 스냅샷을 만든다. JSON의 `packagedDocuments`에는 번들에 실제 포함한 문서의 `readPath`, 원본 경로·URL, 해시가 있다. `sourceCheckout`의 런타임 진입점은 별도 원본 checkout을 기준으로 하며, 설치·검증 명령에는 `executed: false`를 표시한다. `provenance`의 원본 커밋·dirty 상태와 각 문서의 해시를 함께 확인한다. `sourceModified: true` 문서는 커밋 URL에 없는 로컬 수정을 포함하므로 번들의 실제 `readPath`를 읽는다. 이 문서 경로를 서버 코드 경로로 사용하지 않는다.
 
-`feature-standards@0.1.0` 게시와 설치가 확인된 이후에는 다음 npm 진입점을 사용한다.
+게시된 `feature-standards@0.1.0`의 npm 진입점은 다음과 같다.
 
 ```sh
 npx feature-standards@0.1.0 list
@@ -49,10 +49,10 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack python --pr
 
 | 역할 | 배포 단위 | 원본과 안내 |
 |---|---|---|
-| 기능 탐색·선택 문맥 | 주 패키지 `feature-standards` `0.1.0` 준비 | [패키지 안내](../packages/feature-standards/README.md) |
+| 기능 탐색·선택 문맥 | 주 패키지 `feature-standards` `0.1.0` 게시 확인 | [패키지 안내](../packages/feature-standards/README.md) |
 | 인증 서버 라이브러리 | Python·Go·Java·Rust의 개별 패키지 | [서버 배포 상태](server-releases.md) |
-| 브라우저 인증 API 어댑터 | `@ugauga/feature-standards-react-auth` `0.1.4` 준비 | [공개 API 안내](../clients/react/README.md), [게시 기록](npm-release.md) |
-| 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.1.1` 준비 | [생성 도구 안내](create-feature-auth.md) |
+| 브라우저 인증 API 어댑터 | `@ugauga/feature-standards-react-auth` `0.1.4` 게시 확인 | [공개 API 안내](../clients/react/README.md), [게시 기록](npm-release.md) |
+| 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.1.1` 게시 확인 | [생성 도구 안내](create-feature-auth.md) |
 
 생성기는 명시적인 source checkout을 연결해 얇은 소비 앱을 만든다. 생성기의 HTTP check는 메모리 v1만 확인하며, 선택한 프로젝트 프로필이 v3여도 DB·계정 흐름 검증을 대신하지 않는다. 준비 버전, 로컬 tarball, registry 게시·설치, npm 검색 반영은 각각 다른 상태다. [jongko54 검색 안내](npm-discovery.md)를 함께 확인한다.
 

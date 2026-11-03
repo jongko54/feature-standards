@@ -8,28 +8,28 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 ## Start with the feature catalog
 
-The main npm package is **`feature-standards`**, with `0.1.0` prepared in this checkout. It provides a JSON CLI and curated contracts, a manifest, and stack guides. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
+The main npm package is **[`feature-standards@0.1.0`](https://www.npmjs.com/package/feature-standards)**. It provides a JSON CLI and curated contracts, a manifest, and stack guides. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
 
-Use the source checkout before npm publication is confirmed:
+Run the published catalog:
+
+```sh
+npx feature-standards@0.1.0 list
+npx feature-standards@0.1.0 context \
+  --feature auth --stack python --profile browser-session-v1
+```
+
+Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. The CLI returns JSON context with separate bundled-document paths and source-checkout instructions; it does not install dependencies, generate applications, run servers, migrate databases, or execute tests.
+
+You can also build the documentation snapshot and run from a source checkout:
 
 ```sh
 npm --prefix packages/feature-standards run build
 node packages/feature-standards/src/cli.mjs list
 node packages/feature-standards/src/cli.mjs context \
-  --feature auth --stack python --profile browser-session-v1
-```
-
-The build creates the bundled documentation snapshot. Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. The CLI returns JSON context with separate bundled-document paths and source-checkout instructions; it does not install dependencies, generate applications, run servers, migrate databases, or execute tests.
-
-After `feature-standards@0.1.0` publication and registry installation are verified, the equivalent npm entry points are:
-
-```sh
-npx feature-standards@0.1.0 list
-npx feature-standards@0.1.0 context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
-See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). Prepared versions and local package checks do not establish public npm availability or search indexing.
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [release receipt](docs/npm-product-release-2026-11-03.json) records public artifact integrity, a fresh registry install, all 15 contexts, and the observed `jongko54` search results. Search rank and future indexing are not guaranteed.
 
 ## How an AI integration works
 
@@ -62,12 +62,12 @@ v1 is the default. v2 and v3 require explicit database configuration and migrati
 
 The main package exposes the feature context. The following npm packages are authentication components within Feature Standards:
 
-| Component | Package | Prepared version |
+| Component | Package | Published npm version |
 |---|---|---|
 | Browser authentication API adapter | `@ugauga/feature-standards-react-auth` | `0.1.4` |
 | Thin authentication application generator for four server stacks | `@ugauga/create-feature-auth` | `0.1.1` |
 
-The React adapter connects browser applications to the shared authentication API; it is one part of the project. The generator creates application glue around the server libraries. The [React release record](docs/npm-release.md) and [server release guide](docs/server-releases.md) track registry-specific publication and installation separately from these prepared versions. All three npm packages identify [jongko54](https://github.com/jongko54) as author and carry the `jongko54` and `feature-standards` discovery keywords.
+The React adapter connects browser applications to the shared authentication API; it is one part of the project. The generator creates application glue around the server libraries. The [npm release record](docs/npm-release.md) and [server release guide](docs/server-releases.md) track registry-specific publication and installation evidence. All three npm packages identify [jongko54](https://github.com/jongko54) as author and carry the `jongko54` and `feature-standards` discovery keywords.
 
 ### Generate an authentication consumer
 

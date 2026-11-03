@@ -15,7 +15,7 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest /physical/path/outside-the-checkout/new-auth-app \
   --check
 
-# After publication and registry installation of the prepared 0.1.1 are verified:
+# Published 0.1.1; registry installation and Python glue generation verified:
 npx @ugauga/create-feature-auth@0.1.1 \
   --source /absolute/path/to/feature-standards \
   --stack rust \

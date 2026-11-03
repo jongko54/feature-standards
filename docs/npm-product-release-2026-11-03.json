@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-03T13:43:03.190038+00:00",
+  "sourceCommit": "b4130b0dc6fd6e1408b35eed4d1ebf9189fb892a",
+  "sourceCi": {
+    "runId": 41644089439,
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41644089439",
+    "conclusion": "success"
+  },
+  "npmRelease": {
+    "tag": "feature-standards-v0.1.0",
+    "runId": 41646067225,
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41646067225",
+    "conclusion": "success",
+    "authentication": "GitHub OIDC",
+    "latest": "0.1.0"
+  },
+  "reviewedArtifact": {
+    "package": "feature-standards",
+    "version": "0.1.0",
+    "files": 44,
+    "documentHashesVerified": 38,
+    "sourceCommit": "b4130b0dc6fd6e1408b35eed4d1ebf9189fb892a",
+    "sourceDirty": false,
+    "snapshotDirty": false,
+    "sha256": "82f6f14f073fb342e4a1dab5276fcd69af958fc8217ca4920a950911266a34de",
+    "integrity": "sha512-/aitpwjzmD4XKre7+uAWjDKjWu3wmYLX2Hes614Or31qTDtyM0JHqxzcDuKs7P80F0oY9xcKAgzViDwIsEzipw=="
+  },
+  "registryInstall": {
+    "name": "feature-standards",
+    "version": "0.1.0",
+    "integrity": "sha512-/aitpwjzmD4XKre7+uAWjDKjWu3wmYLX2Hes614Or31qTDtyM0JHqxzcDuKs7P80F0oY9xcKAgzViDwIsEzipw==",
+    "publicDownloadVerified": true,
+    "freshEmptyCacheRegistryInstall": true,
+    "installedBin": true,
+    "contexts": [
+      [
+        "python",
+        "browser-session-v1"
+      ],
+      [
+        "python",
+        "browser-session-v2"
+      ],
+      [
+        "python",
+        "browser-session-v3"
+      ],
+      [
+        "go",
+        "browser-session-v1"
+      ],
+      [
+        "go",
+        "browser-session-v2"
+      ],
+      [
+        "go",
+        "browser-session-v3"
+      ],
+      [
+        "java",
+        "browser-session-v1"
+      ],
+      [
+        "java",
+        "browser-session-v2"
+      ],
+      [
+        "java",
+        "browser-session-v3"
+      ],
+      [
+        "rust",
+        "browser-session-v1"
+      ],
+      [
+        "rust",
+        "browser-session-v2"
+      ],
+      [
+        "rust",
+        "browser-session-v3"
+      ],
+      [
+        "react",
+        "browser-session-v1"
+      ],
+      [
+        "react",
+        "browser-session-v2"
+      ],
+      [
+        "react",
+        "browser-session-v3"
+      ]
+    ],
+    "nodeExports": true,
+    "files": 44,
+    "author": "jongko54",
+    "sourceCommit": "b4130b0dc6fd6e1408b35eed4d1ebf9189fb892a",
+    "sourceDirty": false,
+    "snapshotDirty": false
+  },
+  "discovery": {
+    "query": "npm search jongko54",
+    "observedPackages": [
+      {
+        "name": "@ugauga/feature-standards-react-auth",
+        "version": "0.1.4",
+        "description": "Session authentication API client by jongko54 with TypeScript types for React and browser apps"
+      },
+      {
+        "name": "@ugauga/create-feature-auth",
+        "version": "0.1.1",
+        "description": "Create thin authentication consumers from shared Feature Standards contracts by jongko54"
+      },
+      {
+        "name": "feature-standards",
+        "version": "0.1.0",
+        "description": "Cross-language reusable feature contracts and AI integration context by jongko54"
+      }
+    ],
+    "rankOrFutureIndexingGuaranteed": false
+  },
+  "scope": {
+    "availableFeatures": [
+      "auth"
+    ],
+    "backendStacks": [
+      "python",
+      "go",
+      "java",
+      "rust"
+    ],
+    "clientStacks": [
+      "react"
+    ],
+    "runtimeImplementationsBundled": false,
+    "commandsAutomaticallyExecuted": false,
+    "aiEfficiencyBenchmarkOfThisPackage": false
+  },
+  "components": {
+    "reactAuth": {
+      "name": "@ugauga/feature-standards-react-auth",
+      "version": "0.1.4",
+      "oidcRun": 41643117218,
+      "oidcRunConclusion": "success",
+      "publicIntegrityVerified": true,
+      "freshRegistryInstallVerified": true,
+      "rootAndApiExportsVerified": true
+    },
+    "generator": {
+      "name": "@ugauga/create-feature-auth",
+      "version": "0.1.1",
+      "oidcRun": 41643117826,
+      "uploadSucceeded": true,
+      "oidcRunConclusion": "failure",
+      "failureStage": "old two-minute public-availability check",
+      "laterIndependentPublicIntegrityVerified": true,
+      "freshRegistryInstallVerified": true,
+      "installedBinaryVerified": true,
+      "pythonGlueGenerationVerified": true,
+      "generatedAuthRuntimeCheckedInThisRegistrySmoke": false
+    }
+  },
+  "limits": [
+    "The main package is a contract and context snapshot; source-checkout runtime guidance is separate.",
+    "Search observations are time-specific.",
+    "The full CI above covers the tagged source commit; later release documentation changes have separate syntax and diff checks."
+  ]
+}
