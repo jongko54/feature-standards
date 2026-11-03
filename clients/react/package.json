@@ -1,9 +1,9 @@
 {
   "name": "@ugauga/feature-standards-react-auth",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
-  "description": "Typed browser session authentication client for React and TypeScript applications",
+  "description": "Session authentication API client with TypeScript types for React and browser apps",
   "license": "MIT",
   "repository": {
     "type": "git",
