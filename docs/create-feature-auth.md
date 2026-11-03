@@ -1,6 +1,8 @@
 # Generate an authentication consumer
 
-`@ugauga/create-feature-auth` creates a thin application that reuses the repository's public authentication library. It supports Python/FastAPI, Go/net/http, Java/Spring Boot, and Rust/Axum, with a protected `GET /api/profile`. It keeps authentication behavior in the library instead of generating another implementation.
+`@ugauga/create-feature-auth` is the authentication-specific application generator within [Feature Standards](../README.md). The main `feature-standards` package provides feature discovery, contracts, and stack context; this companion generator creates a thin application that reuses an existing public authentication library. Authentication is the first available feature, and this CLI does not generate other features.
+
+It supports Python/FastAPI, Go/net/http, Java/Spring Boot, and Rust/Axum, with a protected `GET /api/profile`. It keeps authentication behavior in the library instead of generating another implementation. See the [AI integration guide](ai-integration.md) for the feature/profile/stack → contract/API → library reuse → conformance workflow.
 
 The source checkout must be explicit. Server registry publication is separate from project generation; local source dependencies work before those publications are available. React is supported through the existing [React consumer](../examples/consumer-python-react/README.md), not a generated frontend in this CLI.
 
@@ -13,15 +15,15 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest /physical/path/outside-the-checkout/new-auth-app \
   --check
 
-# After the first npm publication is verified in the release receipt:
-npx @ugauga/create-feature-auth \
+# After publication and registry installation of the prepared 0.1.1 are verified:
+npx @ugauga/create-feature-auth@0.1.1 \
   --source /absolute/path/to/feature-standards \
   --stack rust \
   --profile browser-session-v3 \
   --dest /physical/path/to/new-auth-app
 ```
 
-Node.js 22.12+ is required. There are no runtime npm dependencies. Generation reads bundled consumer templates and the chosen checkout's manifest and package metadata; it does not invoke a compiler, install dependencies, or access a database unless `--check` is supplied. The source is trusted build input, not sandboxed code.
+Node.js 22.12+ is required. There are no runtime npm dependencies. The source checkout contains the server runtime separately from the main context package. Generation reads bundled consumer templates and the chosen checkout's manifest and package metadata without invoking a compiler, installing dependencies, or accessing a database. `--check` additionally builds and runs the temporary memory v1 fixture described below. The source is trusted build input, not sandboxed code.
 
 `--source`, `--stack`, and `--dest` are required. `--profile` defaults to `browser-session-v1`; v2 and v3 must be selected explicitly. Unsupported selections fail before the target is created. The destination's parent must already exist, be a physical directory without symlinked ancestors, and be outside the source checkout. The destination itself must not exist, including as a dangling symlink. On macOS, resolve aliases such as `/tmp` with `realpath` first.
 
@@ -70,3 +72,5 @@ npm --prefix packages/create-feature-auth run check:generated
 ```
 
 Safety tests cover all 12 stack/profile combinations, existing targets, dangling links, destination symlinks, source escape attempts, malformed manifests, and invalid CLI options. The integration command generates four fresh applications, builds and exercises each through HTTP, checks that source fingerprints did not change, and removes its own temporary output. Package publication and registry installation are independently verified release steps.
+
+The prepared package version is `0.1.1`. Metadata identifies [jongko54](https://github.com/jongko54) as author and includes the `jongko54` and `feature-standards` keywords; see [npm discovery](npm-discovery.md) for the distinction between package metadata and live search results.

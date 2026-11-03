@@ -1,0 +1,163 @@
+// Build-time only: no implementation source, binaries or execution traces are copied.
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { chmodSync, lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+
+const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = resolve(PACKAGE, '../..');
+const REPOSITORY = 'https://github.com/jongko54/feature-standards';
+// Deliberately enumerate every source file. Never copy source directories recursively.
+export const SOURCE_FILES = Object.freeze([
+  'feature-standards.json',
+  'README.md',
+  'SECURITY.md',
+  'features/auth/catalog.schema.json',
+  'features/auth/specification.md',
+  'features/auth/postgres-session-v2.md',
+  'features/auth/account-session-v3.md',
+  'features/auth/mail-delivery-v1.md',
+  'features/auth/openapi.json',
+  'features/auth/openapi-v2.json',
+  'features/auth/openapi-v3.json',
+  'features/auth/scenarios.json',
+  'features/auth/scenarios-v2.json',
+  'features/auth/scenarios-v3.json',
+  'features/auth/mail-scenarios.json',
+  'features/auth/postgres/001_initial.sql',
+  'features/auth/postgres/002_accounts.sql',
+  'features/auth/postgres/003_mail_delivery.sql',
+  'docs/ai-integration.md',
+  'docs/create-feature-auth.md',
+  'docs/postgres-v2.md',
+  'docs/account-v3.md',
+  'docs/smtp-delivery.md',
+  'docs/versioning.md',
+  'implementations/python-fastapi/README.md',
+  'implementations/go-net-http/README.md',
+  'implementations/java-spring/README.md',
+  'implementations/rust-axum/README.md',
+  'clients/react/README.md',
+  'examples/consumer-python-react/README.md',
+  'examples/consumer-python-react/PROFILE_TESTS.md',
+  'examples/consumer-go/README.md',
+  'examples/consumer-java/README.md',
+  'examples/consumer-rust/README.md',
+  'skills/integrate-auth/SKILL.md',
+  'skills/integrate-auth/references/postgres.md',
+  'skills/integrate-auth/references/accounts.md',
+  'skills/integrate-auth/references/mail.md',
+]);
+const STACKS = ['python', 'go', 'java', 'rust', 'react'];
+const PROFILES = ['browser-session-v1', 'browser-session-v2', 'browser-session-v3'];
+const allowed = new Set(SOURCE_FILES);
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+
+function regularSource(sourcePath) {
+  if (isAbsolute(sourcePath) || sourcePath.split('/').includes('..')) throw new Error('invalid-source-path');
+  const candidate = join(ROOT, sourcePath);
+  // Refuse links in every ancestor, including links to other files inside the repo.
+  let current = ROOT;
+  for (const part of sourcePath.split('/')) {
+    current = join(current, part);
+    if (lstatSync(current).isSymbolicLink()) throw new Error('source-symlink: ' + sourcePath);
+  }
+  const physical = realpathSync(candidate);
+  const distance = relative(ROOT, physical);
+  if (isAbsolute(distance) || distance === '..' || distance.startsWith('..' + sep) || !lstatSync(physical).isFile()) {
+    throw new Error('source-file-escape: ' + sourcePath);
+  }
+  return physical;
+}
+
+function git(argv, allowMissing = false) {
+  const env = { ...process.env };
+  for (const key of Object.keys(env)) if (key.startsWith('GIT_')) delete env[key];
+  const result = spawnSync('git', ['-C', ROOT, ...argv], {
+    env, timeout: 5000, maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  if (result.error || (result.status !== 0 && !allowMissing)) throw new Error('source-git-metadata-unavailable');
+  return result;
+}
+
+function requireDocument(path) {
+  if (!allowed.has(path)) throw new Error('manifest-document-not-allowlisted: ' + path);
+}
+
+function exactIds(entries, expected, label) {
+  if (!Array.isArray(entries) || entries.length !== expected.length ||
+      [...entries.map(entry => entry.id)].sort().join() !== [...expected].sort().join()) {
+    throw new Error('unsupported-manifest-' + label);
+  }
+}
+
+function validateManifest(manifest, sources) {
+  if (manifest.schema_version !== 1 || manifest.feature !== 'auth') throw new Error('unsupported-manifest-feature');
+  exactIds(manifest.profiles, PROFILES, 'profiles');
+  exactIds(manifest.stacks, STACKS, 'stacks');
+  for (const profile of manifest.profiles) {
+    for (const name of ['specification', 'openapi', 'scenarios', 'guide']) requireDocument(profile[name]);
+    if (!Array.isArray(profile.migrations)) throw new Error('unsupported-manifest-migrations');
+    profile.migrations.forEach(requireDocument);
+    const api = JSON.parse(sources.get(profile.openapi));
+    const scenarios = JSON.parse(sources.get(profile.scenarios));
+    if (api.paths?.['/healthz']?.get?.responses?.['200']?.content?.['application/json']?.schema?.properties?.profile?.const !== profile.id || scenarios.profile !== profile.id) {
+      throw new Error('manifest-contract-profile-mismatch: ' + profile.id);
+    }
+  }
+  for (const stack of manifest.stacks) {
+    requireDocument(stack.guide);
+    requireDocument(stack.consumer + '/README.md');
+    if (!Array.isArray(stack.profiles) || [...stack.profiles].sort().join() !== [...PROFILES].sort().join()) {
+      throw new Error('unsupported-manifest-stack-profiles: ' + stack.id);
+    }
+    if (!Array.isArray(stack.entrypoints) || stack.entrypoints.length === 0) throw new Error('missing-source-entrypoints');
+    for (const entrypoint of stack.entrypoints) regularSource(entrypoint.path);
+  }
+  for (const addon of manifest.addons) {
+    for (const name of ['specification', 'guide', 'scenarios']) requireDocument(addon[name]);
+    regularSource(addon.entrypoint);
+  }
+}
+
+export function buildSnapshot() {
+  // Read and validate every input before replacing this package's generated directory.
+  const sources = new Map(SOURCE_FILES.map(path => [path, readFileSync(regularSource(path))]));
+  validateManifest(JSON.parse(sources.get('feature-standards.json')), sources);
+  const sourceCommit = git(['rev-parse', 'HEAD']).stdout.toString('utf8').trim();
+  if (!/^[a-f0-9]{40,64}$/.test(sourceCommit)) throw new Error('invalid-source-commit');
+  const files = Object.fromEntries([...sources].map(([path, bytes]) => {
+    const committed = git(['show', sourceCommit + ':' + path], true);
+    return [path, {
+      sha256: sha256(bytes),
+      sourceModified: committed.status !== 0 || !committed.stdout.equals(bytes),
+    }];
+  }));
+  const provenance = {
+    schemaVersion: 1,
+    repositoryUrl: REPOSITORY,
+    sourceCommit,
+    sourceDirty: git(['status', '--porcelain=v1', '--untracked-files=normal']).stdout.length > 0,
+    snapshotDirty: Object.values(files).some(file => file.sourceModified),
+    capturedAt: new Date().toISOString(),
+    sourceUrlMeaning: 'URLs point to the captured HEAD. Files marked sourceModified include local changes not present at that URL; SHA-256 identifies the packaged bytes.',
+    files,
+  };
+  const destination = join(PACKAGE, 'snapshot');
+  rmSync(destination, { recursive: true, force: true });
+  mkdirSync(destination, { recursive: true });
+  for (const [path, bytes] of sources) {
+    const target = join(destination, path);
+    mkdirSync(dirname(target), { recursive: true });
+    writeFileSync(target, bytes, { mode: 0o644 });
+  }
+  writeFileSync(join(destination, 'provenance.json'), JSON.stringify(provenance, null, 2) + '\n');
+  chmodSync(join(PACKAGE, 'src/cli.mjs'), 0o755);
+  return provenance;
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  try { buildSnapshot(); }
+  catch (error) { console.error('feature-standards build: ' + error.message); process.exitCode = 1; }
+}

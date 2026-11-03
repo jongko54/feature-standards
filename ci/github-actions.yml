@@ -164,6 +164,13 @@ jobs:
           npm test
           npm run check:generated
           npm pack --pack-destination "$RUNNER_TEMP"
+      - name: Test and install the main feature catalog from its real tarball
+        working-directory: packages/feature-standards
+        run: |
+          npm ci
+          npm test
+          npm run check:pack
+          npm run check:bootstrap
       - name: Verify checked-in workflow template matches
         run: |
           cmp .github/workflows/ci.yml ci/github-actions.yml

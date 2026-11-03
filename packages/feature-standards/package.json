@@ -1,0 +1,30 @@
+{
+  "name": "feature-standards",
+  "version": "0.1.0",
+  "description": "Cross-language reusable feature contracts and AI integration context by jongko54",
+  "type": "module",
+  "license": "MIT",
+  "author": { "name": "jongko54", "url": "https://github.com/jongko54" },
+  "keywords": ["feature-standards", "jongko54", "ai", "cross-language", "contracts", "openapi", "conformance", "python", "go", "java", "rust", "react"],
+  "engines": { "node": ">=22.12.0" },
+  "bin": { "feature-standards": "./src/cli.mjs" },
+  "exports": { ".": "./src/index.mjs" },
+  "files": ["src/cli.mjs", "src/index.mjs", "snapshot", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepack": "npm run build",
+    "pretest": "npm run build",
+    "test": "node --test test/*.test.mjs",
+    "check:pack": "node test/packed.mjs",
+    "pack:bootstrap": "node scripts/pack-bootstrap.mjs",
+    "check:bootstrap": "node test/bootstrap.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jongko54/feature-standards.git",
+    "directory": "packages/feature-standards"
+  },
+  "homepage": "https://github.com/jongko54/feature-standards#readme",
+  "bugs": { "url": "https://github.com/jongko54/feature-standards/issues" },
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" }
+}

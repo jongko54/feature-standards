@@ -1,33 +1,77 @@
 # Feature Standards
 
-**Reusable features for AI-assisted development, backed by shared contracts, stack-specific implementations, and common conformance tests.**
+**Shared feature contracts and reusable implementations across languages, so AI agents can integrate existing libraries and verify the result.**
 
-Authentication is the first feature: login, logout, and session lookup. Python, Go, Java, and Rust servers implement the same HTTP behavior, and a shared React client connects to each backend.
+Feature Standards organizes a feature's behavior, public APIs, stack guides, and conformance checks in one place. An agent chooses the feature, profile, and stack; reads the relevant contract and API; reuses the implementation; and checks the integration against the same behavior across stacks. The goal is to reduce repeated implementation and unnecessary exploration during AI-assisted development.
 
-The **0.3.0 account lifecycle extension** adds registration, email verification, and password reset through the optional `browser-session-v3` profile. The default in-memory `browser-session-v1` and PostgreSQL `browser-session-v2` profiles remain available. Select v3 with `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`. See the [local v3 validation record](docs/validation-2026-11-02-accounts-v3.md) and [commit-specific CI results](https://github.com/jongko54/feature-standards/actions) for verified coverage. This project has not undergone a production security audit.
+**Authentication is the first and currently available feature.** Python/FastAPI, Go/net/http, Java/Spring, and Rust/Axum implement shared browser-session contracts. React is one client adapter for those servers. The catalog currently contains `auth`; additional features are future work.
 
-## What is included
+## Start with the feature catalog
 
-| Component | Purpose |
-|---|---|
-| [v1 specification](features/auth/specification.md) / [OpenAPI](features/auth/openapi.json) / [19 scenarios](features/auth/scenarios.json) | Default profile: one configured user and process-local sessions |
-| [v2 specification](features/auth/postgres-session-v2.md) / [OpenAPI](features/auth/openapi-v2.json) / [evidence map](features/auth/scenarios-v2.json) | PostgreSQL users, sessions, and login failures, with transaction and failure semantics |
-| [v3 specification](features/auth/account-session-v3.md) / [OpenAPI](features/auth/openapi-v3.json) / [evidence map](features/auth/scenarios-v3.json) | Registration, email verification, password reset, and a transactional outbox |
-| [SMTP delivery contract](features/auth/mail-delivery-v1.md) / [guide](docs/smtp-delivery.md) / [evidence map](features/auth/mail-scenarios.json) | Optional worker with verified TLS, bounded retries, and fenced acknowledgments |
-| [PostgreSQL DDL](features/auth/postgres/001_initial.sql) / [database tool](tools/auth_db.py) | Explicit schema version 1 migration and separate demo seeding |
-| [Python / FastAPI](implementations/python-fastapi) | Installable `feature_auth` package, application factory, and authentication dependency |
-| [Go / net/http](implementations/go-net-http), [Java / Spring](implementations/java-spring), [Rust / Axum](implementations/rust-axum) | HTTP adapters with service and storage boundaries |
-| [React / TypeScript](clients/react/README.md) | Shared reference UI and the `@ugauga/feature-standards-react-auth/api` export |
-| [Separate Python + React consumer](examples/consumer-python-react/README.md) | Protected API example that imports packages without copying authentication logic |
-| [AI integration skill](skills/integrate-auth/SKILL.md) | Inspect, integrate, and validate authentication in a target project |
-| [Integration manifest](feature-standards.json) / [AI integration guide](docs/ai-integration.md) | Public APIs, profiles, dependencies, consumer examples, and verification commands for five stacks |
-| [Authentication bootstrap CLI](docs/create-feature-auth.md) | Generate a thin protected API consumer for any server stack and select v1/v2/v3 |
+The main npm package is **`feature-standards`**, with `0.1.0` prepared in this checkout. It provides a JSON CLI and curated contracts, a manifest, and stack guides. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
 
-See the [PostgreSQL guide](docs/postgres-v2.md) for v2, the [account lifecycle guide](docs/account-v3.md) for v3 migrations, mail, TLS, and verification boundaries, and the [versioning policy](docs/versioning.md) for compatibility rules. Supporting specifications and validation records currently include Korean documentation.
+Use the source checkout before npm publication is confirmed:
 
-## Quick start
+```sh
+npm --prefix packages/feature-standards run build
+node packages/feature-standards/src/cli.mjs list
+node packages/feature-standards/src/cli.mjs context \
+  --feature auth --stack python --profile browser-session-v1
+```
 
-To generate a separate consumer application from a local source checkout:
+The build creates the bundled documentation snapshot. Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. The CLI returns JSON context with separate bundled-document paths and source-checkout instructions; it does not install dependencies, generate applications, run servers, migrate databases, or execute tests.
+
+After `feature-standards@0.1.0` publication and registry installation are verified, the equivalent npm entry points are:
+
+```sh
+npx feature-standards@0.1.0 list
+npx feature-standards@0.1.0 context \
+  --feature auth --stack go --profile browser-session-v2
+```
+
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). Prepared versions and local package checks do not establish public npm availability or search indexing.
+
+## How an AI integration works
+
+1. **Choose the feature, profile, and stack.** The catalog makes the supported combinations explicit. If the selection is already known, go directly to its contract and public API guide.
+2. **Read the selected contract and API.** Check HTTP behavior, errors, storage requirements, and the library entry points needed by the target application.
+3. **Reuse the implementation.** Import the matching library or client adapter and add application-specific glue. Use the authentication generator when a new thin consumer application is needed.
+4. **Run conformance and application checks.** Execute the selected checks explicitly, then test the target application's real API and UI. Record the source version, selected profile, results, and remaining limits.
+
+The [source manifest](feature-standards.json) maps the current authentication profiles to public APIs, dependencies, examples, and verification commands. The [integration skill](skills/integrate-auth/SKILL.md) provides the authentication-specific workflow. Neither a JSON context response nor a package installation proves a working integration.
+
+## Current feature: authentication
+
+| Profile | Behavior | Contract and setup |
+|---|---|---|
+| `browser-session-v1` | Login, session lookup, and logout for one configured user with process-local sessions | [Specification](features/auth/specification.md), [OpenAPI](features/auth/openapi.json), [19 scenarios](features/auth/scenarios.json) |
+| `browser-session-v2` | PostgreSQL users, sessions, and login failures with transaction and failure semantics | [Specification](features/auth/postgres-session-v2.md), [OpenAPI](features/auth/openapi-v2.json), [PostgreSQL guide](docs/postgres-v2.md) |
+| `browser-session-v3` | Registration, email verification, password reset, and a transactional outbox; PostgreSQL schema 2 | [Specification](features/auth/account-session-v3.md), [OpenAPI](features/auth/openapi-v3.json), [Account guide](docs/account-v3.md) |
+
+v1 is the default. v2 and v3 require explicit database configuration and migrations. The optional [SMTP delivery extension](features/auth/mail-delivery-v1.md) belongs to v3 and requires a separately configured and explicitly run worker; see the [SMTP guide](docs/smtp-delivery.md). Installing or starting a package does not migrate or seed a database.
+
+### Reusable libraries and adapters
+
+| Stack | Public interface | Integration example |
+|---|---|---|
+| [Python / FastAPI](implementations/python-fastapi/README.md) | `feature_auth.create_app`, `current_user` | [Python + React consumer](examples/consumer-python-react/README.md) |
+| [Go / net/http](implementations/go-net-http/README.md) | `auth.NewServer`, `Server.CurrentUser` | [Go consumer](examples/consumer-go/README.md) |
+| [Java / Spring](implementations/java-spring/README.md) | `AuthService.create`, `AuthFilter`; plain JAR with `library` classifier | [Java consumer](examples/consumer-java/README.md) |
+| [Rust / Axum](implementations/rust-axum/README.md) | `AuthService::from_config`, `current_user` | [Rust consumer](examples/consumer-rust/README.md) |
+| [React / TypeScript](clients/react/README.md) | `createAuthApi`, `AuthSession`; npm root and `/api` exports | [Python + React consumer](examples/consumer-python-react/README.md) |
+
+The main package exposes the feature context. The following npm packages are authentication components within Feature Standards:
+
+| Component | Package | Prepared version |
+|---|---|---|
+| Browser authentication API adapter | `@ugauga/feature-standards-react-auth` | `0.1.4` |
+| Thin authentication application generator for four server stacks | `@ugauga/create-feature-auth` | `0.1.1` |
+
+The React adapter connects browser applications to the shared authentication API; it is one part of the project. The generator creates application glue around the server libraries. The [React release record](docs/npm-release.md) and [server release guide](docs/server-releases.md) track registry-specific publication and installation separately from these prepared versions. All three npm packages identify [jongko54](https://github.com/jongko54) as author and carry the `jongko54` and `feature-standards` discovery keywords.
+
+### Generate an authentication consumer
+
+From the source checkout, create a separate application using an explicit runtime source path:
 
 ```sh
 node packages/create-feature-auth/src/cli.mjs \
@@ -35,40 +79,19 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest ../my-auth-app --check
 ```
 
-Choose `python`, `go`, `java`, or `rust`. The CLI connects the existing package and generates application glue, environment examples, and build/run commands. `--check` uses a temporary loopback memory demo; it does not migrate or seed a database. See the [CLI guide](docs/create-feature-auth.md) and [server release status](docs/server-releases.md).
+Choose `python`, `go`, `java`, or `rust`. The destination must be new, outside the checkout, and under an existing physical parent directory. The generator reuses the chosen server library rather than copying its implementation. `--check` builds and exercises a temporary loopback **memory v1** application even when another profile is selected; it is not a v2/v3 database test. See the [generator guide](docs/create-feature-auth.md) for requirements, outputs, and explicit database setup.
 
-Install the toolchain for your chosen server: Python 3.12+ with [uv](https://docs.astral.sh/uv/), Go 1.26+, Java 21+, or Rust/Cargo 1.93.1+. The React client requires Node.js 22.12+ and npm. Full validation requires all four server toolchains; browser CI uses Node.js 24 and Chromium.
+### Run a local reference application
 
-Start one in-memory demo server. The public demo credentials are `demo@example.com` / `correct-horse-battery-staple`.
+The following commands start the default in-memory Python reference server and shared React UI. The public demo credentials are `demo@example.com` / `correct-horse-battery-staple`.
 
 ```sh
-# Python
 cd implementations/python-fastapi
 AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
   uv run --frozen uvicorn app:app --no-proxy-headers --host 127.0.0.1 --port 8000
 ```
 
-```sh
-# Or Go
-cd implementations/go-net-http
-AUTH_DEMO=true AUTH_COOKIE_SECURE=false go run .
-```
-
-```sh
-# Or Java
-cd implementations/java-spring
-./mvnw -q -DskipTests package
-AUTH_DEMO=true AUTH_COOKIE_SECURE=false java -jar target/auth-server.jar
-```
-
-```sh
-# Or Rust
-cd implementations/rust-axum
-cargo build --locked
-AUTH_DEMO=true AUTH_COOKIE_SECURE=false target/debug/feature-standards-auth
-```
-
-In another terminal, start the shared UI and open **http://127.0.0.1:5173**.
+In another terminal, from the checkout root:
 
 ```sh
 cd clients/react
@@ -76,150 +99,42 @@ npm ci
 npm run dev
 ```
 
-Vite proxies `/auth` to the selected server, so the local setup does not require additional CORS configuration. For a different server port, use a command such as `AUTH_API_TARGET=http://127.0.0.1:8080 npm run dev`. Keep `localhost` and `127.0.0.1` consistent: they are different origins.
+Open **http://127.0.0.1:5173**. Vite proxies `/auth` to the server. Use `AUTH_API_TARGET=http://127.0.0.1:8080 npm run dev` for another backend port, and keep `localhost` and `127.0.0.1` consistent because they are different origins. The [stack guides](#reusable-libraries-and-adapters) contain the other server commands.
 
-### Use PostgreSQL
+Python requires 3.12+ with [uv](https://docs.astral.sh/uv/); the alternative servers require Go 1.26+, Java 21+, or Rust/Cargo 1.93.1+. The CLI and React client require Node.js 22.12+. Full repository validation needs all four server toolchains; browser CI uses Node.js 24 and Chromium.
 
-Set `AUTH_DATABASE_URL` to the PostgreSQL URI of an existing dedicated local database, then prepare it explicitly from the repository root.
+## Verify the shared behavior
 
-```sh
-uv sync --frozen --project tools
-uv run --frozen --project tools python tools/auth_db.py migrate
-# Only for a local demo that needs the two public test accounts:
-uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
-```
-
-Pass `AUTH_STORE=postgres` and `AUTH_DATABASE_URL` to the server. For example:
+From the repository root, validate the catalog, generated contracts, and repository tools:
 
 ```sh
-cd implementations/python-fastapi
-AUTH_STORE=postgres AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
-  AUTH_ALLOWED_ORIGIN=http://127.0.0.1:5173 \
-  uv run --frozen uvicorn app:app --no-proxy-headers --host 127.0.0.1 --port 8000
-```
-
-The application performs **no automatic DDL, seeding, or in-memory fallback**. In database mode, `AUTH_DEMO=true` only permits local HTTP and cookie exceptions; it does not create accounts or change passwords. `AUTH_USER_EMAIL` and `AUTH_USER_PASSWORD` are not used in database mode. Demo seeding preserves existing users and passwords.
-
-The common local URI uses an explicit `sslmode=disable`. Remote Rust connections require `sslmode=verify-full` and verify the certificate chain and hostname using an explicit `sslrootcert` or the platform trust roots. Weaker modes and plaintext fallback after TLS refusal are rejected. Production database authentication, privileges, and capacity require a separate review.
-
-### Enable the account lifecycle
-
-v3 requires schema version 2. Stop existing schema 1 servers, check backups and permissions, and migrate explicitly. The same tool initializes a new database at schema 1 before upgrading it to 2.
-
-```sh
-uv run --frozen --project tools python tools/auth_db.py migrate-accounts
-# Only when a local database needs public test accounts:
-uv run --frozen --project tools python tools/auth_db.py seed-demo --confirm-demo
-```
-
-Set `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true` on the server and `VITE_AUTH_ACCOUNT_LIFECYCLE=true` when starting the React development server. The default false value preserves the existing profile and screen. New accounts cannot log in before email verification. Password reset atomically revokes all existing sessions, and verification or reset cannot override an administrator's disabled state.
-
-Email messages are stored in the database outbox. The optional [SMTP worker](tools/mail_worker.py) handles TLS delivery, retries, and claim/acknowledgment processing using separate SMTP configuration. Provider accounts and sender addresses must be configured separately; implementation and local testing do not demonstrate production email delivery. The [local capture tool](tools/mail_capture.py) writes eligible test messages not owned by SMTP to new files with mode 0600. Raw tokens in the outbox and capture files are sensitive bearer credentials. See the [SMTP guide](docs/smtp-delivery.md) for migrations, settings, and operational boundaries.
-
-## Reuse in another project
-
-AI agents and tools can select a stack and profile from `feature-standards.json`. For example, `uv run --frozen --project tools python tools/auth_catalog.py --stack go --profile browser-session-v1` returns the relevant specification, public APIs, example, and commands as JSON. It does not execute those commands. The `.agents/skills/integrate-auth` symlink makes the source skill discoverable by Codex.
-
-The paired model evaluation passed **24/24 integrations** across four backends, two context conditions, and three repeats per condition. Efficiency results are mixed and do not establish a general speed or token improvement. See the [repeated evaluation](docs/validation-ai-paired-2026-11-03.md), [earlier smoke record](docs/validation-ai-2026-11-03.md), and [AI integration guide](docs/ai-integration.md).
-
-| Stack | Reusable interface | Separate consumer |
-|---|---|---|
-| Python | Wheel with `create_app` and `current_user` | [Python + React](examples/consumer-python-react/README.md) |
-| Go | `auth` package with `NewServer` and `CurrentUser` | [Go](examples/consumer-go/README.md) |
-| Java | Plain JAR with the `library` classifier, `AuthService`, and `AuthFilter` | [Java](examples/consumer-java/README.md) |
-| Rust | Path crate with `AuthService::from_config` and `current_user` | [Rust](examples/consumer-rust/README.md) |
-| React | `@ugauga/feature-standards-react-auth/api` | [Python + React](examples/consumer-python-react/README.md) |
-
-Independent consumers exercise protected APIs and session revocation with in-memory v1. The [database consumer matrix](examples/consumer-python-react/PROFILE_TESTS.md) additionally verifies all four server packages with PostgreSQL v2/v3 and a real React UI: eight isolated backend/profile combinations and 28 Chromium scenarios passed in the current local run. Reference servers have separate conformance checks. Server registry availability is tracked in the [release guide](docs/server-releases.md); the React API is [published on npm](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth).
-
-The Python distribution is named `feature-standards-python-auth`, and its import name is `feature_auth`. The [package project](implementations/python-fastapi/pyproject.toml) defines a wheel build; the [consumer project](examples/consumer-python-react/pyproject.toml) installs it through a uv path dependency. Its public interfaces include `create_app()` and `current_user(request)`.
-
-```python
-from typing import Annotated
-from fastapi import Depends
-from feature_auth import create_app, current_user
-
-app = create_app()
-
-
-@app.get("/api/profile")
-def profile(user: Annotated[dict[str, str], Depends(current_user)]):
-    return {"user": user}
-```
-
-Install the React API client from npm and import its public API:
-
-```sh
-npm install @ugauga/feature-standards-react-auth
-```
-
-```ts
-import { createAuthApi, type AuthSession } from '@ugauga/feature-standards-react-auth/api';
-
-const auth = createAuthApi();
-const session: AuthSession | null = await auth.me();
-```
-
-The [separate consumer example](examples/consumer-python-react/README.md) covers a protected API, login, reload restoration, logout, and user isolation. It uses a React file dependency to test the current checkout; registry installation is verified separately. The Python wheel is provided as a local dependency. See the [v2 guide](docs/postgres-v2.md#별도-소비-앱) for setup.
-
-## Verify the same behavior across stacks
-
-See the [SMTP validation record](docs/validation-smtp-2026-11-02.md) for the mail extension's executed coverage.
-
-Run the following commands from the repository root. Static contract checks validate schemas and their test mappings; they do not execute server behavior.
-
-```sh
+uv run --frozen --project tools python tools/auth_catalog.py --check
 uv run --frozen --project tools python tools/check_contract.py
 uv run --frozen --project tools python tools/generate_openapi_v2.py --check
 uv run --frozen --project tools python tools/generate_openapi_v3.py --check
 uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
+```
 
+Run implementation and common v1 behavior checks separately:
+
+```sh
 uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
 go -C implementations/go-net-http test -race ./...
 implementations/java-spring/mvnw -f implementations/java-spring/pom.xml test
 cargo test --locked --manifest-path implementations/rust-axum/Cargo.toml
-
 python3 tests/conformance.py --backend all --browser
 ```
 
-For browser checks, first run `npm ci`, `npm test`, `npm run build`, and `npx playwright install chromium` in `clients/react`. Port 5173 must be available. Omit `--browser` to run only the v1 HTTP checks, or select one server with `--backend python|go|java|rust`.
+For browser checks, first run `npm ci`, `npm test`, `npm run build`, and `npx playwright install chromium` in `clients/react`. Port 5173 must be available. Omit `--browser` for v1 HTTP checks only, or select `--backend python|go|java|rust`.
 
-Full v2 validation uses PostgreSQL server binaries containing `initdb` and `pg_ctl`, or an explicitly configured dedicated test database. Local validation used **PostgreSQL 18.6**.
+Database, account, consumer-profile, and SMTP checks have separate prerequisites and evidence: [PostgreSQL v2](docs/postgres-v2.md), [account v3](docs/account-v3.md), [consumer profile matrix](examples/consumer-python-react/PROFILE_TESTS.md), and [SMTP validation](docs/validation-smtp-2026-11-02.md). Database harnesses reset the `feature_auth` schema. Use only task-owned loopback test databases whose names start with `feature_standards_test`.
 
-```sh
-# Start and stop a dedicated temporary database with server binaries from PATH.
-uv run --frozen --project tools python tests/postgres_conformance.py --browser
-uv run --frozen --project tools python tests/account_conformance.py --browser
+The [CI workflow](.github/workflows/ci.yml) and [matching template](ci/github-actions.yml) define repository checks. A workflow definition, a local result, and a successful CI run for a particular source commit are separate evidence. The [reuse validation record](docs/validation-reuse-2026-11-03.md) links the corresponding implementation CI and distribution checks.
 
-# Prepare the separate Python/React consumer dependencies.
-uv sync --frozen --project examples/consumer-python-react
-npm --prefix examples/consumer-python-react ci
-npm --prefix examples/consumer-python-react run build
-uv run --frozen --project tools python tests/consumer_conformance.py
-uv run --frozen --project tools python tests/consumer_profiles.py --browser
-```
+## Evidence and limits
 
-Use `FEATURE_STANDARDS_PG_BIN` to choose a server binary directory, or `FEATURE_STANDARDS_TEST_DATABASE_URL` to use an existing dedicated database. The database harnesses reset the `feature_auth` schema, so use **only task-owned loopback test databases whose names start with `feature_standards_test`**. See the [v2 guide](docs/postgres-v2.md#검증과-근거-맵) for fixture safeguards and evidence mappings.
+An earlier paired AI evaluation passed **24/24 authentication integrations** across four backends, two context conditions, and three repeats per condition. It measured the earlier **v1** integration workflow. Time and token results were mixed and do not establish a general efficiency improvement or benchmark the new `feature-standards` package. See the [repeated evaluation and its source/sampling limits](docs/validation-ai-paired-2026-11-03.md). Reducing repeated work is the product goal; improvement must be measured for the actual workflow and environment.
 
-### GitHub Actions
+These specifications are experimental repository conventions, not an accredited international standard. In-memory state is lost on restart. Database mode has no automatic DDL, seeding, or in-memory fallback. Role management and MFA are not included. Production integration needs review of HTTPS, proxy trust, secrets, database privileges and backups, observability, and outbox access and retention. SMTP acceptance does not prove inbox delivery. This project has not undergone a production security audit.
 
-The [CI workflow](.github/workflows/ci.yml) and its [matching template](ci/github-actions.yml) define PostgreSQL 18.6 services; separate schema 1/2 databases for backend tests; v1/v2/v3 HTTP and browser checks; account races and SQL gateway tests; Rust TLS; independent consumers; and SMTP delivery/capture races. Mail checks use separate worker, capture, and integration databases. Update both workflow files together. A checked-in workflow definition and a [successful run for a specific commit](https://github.com/jongko54/feature-standards/actions) are separate evidence.
-
-## API and operational boundaries
-
-| Request | Success | Representative failures |
-|---|---|---|
-| `POST /auth/login` | `200` with session cookie, user, and CSRF token | `400`, `401`, `403`, `413`, `415`, `429`; v2 `503` |
-| `GET /auth/me` | `200` with user and CSRF token | `401`; v2 `503` |
-| `POST /auth/logout` | Empty `204`, server session deletion, and cookie removal | `403`; v2 `503` |
-| `GET /healthz` | `200` with selected profile and implementation name | v2 storage failure `503` |
-
-State-changing requests require an exact Origin match. In v2, an unexpired stored session requires logout CSRF validation regardless of the user's enabled state. Invalid CSRF preserves the session, and database failure is not reported as successful logout. Cookies use `Secure` by default.
-
-In-memory state is lost on restart. v2/v3 share sessions and login failures through the database. Behind a reverse proxy, the peer address is the proxy's address unless a trusted proxy policy is configured. Production integration requires review of database privileges, backups and capacity, proxy trust, HTTPS, secret management, observability, and outbox access, encryption, and retention. Role management and MFA are not included. SMTP DATA acceptance and database acknowledgment do not prove inbox delivery.
-
-These specifications are experimental repository conventions, not an accredited international standard. See the [original v1 validation record](docs/validation-2026-11-01.md), [contribution guide](CONTRIBUTING.md), [security scope](SECURITY.md), and [prior research](docs/research.md). Licensed under [MIT](LICENSE).
-
-## Release and validation status
-
-The [reuse validation record](docs/validation-reuse-2026-11-03.md) covers the four-language generator, independent PostgreSQL consumers, distribution artifacts, and [successful full implementation CI](https://github.com/jongko54/feature-standards/actions/runs/41571472426). Go v0.1.0 is [published and remotely installed](docs/go-release-0.1.0.json). The new CLI npm publication and trusted-publisher activation still require npm account authentication; Python, Java, and Rust registry setup is documented separately.
+See the [versioning policy](docs/versioning.md), [contribution guide](CONTRIBUTING.md), [security scope](SECURITY.md), and [prior research](docs/research.md). Created by [jongko54](https://github.com/jongko54). Licensed under [MIT](LICENSE).

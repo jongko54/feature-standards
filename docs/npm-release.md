@@ -52,7 +52,7 @@ npm install @ugauga/feature-standards-react-auth
 
 ## Automated releases with OIDC
 
-`.github/workflows/publish-npm.yml` tests and packs both npm packages. A manual dispatch only builds. Version tags `npm-react-auth-vX.Y.Z` and `npm-create-feature-auth-vX.Y.Z` select one artifact, and its metadata must match the exact tag. The publish job requires full main-branch CI to have succeeded for the same source commit. Node 24 and npm 12.2.1 support this trusted publishing flow.
+`.github/workflows/publish-npm.yml` tests and packs the main `feature-standards` catalog and both authentication components. A manual dispatch only builds. Version tags `feature-standards-vX.Y.Z`, `npm-react-auth-vX.Y.Z`, and `npm-create-feature-auth-vX.Y.Z` select one artifact, and its metadata must match the exact tag. The publish job requires full main-branch CI to have succeeded for the same source commit. Node 24 and npm 12.2.1 support this trusted publishing flow.
 
 Configure each existing package's npm trusted publisher with repository `jongko54/feature-standards`, workflow `publish-npm.yml`, environment `npm`, and publish permission. The CLI's first release requires ordinary npm authentication before its publisher can be connected. This account action requires npm 2FA; creating the workflow alone does not activate it.
 
@@ -84,3 +84,9 @@ The corrected API `0.1.3` [run](https://github.com/jongko54/feature-standards/ac
 ## jongko54 discovery metadata
 
 The next API candidate is `0.1.4`, and CLI remains `0.1.1`. Both set author `jongko54` with the GitHub profile URL, include `jongko54` and `feature-standards` keywords and the author handle in the description, and bundle README authorship links. Actual tarball manifests and SDK/CLI package consumer checks passed. The [discovery guide](npm-discovery.md) records queries and the separate publication/index-verification boundary.
+
+## Main product package and publisher setup
+
+The main product is `feature-standards@0.1.0`: curated cross-language contracts and a read-only JSON context selector. Authentication is its first currently available feature; the React adapter and generator retain their accurate component package names. Normal and three-file namespace bootstrap artifacts are built separately; see the [bootstrap and discovery policy](npm-discovery.md#verify-publication-and-search-separately).
+
+After fresh account authentication on 2026-11-03, `npm trust list @ugauga/feature-standards-react-auth` returned no configurations. An authenticated `npm trust github` then created the publisher for `jongko54/feature-standards`, `publish-npm.yml`, environment `npm`, with publication permission. This confirms configuration creation, not a successful OIDC release. The exact-main-CI gate and a registry integrity receipt still apply to the next component release. No unrelated publisher was revoked.

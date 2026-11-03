@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {
+    "npm-standards": ("packages/feature-standards", "feature-standards-v", "npm"),
     "npm-react-auth": ("clients/react", "npm-react-auth-v", "npm"),
     "npm-cli": ("packages/create-feature-auth", "npm-create-feature-auth-v", "npm"),
     "python": ("implementations/python-fastapi", "python-auth-v", "python"),
