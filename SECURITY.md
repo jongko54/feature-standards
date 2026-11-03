@@ -28,4 +28,8 @@ v1 메모리, v2 PostgreSQL과 v3 계정 생명주기는 동작을 비교하고 
 
 [v2 공통 harness](tests/postgres_conformance.py), [v3 harness](tests/account_conformance.py), [소비 앱 harness](tests/consumer_conformance.py)는 `feature_auth` 스키마를 초기화합니다. 외부 DB는 loopback·명시적 포트·ASCII `feature_standards_test*` 이름을 검사하며 작업 전용 DB에서만 실행합니다. fixture는 `sslmode=disable` 외 query와 값이 있는 `PG*` 환경도 거절합니다. 이는 앱의 TLS URI 정책과 다른 테스트 대상 보호 규칙입니다. 운영 DB와 기존 사용자 데이터에는 실행하지 마세요.
 
-취약점은 저장소 소유자에게 비공개 채널로 먼저 제보해 주세요. 시크릿과 공격 가능한 상세 내용을 공개 이슈에 게시하지 마세요. 공개 전환 시 제보 경로를 별도로 정합니다.
+## Private vulnerability reporting
+
+GitHub private vulnerability reporting is enabled for this public repository. Use [Report a vulnerability](https://github.com/jongko54/feature-standards/security/advisories/new) to contact the maintainer privately. Include the affected commit or package version, profile, deployment assumptions, impact, and a minimal reproduction with synthetic credentials. Do not post secrets or exploitable details in public issues.
+
+The maintainer reviews reports as capacity permits; no guaranteed response SLA or independent security certification is claimed. Reporters and maintainers coordinate a fix and disclosure through the private advisory.

@@ -112,7 +112,7 @@ HTTP 어댑터는 SQL을 알지 않고 `LoginSession`/`AuthError`를 공통 응�
 상태 변경 제품 API의 Origin·CSRF·권한 검사는 별도로 필요하다.
 독립 Cargo path dependency와 보호 API의 실제 통합 예제는
 [`examples/consumer-rust`](../../examples/consumer-rust/README.md)를 참고한다.
-라이브러리의 `publish = false`는 유지하며 crates.io 게시를 의미하지 않는다.
+배포 메타데이터와 독립 `.crate` 패키지를 제공한다. crates.io 실제 게시 여부와 계정 설정은 [서버 배포 안내](../../docs/server-releases.md)를 확인한다. 로컬 path dependency 성공을 registry 게시로 간주하지 않는다.
 
 실제 PostgreSQL 자체 테스트는 명시적인 폐기 가능 DB에서만 실행한다. DB 이름은
 `feature_standards_test`로 시작해야 한다. 이 테스트는 해당 DB를 migrate하고 테스트

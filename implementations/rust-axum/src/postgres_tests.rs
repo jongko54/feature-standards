@@ -43,11 +43,14 @@ fn logout(token: &str, csrf: Option<&str>) -> axum::http::Request<axum::body::Bo
 async fn postgres_real_transactions_persistence_rate_limit_and_fail_closed() {
     let uri = std::env::var("AUTH_TEST_DATABASE_URL").expect("AUTH_TEST_DATABASE_URL is required");
     let db = client(&uri).await;
-    db.batch_execute(include_str!(
-        "../../../features/auth/postgres/001_initial.sql"
-    ))
-    .await
-    .unwrap();
+    // These opt-in repository integration tests use the canonical migration.
+    // Load it at runtime so normal crate tests also compile outside the monorepo.
+    let migration = std::fs::read_to_string(
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../features/auth/postgres/001_initial.sql"),
+    )
+    .expect("run this ignored integration test from a full feature-standards checkout");
+    db.batch_execute(&migration).await.unwrap();
     db.batch_execute("TRUNCATE feature_auth.users CASCADE; TRUNCATE feature_auth.login_attempts;")
         .await
         .unwrap();

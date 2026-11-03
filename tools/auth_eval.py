@@ -12,6 +12,7 @@ import re
 import shutil
 import signal
 import socket
+import statistics
 import subprocess
 import tempfile
 import threading
@@ -53,6 +54,7 @@ TOOL_FILES = {
     "pyproject.toml",
     "uv.lock",
 }
+MODEL_PATTERN = r"[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}"
 
 
 class EvalError(Exception):
@@ -106,13 +108,18 @@ def source_files(root: Path) -> list[Path]:
         allowed = (
             name in ROOT_FILES
             or relative.parts[0] in SCOPES
+            or relative.parts[:2] == ("packages", "create-feature-auth")
             or (
                 len(relative.parts) == 2
                 and relative.parts[0] == "tools"
                 and relative.name in TOOL_FILES
             )
         )
-        if not allowed or name == "docs/ai-integration-plan.md":
+        if (
+            not allowed
+            or name == "docs/ai-integration-plan.md"
+            or relative.parts[:3] == ("docs", "superpowers", "plans")
+        ):
             continue
         source = root / relative
         if source.is_file() or source.is_symlink():
@@ -175,11 +182,163 @@ def fingerprint(root: Path) -> dict[str, str]:
     return result
 
 
+def digest_hashes(hashes: dict) -> str:
+    return hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
+
+
+def source_hashes(root: Path) -> dict[str, str]:
+    return {
+        str(relative): (
+            "link:" + os.readlink(root / relative)
+            if (root / relative).is_symlink()
+            else hashlib.sha256((root / relative).read_bytes()).hexdigest()
+        )
+        for relative in source_files(root)
+    }
+
+
+def freeze_sources(
+    root: Path, destination: Path, conditions: tuple[str, ...]
+) -> tuple[dict, dict[str, Path]]:
+    """Capture condition templates once; never reread a live checkout during trials."""
+    destination.mkdir(mode=0o700)
+    commit = (
+        subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root).decode().strip()
+    )
+    dirty = bool(
+        subprocess.check_output(
+            ["git", "status", "--porcelain", "--untracked-files=normal"], cwd=root
+        ).strip()
+    )
+    before = source_hashes(root)
+    # Keep the complete current selection even for a baseline-only invocation.
+    current = destination / "skill"
+    if snapshot(root, current, "skill") != before:
+        raise EvalError("source-changed-during-snapshot")
+    templates = {"skill": current}
+    if "baseline" in conditions:
+        baseline = destination / "baseline"
+        snapshot(root, baseline, "baseline")
+        templates["baseline"] = baseline
+        # All non-condition files must be the same captured current source.
+        baseline_hashes = fingerprint(baseline)
+        replaced = {"AGENTS.md", "README.md", "skills/integrate-auth/SKILL.md"}
+        if any(
+            before.get(name) != value
+            for name, value in baseline_hashes.items()
+            if name not in replaced
+        ):
+            raise EvalError("source-changed-during-snapshot")
+    after_commit = (
+        subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root).decode().strip()
+    )
+    if source_hashes(root) != before or after_commit != commit:
+        raise EvalError("source-changed-during-snapshot")
+    return {
+        "source_commit": commit,
+        "source_dirty": dirty,
+        "source_sha256": digest_hashes(before),
+    }, {condition: templates[condition] for condition in conditions}
+
+
+def aggregate_results(runs: list[dict]) -> dict:
+    """Report every run; never turn missing/partial token counts into zeros."""
+
+    def stats(values: list) -> dict:
+        values = sorted(value for value in values if type(value) in (int, float))
+        if not values:
+            return {
+                "samples": 0,
+                "missing": len(runs),
+                "min": None,
+                "p25": None,
+                "median": None,
+                "p75": None,
+                "max": None,
+            }
+        quartiles = (
+            statistics.quantiles(values, n=4, method="inclusive")
+            if len(values) > 1
+            else [values[0]] * 3
+        )
+        return {
+            "samples": len(values),
+            "missing": len(runs) - len(values),
+            "min": values[0],
+            "p25": quartiles[0],
+            "median": statistics.median(values),
+            "p75": quartiles[2],
+            "max": values[-1],
+        }
+
+    metrics = {
+        key: stats([run.get(key) for run in runs])
+        for key in ("elapsed_seconds", "agent_seconds")
+    }
+    agents = [run.get("agent") or {} for run in runs]
+    metrics["command_count"] = stats([agent.get("command_count") for agent in agents])
+    for key in ("input_tokens", "cached_input_tokens", "output_tokens"):
+        metrics[key] = stats(
+            [
+                (agent.get("usage") or {}).get(key)
+                if agent.get("usage_complete")
+                else None
+                for agent in agents
+            ]
+        )
+    identities = {
+        tuple(
+            run.get(key)
+            for key in (
+                "source_sha256",
+                "requested_model",
+                "cli_version",
+                "runner_sha256",
+                "tasks_sha256",
+                "profile",
+                "timeout_seconds",
+            )
+        )
+        for run in runs
+    }
+    models = sorted(
+        {
+            model
+            for agent in agents
+            for model in agent.get("models", [agent.get("model")])
+            if model
+        }
+    )
+    errors = {}
+    for run in runs:
+        if run.get("error_code"):
+            errors[run["error_code"]] = errors.get(run["error_code"], 0) + 1
+    passed = sum(bool(run["passed"]) for run in runs)
+    return {
+        "runs": len(runs),
+        "passed": passed,
+        "success_rate": passed / len(runs) if runs else None,
+        "comparable_configuration": len(identities) == 1
+        and all(all(identity) for identity in identities)
+        and len(models) <= 1,
+        "reported_models": models,
+        "model_reported_runs": sum(
+            bool(agent.get("models") or agent.get("model")) for agent in agents
+        ),
+        "usage_complete_runs": sum(
+            bool(agent.get("usage_complete")) for agent in agents
+        ),
+        "errors": dict(sorted(errors.items())),
+        "metrics": metrics,
+    }
+
+
 def parse_trace(path: Path) -> dict:
     completed = failed = commands = malformed = 0
     usage = {"input_tokens": 0, "cached_input_tokens": 0, "output_tokens": 0}
     usage_turns = 0
     model = None
+    models = set()
     path_references = {"skill": 0, "manifest": 0}
     with path.open(encoding="utf-8", errors="replace") as stream:
         for line in stream:
@@ -193,10 +352,9 @@ def parse_trace(path: Path) -> dict:
                 continue
             kind = event.get("type")
             candidate = event.get("model")
-            if isinstance(candidate, str) and re.fullmatch(
-                r"[A-Za-z0-9][A-Za-z0-9_.:/-]{0,127}", candidate
-            ):
+            if isinstance(candidate, str) and re.fullmatch(MODEL_PATTERN, candidate):
                 model = candidate
+                models.add(candidate)
             if kind == "item.completed" and isinstance(event.get("item"), dict):
                 commands += event["item"].get("type") == "command_execution"
                 text = event["item"].get("command", "")
@@ -225,6 +383,7 @@ def parse_trace(path: Path) -> dict:
         "usage_complete": completed > 0 and usage_turns == completed,
         "usage": usage if usage_turns else None,
         "model": model,
+        "models": sorted(models),
         "command_path_references": path_references,
     }
 
@@ -766,8 +925,10 @@ def grade(
             stop_group(child, tree)
 
 
-def prompt(stack: str, commit: str) -> str:
-    task = json.loads((ROOT / "evals/auth/tasks.json").read_text())[stack]
+def prompt(stack: str, commit: str, tasks: dict | None = None) -> str:
+    if tasks is None:
+        tasks = json.loads((ROOT / "evals/auth/tasks.json").read_text())
+    task = tasks[stack]
     return f"""{task}
 
 현재 디렉터리는 쓰기 가능한 generated/이고 상위 ../가 읽기 전용 참조 저장소입니다.
@@ -795,19 +956,44 @@ def run_trial(
     condition: str,
     timeout: int,
     *,
+    model: str,
     cli: str = "codex",
+    template: Path | None = None,
+    source_metadata: dict | None = None,
+    tasks: dict | None = None,
+    repeat: int = 1,
+    sequence: int = 1,
 ) -> dict:
+    if not re.fullmatch(MODEL_PATTERN, model):
+        raise EvalError("invalid-model-id")
     started = time.monotonic()
     deadline = started + timeout
     output.mkdir(mode=0o700)
-    commit = (
-        subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root).decode().strip()
-    )
+    if source_metadata is None:
+        source_metadata = {
+            "source_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=root
+            )
+            .decode()
+            .strip(),
+            "source_dirty": bool(
+                subprocess.check_output(
+                    ["git", "status", "--porcelain", "--untracked-files=normal"],
+                    cwd=root,
+                ).strip()
+            ),
+            "source_sha256": digest_hashes(source_hashes(root)),
+        }
+    commit = source_metadata["source_commit"]
     # A workspace beneath the real repo could inherit its AGENTS.md and Git root.
     # Use a separate resolved temporary location, then retain only reviewable sources.
     workspace = tempfile.TemporaryDirectory(prefix="feature-auth-eval-")
     work = Path(workspace.name).resolve() / "snapshot"
-    before = snapshot(root, work, condition)
+    if template is None:
+        before = snapshot(root, work, condition)
+    else:
+        shutil.copytree(template, work, symlinks=True)
+        before = fingerprint(work)
     subprocess.run(
         [
             "git",
@@ -848,27 +1034,28 @@ def run_trial(
     result = {
         "stack": stack,
         "condition": condition,
-        "source_commit": commit,
-        "source_dirty": bool(
-            subprocess.check_output(
-                ["git", "status", "--porcelain", "--untracked-files=normal"], cwd=root
-            ).strip()
-        ),
+        **source_metadata,
+        "profile": "browser-session-v1",
+        "repeat": repeat,
+        "sequence": sequence,
+        "timeout_seconds": timeout,
+        "requested_model": model,
         "cli_version": cli_version,
         "baseline_ref": BASELINE_REF,
-        "snapshot_sha256": hashlib.sha256(
-            json.dumps(before, sort_keys=True).encode()
-        ).hexdigest(),
+        "snapshot_sha256": digest_hashes(before),
         "passed": False,
         "checks": [],
         "error_code": None,
         "agent": None,
         "source_unchanged": False,
+        "model_selection": "not_reported",
     }
     trace = output / "trace.jsonl"
     argv = [
         cli,
         "exec",
+        "--model",
+        model,
         "--ignore-user-config",
         "--ephemeral",
         "--sandbox",
@@ -892,7 +1079,7 @@ def run_trial(
             env,
             trace,
             min(deadline, started + timeout * 0.67),
-            prompt(stack, commit).encode(),
+            prompt(stack, commit, tasks).encode(),
             output / "agent.log",
         )
         result["agent_seconds"] = round(time.monotonic() - agent_started, 3)
@@ -917,6 +1104,10 @@ def run_trial(
         result.setdefault("agent_seconds", round(time.monotonic() - agent_started, 3))
         if trace.exists() and result["agent"] is None:
             result["agent"] = parse_trace(trace)
+        if result["agent"] and result["agent"]["models"]:
+            result["model_selection"] = (
+                "matching" if result["agent"]["models"] == [model] else "different"
+            )
         result["elapsed_seconds"] = round(time.monotonic() - started, 3)
         shutil.copytree(
             work,
@@ -931,33 +1122,90 @@ def run_trial(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stack", choices=STACKS, required=True)
-    parser.add_argument("--condition", choices=("baseline", "skill"), required=True)
-    parser.add_argument("--repeats", type=int, choices=range(1, 4), default=1)
+    parser.add_argument("--stack", choices=(*STACKS, "all"), required=True)
+    parser.add_argument(
+        "--condition", choices=("baseline", "skill", "both"), required=True
+    )
+    parser.add_argument(
+        "--model",
+        required=True,
+        help="Caller-selected fixed model ID passed explicitly to codex exec",
+    )
+    parser.add_argument("--repeats", type=int, choices=range(1, 11), default=3)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if not 1 <= args.timeout <= 600:
         parser.error("--timeout must be between 1 and 600 seconds")
+    if not re.fullmatch(MODEL_PATTERN, args.model):
+        parser.error("--model must be a model identifier without whitespace or options")
     if shutil.which("codex") is None:
         parser.error("codex CLI is required")
     try:
         output = prepare_output(args.output)
-        results = [
-            run_trial(
-                ROOT,
-                output / f"trial-{index + 1}",
-                args.stack,
-                args.condition,
-                args.timeout,
+        tasks_bytes = (ROOT / "evals/auth/tasks.json").read_bytes()
+        tasks = json.loads(tasks_bytes)
+        runner_hash = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+        stacks = STACKS if args.stack == "all" else (args.stack,)
+        conditions = (
+            ("baseline", "skill") if args.condition == "both" else (args.condition,)
+        )
+        results = []
+        with tempfile.TemporaryDirectory(prefix="feature-auth-eval-frozen-") as frozen:
+            metadata, templates = freeze_sources(
+                ROOT, Path(frozen).resolve() / "sources", conditions
             )
-            for index in range(args.repeats)
-        ]
+            metadata.update(
+                runner_sha256=runner_hash,
+                tasks_sha256=hashlib.sha256(tasks_bytes).hexdigest(),
+            )
+            for index in range(args.repeats):
+                for stack in stacks:
+                    # Alternate order to expose, rather than silently fix, a warm-cache advantage.
+                    order = (
+                        conditions if index % 2 == 0 else tuple(reversed(conditions))
+                    )
+                    for condition in order:
+                        name = (
+                            f"trial-{index + 1}"
+                            if len(stacks) == len(conditions) == 1
+                            else f"{stack}-{condition}-trial-{index + 1}"
+                        )
+                        result = run_trial(
+                            ROOT,
+                            output / name,
+                            stack,
+                            condition,
+                            args.timeout,
+                            model=args.model,
+                            template=templates[condition],
+                            source_metadata=metadata,
+                            tasks=tasks,
+                            repeat=index + 1,
+                            sequence=len(results) + 1,
+                        )
+                        results.append(result)
         summary = {
             "stack": args.stack,
             "condition": args.condition,
+            "profile": "browser-session-v1",
+            "requested_model": args.model,
+            **metadata,
+            "timeout_seconds": args.timeout,
             "repeats": args.repeats,
             "passed": sum(item["passed"] for item in results),
+            "total": len(results),
+            "aggregates": {
+                f"{stack}/{condition}": aggregate_results(
+                    [
+                        item
+                        for item in results
+                        if item["stack"] == stack and item["condition"] == condition
+                    ]
+                )
+                for stack in stacks
+                for condition in conditions
+            },
             "runs": results,
         }
         write_json(output / "summary.json", summary)
@@ -965,9 +1213,9 @@ def main() -> int:
         print("Auth evaluation could not initialize; inspect private local outputs.")
         return 2
     print(
-        f"Auth integration evaluation: {summary['passed']}/{args.repeats} passed. Private outputs written."
+        f"Auth integration evaluation: {summary['passed']}/{summary['total']} passed. Private outputs written."
     )
-    return 0 if summary["passed"] == args.repeats else 1
+    return 0 if summary["passed"] == summary["total"] else 1
 
 
 if __name__ == "__main__":

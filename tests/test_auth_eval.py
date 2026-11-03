@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import secrets
@@ -14,6 +15,7 @@ import tempfile
 import threading
 import time
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
@@ -186,6 +188,39 @@ class AuthEvalTests(unittest.TestCase):
         self.assertEqual(result["command_count"], 1)
         self.assertEqual(result["model"], "fixture-model")
         self.assertEqual(result["command_path_references"], {"skill": 1, "manifest": 1})
+
+    def test_trace_retains_all_reported_models_without_guessing(self):
+        result = self.trace(
+            [
+                {"type": "thread.started", "model": "fixture-alias"},
+                {"type": "turn.completed", "model": "fixture-resolved-id"},
+            ]
+        )
+        self.assertEqual(result["models"], ["fixture-alias", "fixture-resolved-id"])
+        self.assertEqual(result["model"], "fixture-resolved-id")
+
+    def test_cli_requires_caller_model_and_rejects_option_like_ids(self):
+        base = [
+            "auth_eval.py",
+            "--stack",
+            "python",
+            "--condition",
+            "skill",
+            "--output",
+            str(self.root / "unused"),
+        ]
+        for extra in ([], ["--model", "contains whitespace"], ["--model=-c"]):
+            with (
+                self.subTest(extra=extra),
+                patch.object(sys, "argv", base + extra),
+                patch.object(auth_eval, "run_trial") as trial,
+                redirect_stderr(io.StringIO()),
+                self.assertRaises(SystemExit) as failure,
+            ):
+                auth_eval.main()
+            self.assertEqual(failure.exception.code, 2)
+            trial.assert_not_called()
+        self.assertFalse((self.root / "unused").exists())
 
     def test_output_rejects_clobber_and_symlink(self):
         directory = auth_eval.prepare_output(self.root / "new")
@@ -464,6 +499,176 @@ class AuthEvalTests(unittest.TestCase):
         self.assertFalse((skill / "implementations/python-fastapi/.env").exists())
         self.assertEqual(stat.S_IMODE((skill / library).stat().st_mode) & 0o222, 0)
 
+    def test_frozen_sources_keep_both_conditions_identical_after_checkout_changes(self):
+        root, commit = self.fixture_repo()
+        package = root / "packages/create-feature-auth/src/cli.mjs"
+        package.parent.mkdir(parents=True)
+        package.write_text("// fixture generator\n")
+        with patch.object(auth_eval, "BASELINE_REF", commit):
+            metadata, templates = auth_eval.freeze_sources(
+                root, self.root / "frozen", ("baseline", "skill")
+            )
+        self.assertEqual(metadata["source_commit"], commit)
+        self.assertEqual(len(metadata["source_sha256"]), 64)
+        library = "implementations/python-fastapi/feature_auth/__init__.py"
+        (root / library).write_text("changed after capture")
+        self.assertEqual(
+            (templates["baseline"] / library).read_bytes(),
+            (templates["skill"] / library).read_bytes(),
+        )
+        self.assertNotEqual(
+            (templates["skill"] / library).read_bytes(), (root / library).read_bytes()
+        )
+        self.assertTrue((templates["skill"] / package.relative_to(root)).is_file())
+
+    def test_source_change_during_capture_is_rejected(self):
+        root, commit = self.fixture_repo()
+        original_snapshot = auth_eval.snapshot
+
+        def changing_snapshot(source, destination, condition):
+            result = original_snapshot(source, destination, condition)
+            if condition == "skill":
+                (
+                    source / "implementations/python-fastapi/feature_auth/__init__.py"
+                ).write_text("changed during capture")
+            return result
+
+        with (
+            patch.object(auth_eval, "BASELINE_REF", commit),
+            patch.object(auth_eval, "snapshot", changing_snapshot),
+            self.assertRaisesRegex(
+                auth_eval.EvalError, "source-changed-during-snapshot"
+            ),
+        ):
+            auth_eval.freeze_sources(root, self.root / "frozen", ("baseline", "skill"))
+
+    def test_main_pairs_all_stacks_and_repeats_from_one_frozen_capture(self):
+        root, commit = self.fixture_repo()
+        tasks = root / "evals/auth/tasks.json"
+        tasks.parent.mkdir(parents=True)
+        tasks.write_text(
+            json.dumps({stack: stack + " task" for stack in auth_eval.STACKS})
+        )
+        seen = []
+        hashes = {}
+
+        def trial(source, output, stack, condition, timeout, **kwargs):
+            before = auth_eval.fingerprint(kwargs["template"])
+            if condition in hashes:
+                self.assertEqual(before, hashes[condition])
+            hashes[condition] = before
+            seen.append((stack, condition, kwargs["repeat"], kwargs["model"]))
+            if len(seen) == 1:
+                (
+                    source / "implementations/python-fastapi/feature_auth/__init__.py"
+                ).write_text("changed after freeze")
+                tasks.write_text("changed after freeze")
+            self.assertEqual(kwargs["tasks"][stack], stack + " task")
+            return {
+                "stack": stack,
+                "condition": condition,
+                "passed": True,
+                "agent": None,
+                "requested_model": kwargs["model"],
+                "cli_version": "fixture-cli 1.0",
+                **kwargs["source_metadata"],
+            }
+
+        argv = [
+            "auth_eval.py",
+            "--stack",
+            "all",
+            "--condition",
+            "both",
+            "--repeats",
+            "3",
+            "--model",
+            "fixture-model",
+            "--output",
+            str(self.root / "results"),
+        ]
+        with (
+            patch.object(auth_eval, "ROOT", root),
+            patch.object(auth_eval, "BASELINE_REF", commit),
+            patch.object(auth_eval, "run_trial", trial),
+            patch.object(auth_eval.shutil, "which", return_value="fixture-codex"),
+            patch.object(sys, "argv", argv),
+            redirect_stdout(io.StringIO()),
+        ):
+            self.assertEqual(auth_eval.main(), 0)
+        self.assertEqual(len(seen), 24)
+        self.assertEqual(seen[0], ("python", "baseline", 1, "fixture-model"))
+        self.assertEqual(seen[8], ("python", "skill", 2, "fixture-model"))
+        result = json.loads((self.root / "results/summary.json").read_text())
+        self.assertEqual(result["total"], 24)
+        self.assertEqual(len(result["aggregates"]), 8)
+        self.assertEqual(
+            {run["source_sha256"] for run in result["runs"]}, {result["source_sha256"]}
+        )
+
+    def test_aggregate_keeps_missing_usage_out_of_token_statistics(self):
+        runs = []
+        for index, tokens in enumerate((0, 100, None)):
+            runs.append(
+                {
+                    "passed": index != 2,
+                    "elapsed_seconds": (1, 9, 100)[index],
+                    "agent_seconds": (0.5, 8, 99)[index],
+                    "requested_model": "fixture-model",
+                    "cli_version": "fixture-cli 1.0",
+                    "source_sha256": "same-source",
+                    "runner_sha256": "same-runner",
+                    "tasks_sha256": "same-task",
+                    "profile": "browser-session-v1",
+                    "timeout_seconds": 600,
+                    "error_code": "agent-failed" if index == 2 else None,
+                    "agent": {
+                        "model": None,
+                        "models": [],
+                        "command_count": index,
+                        "usage_complete": tokens is not None,
+                        "usage": {
+                            key: tokens
+                            for key in (
+                                "input_tokens",
+                                "cached_input_tokens",
+                                "output_tokens",
+                            )
+                        }
+                        if tokens is not None
+                        else None,
+                    },
+                }
+            )
+        summary = auth_eval.aggregate_results(runs)
+        self.assertEqual(summary["passed"], 2)
+        self.assertEqual(summary["metrics"]["elapsed_seconds"]["median"], 9)
+        self.assertEqual(summary["metrics"]["input_tokens"]["samples"], 2)
+        self.assertEqual(summary["metrics"]["input_tokens"]["missing"], 1)
+        self.assertEqual(summary["metrics"]["input_tokens"]["median"], 50)
+        self.assertEqual(summary["metrics"]["input_tokens"]["min"], 0)
+        self.assertEqual(summary["reported_models"], [])
+        self.assertEqual(summary["model_reported_runs"], 0)
+        self.assertEqual(summary["errors"], {"agent-failed": 1})
+        self.assertTrue(summary["comparable_configuration"])
+        runs[0]["cli_version"] = "different-cli"
+        self.assertFalse(auth_eval.aggregate_results(runs)["comparable_configuration"])
+
+    def test_aggregate_flags_mixed_sources_and_partial_usage(self):
+        runs = [
+            {
+                "passed": False,
+                "source_sha256": source,
+                "requested_model": "fixture-model",
+                "cli_version": "same-cli",
+                "agent": {"usage": {"input_tokens": 8}, "usage_complete": False},
+            }
+            for source in ("one", "two")
+        ]
+        summary = auth_eval.aggregate_results(runs)
+        self.assertFalse(summary["comparable_configuration"])
+        self.assertIsNone(summary["metrics"]["input_tokens"]["median"])
+
     def test_real_skill_snapshot_catalog_is_loadable_and_selectable(self):
         destination = self.root / "real-skill-snapshot"
         auth_eval.snapshot(auth_eval.ROOT, destination, "skill")
@@ -475,10 +680,15 @@ class AuthEvalTests(unittest.TestCase):
         catalog = catalog_module.load_catalog()
         catalog_module.validate_catalog(catalog)
         for stack in (*auth_eval.STACKS, "react"):
-            selected = catalog_module.select(catalog, stack, "browser-session-v1")
-            self.assertEqual(selected["stack"]["id"], stack)
-            for relative in selected["read"]:
-                self.assertTrue((destination / relative).is_file())
+            for profile in (
+                "browser-session-v1",
+                "browser-session-v2",
+                "browser-session-v3",
+            ):
+                selected = catalog_module.select(catalog, stack, profile)
+                self.assertEqual(selected["stack"]["id"], stack)
+                for relative in selected["read"]:
+                    self.assertTrue((destination / relative).is_file())
 
     def test_snapshot_rejects_absolute_symlink_even_to_source_inside_repo(self):
         root, _ = self.fixture_repo()
@@ -492,6 +702,7 @@ class AuthEvalTests(unittest.TestCase):
         cli.write_text(
             "#!/usr/bin/env python3\nimport json,re,sys\nfrom pathlib import Path\n"
             "if '--version' in sys.argv: print('fixture-cli 1.0'); sys.exit(0)\n"
+            "assert sys.argv[sys.argv.index('--model')+1] == 'fixture-model'\n"
             "text=sys.stdin.read()\ncommit=re.search(r'출처 커밋은 ([0-9a-f]{40})',text)[1]\n"
             "assert (Path.cwd().parent / '.git').is_dir()\n"
             f"Path('app.py').write_text({FAKE_SERVER!r})\n"
@@ -504,13 +715,22 @@ class AuthEvalTests(unittest.TestCase):
         with patch.object(auth_eval, "BASELINE_REF", commit):
             for condition in ("baseline", "skill"):
                 result = auth_eval.run_trial(
-                    root, self.root / condition, "python", condition, 15, cli=str(cli)
+                    root,
+                    self.root / condition,
+                    "python",
+                    condition,
+                    15,
+                    cli=str(cli),
+                    model="fixture-model",
                 )
                 self.assertFalse(result["passed"])
                 self.assertEqual(result["error_code"], "http-wrong-password-401")
                 self.assertTrue(result["source_unchanged"])
                 self.assertTrue(result["source_dirty"])
                 self.assertEqual(result["agent"]["usage"]["output_tokens"], 0)
+                self.assertEqual(result["requested_model"], "fixture-model")
+                self.assertIsNone(result["agent"]["model"])
+                self.assertEqual(result["model_selection"], "not_reported")
                 self.assertFalse((self.root / condition / "snapshot/.git").exists())
 
 

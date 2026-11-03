@@ -49,3 +49,18 @@ npm install @ugauga/feature-standards-react-auth
 ```
 
 로컬 tarball 설치와 실제 registry 설치를 각각 확인했으며, 위 게시물은 API 클라이언트다. 참조 화면은 저장소에서 실행한다. 이후 버전은 기존 npm 버전을 덮어쓰지 않고 새 버전으로 게시한다.
+
+## Automated releases with OIDC
+
+`.github/workflows/publish-npm.yml` tests and packs both npm packages. A manual dispatch only builds. Version tags `npm-react-auth-vX.Y.Z` and `npm-create-feature-auth-vX.Y.Z` select one artifact, and its metadata must match the exact tag. The publish job requires full main-branch CI to have succeeded for the same source commit. Node 24 and npm 12.2.1 support this trusted publishing flow.
+
+Configure each existing package's npm trusted publisher with repository `jongko54/feature-standards`, workflow `publish-npm.yml`, environment `npm`, and publish permission. The CLI's first release requires ordinary npm authentication before its publisher can be connected. This account action requires npm 2FA; creating the workflow alone does not activate it.
+
+```sh
+npm exec --yes --package=node@24 --package=npm@12.2.1 -- npm trust github \
+  @ugauga/feature-standards-react-auth --repo jongko54/feature-standards \
+  --file publish-npm.yml --env npm --allow-publish --yes --browser=false
+# After its first release, repeat for @ugauga/create-feature-auth.
+```
+
+No long-lived NPM_TOKEN is added. The job publishes the exact built tarball and verifies registry version, SHA-512 integrity, and a public tarball download. Confirm activation with `npm trust list PACKAGE --json` and an actual tagged release before reporting automatic publication as complete. See the [npm trust command](https://docs.npmjs.com/cli/v12/commands/npm-trust/) and [trusted publishing guide](https://docs.npmjs.com/trusted-publishers/).

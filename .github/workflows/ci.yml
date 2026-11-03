@@ -122,6 +122,11 @@ jobs:
           cargo fmt --all --manifest-path examples/consumer-rust/Cargo.toml -- --check
           cargo clippy --locked --manifest-path examples/consumer-rust/Cargo.toml --all-targets -- -D warnings
           cargo test --locked --manifest-path examples/consumer-rust/Cargo.toml
+      - name: Build standalone server distributions
+        run: |
+          uv build --project implementations/python-fastapi --out-dir dist/python
+          uvx --from twine==7.0.0 twine check --strict dist/python/*
+          cargo package --locked --manifest-path implementations/rust-axum/Cargo.toml
       - name: Install and build React client
         working-directory: clients/react
         run: |
@@ -147,7 +152,19 @@ jobs:
           npm run build
       - name: Consumer integration and browser tests
         run: uv run --frozen --project tools python tests/consumer_conformance.py
+      - name: Independent consumers with PostgreSQL v2 v3 and real browser UI
+        run: uv run --frozen --project tools python tests/consumer_profiles.py --browser
+      - name: Test and pack the authentication bootstrap CLI
+        working-directory: packages/create-feature-auth
+        run: |
+          npm ci
+          npm test
+          npm run check:generated
+          npm pack --pack-destination "$RUNNER_TEMP"
       - name: Verify checked-in workflow template matches
-        run: cmp .github/workflows/ci.yml ci/github-actions.yml
+        run: |
+          cmp .github/workflows/ci.yml ci/github-actions.yml
+          cmp .github/workflows/publish-npm.yml ci/publish-npm.yml
+          cmp .github/workflows/publish-python.yml ci/publish-python.yml
       - name: Whitespace check
         run: git diff --check

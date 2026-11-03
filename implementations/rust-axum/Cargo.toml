@@ -3,7 +3,14 @@ name = "feature-standards-auth"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.93.1"
-publish = false
+description = "Contract-tested session authentication for Axum"
+license = "MIT"
+repository = "https://github.com/jongko54/feature-standards"
+homepage = "https://github.com/jongko54/feature-standards"
+readme = "PACKAGE.md"
+keywords = ["authentication", "session", "csrf", "axum", "postgres"]
+categories = ["authentication", "web-programming::http-server"]
+include = ["src/**", "tests/reuse_api.rs", "Cargo.toml", "Cargo.lock", "PACKAGE.md", "LICENSE"]
 
 [dependencies]
 argon2 = { version = "0.6.0", default-features = false, features = ["alloc"] }

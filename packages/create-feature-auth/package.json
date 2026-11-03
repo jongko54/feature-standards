@@ -1,0 +1,20 @@
+{
+  "name": "@ugauga/create-feature-auth",
+  "version": "0.1.0",
+  "description": "Create thin authentication consumers from shared Feature Standards contracts",
+  "type": "module",
+  "license": "MIT",
+  "engines": {"node": ">=22.12.0"},
+  "bin": {"create-feature-auth": "./src/cli.mjs"},
+  "files": ["src", "templates", "README.md", "LICENSE"],
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check:generated": "node test/generated.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jongko54/feature-standards.git",
+    "directory": "packages/create-feature-auth"
+  },
+  "publishConfig": {"access": "public", "registry": "https://registry.npmjs.org/"}
+}

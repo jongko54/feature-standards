@@ -1,6 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
 import { authApi, type AuthSession } from '@ugauga/feature-standards-react-auth/api';
+import { AccountFlow } from './AccountFlow';
+
+const accounts = import.meta.env.VITE_AUTH_ACCOUNT_LIFECYCLE === 'true';
 
 function App() {
   const [session, setSession] = useState<AuthSession | null>(null);
@@ -42,6 +45,8 @@ function App() {
         <button disabled={busy}>로그인</button>
       </form>}
     {error && <p role="alert">{error}</p>}
+    {accounts && <p><a href="/register">Register</a> · <a href="/request-reset">Request reset</a></p>}
   </main>;
 }
-createRoot(document.getElementById('root')!).render(<App />);
+const action = location.pathname.slice(1);
+createRoot(document.getElementById('root')!).render(accounts && (action === 'register' || action === 'verify-email' || action === 'request-reset' || action === 'reset-password') ? <AccountFlow action={action} /> : <App />);

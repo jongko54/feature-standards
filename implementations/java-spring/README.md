@@ -44,7 +44,7 @@ DB 모드에서는 `AUTH_USER_EMAIL`과 `AUTH_USER_PASSWORD`를 요구하거나 
 
 ### 라이브러리로 가져오기
 
-`./mvnw -q install -DskipTests`는 기존 실행 파일 `target/auth-server.jar`와 일반 클래스 경로의 `target/auth-server-library.jar`를 함께 빌드하고 로컬 Maven 캐시에 설치한다. 다른 프로젝트는 `dev.featurestandards:java-spring-auth:1.0.0:jar:library`를 의존성으로 지정한다. 일반 JAR에는 참조 서버의 `AuthApplication`과 `application.properties`를 넣지 않으므로 소비 앱의 component scan·설정을 덮어쓰지 않는다. Maven Central 게시를 수행하지 않는다.
+`./mvnw -q install -DskipTests`는 기존 실행 파일 `target/auth-server.jar`와 일반 클래스 경로의 `target/auth-server-library.jar`를 함께 빌드하고 로컬 Maven 캐시에 설치한다. 다른 프로젝트는 `io.github.jongko54:java-spring-auth:1.0.0:jar:library`를 의존성으로 지정한다. 일반 JAR에는 참조 서버의 `AuthApplication`과 `application.properties`를 넣지 않으므로 소비 앱의 component scan·설정을 덮어쓰지 않는다. Maven Central 게시를 수행하지 않는다.
 
 공개 `AuthConfig.password(env, demo)`는 메모리 사용 시 참조 구현과 같은 비밀번호 선택 규칙을 제공한다. PostgreSQL 모드는 비밀번호 인자를 null로 전달하며 기존 설정·schema 검사를 사용한다. Servlet 어댑터를 재사용할 때 `AuthFilter`를 `/auth/*`, `/healthz`에 등록하고 소비 앱의 경로는 해당 앱에서 처리한다. 보호 API는 `AuthService.session(token)`의 유효 세션만 사용하고 저장소 실패를 성공이나 익명 상태로 감추지 않는다. 실제 별도 의존성 설치·보호 API·로그아웃 후 쿠키 폐기는 [Java 소비 예제](../../examples/consumer-java/README.md)에서 검증한다.
 

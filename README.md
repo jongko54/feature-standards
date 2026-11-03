@@ -21,10 +21,21 @@ The **0.3.0 account lifecycle extension** adds registration, email verification,
 | [Separate Python + React consumer](examples/consumer-python-react/README.md) | Protected API example that imports packages without copying authentication logic |
 | [AI integration skill](skills/integrate-auth/SKILL.md) | Inspect, integrate, and validate authentication in a target project |
 | [Integration manifest](feature-standards.json) / [AI integration guide](docs/ai-integration.md) | Public APIs, profiles, dependencies, consumer examples, and verification commands for five stacks |
+| [Authentication bootstrap CLI](docs/create-feature-auth.md) | Generate a thin protected API consumer for any server stack and select v1/v2/v3 |
 
 See the [PostgreSQL guide](docs/postgres-v2.md) for v2, the [account lifecycle guide](docs/account-v3.md) for v3 migrations, mail, TLS, and verification boundaries, and the [versioning policy](docs/versioning.md) for compatibility rules. Supporting specifications and validation records currently include Korean documentation.
 
 ## Quick start
+
+To generate a separate consumer application from a local source checkout:
+
+```sh
+node packages/create-feature-auth/src/cli.mjs \
+  --source "$PWD" --stack python --profile browser-session-v1 \
+  --dest ../my-auth-app --check
+```
+
+Choose `python`, `go`, `java`, or `rust`. The CLI connects the existing package and generates application glue, environment examples, and build/run commands. `--check` uses a temporary loopback memory demo; it does not migrate or seed a database. See the [CLI guide](docs/create-feature-auth.md) and [server release status](docs/server-releases.md).
 
 Install the toolchain for your chosen server: Python 3.12+ with [uv](https://docs.astral.sh/uv/), Go 1.26+, Java 21+, or Rust/Cargo 1.93.1+. The React client requires Node.js 22.12+ and npm. Full validation requires all four server toolchains; browser CI uses Node.js 24 and Chromium.
 
@@ -119,7 +130,7 @@ Actual model integration succeeded in **8/8 runs** across four backends and two 
 | Rust | Path crate with `AuthService::from_config` and `current_user` | [Rust](examples/consumer-rust/README.md) |
 | React | `@ugauga/feature-standards-react-auth/api` | [Python + React](examples/consumer-python-react/README.md) |
 
-The independent Go, Java, and Rust consumer tests exercise protected APIs and session revocation with in-memory v1. They do not validate those consumer apps against PostgreSQL v2/v3 or a browser UI. The reference servers have separate v1/v2/v3 conformance checks. Server packages are provided through local consumer examples; the React API is [published on npm](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth). See the [publication and installation record](docs/npm-release.md).
+Independent consumers exercise protected APIs and session revocation with in-memory v1. The [database consumer matrix](examples/consumer-python-react/PROFILE_TESTS.md) additionally verifies all four server packages with PostgreSQL v2/v3 and a real React UI: eight isolated backend/profile combinations and 28 Chromium scenarios passed in the current local run. Reference servers have separate conformance checks. Server registry availability is tracked in the [release guide](docs/server-releases.md); the React API is [published on npm](https://www.npmjs.com/package/@ugauga/feature-standards-react-auth).
 
 The Python distribution is named `feature-standards-python-auth`, and its import name is `feature_auth`. The [package project](implementations/python-fastapi/pyproject.toml) defines a wheel build; the [consumer project](examples/consumer-python-react/pyproject.toml) installs it through a uv path dependency. Its public interfaces include `create_app()` and `current_user(request)`.
 
@@ -185,6 +196,7 @@ uv sync --frozen --project examples/consumer-python-react
 npm --prefix examples/consumer-python-react ci
 npm --prefix examples/consumer-python-react run build
 uv run --frozen --project tools python tests/consumer_conformance.py
+uv run --frozen --project tools python tests/consumer_profiles.py --browser
 ```
 
 Use `FEATURE_STANDARDS_PG_BIN` to choose a server binary directory, or `FEATURE_STANDARDS_TEST_DATABASE_URL` to use an existing dedicated database. The database harnesses reset the `feature_auth` schema, so use **only task-owned loopback test databases whose names start with `feature_standards_test`**. See the [v2 guide](docs/postgres-v2.md#검증과-근거-맵) for fixture safeguards and evidence mappings.

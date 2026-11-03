@@ -1,9 +1,13 @@
-# 기여 안내
+# Contributing
 
-기능은 `features/<기능>/`에 명세·OpenAPI·시나리오를, `implementations/<스택>/`에 구현과 잠금 파일을 둡니다. 클라이언트는 언어별 서버와 조합 가능해야 합니다.
+Put specifications, OpenAPI, and scenarios in `features/<feature>/`, and implementations with dependency locks in `implementations/<stack>/`. A client must work with every compatible server profile. Reuse an existing public package through a thin consumer before implementing another authentication system.
 
-새 언어 구현은 공통 테스트 runner의 시작 절차만 확장하고 같은 `AuthContract`를 실행하세요. 특정 구현만 통과하도록 검증을 완화하지 않습니다. 라이브러리 내부 구조까지 동일하게 만들 필요는 없습니다.
+For a new language, extend the common runner's build/start adapter and run the same contract tests. Do not relax assertions for one implementation. Internal architecture can follow language conventions.
 
-계약을 바꾸려면 관찰 가능한 전후 동작, 영향을 받는 구현·클라이언트, 새 검증 시나리오, 호환성 영향을 함께 설명합니다. 오류·서버 측 무효화·타임아웃 같은 실패 조건도 포함합니다. 관련 검증 명령은 루트 README와 `.github/workflows/ci.yml`을 따릅니다. CI를 변경하면 `ci/github-actions.yml` 템플릿도 같은 내용으로 갱신합니다. 원격 실행 결과는 해당 커밋의 Actions에서 확인합니다.
+For a contract change, describe its trigger and before/after behavior, affected profiles and clients, new failure scenarios, and compatibility impact. Preserve older profile defaults. Migrations and demo seeding remain explicit operations.
 
-AI로 기여할 때는 적용한 계약 버전과 실제 실행한 검증을 기록하세요. 실행하지 않은 테스트를 통과했다고 적지 말고, 의존성을 최신이라는 이유만으로 무조건 교체하지 마세요. 외부 코드를 가져오면 출처와 라이선스를 확인하고 필요한 고지를 보존합니다.
+Run relevant checks using the root README and `.github/workflows/ci.yml`. Update matching `ci/` templates when active workflows change. CLI changes require package tests and real generated-app checks; DB consumer changes require `tests/consumer_profiles.py --browser` with disposable databases.
+
+For AI contributions, record the contract/profile, public APIs reused, and checks actually executed. Instruction inspection is not a model benchmark, and a local test is not a registry publication. Keep raw model traces, credentials, session tokens, and mail payloads out of commits and CI artifacts. Verify sources and preserve license notices for imported code.
+
+Release tags must match package versions and point to a commit whose full main-branch CI has passed. See [npm releases](docs/npm-release.md) and [server releases](docs/server-releases.md). Report security issues through the [private reporting policy](SECURITY.md).
