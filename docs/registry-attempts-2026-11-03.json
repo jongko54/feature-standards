@@ -1,0 +1,52 @@
+{
+  "source_commit": "64a47a9c06a54c87b6d03d1447223e79f35aec53",
+  "full_main_ci": {
+    "run_id": 41582509327,
+    "conclusion": "success"
+  },
+  "build_only_runs": [
+    {
+      "run_id": 41582526881,
+      "kind": "rust",
+      "conclusion": "success",
+      "publish_job": "skipped"
+    },
+    {
+      "run_id": 41582530378,
+      "kind": "npm",
+      "conclusion": "success",
+      "publish_job": "skipped"
+    }
+  ],
+  "publication_attempts": [
+    {
+      "run_id": 41583797633,
+      "tag": "npm-react-auth-v0.1.2",
+      "registry": "npm",
+      "conclusion": "failure",
+      "error_code": "EALLOWGIT",
+      "failure_stage": "local tarball argument parsed as GitHub shorthand before registry authentication",
+      "publication_verified": false
+    },
+    {
+      "run_id": 41583797414,
+      "tag": "python-auth-v0.2.0",
+      "registry": "pypi",
+      "conclusion": "failure",
+      "error_code": "invalid-publisher",
+      "failure_stage": "valid GitHub OIDC token rejected because no publisher matched its claims",
+      "publication_verified": false
+    }
+  ],
+  "corrected_api_candidate": {
+    "version": "0.1.3",
+    "file": "ugauga-feature-standards-react-auth-0.1.3.tgz",
+    "bytes": 4709,
+    "sha256": "4b46eb1bd6856b96e74430013175904746d8b8c38f6091e4f8a6f8be7138c755",
+    "integrity": "sha512-FBSctsOYugEkIWCgt6hiprZTBccWohX45yfokTKGxWhnCjBSeMyA8WOmHuWXrutFbX7PfC6c5OdQGbt3v112gA==",
+    "relative_path_reproduction": "EALLOWGIT",
+    "absolute_path_dry_run_exit": 0,
+    "dry_run_ci_markers_without_oidc_credentials_exit": 0,
+    "publication_verified": false
+  }
+}

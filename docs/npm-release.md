@@ -67,6 +67,14 @@ No long-lived NPM_TOKEN is added. The job publishes the exact built tarball and 
 
 ## Prepared publisher-validation patches
 
-The checkout prepares API `0.1.2` and CLI `0.1.1`; these versions are not declared published until registry receipts are recorded. The API patch adds the companion server-generation guide without changing JavaScript or type declarations. The CLI patch fixes generated provenance to read the installed package version rather than a duplicated `0.1.0` literal, with a regression that fails before the fix.
+The initial preparation targeted API `0.1.2` and CLI `0.1.1`; these versions are not declared published until registry receipts are recorded. The API patch adds the companion server-generation guide without changing JavaScript or type declarations. The CLI patch fixes generated provenance to read the installed package version rather than a duplicated `0.1.0` literal, with a regression that fails before the fix.
 
 The first CLI `0.1.0` bootstrap can use the reviewed artifact from full-CI commit `eff0d9d6905de5d8729eef07771a5838ee36b1b3`. The package must exist before its npm trusted publisher is configured. Then the new version tags publish the prepared patches through OIDC after exact main source CI passes. Configure each publisher and complete its first successful OIDC publish promptly; npm currently requires validation within two days. Read the [official expiry and provenance guidance](https://docs.npmjs.com/trusted-publishers/#trusted-publisher-configuration-expiry). No existing publisher is revoked automatically.
+
+## First OIDC attempts and path correction
+
+The API0.1.2 tag attempt reached the publication command but npm12.2.1 interpreted `release/PACKAGE.tgz` as a GitHub shorthand and refused it with EALLOWGIT. This was a workflow path error, before registry authentication. A local no-upload reproduction failed with that relative argument and succeeded with an absolute archive path. The workflow now uses the same absolute tarball expression for its dry-run and actual publish steps. See the [official package-spec guidance](https://github.com/npm/cli/blob/latest/docs/lib/content/commands/npm-publish.md).
+
+The failed0.1.2 tag remains immutable. The corrected API candidate is0.1.3; CLI remains0.1.1. The new main commit must pass full CI before the next API tag. No package version is assumed published from a failed workflow.
+
+Python0.2.0 reached PyPI OIDC token exchange, which rejected the valid GitHub token with `invalid-publisher` (no matching publisher). Register the documented pending publisher, then rerun the failed publishing job from its existing source/tag rather than replacing that tag.

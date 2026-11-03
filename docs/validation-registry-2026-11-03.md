@@ -25,3 +25,15 @@ Prepared source versions are API0.1.2 and CLI0.1.1. The registry remained API0.1
 The existing npm login token returned401. A web login session was started; when the older CLI fell back to an interactive legacy prompt, it was stopped and a supported current CLI web session was started. No password or authentication code was requested in chat. A waiting login URL is not proof of authentication or publication.
 
 Python still needs its PyPI pending publisher. Maven still needs a verified Central namespace/token and maintainer-controlled production signing key. Rust still needs account/email verification, initial publication and its configured OIDC publisher. The local fixture and build-only workflows do not complete those account operations. See [Maven setup](maven-release.md), [Rust setup](rust-release.md), and [server release status](server-releases.md).
+
+## Real workflow and registry attempts
+
+Full [main CI](https://github.com/jongko54/feature-standards/actions/runs/41582509327) passed at `64a47a9c06a54c87b6d03d1447223e79f35aec53`. The [Rust build-only workflow](https://github.com/jongko54/feature-standards/actions/runs/41582526881) and [npm build-only workflow](https://github.com/jongko54/feature-standards/actions/runs/41582530378) also succeeded with publication skipped. Downloaded npm artifacts matched reviewed tarball contents and file modes.
+
+Actual API0.1.2 [publication](https://github.com/jongko54/feature-standards/actions/runs/41583797633) exposed a workflow path bug: npm12 interpreted `release/PACKAGE.tgz` as GitHub shorthand, raising EALLOWGIT before registry authentication. A local exact-CLI dry-run reproduced the failure; an absolute tarball path passed, including CI markers with no OIDC credentials. Both dry-run and actual publish now use the absolute path. Tag-target-only dry-run prevents another already published matrix package from blocking a release. Manual dispatch remains build-only.
+
+The failed tag stays immutable, and API0.1.3 is the corrected candidate. All branch pushes, PRs and manual full-CI runs remain enabled. Tag pushes use the existing mandatory exact-main-source CI gate instead of rerunning identical contract suites. The [GitHub filter rule](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore) documents this branch-only push configuration.
+
+Python0.2.0 [publication](https://github.com/jongko54/feature-standards/actions/runs/41583797414) reached OIDC token exchange and PyPI returned invalid-publisher: a valid GitHub token had no matching registered publisher. No upload was verified. Register the pending publisher with ownerjongko54, repositoryfeature-standards, workflowpublish-python.yml and environmentpypi; the failed publishing job can then be retried from its existing tag/source.
+
+[Attempt details and corrected artifact](registry-attempts-2026-11-03.json) preserve failures rather than converting build success or a tag into publication proof. Public checks still showed API0.1.1, and404 for CLI, PyPI, crates.io and the Maven coordinate.
