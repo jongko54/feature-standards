@@ -73,8 +73,10 @@ The first CLI `0.1.0` bootstrap can use the reviewed artifact from full-CI commi
 
 ## First OIDC attempts and path correction
 
-The API0.1.2 tag attempt reached the publication command but npm12.2.1 interpreted `release/PACKAGE.tgz` as a GitHub shorthand and refused it with EALLOWGIT. This was a workflow path error, before registry authentication. A local no-upload reproduction failed with that relative argument and succeeded with an absolute archive path. The workflow now uses the same absolute tarball expression for its dry-run and actual publish steps. See the [official package-spec guidance](https://github.com/npm/cli/blob/latest/docs/lib/content/commands/npm-publish.md).
+The API `0.1.2` tag attempt reached the publication command but npm 12.2.1 interpreted `release/PACKAGE.tgz` as a GitHub shorthand and refused it with EALLOWGIT. This was a workflow path error, before registry authentication. A local no-upload reproduction failed with that relative argument and succeeded with an absolute archive path. The workflow now uses the same absolute tarball expression for its dry-run and actual publish steps. See the [official package-spec guidance](https://github.com/npm/cli/blob/latest/docs/lib/content/commands/npm-publish.md).
 
 The failed0.1.2 tag remains immutable. The corrected API candidate is0.1.3; CLI remains0.1.1. The new main commit must pass full CI before the next API tag. No package version is assumed published from a failed workflow.
 
-Python0.2.0 reached PyPI OIDC token exchange, which rejected the valid GitHub token with `invalid-publisher` (no matching publisher). Register the documented pending publisher, then rerun the failed publishing job from its existing source/tag rather than replacing that tag.
+Python `0.2.0` reached PyPI OIDC token exchange, which rejected the valid GitHub token with `invalid-publisher` (no matching publisher). Register the documented pending publisher, then rerun the failed publishing job from its existing source/tag rather than replacing that tag.
+
+The corrected API `0.1.3` [run](https://github.com/jongko54/feature-standards/actions/runs/41585652357) passed artifact dry-run and source CI but failed ENEEDAUTH after OIDC. npm's default log does not expose whether this was publisher matching, GitHub token issuance, or token exchange, so the connection is not reported as active. Public latest remains0.1.1. Inspect the package's configured publisher after a valid local npm login; no token is added to CI. [Final attempt receipt](registry-attempts-2026-11-03.json).

@@ -36,6 +36,17 @@
       "error_code": "invalid-publisher",
       "failure_stage": "valid GitHub OIDC token rejected because no publisher matched its claims",
       "publication_verified": false
+    },
+    {
+      "run_id": 41585652357,
+      "source_commit": "270625edb90b9acf1f2ed2998342e41cc83b3eb5",
+      "tag": "npm-react-auth-v0.1.3",
+      "registry": "npm",
+      "conclusion": "failure",
+      "error_code": "ENEEDAUTH",
+      "failure_stage": "tarball dry-run and exact main CI passed; OIDC returned no usable npm credential",
+      "underlying_oidc_failure_reason": "not exposed by default npm log; publisher mismatch not confirmed",
+      "publication_verified": false
     }
   ],
   "corrected_api_candidate": {
@@ -47,6 +58,37 @@
     "relative_path_reproduction": "EALLOWGIT",
     "absolute_path_dry_run_exit": 0,
     "dry_run_ci_markers_without_oidc_credentials_exit": 0,
-    "publication_verified": false
-  }
+    "publication_verified": false,
+    "absolute_path_dry_run_github_job": "passed in selected package job41585652357"
+  },
+  "corrected_full_main_ci": {
+    "source_commit": "270625edb90b9acf1f2ed2998342e41cc83b3eb5",
+    "run_id": 41584483597,
+    "conclusion": "success"
+  },
+  "final_public_registry_observations": [
+    {
+      "target": "npm_api",
+      "status": 200,
+      "latest": "0.1.1",
+      "version_0_1_3_present": false
+    },
+    {
+      "target": "npm_cli",
+      "status": 404
+    },
+    {
+      "target": "pypi",
+      "status": 404
+    },
+    {
+      "target": "crates",
+      "status": 404
+    },
+    {
+      "target": "central",
+      "status": 404
+    }
+  ],
+  "observed_at_utc": "2026-11-03T05:51:38.999814+00:00"
 }
