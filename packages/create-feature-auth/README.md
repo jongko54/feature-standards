@@ -6,7 +6,7 @@ Part of [Feature Standards](https://github.com/jongko54/feature-standards) by [j
 
 Node.js 22.12 or newer is required. The CLI has no runtime npm dependencies. Generation itself needs no language compiler, database, or network connection. Building the generated app needs the selected language toolchain and can download dependencies.
 
-The selected-profile check protocol described below requires version `0.2.0`. Use `node packages/create-feature-auth/src/cli.mjs` from this checkout until that version's registry publication is verified. Existing `0.1.1` consumers keep the earlier memory-only check behavior.
+Version `0.2.0` is published with the selected-profile check protocol described below. Fresh registry installation and real selected-profile execution are recorded in the repository's release receipt. The source CLI accepts the same arguments. Existing `0.1.1` consumers keep the earlier memory-only check behavior.
 
 ```sh
 npx @ugauga/create-feature-auth@0.2.0 \
@@ -40,6 +40,8 @@ node project.mjs start
 | v3 | v2 checks plus registration, single-use email verification, password reset, revocation of both existing sessions, replay rejection, and replacement-password login |
 
 v2/v3 checks require an explicit dedicated test connection in `FEATURE_STANDARDS_TEST_DATABASE_URL`, with a numeric loopback host or `localhost`, an explicit port, a `feature_standards_test*` database name, and only optional `sslmode=disable`. The database role must be able to create/drop test databases. Other `PG*` routing settings are refused. `AUTH_DATABASE_URL` is never used as the check fixture's fallback.
+
+All v2/v3 checks also require `uv` and Python 3.12+ for the checkout's frozen `tools` fixture environment, including checks of Go, Java, and Rust applications. This is a test-helper requirement; the runtime library uses its own language dependencies.
 
 The supplied database is only an administrative connection. The check creates a fresh UUID-named database, applies the selected schema and demo fixtures **there**, and drops that owned database after success or failure. It does not reset the supplied database's schema or data. Verification/reset capabilities stay in private child-process pipes; no SMTP server or public inbox is used. These are HTTP checks, not browser UI, SMTP delivery, or production deployment verification. If a check fails, the generated project remains available for inspection.
 

@@ -9,7 +9,7 @@ This main package distributes a curated contract snapshot, a read-only context s
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# 0.2.0 is prepared in source. Use this after its registry publication is verified:
+# Published 0.2.0; fresh registry installation and actual workflows verified.
 npm install --save-dev feature-standards@0.2.0
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1

@@ -15,7 +15,7 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest /physical/path/outside-the-checkout/new-auth-app \
   --check
 
-# Selected-profile checks require 0.2.0; use the source until its publication is verified:
+# Published 0.2.0: selected-profile checks and fresh registry installation verified.
 npx @ugauga/create-feature-auth@0.2.0 \
   --source /absolute/path/to/feature-standards \
   --stack rust \
@@ -23,7 +23,7 @@ npx @ugauga/create-feature-auth@0.2.0 \
   --dest /physical/path/to/new-auth-app
 ```
 
-Node.js 22.12+ is required. There are no runtime npm dependencies. The source checkout contains the server runtime separately from the main context package. Generation reads bundled consumer templates and the chosen checkout's manifest and package metadata without invoking a compiler, installing dependencies, or accessing a database. `--check` additionally builds and runs the selected profile's isolated fixture described below. The source is trusted build input, not sandboxed code. Existing `0.1.1` packages retain their earlier memory-only check behavior; the new protocol is prepared in `0.2.0`.
+Node.js 22.12+ is required. There are no runtime npm dependencies. The source checkout contains the server runtime separately from the main context package. Generation reads bundled consumer templates and the chosen checkout's manifest and package metadata without invoking a compiler, installing dependencies, or accessing a database. `--check` additionally builds and runs the selected profile's isolated fixture described below. The source is trusted build input, not sandboxed code. Existing `0.1.1` packages retain their earlier memory-only check behavior; the selected-profile protocol is published in `0.2.0`.
 
 `--source`, `--stack`, and `--dest` are required. `--profile` defaults to `browser-session-v1`; v2 and v3 must be selected explicitly. Unsupported selections fail before the target is created. The destination's parent must already exist, be a physical directory without symlinked ancestors, and be outside the source checkout. The destination itself must not exist, including as a dangling symlink. On macOS, resolve aliases such as `/tmp` with `realpath` first.
 
@@ -38,6 +38,8 @@ node project.mjs start
 ```
 
 Build requirements are Python 3.12+ with `uv`, Go 1.26+, JDK 21+ with the source Maven wrapper, or Rust 1.93.1+ with Cargo. Java uses the checkout's Maven coordinates, creates a generated POM overlay pointing to the original library source, and keeps its build output and Maven repository under `.feature-auth/`. No authentication source is copied and the original checkout is not edited. Other stack outputs stay in the generated project; dependency download caches may be populated.
+
+Every v2/v3 check additionally needs `uv` and Python 3.12+ for the source checkout's frozen `tools` fixture environment, including checks of Go, Java, and Rust applications. The helper may download its declared test dependencies. This requirement belongs to the database checker; the runtime library uses its own language's dependencies.
 
 `--check` and the generated `check` command build and exercise the **recorded profile**. The fixture replaces inherited `AUTH_*` settings with synthetic values, binds a unique loopback port, and stops its own server afterward. Every profile checks:
 
@@ -81,4 +83,4 @@ npm --prefix packages/create-feature-auth run check:generated:memory
 
 Safety tests cover fresh generation of all 12 stack/profile combinations, existing targets, dangling links, destination symlinks, source escapes, malformed manifests, invalid CLI options, and database routing rejection. `check:generated` exercises all 12 actual stack/profile combinations, with one task-owned build directory per stack and real incremental builds on each check. Every database profile gets its own fresh UUID database. It verifies source fingerprints and normal/error fixture cleanup, then removes only its own temporary app output. `check:generated:memory` explicitly runs four memory checks. Package publication and registry installation are independently verified release steps.
 
-The prepared package version is `0.2.0`. Metadata identifies [jongko54](https://github.com/jongko54) as author and includes the `jongko54` and `feature-standards` keywords; see [npm discovery](npm-discovery.md) for the distinction between package metadata and live search results.
+The published package version is `0.2.0`. Metadata identifies [jongko54](https://github.com/jongko54) as author and includes the `jongko54` and `feature-standards` keywords; see the [release receipt](npm-workflow-release-2026-11-04.json) and [npm discovery](npm-discovery.md) for verified installation and dated search results.

@@ -8,25 +8,25 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 ## Start with the feature catalog
 
-The main npm package is **[`feature-standards@0.1.0`](https://www.npmjs.com/package/feature-standards)**. It provides a JSON CLI and curated contracts, a manifest, and stack guides. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
+The main npm package is **[`feature-standards@0.2.0`](https://www.npmjs.com/package/feature-standards)**. It provides curated contracts, stack context, and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
 
 Run the published catalog:
 
 ```sh
-npx feature-standards@0.1.0 list
-npx feature-standards@0.1.0 context \
+npx feature-standards@0.2.0 list
+npx feature-standards@0.2.0 context \
   --feature auth --stack python --profile browser-session-v1
 ```
 
-Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. The CLI returns JSON context with separate bundled-document paths and source-checkout instructions; it does not install dependencies, generate applications, run servers, migrate databases, or execute tests.
+Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication profiles below. `list` and `context` are read-only JSON selectors with separate bundled-document paths and source-checkout instructions.
 
-Version `0.2.0` adds explicit `init` and `check` commands. Until that version's registry release is recorded, run the new commands from the source checkout:
+The published `0.2.0` workflow adds explicit `init` and `check` commands. From a trusted Feature Standards source checkout:
 
 ```sh
-node packages/feature-standards/src/cli.mjs init \
+npx feature-standards@0.2.0 init \
   --feature auth --source "$PWD" --stack python \
   --profile browser-session-v1 --dest ../my-auth-app --check
-node packages/feature-standards/src/cli.mjs check --project ../my-auth-app
+npx feature-standards@0.2.0 check --project ../my-auth-app
 ```
 
 `init` creates a new application using the checkout's generator `0.2.0` or newer. `check` and `init --check` explicitly build and exercise that trusted application's selected profile. v1 uses a temporary memory server. v2/v3 require `FEATURE_STANDARDS_TEST_DATABASE_URL` pointing to a dedicated loopback test database with an explicit port and a `feature_standards_test*` name; the test role needs permission to create databases. Each check creates and drops its own UUID database, leaving the base database's schema and data unchanged. v2 verifies persistence across a server restart; v3 also verifies registration, email verification, password reset, and session revocation without sending SMTP mail. A JSON receipt identifies the profile and completed checks. See the [generation guide](docs/create-feature-auth.md).
@@ -40,7 +40,7 @@ node packages/feature-standards/src/cli.mjs context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
-See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [release receipt](docs/npm-product-release-2026-11-03.json) records public artifact integrity, a fresh registry install, all 15 contexts, and the observed `jongko54` search results. Search rank and future indexing are not guaranteed.
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives while language-registry account setup remains pending. Search rank and future indexing are not guaranteed.
 
 ## How an AI integration works
 
@@ -76,7 +76,7 @@ The main package exposes the feature context. The following npm packages are aut
 | Component | Package | Published npm version |
 |---|---|---|
 | Browser authentication API adapter | `@ugauga/feature-standards-react-auth` | `0.1.4` |
-| Thin authentication application generator for four server stacks | `@ugauga/create-feature-auth` | `0.1.1` |
+| Thin authentication application generator for four server stacks | `@ugauga/create-feature-auth` | `0.2.0` |
 
 The React adapter connects browser applications to the shared authentication API; it is one part of the project. The generator creates application glue around the server libraries. The [npm release record](docs/npm-release.md) and [server release guide](docs/server-releases.md) track registry-specific publication and installation evidence. All three npm packages identify [jongko54](https://github.com/jongko54) as author and carry the `jongko54` and `feature-standards` discovery keywords.
 

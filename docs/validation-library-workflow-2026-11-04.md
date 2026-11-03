@@ -2,6 +2,8 @@
 
 Prepared main catalog/workflow CLI and authentication generator versions are `0.2.0`. Authentication HTTP contracts, database schemas, and server runtime sources are unchanged. Local checks below ran from the implementation working tree based on `2a486ae11d8de95ee9eed8aef01f70e3b9a6b3bc`; those results are separate from the later exact-commit CI and public release receipts.
 
+Publication is now confirmed: both npm packages are `0.2.0`, source CI and both OIDC release workflows passed for `2b64e5201d6ebe5029dcc67704a7f46d7b735b59`, and the [GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) exposes the server archives. The [public release receipt](npm-workflow-release-2026-11-04.json) records anonymous fresh installation, actual installed `init --check`/selected-profile execution, all 15 contexts, all eight verified GitHub downloads, and the remaining language-registry account boundary. The opening local results retain their original working-tree provenance.
+
 ## Selected-profile generated applications
 
 - Generator unit tests: **14/14**, including source/destination preservation, unsupported selection, stdin import, explicit test DB routing, refusal to use inherited production `AUTH_DATABASE_URL`, and equivalent percent-encoded credentials.

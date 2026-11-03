@@ -15,7 +15,7 @@ The Maven group changed from the unpublished `dev.featurestandards` coordinate t
 
 ## Build and verify
 
-The `feature-standards-v0.2.0` GitHub release is prepared to provide the server archives, original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` after the exact source CI passes. Check the actual release and receipt before using the URLs below. These assets are an alternative distribution path while language-registry account setup is pending; they do not establish publication on PyPI, Maven Central, or crates.io.
+The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets are an alternative distribution path while language-registry account setup is pending; they do not establish publication on PyPI, Maven Central, or crates.io.
 
 After the release assets and checksums are verified, Python can install the wheel URL directly:
 
@@ -32,6 +32,8 @@ mvn install:install-file \
 ```
 
 Consumers select `io.github.jongko54:java-spring-auth:1.0.0` with classifier `library`. The POM is required for transitive dependencies; the executable application JAR is not the library artifact. Rust consumers can extract the release's `feature-standards-auth-0.1.0.crate` into their own vendor directory and use the unpacked library as a Cargo path dependency. The [independent distribution checker](validation-server-distributions-2026-11-04.md) verifies that unpacked-crate consumption outside the original checkout. Keep the recorded version/checksum when vendoring; this is separate from crates.io version resolution.
+
+The installation parameters follow [Apache Maven's install-file reference](https://maven.apache.org/plugins/maven-install-plugin/install-file-mojo.html); unpacked Rust consumption follows [Cargo path dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-path-dependencies).
 
 From the repository root:
 

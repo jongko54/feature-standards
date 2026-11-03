@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-03T16:14:56.880167+00:00",
+  "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+  "sourceCi": {
+    "runId": 41667686875,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41667686875"
+  },
+  "npmReleases": [
+    {
+      "name": "feature-standards",
+      "version": "0.2.0",
+      "tag": "feature-standards-v0.2.0",
+      "runId": 41670228278,
+      "conclusion": "success"
+    },
+    {
+      "name": "@ugauga/create-feature-auth",
+      "version": "0.2.0",
+      "tag": "npm-create-feature-auth-v0.2.0",
+      "runId": 41670228208,
+      "conclusion": "success"
+    }
+  ],
+  "publicNpmVerification": {
+    "registry": [
+      {
+        "name": "feature-standards",
+        "version": "0.2.0",
+        "files": 45,
+        "sha256": "cdd6f059fc623c9574690bb0b1b35978b07d5684f028f66c7fe5c7c0ed5d0fe9",
+        "integrity": "sha512-+iB4FULXyJqSX52F0hZr2YMIik9vJcqYuu7HdZpyULGbUA1x3Dn3XC5LPJY7m+dsSVHbrQplpf0SjUe4Pj37qw==",
+        "latest": "0.2.0",
+        "publicIntegrityVerified": true
+      },
+      {
+        "name": "@ugauga/create-feature-auth",
+        "version": "0.2.0",
+        "files": 20,
+        "sha256": "8ce7bad11cdbb629aebb2076a4eb6100b021a1f530f2547d40feac3f8b1fec0c",
+        "integrity": "sha512-oqvv3KlRNWVkDOF44KCVidiKyJzebBpR8Rd2/SXXEa/B1zp7Jyfw0HtTHAn/WG7MAtQCqeZxDH476OePxn7SBA==",
+        "latest": "0.2.0",
+        "publicIntegrityVerified": true
+      }
+    ],
+    "anonymousFreshRegistryInstall": true,
+    "contexts": 15,
+    "nodeExports": true,
+    "mainInitCheck": {
+      "schemaVersion": 1,
+      "stack": "python",
+      "profile": "browser-session-v1",
+      "passed": true,
+      "checks": [
+        "selected-profile-health",
+        "anonymous-and-forged-protected-access",
+        "login-shared-protected-identity",
+        "independent-sessions",
+        "csrf-rejection-preserves-session",
+        "server-logout-revokes-copied-cookie"
+      ],
+      "database": {
+        "used": false,
+        "isolated": false
+      },
+      "feature": "auth",
+      "executed": true
+    },
+    "publicGeneratorSelectedProfileCheck": {
+      "schemaVersion": 1,
+      "stack": "go",
+      "profile": "browser-session-v2",
+      "passed": true,
+      "checks": [
+        "selected-profile-health",
+        "anonymous-and-forged-protected-access",
+        "login-shared-protected-identity",
+        "independent-sessions",
+        "csrf-rejection-preserves-session",
+        "server-logout-revokes-copied-cookie",
+        "database-session-survives-server-restart"
+      ],
+      "database": {
+        "used": true,
+        "isolated": true,
+        "created": true,
+        "dropped": true,
+        "existingDatabaseModified": false
+      }
+    },
+    "search": {
+      "query": "npm search jongko54",
+      "packages": [
+        {
+          "name": "@ugauga/feature-standards-react-auth",
+          "version": "0.1.4",
+          "description": "Session authentication API client by jongko54 with TypeScript types for React and browser apps"
+        },
+        {
+          "name": "@ugauga/create-feature-auth",
+          "version": "0.2.0",
+          "description": "Create thin authentication consumers from shared Feature Standards contracts by jongko54"
+        },
+        {
+          "name": "feature-standards",
+          "version": "0.2.0",
+          "description": "Cross-language reusable feature contracts and AI integration context by jongko54"
+        }
+      ]
+    },
+    "smtpSent": false
+  },
+  "githubServerRelease": {
+    "url": "https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0",
+    "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+    "publicDownloadsVerified": {
+      "feature-standards-auth-0.1.0.crate": "75413f01e585b1d3a7965898c0365a4dcd52a1f2ec84d773b2313f4ee11cb03d",
+      "feature_standards_python_auth-0.2.0-py3-none-any.whl": "230d62022cf469909a66138ac1a17d8cdd2a60cab5de484f54228e407d473df4",
+      "feature_standards_python_auth-0.2.0.tar.gz": "ba03ec700bff340a0f44f796246167a05139a651c9ad16c1b3b3a1c7832925e2",
+      "java-spring-auth-1.0.0-library.jar": "323597957adcd6d70af7a551fafcea5d798aef5bf31074a117dd0c1873e06391",
+      "java-spring-auth-1.0.0.pom": "951d886c8ff3dc3d595adf64efc8ee29f0740c42bdd636471de8a87136a80fd2",
+      "LICENSE": "23456eb4e14a9d5ed72e0c2f12e46d2f4ecc2ea8c59c1629e65363b36943df0c",
+      "SHA256SUMS": "1493e05a695485b9c14326b82d00d057b9bbb8baedb470611553e947a9282907",
+      "SOURCE.json": "2976ef15ce4bc2e542616afa3edcb0f48f10a79ce299748e0b819551e0a095c9"
+    }
+  },
+  "publicWheelInstallation": {
+    "url": "https://github.com/jongko54/feature-standards/releases/download/feature-standards-v0.2.0/feature_standards_python_auth-0.2.0-py3-none-any.whl",
+    "freshExternalVirtualenv": true,
+    "publicDownloadInstalled": true,
+    "publicApiImports": true,
+    "authRuntimeDbSmtpExecuted": false
+  },
+  "sourceChecks": {
+    "mainUnitTests": 16,
+    "generatorUnitTests": 14,
+    "distributionUnitTests": 7,
+    "releaseMetadataUnitTests": 3,
+    "realGeneratedProfileChecks": 12,
+    "realBuildInvocations": 12,
+    "incrementalBuildDirectories": 4,
+    "coldBuildForEveryProfile": false,
+    "installedLocalArchiveGeneratedProjects": 12,
+    "installedLocalArchiveRealChecks": [
+      "python/browser-session-v1",
+      "go/browser-session-v2",
+      "python/browser-session-v3"
+    ],
+    "fixtureCleanupNormalAndErrorChecks": 4,
+    "sentinelRowsPreserved": true,
+    "sourceImplementationsUnchanged": true,
+    "independentReviewFindings": {
+      "p2": 1,
+      "resolved": 1
+    }
+  },
+  "languageRegistryAvailability": [
+    {
+      "stack": "python",
+      "status": 404,
+      "url": "https://pypi.org/pypi/feature-standards-python-auth/json"
+    },
+    {
+      "stack": "java",
+      "status": 404,
+      "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom"
+    },
+    {
+      "stack": "rust",
+      "status": 404,
+      "url": "https://crates.io/api/v1/crates/feature-standards-auth"
+    },
+    {
+      "stack": "go",
+      "status": 200,
+      "url": "https://proxy.golang.org/github.com/jongko54/feature-standards/implementations/go-net-http/@v/v0.1.0.info"
+    }
+  ],
+  "remaining": [
+    "Python/PyPI, Java/Maven Central and Rust/crates.io require registry account/publisher/signing setup before formal registry publication can be confirmed.",
+    "Generation and selected-profile checks still require an explicit trusted source checkout."
+  ],
+  "accountAccessBoundary": {
+    "blockedAction": "browser access to PyPI account trusted-publisher settings",
+    "reason": "origin approval did not grant network access",
+    "privateCredentialsRequestedInChat": false,
+    "longLivedTokenAddedToCi": false
+  },
+  "scope": [
+    "GitHub assets are separate from language-registry publication.",
+    "Public wheel smoke verifies installation/imports only; runtime HTTP/database coverage is recorded in source CI and selected-profile checks.",
+    "These checks do not establish AI speed/token improvements or production security certification.",
+    "Later documentation-only commits have syntax/diff validation separate from the exact tagged source CI."
+  ]
+}

@@ -6,7 +6,7 @@ Feature Standards의 목적은 여러 언어에서 같은 기능 계약을 찾�
 
 ## 주 진입점: 기능과 스택 문맥
 
-주 npm 패키지 `feature-standards@0.1.0`은 게시와 새 registry 설치를 확인했다. 선별한 계약·manifest·스택 안내와 JSON CLI를 제공한다. 서버 런타임·소비 앱·실행 가능한 conformance 도구는 원본 checkout에 있으며, 이 문맥 패키지 설치만으로 각 언어의 런타임 라이브러리가 설치되지는 않는다. [게시·설치·15개 문맥·검색 확인 기록](npm-product-release-2026-11-03.json)을 함께 확인한다.
+주 npm 패키지 `feature-standards@0.2.0`은 게시와 새 registry 설치를 확인했다. 선별한 계약·스택 문맥과 명시적인 앱 생성·프로필 검사를 제공한다. 실제 생성·검증은 지정한 원본 checkout과 해당 언어 도구 체인을 사용한다. [게시·설치·15개 문맥·실제 워크플로·검색 기록](npm-workflow-release-2026-11-04.json)을 함께 확인한다.
 
 원본 checkout에서 실행할 수도 있다.
 
@@ -21,11 +21,11 @@ node packages/feature-standards/src/cli.mjs context \
 
 소스의 첫 실행 전 `build`는 배포할 문서 스냅샷을 만든다. JSON의 `packagedDocuments`에는 번들에 실제 포함한 문서의 `readPath`, 원본 경로·URL, 해시가 있다. `sourceCheckout`의 런타임 진입점은 별도 원본 checkout을 기준으로 하며, 설치·검증 명령에는 `executed: false`를 표시한다. `provenance`의 원본 커밋·dirty 상태와 각 문서의 해시를 함께 확인한다. `sourceModified: true` 문서는 커밋 URL에 없는 로컬 수정을 포함하므로 번들의 실제 `readPath`를 읽는다. 이 문서 경로를 서버 코드 경로로 사용하지 않는다.
 
-게시된 `feature-standards@0.1.0`의 npm 진입점은 다음과 같다.
+게시된 `feature-standards@0.2.0`의 npm 진입점은 다음과 같다.
 
 ```sh
-npx feature-standards@0.1.0 list
-npx feature-standards@0.1.0 context \
+npx feature-standards@0.2.0 list
+npx feature-standards@0.2.0 context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
@@ -49,12 +49,12 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack python --pr
 
 | 역할 | 배포 단위 | 원본과 안내 |
 |---|---|---|
-| 기능 탐색·선택 문맥 | 주 패키지 `feature-standards` `0.1.0` 게시 확인 | [패키지 안내](../packages/feature-standards/README.md) |
+| 기능 탐색·생성·검증 | 주 패키지 `feature-standards` `0.2.0` 게시 확인 | [패키지 안내](../packages/feature-standards/README.md) |
 | 인증 서버 라이브러리 | Python·Go·Java·Rust의 개별 패키지 | [서버 배포 상태](server-releases.md) |
 | 브라우저 인증 API 어댑터 | `@ugauga/feature-standards-react-auth` `0.1.4` 게시 확인 | [공개 API 안내](../clients/react/README.md), [게시 기록](npm-release.md) |
-| 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.1.1` 게시 확인 | [생성 도구 안내](create-feature-auth.md) |
+| 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.2.0` 게시 확인 | [생성 도구 안내](create-feature-auth.md) |
 
-생성기는 명시적인 source checkout을 연결해 얇은 소비 앱을 만든다. 게시된 생성기 `0.1.1`은 메모리 v1만 검사한다. 준비 중인 대표 CLI·생성기 `0.2.0`은 아래 명시적 명령에서 선택한 프로필을 검사한다. v2/v3에는 별도 `FEATURE_STANDARDS_TEST_DATABASE_URL`이 필요하며, 새 UUID 테스트 DB에서만 이관·fixture·검증을 실행하고 자신이 만든 DB를 정리한다. 원래 DB의 스키마와 데이터는 수정하지 않는다. v3는 가입·확인·재설정과 기존 세션 폐기를 검사하며 SMTP를 발송하지 않는다.
+생성기는 명시적인 source checkout을 연결해 얇은 소비 앱을 만든다. 이전 생성기 `0.1.1`은 메모리 v1만 검사한다. 게시된 대표 CLI·생성기 `0.2.0`은 아래 명시적 명령에서 선택한 프로필을 검사한다. v2/v3에는 별도 `FEATURE_STANDARDS_TEST_DATABASE_URL`이 필요하며, 새 UUID 테스트 DB에서만 이관·fixture·검증을 실행하고 자신이 만든 DB를 정리한다. 원래 DB의 스키마와 데이터는 수정하지 않는다. v3는 가입·확인·재설정과 기존 세션 폐기를 검사하며 SMTP를 발송하지 않는다.
 
 ```sh
 node packages/feature-standards/src/cli.mjs init \

@@ -4,8 +4,8 @@
 
 | 대상 | 버전 | 의미 |
 |---|---|---|
-| 대표 npm 패키지 | `0.1.0` 게시, `0.2.0` 준비 | `feature-standards`; 새 버전은 명시적 `init`/`check`를 추가하고 읽기 전용 조회를 유지 |
-| 생성기 npm 패키지 | `0.1.1` 게시, `0.2.0` 준비 | `@ugauga/create-feature-auth`; 새 생성 앱은 `checkProtocolVersion: 1`로 선택 프로필 검사 결과를 반환 |
+| 대표 npm 패키지 | `0.2.0` 게시 | `feature-standards`; 명시적 `init`/`check`와 읽기 전용 조회 |
+| 생성기 npm 패키지 | `0.2.0` 게시 | `@ugauga/create-feature-auth`; 새 생성 앱은 `checkProtocolVersion: 1`로 선택 프로필 검사 결과를 반환 |
 | React npm API 패키지 | `0.1.4` | `@ugauga/feature-standards-react-auth`, 작성자·검색 metadata 개선; [배포 기록](npm-release.md) |
 | v1 OpenAPI `info.version` | `0.1.0` | 기존 단일 사용자·메모리 계약 |
 | 기본 프로필 | `browser-session-v1` | `AUTH_STORE=memory` |
