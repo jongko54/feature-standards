@@ -5,11 +5,11 @@ Building, publishing, and installing from a public registry are separate verific
 | Stack | Package / version | Distribution | Registry prerequisite |
 |---|---|---|---|
 | Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | PyPI account and pending trusted publisher |
-| Go | `github.com/jongko54/feature-standards/implementations/go-net-http` 0.1.0 | nested-module Git tag | Remote tag and fresh remote install |
+| Go | `github.com/jongko54/feature-standards/implementations/go-net-http` 0.1.0 | nested-module Git tag | Published and independently installed; [receipt](go-release-0.1.0.json) |
 | Java | `io.github.jongko54:java-spring-auth:1.0.0` | executable JAR, `library` classifier, sources + Javadoc | Central namespace, signing key, user token |
 | Rust | `feature-standards-auth` 0.1.0 | standalone `.crate` | crates.io account and email verification |
 
-PyPI and crates.io returned project-not-found on 2026-11-03 before this batch's release work. Actual registry receipts are recorded separately in the validation report. No server registry credentials were present in the current local environment.
+PyPI and crates.io returned project-not-found on 2026-11-03 before this batch's release work. Actual registry receipts are recorded separately in the validation report. No server registry credentials were found in the checked environment variables or standard credential files.
 
 The Maven group changed from the unpublished `dev.featurestandards` coordinate to `io.github.jongko54`. Java packages and public APIs stay `dev.featurestandards.auth`; consumers must update the dependency group. The GitHub-owned namespace can be verified through a corresponding Central account; this repository does not claim account setup is complete.
 
@@ -66,3 +66,5 @@ go get github.com/jongko54/feature-standards/implementations/go-net-http/auth@v0
 ```
 
 Verify the remote tag and a fresh installation before marking the Go package published in the manifest. Never move an already published version tag.
+
+Go `v0.1.0` was published from `eff0d9d6905de5d8729eef07771a5838ee36b1b3` after full main CI succeeded. A new module installed it through normal `go get`, with no local replace, then passed both real loopback consumer lifecycle tests with the race detector. The receipt records module and go.mod checksums.

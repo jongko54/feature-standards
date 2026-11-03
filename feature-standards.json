@@ -151,7 +151,7 @@
       "package": {
         "kind": "go-module",
         "name": "github.com/jongko54/feature-standards/implementations/go-net-http/auth",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

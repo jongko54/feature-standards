@@ -1,0 +1,45 @@
+{
+  "source_commit": "eff0d9d6905de5d8729eef07771a5838ee36b1b3",
+  "build_workflows": [
+    {
+      "run_id": 41571499096,
+      "url": "https://github.com/jongko54/feature-standards/actions/runs/41571499096",
+      "conclusion": "success",
+      "publish_job": "skipped"
+    },
+    {
+      "run_id": 41571502313,
+      "url": "https://github.com/jongko54/feature-standards/actions/runs/41571502313",
+      "conclusion": "success",
+      "publish_job": "skipped"
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "ugauga-create-feature-auth-0.1.0.tgz",
+      "bytes": 25806,
+      "sha256": "578580a592b5a1109e9f0e506beb264cc52cd705cdf9c30a43bef5d96c02e9b4",
+      "integrity": "sha512-FOYyZeIsDETC3WZmBfNpeOT8QhVmkumbdPcc/OQBrsLN8QJa1zvXO8Q1qs6iNYkdrM90MjO2avKheBbiJuCUeg=="
+    },
+    {
+      "file": "ugauga-feature-standards-react-auth-0.1.1.tgz",
+      "bytes": 4518,
+      "sha256": "3dda1f68cbc87caa79c725ae0c5fb58e2eab71517f80bcd63cf15b0c99c036ab",
+      "integrity": "sha512-CjOUgHOxvX0GbQzUD2F61olGIhe2ISzvucXQ3d00qRtMk1RwTfthVaxqctPmYlbYNADIhlwu987i3svqJstoEg=="
+    },
+    {
+      "file": "feature_standards_python_auth-0.2.0-py3-none-any.whl",
+      "bytes": 14058,
+      "sha256": "230d62022cf469909a66138ac1a17d8cdd2a60cab5de484f54228e407d473df4",
+      "integrity": "sha512-IUvtO8Pa4yaE5VOMS7Jaqm+uU4+w5S7XAfSknVtNUZgGxUQnlsU7liykCySYE+fgFCSp5Zsh4aoNjQFSvF3mfw=="
+    },
+    {
+      "file": "feature_standards_python_auth-0.2.0.tar.gz",
+      "bytes": 10772,
+      "sha256": "ba03ec700bff340a0f44f796246167a05139a651c9ad16c1b3b3a1c7832925e2",
+      "integrity": "sha512-zlGnlz9Fm2ZnCnhZtsk/UtX8HXMLWzAf9sg2JXcY9+6xUN/ZzmW4wc0JrTgCtJ0Jv7zkvnWltcgpsdyFF1dlSg=="
+    }
+  ],
+  "cli_tarball_contents_match_reviewed_install": true,
+  "public_registry_publication_proven": false
+}

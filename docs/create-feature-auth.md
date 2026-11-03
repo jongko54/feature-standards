@@ -13,7 +13,7 @@ node packages/create-feature-auth/src/cli.mjs \
   --dest /physical/path/outside-the-checkout/new-auth-app \
   --check
 
-# With the published npm package:
+# After the first npm publication is verified in the release receipt:
 npx @ugauga/create-feature-auth \
   --source /absolute/path/to/feature-standards \
   --stack rust \

@@ -23,3 +23,12 @@
 - Git 커밋·푸시와 원격 CI, 레지스트리 게시 및 설치를 별도로 확인한다. 외부 인증/설정이 필요하면 검증한 산출물·정확한 다음 동작을 제시한 뒤 해당 단계만 사용자에게 요청한다.
 
 롤백은 이 작업의 소스 커밋을 되돌리는 방식이다. 기존 데이터 이관은 추가하지 않는다. 공개 레지스트리의 이미 게시된 버전은 덮어쓰거나 자동으로 unpublish하지 않는다.
+
+## 실행 결과
+
+- CLI 안전 검사7개·4개 생성 앱의 빌드/실제 HTTP와 npm tarball 설치를 확인했다. v2/v3 선택도 가능하며 CLI check 자체는 메모리 v1이다.
+- 독립 소비 matrix8개 DB 조합·Chromium28개를 로컬과 구현 CI에서 실행했다. 기존 v1 공통 HTTP76개·브라우저32개도 로컬 통과했다.
+- 반복 모델 평가24/24 통합에 성공했다. 효율은 혼합 결과이며 [전용 보고서](../../validation-ai-paired-2026-11-03.md)에 수치·한계·소스 고정 범위를 기록한다.
+- 구현 커밋eff0d9d 전체 main CI와 npm/Python artifact 전용 workflow가 성공했다. Go v0.1.0 태그·인증 없는 공개 proxy·새 모듈 설치·race HTTP검사를 확인했다. Python/Java/Rust 산출물은 로컬 검증했고 실제 레지스트리 게시와 구분했다.
+- GitHub 비공개 취약점 제보를 활성화하고 정책·기여 안내·역사적 계획 상태를 정리했다.
+- 남은 외부 작업: npm 본인인증 만료로 trusted publisher 연결·새 CLI npm 게시 미완료, PyPI pending publisher/Central namespace·서명·token/crates.io 계정 설정 필요. 장기 token이나 새 서명 키를 추가하지 않았다.

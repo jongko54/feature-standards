@@ -34,3 +34,7 @@ AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
 앱은 자동 DDL·seed·메모리 fallback을 하지 않는다. DB 준비와 프로필 선택은 [PostgreSQL 안내](../../docs/postgres-v2.md), [계정 안내](../../docs/account-v3.md)를 따른다. 소비 테스트 통과는 v2/v3 소비 앱 런타임이나 운영 DB·메일 발송을 검증했다는 뜻이 아니다. 해당 백엔드의 v2/v3 공통 검증은 저장소의 별도 harness가 맡는다.
 
 이 예제는 저장소 내 로컬 artifact를 사용한다. 원본 커밋은 `git rev-parse HEAD`로 기록하고, 업데이트 후 같은 테스트와 대상 앱의 검증을 실행한다. 레지스트리 게시나 운영 보안 감사 완료를 의미하지 않는다.
+
+## Database consumer validation
+
+The separate [consumer profile matrix](../consumer-python-react/PROFILE_TESTS.md) now builds and runs this application against PostgreSQL v2 and v3, using unique disposable databases and the shared consumer React UI. The four-backend matrix passed eight backend/profile combinations and 28 Chromium scenarios locally on 2026-11-03. This is additional runtime evidence; the unit tests described above still target memory v1. See the [validation record](../../docs/validation-reuse-2026-11-03.md).

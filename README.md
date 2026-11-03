@@ -120,7 +120,7 @@ Email messages are stored in the database outbox. The optional [SMTP worker](too
 
 AI agents and tools can select a stack and profile from `feature-standards.json`. For example, `uv run --frozen --project tools python tools/auth_catalog.py --stack go --profile browser-session-v1` returns the relevant specification, public APIs, example, and commands as JSON. It does not execute those commands. The `.agents/skills/integrate-auth` symlink makes the source skill discoverable by Codex.
 
-Actual model integration succeeded in **8/8 runs** across four backends and two context conditions. These results do not establish time or token savings. See the [execution record](docs/validation-ai-2026-11-03.md) and [AI integration guide](docs/ai-integration.md).
+The paired model evaluation passed **24/24 integrations** across four backends, two context conditions, and three repeats per condition. Efficiency results are mixed and do not establish a general speed or token improvement. See the [repeated evaluation](docs/validation-ai-paired-2026-11-03.md), [earlier smoke record](docs/validation-ai-2026-11-03.md), and [AI integration guide](docs/ai-integration.md).
 
 | Stack | Reusable interface | Separate consumer |
 |---|---|---|
@@ -219,3 +219,7 @@ State-changing requests require an exact Origin match. In v2, an unexpired store
 In-memory state is lost on restart. v2/v3 share sessions and login failures through the database. Behind a reverse proxy, the peer address is the proxy's address unless a trusted proxy policy is configured. Production integration requires review of database privileges, backups and capacity, proxy trust, HTTPS, secret management, observability, and outbox access, encryption, and retention. Role management and MFA are not included. SMTP DATA acceptance and database acknowledgment do not prove inbox delivery.
 
 These specifications are experimental repository conventions, not an accredited international standard. See the [original v1 validation record](docs/validation-2026-11-01.md), [contribution guide](CONTRIBUTING.md), [security scope](SECURITY.md), and [prior research](docs/research.md). Licensed under [MIT](LICENSE).
+
+## Release and validation status
+
+The [reuse validation record](docs/validation-reuse-2026-11-03.md) covers the four-language generator, independent PostgreSQL consumers, distribution artifacts, and [successful full implementation CI](https://github.com/jongko54/feature-standards/actions/runs/41571472426). Go v0.1.0 is [published and remotely installed](docs/go-release-0.1.0.json). The new CLI npm publication and trusted-publisher activation still require npm account authentication; Python, Java, and Rust registry setup is documented separately.

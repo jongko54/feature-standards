@@ -2,7 +2,7 @@
 
 목표는 같은 요청에 대해 에이전트가 지원 프로필을 고르고, 기존 패키지를 통합하고, 실행으로 결과를 확인하도록 만드는 것이다. 모델 가중치나 비공개 추론 알고리즘을 분석했다고 주장하지 않는다. 공통 동작의 표준화와 AI가 통합을 성공하는지는 별도 측정이다.
 
-2026-11-03 실제 Codex 통합은 네 백엔드×두 조건 **8/8 성공**, 각 HTTP 19개를 통과했다. 새 조건의 스킬·manifest 참조도 관측했지만 시간·토큰 절감은 입증하지 못했다. [실행 결과와 한계](validation-ai-2026-11-03.md)를 확인한다.
+첫 smoke 평가는 네 백엔드×두 조건 **8/8 성공**이었으며 [이전 결과](validation-ai-2026-11-03.md)를 보존한다. 이후 같은 고정 소스와 명시적 요청 모델로 조건별 3회 반복한 **24/24 통합**이 모두 통과했다. 시간·토큰 효율은 언어별 혼합 결과이며 일괄 개선을 입증하지 못했다. [반복 평가 결과와 한계](validation-ai-paired-2026-11-03.md)를 확인한다.
 
 ## 탐색과 선택
 
@@ -25,7 +25,7 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack rust --prof
 
 ## 재사용 검증
 
-[Go](../examples/consumer-go/README.md), [Java](../examples/consumer-java/README.md), [Rust](../examples/consumer-rust/README.md)는 인증 구현을 복사하지 않는 독립 프로젝트다. 메모리 v1에서 익명 요청·로그인·보호 API·CSRF 거절·로그아웃·이전 쿠키 거절을 실행한다. Python+React는 기존 PostgreSQL 소비 앱의 브라우저 검사를 유지한다. Go·Java·Rust 소비 앱의 PostgreSQL·실제 화면 통합까지 검증했다는 의미는 아니다.
+[Go](../examples/consumer-go/README.md), [Java](../examples/consumer-java/README.md), [Rust](../examples/consumer-rust/README.md)는 인증 구현을 복사하지 않는 독립 프로젝트다. 메모리 v1에서 익명 요청·로그인·보호 API·CSRF 거절·로그아웃·이전 쿠키 거절을 실행한다. 추가 [독립 소비 matrix](../examples/consumer-python-react/PROFILE_TESTS.md)는 네 언어의 v2/v3를 각각 별도 임시 DB에서 실행하며 세션 분리·서버 재시작·계정 흐름과 실제 소비 React 화면을 검사한다. 8개 backend/profile 조합과 Chromium 28개가 로컬 및 구현 커밋 CI에서 통과했다.
 
 참조 서버의 v1/v2/v3 API·브라우저와 언어 간 상태·경합 검증은 기존 공통 harness가 담당한다. React API의 npm 게시·설치 상태는 [배포 기록](npm-release.md)을 확인한다. 서버 패키지의 레지스트리 게시·보안 감사·운영 SMTP 수신 성공은 별도 범위다.
 
@@ -36,3 +36,7 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack rust --prof
 동일한 구현 코드에 이전 문맥 baseline과 새 스킬/manifest 문맥을 적용해 비교한다. 실행마다 새 디렉터리를 사용하고 모델 응답, 명령 수, 시간, 토큰, 종료 사유와 실제 HTTP 결과를 구분해서 기록한다. 한 번씩의 smoke 결과를 일반적인 성공률·통계적 개선으로 표현하지 않는다. 모델·도구 버전과 입력 차이를 함께 남겨야 비교할 수 있다. [공식 스킬 평가 방법](https://developers.openai.com/blog/eval-skills)
 
 CI에는 결정적 계약·도구·소비 검증만 넣는다. 실제 모델 평가는 설치된 CLI와 기존 인증을 사용하는 명시적 수동 실행이며 CI에 공급자 자격 증명을 추가하지 않는다. raw trace와 생성물은 로컬 `eval-results/` 또는 작업 전용 임시 경로에만 두고 요약만 공유한다.
+
+## 생성 도구와 배포 상태
+
+알려진 스택·v1 통합은 선택한 소비 예제와 공개 API 안내로 바로 이동한다. 명시적 checkout을 연결하는 [생성 CLI](create-feature-auth.md)도 제공한다. CLI HTTP check는 메모리 v1만 확인하며 DB 검증을 대신하지 않는다. Go v0.1.0은 공개 모듈 설치까지 확인했고, 나머지 서버 레지스트리와 새 CLI npm 게시·OIDC 활성화는 [배포 안내](server-releases.md)와 [검증 기록](validation-reuse-2026-11-03.md)을 따른다.

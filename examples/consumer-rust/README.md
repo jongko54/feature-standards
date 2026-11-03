@@ -59,3 +59,7 @@ cargo clippy --locked --manifest-path examples/consumer-rust/Cargo.toml --all-ta
 정상 로그아웃 204, 복사해 둔 이전 Cookie의 보호 API 401을 검증한다.
 실제 네트워크·PostgreSQL·React 브라우저 검증은 저장소 루트의 공통 하네스 범위이며
 이 라우터 테스트 통과를 해당 검증까지 통과한 것으로 표현하지 않는다.
+
+## Database consumer validation
+
+The separate [consumer profile matrix](../consumer-python-react/PROFILE_TESTS.md) now builds and runs this application against PostgreSQL v2 and v3, using unique disposable databases and the shared consumer React UI. The four-backend matrix passed eight backend/profile combinations and 28 Chromium scenarios locally on 2026-11-03. This is additional runtime evidence; the unit tests described above still target memory v1. See the [validation record](../../docs/validation-reuse-2026-11-03.md).

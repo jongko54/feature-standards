@@ -99,3 +99,13 @@ go test -race ./... -run TestPostgresAccount
 - [RFC 9106 권장 매개변수](https://www.rfc-editor.org/rfc/rfc9106.html#section-7.4)
 
 - [pgxpool 트랜잭션 API](https://pkg.go.dev/github.com/jackc/pgx/v5/pgxpool)
+
+## Published module
+
+The public `v0.1.0` nested-module release is available without a local replace directive:
+
+```sh
+go get github.com/jongko54/feature-standards/implementations/go-net-http/auth@v0.1.0
+```
+
+A fresh module passed both real HTTP consumer lifecycle tests with race detection. See the [release receipt](../../docs/go-release-0.1.0.json) and [source CI](https://github.com/jongko54/feature-standards/actions/runs/41571472426). The checked-in consumer continues using a local replace to verify current checkout changes.

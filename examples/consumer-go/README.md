@@ -32,3 +32,7 @@ AUTH_DEMO=true AUTH_COOKIE_SECURE=false \
 같은 앱 factory가 `AUTH_STORE=postgres`의 v2와 `AUTH_ACCOUNT_LIFECYCLE=true`의 v3를 그대로 전달한다. PostgreSQL은 [v2 안내](../../docs/postgres-v2.md)에 따라 별도 DB에 명시적으로 이관·seed한 뒤 `AUTH_DATABASE_URL`을 설정한다. 가입·이메일 확인·비밀번호 재설정은 [v3 안내](../../docs/account-v3.md)의 schema 2와 계정 설정을 사용한다. 앱은 자동 DDL·seed·메모리 fallback을 하지 않는다. 소비 예제의 기본 테스트가 PostgreSQL 또는 계정 생명주기 실행 검증을 대신하지 않으며, 해당 저장소의 공통 v2/v3 conformance로 따로 확인한다.
 
 `CurrentUser` 실패 시 handler는 즉시 반환해야 한다. 데이터베이스 실패는 503, 알 수 없는 내부 실패는 진단 문자열이 없는 500이며 identity를 반환하지 않는다. 이 helper는 인증만 수행한다. 소비 앱의 역할·자원 접근 권한과 상태 변경 API의 Origin·CSRF 정책은 그 앱의 책임이다. 예제는 보호된 읽기 전용 API만 추가하며 운영 배포나 보안 감사 완료를 뜻하지 않는다.
+
+## Database consumer validation
+
+The separate [consumer profile matrix](../consumer-python-react/PROFILE_TESTS.md) now builds and runs this application against PostgreSQL v2 and v3, using unique disposable databases and the shared consumer React UI. The four-backend matrix passed eight backend/profile combinations and 28 Chromium scenarios locally on 2026-11-03. This is additional runtime evidence; the unit tests described above still target memory v1. See the [validation record](../../docs/validation-reuse-2026-11-03.md).

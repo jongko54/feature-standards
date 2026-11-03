@@ -1,0 +1,18 @@
+{
+  "module": "github.com/jongko54/feature-standards/implementations/go-net-http",
+  "version": "v0.1.0",
+  "sum": "h1:aIf+v5+mOrJVy3pOOijKk3GkADM/vXAFvupGJQPeMgo=",
+  "go_mod_sum": "h1:OaQJeGpt3Sd27lCbVXDfv7wuJ25qCqF+wtRv4gJGdq4=",
+  "replace": false,
+  "tests": "two live loopback consumer lifecycle tests with race detector",
+  "passed": true,
+  "source_commit": "eff0d9d6905de5d8729eef07771a5838ee36b1b3",
+  "tag": "implementations/go-net-http/v0.1.0",
+  "source_ci": "https://github.com/jongko54/feature-standards/actions/runs/41571472426",
+  "public_proxy": {
+    "url": "https://proxy.golang.org/github.com/jongko54/feature-standards/implementations/go-net-http/@v/v0.1.0.info",
+    "version": "v0.1.0",
+    "commit": "eff0d9d6905de5d8729eef07771a5838ee36b1b3",
+    "verified": true
+  }
+}
