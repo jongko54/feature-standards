@@ -2,6 +2,8 @@
 
 A typed session authentication API client for React and browser TypeScript applications. Supports login, session restoration, logout, registration, email verification, and password reset.
 
+Part of [Feature Standards](https://github.com/jongko54/feature-standards) by [jongko54](https://github.com/jongko54).
+
 ## Installation
 
 ```sh

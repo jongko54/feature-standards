@@ -1,9 +1,11 @@
 {
   "name": "@ugauga/create-feature-auth",
   "version": "0.1.1",
-  "description": "Create thin authentication consumers from shared Feature Standards contracts",
+  "description": "Create thin authentication consumers from shared Feature Standards contracts by jongko54",
   "type": "module",
   "license": "MIT",
+  "author": {"name": "jongko54", "url": "https://github.com/jongko54"},
+  "keywords": ["authentication", "session", "csrf", "cli", "scaffolding", "python", "go", "java", "rust", "feature-standards", "jongko54"],
   "engines": {"node": ">=22.12.0"},
   "bin": {"create-feature-auth": "./src/cli.mjs"},
   "files": ["src", "templates", "README.md", "LICENSE"],

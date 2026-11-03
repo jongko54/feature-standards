@@ -80,3 +80,7 @@ The failed0.1.2 tag remains immutable. The corrected API candidate is0.1.3; CLI 
 Python `0.2.0` reached PyPI OIDC token exchange, which rejected the valid GitHub token with `invalid-publisher` (no matching publisher). Register the documented pending publisher, then rerun the failed publishing job from its existing source/tag rather than replacing that tag.
 
 The corrected API `0.1.3` [run](https://github.com/jongko54/feature-standards/actions/runs/41585652357) passed artifact dry-run and source CI but failed ENEEDAUTH after OIDC. npm's default log does not expose whether this was publisher matching, GitHub token issuance, or token exchange, so the connection is not reported as active. Public latest remains0.1.1. Inspect the package's configured publisher after a valid local npm login; no token is added to CI. [Final attempt receipt](registry-attempts-2026-11-03.json).
+
+## jongko54 discovery metadata
+
+The next API candidate is `0.1.4`, and CLI remains `0.1.1`. Both set author `jongko54` with the GitHub profile URL, include `jongko54` and `feature-standards` keywords and the author handle in the description, and bundle README authorship links. Actual tarball manifests and SDK/CLI package consumer checks passed. The [discovery guide](npm-discovery.md) records queries and the separate publication/index-verification boundary.

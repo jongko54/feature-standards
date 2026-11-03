@@ -2,6 +2,8 @@
 
 Create a thin Python, Go, Java, or Rust application that imports Feature Standards authentication and exposes a protected `GET /api/profile`. Authentication, sessions, CSRF protection, account flows, and database access remain in the shared library.
 
+Part of [Feature Standards](https://github.com/jongko54/feature-standards) by [jongko54](https://github.com/jongko54).
+
 Node.js 22.12 or newer is required. The CLI has no runtime npm dependencies. Generation itself needs no language compiler, database, or network connection. Building the generated app needs the selected language toolchain and can download dependencies.
 
 The npm command below requires the first registry release to be complete. Until it is recorded in the repository release receipt, run `node packages/create-feature-auth/src/cli.mjs` from a source checkout with the same arguments.
