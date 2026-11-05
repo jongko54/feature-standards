@@ -40,7 +40,7 @@ node packages/feature-standards/src/cli.mjs context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
-See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives while language-registry account setup remains pending. Search rank and future indexing are not guaranteed.
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives. Python is also published on PyPI and Go through its versioned module; Java and Rust registry publication remains pending. Search rank and future indexing are not guaranteed.
 
 ## How an AI integration works
 
@@ -70,6 +70,14 @@ v1 is the default. v2 and v3 require explicit database configuration and migrati
 | [Java / Spring](implementations/java-spring/README.md) | `AuthService.create`, `AuthFilter`; plain JAR with `library` classifier | [Java consumer](examples/consumer-java/README.md) |
 | [Rust / Axum](implementations/rust-axum/README.md) | `AuthService::from_config`, `current_user` | [Rust consumer](examples/consumer-rust/README.md) |
 | [React / TypeScript](clients/react/README.md) | `createAuthApi`, `AuthSession`; npm root and `/api` exports | [Python + React consumer](examples/consumer-python-react/README.md) |
+
+Install the Python library from [PyPI](https://pypi.org/project/feature-standards-python-auth/0.2.0/) with Python 3.12 or later:
+
+```sh
+python -m pip install feature-standards-python-auth==0.2.0
+```
+
+The [Python release receipt](docs/python-release-0.2.0.json) records matching CI/public artifact hashes, a fresh PyPI installation, and 19 passing common HTTP contract tests plus the public authentication dependency lifecycle. PostgreSQL, SMTP, and browser checks were not rerun for this registry publication.
 
 The main package exposes the feature context. The following npm packages are authentication components within Feature Standards:
 

@@ -102,7 +102,7 @@
       "package": {
         "kind": "wheel",
         "name": "feature-standards-python-auth",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

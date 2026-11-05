@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T03:24:28.963014+00:00",
+  "name": "feature-standards-python-auth",
+  "version": "0.2.0",
+  "author": "jongko54",
+  "requiresPython": ">=3.12",
+  "projectUrl": "https://pypi.org/project/feature-standards-python-auth/0.2.0/",
+  "registryMetadataUrl": "https://pypi.org/pypi/feature-standards-python-auth/0.2.0/json",
+  "sourceCommit": "64a47a9c06a54c87b6d03d1447223e79f35aec53",
+  "tag": "python-auth-v0.2.0",
+  "publishWorkflow": {
+    "runId": 41583797414,
+    "attempt": 3,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41583797414/attempts/3"
+  },
+  "artifacts": [
+    {
+      "filename": "feature_standards_python_auth-0.2.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/98/2c/9ad37cf6e64cd3c7fe63855d3aed0cdd67bb9a160ba4daba3833817ec038/feature_standards_python_auth-0.2.0-py3-none-any.whl",
+      "sha256": "230d62022cf469909a66138ac1a17d8cdd2a60cab5de484f54228e407d473df4",
+      "matchesCiArtifact": true,
+      "uploadTime": "2026-11-05T03:24:07.249612Z",
+      "size": 14058,
+      "packagetype": "bdist_wheel"
+    },
+    {
+      "filename": "feature_standards_python_auth-0.2.0.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/ff/5e/4dab31746b49318137a12d292269e345231712b2c462519428aaf6d68113/feature_standards_python_auth-0.2.0.tar.gz",
+      "sha256": "ba03ec700bff340a0f44f796246167a05139a651c9ad16c1b3b3a1c7832925e2",
+      "matchesCiArtifact": true,
+      "uploadTime": "2026-11-05T03:24:08.344369Z",
+      "size": 10772,
+      "packagetype": "sdist"
+    }
+  ],
+  "sourceCi": {
+    "runId": 41582509327,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41582509327"
+  },
+  "serverSourceUnchangedComparedWith": "08da07f059ef6393e223c1346f4b1dc8e9952c02",
+  "consumerVerification": {
+    "freshExternalVirtualenv": true,
+    "installedFrom": "https://pypi.org/simple",
+    "requirement": "feature-standards-python-auth==0.2.0",
+    "packageLoadedFromVirtualenv": true,
+    "localPathOrDirectUrlDependency": false,
+    "publicApiImports": true,
+    "currentUserDependencyHttpLifecycle": true,
+    "csrfRejectionPreservesSession": true,
+    "logoutRevokesCopiedCookie": true,
+    "commonHttpConformance": {
+      "profile": "browser-session-v1",
+      "tests": 19,
+      "passed": true
+    },
+    "browserExecuted": false,
+    "postgresExecuted": false,
+    "smtpExecuted": false
+  },
+  "consumerEnvironment": {
+    "python": "3.13.13",
+    "dependencies": [
+      {
+        "name": "annotated-doc",
+        "version": "0.0.5"
+      },
+      {
+        "name": "annotated-types",
+        "version": "0.8.0"
+      },
+      {
+        "name": "anyio",
+        "version": "4.16.0"
+      },
+      {
+        "name": "argon2-cffi",
+        "version": "25.1.0"
+      },
+      {
+        "name": "argon2-cffi-bindings",
+        "version": "26.1.0"
+      },
+      {
+        "name": "cffi",
+        "version": "2.1.1"
+      },
+      {
+        "name": "click",
+        "version": "8.5.0"
+      },
+      {
+        "name": "fastapi",
+        "version": "0.162.0"
+      },
+      {
+        "name": "feature-standards-python-auth",
+        "version": "0.2.0"
+      },
+      {
+        "name": "h11",
+        "version": "0.16.0"
+      },
+      {
+        "name": "idna",
+        "version": "3.20"
+      },
+      {
+        "name": "opentelemetry-api",
+        "version": "1.45.2"
+      },
+      {
+        "name": "psycopg",
+        "version": "3.3.8"
+      },
+      {
+        "name": "psycopg-binary",
+        "version": "3.3.8"
+      },
+      {
+        "name": "pycparser",
+        "version": "3.12"
+      },
+      {
+        "name": "pydantic",
+        "version": "2.14.2"
+      },
+      {
+        "name": "pydantic_core",
+        "version": "2.50.2"
+      },
+      {
+        "name": "starlette",
+        "version": "1.10.0"
+      },
+      {
+        "name": "typing-inspection",
+        "version": "0.4.5"
+      },
+      {
+        "name": "typing_extensions",
+        "version": "4.16.0"
+      },
+      {
+        "name": "uvicorn",
+        "version": "0.54.0"
+      }
+    ]
+  },
+  "verificationCommands": [
+    "gh run rerun 41583797414 --repo jongko54/feature-standards --job 126433465380",
+    "gh run download 41583797414 --repo jongko54/feature-standards --name python-auth --dir CI_ARTIFACT_DIRECTORY",
+    "uv --no-config --no-cache venv --python 3.13 FRESH_VENV",
+    "uv --no-config --no-cache pip install --python FRESH_VENV/bin/python --default-index https://pypi.org/simple feature-standards-python-auth==0.2.0",
+    "FRESH_VENV/bin/python -I PROBE_SCRIPT PRIVATE_EVIDENCE_DIRECTORY"
+  ],
+  "verificationMethod": "The temporary probe loaded public APIs from the fresh virtual environment, started only its own loopback Uvicorn server with proxy headers disabled and explicit v1 demo/TTL/rate-limit settings, verified the dependency lifecycle, and ran the existing tests/conformance.py AuthContract suite. Its server was stopped after testing. Package resolution used no uv configuration, download cache, local source, or inherited publisher settings. No production service or database was used."
+}

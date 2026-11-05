@@ -2,25 +2,25 @@
 
 Building, publishing, and installing from a public registry are separate verification steps. A local distribution check does not imply a public release.
 
-| Stack | Package / version | Distribution | Registry prerequisite |
+| Stack | Package / version | Distribution | Registry status / prerequisite |
 |---|---|---|---|
-| Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | PyPI account and pending trusted publisher |
+| Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | Published on PyPI and independently installed; [receipt](python-release-0.2.0.json) |
 | Go | `github.com/jongko54/feature-standards/implementations/go-net-http` 0.1.0 | nested-module Git tag | Published and independently installed; [receipt](go-release-0.1.0.json) |
 | Java | `io.github.jongko54:java-spring-auth:1.0.0` | executable JAR, `library` classifier, sources + Javadoc | Central namespace, signing key, user token |
 | Rust | `feature-standards-auth` 0.1.0 | standalone `.crate` | crates.io account and email verification |
 
-PyPI and crates.io returned project-not-found on 2026-11-03 before this batch's release work. Actual registry receipts are recorded separately in the validation report. No server registry credentials were found in the checked environment variables or standard credential files.
+The initial 2026-11-03 PyPI and crates.io project-not-found observations remain in the dated validation report. Python 0.2.0 was subsequently published on PyPI on 2026-11-05 through the configured GitHub OIDC publisher. Both public archives matched the original CI artifacts byte for byte. A fresh external virtual environment installed the named version from the public PyPI index, passed all 19 common v1 HTTP tests, and verified the public `current_user` dependency, CSRF rejection, and server-side revocation of a copied logout cookie. See the [Python release receipt](python-release-0.2.0.json). This publication check did not rerun browser, PostgreSQL, or SMTP tests.
 
 The Maven group changed from the unpublished `dev.featurestandards` coordinate to `io.github.jongko54`. Java packages and public APIs stay `dev.featurestandards.auth`; consumers must update the dependency group. The GitHub-owned namespace can be verified through a corresponding Central account; this repository does not claim account setup is complete.
 
 ## Build and verify
 
-The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets are an alternative distribution path while language-registry account setup is pending; they do not establish publication on PyPI, Maven Central, or crates.io.
+The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets remain an alternative distribution path. Java and Rust registry publication is pending; Python's later PyPI publication has its own receipt above.
 
-After the release assets and checksums are verified, Python can install the wheel URL directly:
+Install Python from the public registry with Python 3.12 or later:
 
 ```sh
-python -m pip install 'https://github.com/jongko54/feature-standards/releases/download/feature-standards-v0.2.0/feature_standards_python_auth-0.2.0-py3-none-any.whl'
+python -m pip install feature-standards-python-auth==0.2.0
 ```
 
 For Java, download `java-spring-auth-1.0.0-library.jar` and `java-spring-auth-1.0.0.pom` from that release, then install the plain library with its dependency metadata:
@@ -65,7 +65,7 @@ Python is installed into a fresh virtual environment and checked through its pub
 
 `.github/workflows/publish-python.yml` builds and checks wheel/sdist artifacts. A manual dispatch only builds; a `python-auth-v0.2.0` tag additionally publishes after tag/version and full source CI checks.
 
-Configure the first release's PyPI pending trusted publisher with project `feature-standards-python-auth`, owner `jongko54`, repository `feature-standards`, workflow `publish-python.yml`, and environment `pypi`. Account verification and this trust relationship are required before tagging. No PyPI API token is stored here. See [PyPA's publishing guide](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/).
+The first release used project `feature-standards-python-auth`, owner `jongko54`, repository `feature-standards`, workflow `publish-python.yml`, and environment `pypi`. The existing `python-auth-v0.2.0` run's third attempt published the previously built wheel and sdist after this trust relationship was configured; the immutable tag and server source were unchanged. Future releases must preserve the matching publisher configuration and pass tag/version and full source CI checks. No PyPI API token is stored here. See [PyPA's publishing guide](https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/).
 
 ## Java / Maven Central
 
