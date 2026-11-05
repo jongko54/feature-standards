@@ -197,7 +197,7 @@
       "package": {
         "kind": "maven-library-classifier",
         "name": "io.github.jongko54:java-spring-auth:jar:library:1.0.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

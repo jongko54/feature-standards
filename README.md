@@ -40,7 +40,7 @@ node packages/feature-standards/src/cli.mjs context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
-See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives. Python is also published on PyPI and Go through its versioned module; Java and Rust registry publication remains pending. Search rank and future indexing are not guaranteed.
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives. Python is also published on PyPI, Java on Maven Central, and Go through its versioned module; Rust registry publication remains pending. Search rank and future indexing are not guaranteed.
 
 ## How an AI integration works
 
@@ -78,6 +78,19 @@ python -m pip install feature-standards-python-auth==0.2.0
 ```
 
 The [Python release receipt](docs/python-release-0.2.0.json) records matching CI/public artifact hashes, a fresh PyPI installation, and 19 passing common HTTP contract tests plus the public authentication dependency lifecycle. PostgreSQL, SMTP, and browser checks were not rerun for this registry publication.
+
+Java consumers can resolve the plain library directly from Maven Central:
+
+```xml
+<dependency>
+  <groupId>io.github.jongko54</groupId>
+  <artifactId>java-spring-auth</artifactId>
+  <version>1.0.0</version>
+  <classifier>library</classifier>
+</dependency>
+```
+
+The [Java release receipt](docs/java-release-1.0.0.json) records the published signed artifacts, an initially empty private Maven repository, and four passing consumer tests including real loopback login/logout, CSRF rejection, and safe storage-error behavior.
 
 The main package exposes the feature context. The following npm packages are authentication components within Feature Standards:
 

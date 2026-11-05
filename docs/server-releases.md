@@ -6,16 +6,16 @@ Building, publishing, and installing from a public registry are separate verific
 |---|---|---|---|
 | Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | Published on PyPI and independently installed; [receipt](python-release-0.2.0.json) |
 | Go | `github.com/jongko54/feature-standards/implementations/go-net-http` 0.1.0 | nested-module Git tag | Published and independently installed; [receipt](go-release-0.1.0.json) |
-| Java | `io.github.jongko54:java-spring-auth:1.0.0` | executable JAR, `library` classifier, sources + Javadoc | Central namespace, signing key, user token |
+| Java | `io.github.jongko54:java-spring-auth:1.0.0` | executable JAR, `library` classifier, sources + Javadoc | Published on Maven Central and independently installed; [receipt](java-release-1.0.0.json) |
 | Rust | `feature-standards-auth` 0.1.0 | standalone `.crate` | crates.io account and email verification |
 
 The initial 2026-11-03 PyPI and crates.io project-not-found observations remain in the dated validation report. Python 0.2.0 was subsequently published on PyPI on 2026-11-05 through the configured GitHub OIDC publisher. Both public archives matched the original CI artifacts byte for byte. A fresh external virtual environment installed the named version from the public PyPI index, passed all 19 common v1 HTTP tests, and verified the public `current_user` dependency, CSRF rejection, and server-side revocation of a copied logout cookie. See the [Python release receipt](python-release-0.2.0.json). This publication check did not rerun browser, PostgreSQL, or SMTP tests.
 
-The Maven group changed from the unpublished `dev.featurestandards` coordinate to `io.github.jongko54`. Java packages and public APIs stay `dev.featurestandards.auth`; consumers must update the dependency group. The GitHub-owned namespace can be verified through a corresponding Central account; this repository does not claim account setup is complete.
+The Maven group changed from the unpublished `dev.featurestandards` coordinate to `io.github.jongko54`. Java packages and public APIs stay `dev.featurestandards.auth`; consumers must update the dependency group. Namespace ownership was verified on 2026-11-05. Java 1.0.0 subsequently reached `PUBLISHED` in Central Portal. All 30 public files matched the signed upload, and a separate consumer with blank Maven settings and an initially empty private repository passed all four HTTP/library tests. See the [Java release receipt](java-release-1.0.0.json).
 
 ## Build and verify
 
-The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets remain an alternative distribution path. Java and Rust registry publication is pending; Python's later PyPI publication has its own receipt above.
+The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets remain an alternative distribution path. Rust registry publication is pending; Python and Java now have separate public-registry receipts above.
 
 Install Python from the public registry with Python 3.12 or later:
 
@@ -23,17 +23,20 @@ Install Python from the public registry with Python 3.12 or later:
 python -m pip install feature-standards-python-auth==0.2.0
 ```
 
-For Java, download `java-spring-auth-1.0.0-library.jar` and `java-spring-auth-1.0.0.pom` from that release, then install the plain library with its dependency metadata:
+For Java, select the published library dependency:
 
-```sh
-mvn install:install-file \
-  -Dfile=java-spring-auth-1.0.0-library.jar \
-  -DpomFile=java-spring-auth-1.0.0.pom -Dclassifier=library
+```xml
+<dependency>
+  <groupId>io.github.jongko54</groupId>
+  <artifactId>java-spring-auth</artifactId>
+  <version>1.0.0</version>
+  <classifier>library</classifier>
+</dependency>
 ```
 
 Consumers select `io.github.jongko54:java-spring-auth:1.0.0` with classifier `library`. The POM is required for transitive dependencies; the executable application JAR is not the library artifact. Rust consumers can extract the release's `feature-standards-auth-0.1.0.crate` into their own vendor directory and use the unpacked library as a Cargo path dependency. The [independent distribution checker](validation-server-distributions-2026-11-04.md) verifies that unpacked-crate consumption outside the original checkout. Keep the recorded version/checksum when vendoring; this is separate from crates.io version resolution.
 
-The installation parameters follow [Apache Maven's install-file reference](https://maven.apache.org/plugins/maven-install-plugin/install-file-mojo.html); unpacked Rust consumption follows [Cargo path dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-path-dependencies).
+The Java dependency follows [Apache Maven's dependency reference](https://maven.apache.org/pom.html#dependencies); unpacked Rust consumption follows [Cargo path dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-path-dependencies).
 
 From the repository root:
 
@@ -71,7 +74,7 @@ The first release used project `feature-standards-python-auth`, owner `jongko54`
 
 The [signed-bundle checker](maven-release.md) verifies a local fixture with a temporary test key and upload disabled. Its success is separate from account/namespace verification or Central acceptance.
 
-The `central-release` profile adds signing and Central Publishing; normal builds do not sign or upload. Verify the `io.github.jongko54` namespace, configure a `central` server in a private Maven settings file with a Central user token, and configure a GPG key in the local keyring. Keep credentials and keys outside the repository.
+The `central-release` profile adds signing and Central Publishing; normal builds do not sign or upload. Version 1.0.0 was signed with the maintainer's production key and published through the logged-in Portal after validation. For future CLI releases, use the owning Central account, configure a `central` server in a private Maven settings file with a Central user token, and select the production GPG key. A signed bundle can alternatively be created with `-DskipUpload=true` and uploaded through the Portal. Keep credentials and private keys outside the repository, and select an unpublished version before deploying.
 
 ```sh
 implementations/java-spring/mvnw -f implementations/java-spring/pom.xml \

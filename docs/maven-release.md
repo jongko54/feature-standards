@@ -1,6 +1,12 @@
-# Maven Central release preparation
+# Maven Central releases
 
-The Java package is `io.github.jongko54:java-spring-auth:1.0.0`. Its reusable JAR has classifier `library`; the main artifact remains the executable reference server. Sources, Javadoc, the POM, and MIT license metadata are included. No Central publication is established by a local build.
+The Java package is `io.github.jongko54:java-spring-auth:1.0.0`. Its reusable JAR has classifier `library`; the main artifact remains the executable reference server. Sources, Javadoc, the POM, and MIT license metadata are included. Version 1.0.0 was published on Maven Central on 2026-11-05. The [release receipt](java-release-1.0.0.json) records all 30 matching public files and a separate registry consumer's four passing HTTP/library tests.
+
+## Verified namespace and signing identity
+
+Namespace `io.github.jongko54` was verified in Central Portal on 2026-11-05 using the maintainer's GitHub account ownership. The production signing identity is `jongko54 <jongko54@gmail.com>`, with fingerprint `892B5FC971080E67186FF29DD8E42CD147DAB7C7`. The [public key](keys/jongko54-maven.asc) was independently retrieved from `keyserver.ubuntu.com`. Its initial validity is two years; it is separate from the short-lived fixture key described below. Private key material and its passphrase remain on the maintainer's machine.
+
+A signed bundle can also be uploaded through the logged-in Central Portal without configuring a Maven API token. Central's `VALIDATED`, `PUBLISHING`, and `PUBLISHED` states are separate from fresh public repository downloads and consumer verification. See the [official bundle upload guide](https://central.sonatype.org/publish/publish-portal-upload/).
 
 ## Check the signed bundle without uploading
 
@@ -26,12 +32,12 @@ The JSON result explicitly reports `test_key_only=true` and `published=false`. T
 
 ## Complete the real publisher setup
 
-1. Sign in to [Central Portal](https://central.sonatype.com/) with the intended GitHub account and verify access to namespace `io.github.jongko54`. GitHub-based namespace provisioning can simplify proof of ownership, but the local checker neither creates nor verifies that account. Follow the [namespace instructions](https://central.sonatype.org/register/namespace/).
-2. Create a Central user token privately. Configure server ID `central` in a private Maven settings file using that token's username/password. Do not put those values in the repository, command line, issue, or CI log.
+1. Sign in to [Central Portal](https://central.sonatype.com/) with the account that owns namespace `io.github.jongko54`, using the same sign-in method as the namespace verification. GitHub-based namespace provisioning can simplify proof of ownership, but the local checker neither creates nor verifies that account. Follow the [namespace instructions](https://central.sonatype.org/register/namespace/).
+2. For Maven CLI uploads, create a Central user token privately. Configure server ID `central` in a private Maven settings file using that token's username/password. Do not put those values in the repository, command line, issue, or CI log. A signed bundle uploaded through the logged-in Portal does not require this local token configuration.
 3. Select an existing approved production GPG signing key, or provision one separately under the maintainer's control. Make its public key discoverable according to [Central's signing requirements](https://central.sonatype.org/publish/requirements/gpg/). Keep the private key and passphrase outside the repository. The synthetic fixture key cannot replace this step.
-4. Review the release commit, require successful full source CI, and ensure version `1.0.0` is available. Central versions are immutable. The local bundle check does not reserve a coordinate, authenticate an account, or prove Portal acceptance.
+4. Review the release commit, require successful full source CI, and select an unpublished version. Version `1.0.0` already exists and cannot be overwritten. The local bundle check does not reserve a coordinate, authenticate an account, or prove Portal acceptance.
 
-With that setup complete, this command performs the actual permanent upload and publication:
+After updating to an unpublished version and verifying its full source CI, this command performs the actual permanent upload and publication:
 
 ```sh
 implementations/java-spring/mvnw \

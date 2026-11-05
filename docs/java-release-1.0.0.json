@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T04:52:58.368733+00:00",
+  "groupId": "io.github.jongko54",
+  "artifactId": "java-spring-auth",
+  "version": "1.0.0",
+  "libraryClassifier": "library",
+  "projectUrl": "https://central.sonatype.com/artifact/io.github.jongko54/java-spring-auth/1.0.0",
+  "repositoryUrl": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/",
+  "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+  "tag": "java-auth-v1.0.0",
+  "sourceCi": {
+    "runId": 41667686875,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41667686875"
+  },
+  "portal": {
+    "deploymentId": "d7a0d33d-4363-45da-b207-9b29f75fdc10",
+    "namespace": "io.github.jongko54",
+    "namespaceVerified": true,
+    "validation": "VALIDATED",
+    "status": "PUBLISHED",
+    "published": true,
+    "observedPublishedAt": "2026-11-05T04:48:34Z"
+  },
+  "signing": {
+    "identity": "jongko54 <jongko54@gmail.com>",
+    "fingerprint": "892B5FC971080E67186FF29DD8E42CD147DAB7C7",
+    "algorithm": "ed25519",
+    "initialValidity": "2y",
+    "testKeyUsed": false,
+    "publicKeyFile": "docs/keys/jongko54-maven.asc",
+    "publicKeyServer": "https://keyserver.ubuntu.com",
+    "independentPublicKeyRetrieval": true
+  },
+  "signedBundleVerification": {
+    "coordinates": "io.github.jongko54:java-spring-auth:1.0.0",
+    "bundle_files": 30,
+    "verified_signatures": 5,
+    "verified_checksums": 20,
+    "bundle_sha256": "f1d4730c5914b7600f9bbc18939540e50f3b2ea995cfe8342afbd1bc02c1204f",
+    "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+    "sourceCiRunId": 41667686875,
+    "signingFingerprint": "892B5FC971080E67186FF29DD8E42CD147DAB7C7",
+    "testKeyUsed": false,
+    "sourcePomUnchanged": true,
+    "publishedPomMatchesOriginal": true,
+    "libraryJarMatchesCiArtifact": true,
+    "mavenTests": {
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 17
+    },
+    "artifacts": 5
+  },
+  "publicRegistryVerification": {
+    "observedAt": "2026-11-05T04:48:07.455761+00:00",
+    "repository": "https://repo.maven.apache.org/maven2",
+    "anonymousPublicDownloads": true,
+    "allArtifactsMatchSignedBundle": true,
+    "artifactFiles": {
+      "java-spring-auth-1.0.0-sources.jar": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar",
+        "sha256": "2f55d924dc1621ff062128fda5b1ccf2ae3741a6324149c63baf3e7a97486997",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar.sha256": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar.sha256",
+        "sha256": "6e7b50bb73acaad622f5528eca1a2149f9799a5b38eb47f9c4762e885cbb3c6b",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar.asc": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar.asc",
+        "sha256": "599c8ef334eb5456929998ed389f8540c0b7087b0c8b6c9ebb5a1743533e0424",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar",
+        "sha256": "9351219ded05afe0ec4a066af01845c88852b93eb7fa3ab4db5abc5e76e65f83",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-sources.jar.md5": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar.md5",
+        "sha256": "da16f84a6df3b9684bdacfe1f8909e7264d96699a455c90f5428dceb3b7008c4",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar.sha256": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar.sha256",
+        "sha256": "2a65b7d2b3327cc81b1f23d82c491142a65d5e313269e261fdc09b09005deb48",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom",
+        "sha256": "951d886c8ff3dc3d595adf64efc8ee29f0740c42bdd636471de8a87136a80fd2",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-sources.jar.sha256": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar.sha256",
+        "sha256": "83d22cde406dd0866082081c3aa8a24a4fa83d7ed0c3ed34b4c92e51298323f5",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar.sha1": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar.sha1",
+        "sha256": "bf60c9e4764f6c40a3bda53024978593617362f171d940ed5a966879fee46f8b",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-sources.jar.sha512": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar.sha512",
+        "sha256": "1ee94fe78a6e75244a5b298ee18c1138d530bef1d5e12016c2313d3c276732c1",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom.sha1": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom.sha1",
+        "sha256": "2ffadfb16559a38c6ed4ca6098b24612134f4f9b105d7c84ed5732d30b021d3b",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom.sha256": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom.sha256",
+        "sha256": "7fb3993f2f3cd30a96d098a95ee5f1c92cc48ebc83c57bf520e771a16bceb2af",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar",
+        "sha256": "6c0e37132a8efabe69d8fb6ea0c8133e10c02a40eceabb11d679c26fb465ad18",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar.sha512": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar.sha512",
+        "sha256": "fec85244b4ff97d4e49cdd8c1041aeece5921f7a5c5bdf970e3713225da79f81",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom.sha512": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom.sha512",
+        "sha256": "b640882c2d24db3887a66d2aa875b6c366db1c03a703a0c9f7ebbb1b435dfb97",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar",
+        "sha256": "323597957adcd6d70af7a551fafcea5d798aef5bf31074a117dd0c1873e06391",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-sources.jar.sha1": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar.sha1",
+        "sha256": "cdddb3081e1d05ec9d098c8f39accac9039aa0d3e2dee72b695e2ef769495b34",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar.sha1": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar.sha1",
+        "sha256": "03cac5909996afd7421e59f76de5d920581d897eee9b103e447d106b9febf98c",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar.asc": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar.asc",
+        "sha256": "710db3e86e08e4c54596cdf75d34c93212a6abd53e75d00fd780f93975d47579",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar.md5": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar.md5",
+        "sha256": "46157036ba425f1541ffab2dadbab7f633e71f836b1abdd0e8472a798d1aa9ab",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom.md5": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom.md5",
+        "sha256": "eee1bf2cd2749e0af5bca3a70ecb31492e1e24d636bb6bd6a8b5dfd228bd4578",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar.sha512": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar.sha512",
+        "sha256": "dad01088f141776fae22a1e47a3903fc637c9f41eb15d00824104cf87f4bef12",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar.sha256": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar.sha256",
+        "sha256": "b9372ab5990c254ada0264aa9b8a28727cdeb4817dd0fd7518194126597fcfa2",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.jar.asc": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.jar.asc",
+        "sha256": "89a318d0038ffc08fc88e6a17f96d41ec4508b17d8bcdd36cfc4df5aed9986ae",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-library.jar.md5": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-library.jar.md5",
+        "sha256": "12cb05d132b10e583d7fddea7df41d9e1ee8fdafc8d982589ff063a5fed915c8",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar.sha1": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar.sha1",
+        "sha256": "ce7d0992d4d22218f1b1f8e041751231892c1300c434c85fbc492f2410241010",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar.md5": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar.md5",
+        "sha256": "749fb18ffd03f0eb0e9264b00bdaffea63f6cba7101ddd8475b02102b676ace9",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-javadoc.jar.sha512": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-javadoc.jar.sha512",
+        "sha256": "575b3934c5994e06a01fddf3de24b2feefeb87a6202361138e826d8947cf1737",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0-sources.jar.asc": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0-sources.jar.asc",
+        "sha256": "7e3b3fc88fae48d105ba2393cf7502d0bd5167bff3a272f20aadf23a21f48a7c",
+        "matchesSignedBundle": true
+      },
+      "java-spring-auth-1.0.0.pom.asc": {
+        "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom.asc",
+        "sha256": "43dedf59892722872eadbfb3855dd8029e0e90370dfd7e79301d6342b4595ed3",
+        "matchesSignedBundle": true
+      }
+    }
+  },
+  "consumerVerification": {
+    "freshExternalProject": true,
+    "initiallyEmptyPrivateMavenRepository": true,
+    "blankUserAndGlobalMavenSettings": true,
+    "authenticatedRegistryAccess": false,
+    "localLibraryInstall": false,
+    "serverSourceReferenced": false,
+    "dependency": "io.github.jongko54:java-spring-auth:1.0.0:jar:library",
+    "dependencyResolvedFrom": "central",
+    "resolverRepositoryId": "central-8fac3ebd6edbaca3c794783fa38088af0aa128e7",
+    "installedPomAndLibraryMatchPublicRegistry": true,
+    "consumerTests": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "actualLoopbackHttpLifecycle": true,
+    "csrfRejectionPreservesSession": true,
+    "logoutRevokesCopiedCookie": true,
+    "storageUnavailableFailsClosed": true,
+    "browserExecuted": false,
+    "postgresExecuted": false,
+    "smtpExecuted": false
+  },
+  "publicationMethod": "Signed the original immutable-source POM and attached artifacts with the maintainer production key, created a bundle with skipUpload=true, then uploaded and published through the authenticated Central Portal. No Central API token was stored. Blank Maven settings and private Maven repositories were used for both producer and consumer.",
+  "scope": [
+    "Published POM matches the reviewed original POM; reusable library JAR matches exact-source CI.",
+    "All five detached signatures and twenty checksums were verified with a fresh public-only keyring retrieved from the supported key server.",
+    "The four consumer tests run real loopback HTTP; browser, PostgreSQL, and SMTP checks were not rerun for this registry release.",
+    "The public receipt contains no private key, passphrase, registry token, or runtime mail payload."
+  ]
+}
