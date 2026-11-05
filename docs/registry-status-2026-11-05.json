@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T13:57:22.912955+00:00",
+  "targets": [
+    {
+      "registry": "npm",
+      "name": "feature-standards",
+      "version": "0.2.0",
+      "url": "https://registry.npmjs.org/feature-standards/0.2.0",
+      "httpStatus": 200,
+      "published": true,
+      "integrity": "sha512-+iB4FULXyJqSX52F0hZr2YMIik9vJcqYuu7HdZpyULGbUA1x3Dn3XC5LPJY7m+dsSVHbrQplpf0SjUe4Pj37qw=="
+    },
+    {
+      "registry": "npm",
+      "name": "@ugauga/create-feature-auth",
+      "version": "0.2.0",
+      "url": "https://registry.npmjs.org/%40ugauga%2Fcreate-feature-auth/0.2.0",
+      "httpStatus": 200,
+      "published": true,
+      "integrity": "sha512-oqvv3KlRNWVkDOF44KCVidiKyJzebBpR8Rd2/SXXEa/B1zp7Jyfw0HtTHAn/WG7MAtQCqeZxDH476OePxn7SBA=="
+    },
+    {
+      "registry": "npm",
+      "name": "@ugauga/feature-standards-react-auth",
+      "version": "0.1.4",
+      "url": "https://registry.npmjs.org/%40ugauga%2Ffeature-standards-react-auth/0.1.4",
+      "httpStatus": 200,
+      "published": true,
+      "integrity": "sha512-o7VYurtRJciJWQryBjlqnkHFu+jEAQDAueYE++4nwCdyHsgH0vSxSr8BBxyoMi959hjC3FsSWOF8vaJcvF+YJw=="
+    },
+    {
+      "registry": "pypi",
+      "name": "feature-standards-python-auth",
+      "version": "0.2.0",
+      "url": "https://pypi.org/pypi/feature-standards-python-auth/0.2.0/json",
+      "httpStatus": 200,
+      "published": true
+    },
+    {
+      "registry": "maven",
+      "name": "io.github.jongko54:java-spring-auth",
+      "version": "1.0.0",
+      "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom",
+      "httpStatus": 200,
+      "published": true
+    },
+    {
+      "registry": "cargo",
+      "name": "feature-standards-auth",
+      "version": "0.1.0",
+      "url": "https://crates.io/api/v1/crates/feature-standards-auth/0.1.0",
+      "httpStatus": 200,
+      "published": true,
+      "checksum": "75413f01e585b1d3a7965898c0365a4dcd52a1f2ec84d773b2313f4ee11cb03d"
+    },
+    {
+      "registry": "go",
+      "name": "github.com/jongko54/feature-standards/implementations/go-net-http",
+      "version": "v0.1.0",
+      "url": "https://proxy.golang.org/github.com/jongko54/feature-standards/implementations/go-net-http/@v/v0.1.0.info",
+      "httpStatus": 200,
+      "published": true
+    }
+  ],
+  "scope": "Public availability and selected metadata checks only. Fresh installation and runtime evidence is recorded in the individual version release receipts; the full source suite was not rerun by this lookup."
+}

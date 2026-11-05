@@ -112,7 +112,14 @@ HTTP 어댑터는 SQL을 알지 않고 `LoginSession`/`AuthError`를 공통 응�
 상태 변경 제품 API의 Origin·CSRF·권한 검사는 별도로 필요하다.
 독립 Cargo path dependency와 보호 API의 실제 통합 예제는
 [`examples/consumer-rust`](../../examples/consumer-rust/README.md)를 참고한다.
-배포 메타데이터와 독립 `.crate` 패키지를 제공한다. crates.io 실제 게시 여부와 계정 설정은 [서버 배포 안내](../../docs/server-releases.md)를 확인한다. 로컬 path dependency 성공을 registry 게시로 간주하지 않는다.
+crates.io에 게시한 `feature-standards-auth` 0.1.0은 다른 프로젝트에서 다음처럼 사용할 수 있다.
+
+```toml
+[dependencies]
+feature-standards-auth = "0.1.0"
+```
+
+새 Cargo 저장소에서 설치한 소비 프로젝트의 라우터 테스트 1개와 실제 loopback 서버의 공통 HTTP 검사 19개가 통과했다. [배포 기록](../../docs/rust-release-0.1.0.json)에 공개 crate와 CI 체크섬, 소유자, 원본 커밋을 기록한다. PostgreSQL·SMTP·브라우저를 이번 registry 설치 검사에서 다시 실행한 것은 아니다. 저장소의 소비 예제와 생성기는 명시적으로 지정한 소스를 사용하므로 기존 Cargo path dependency를 유지한다.
 
 실제 PostgreSQL 자체 테스트는 명시적인 폐기 가능 DB에서만 실행한다. DB 이름은
 `feature_standards_test`로 시작해야 한다. 이 테스트는 해당 DB를 migrate하고 테스트

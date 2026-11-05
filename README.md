@@ -40,7 +40,7 @@ node packages/feature-standards/src/cli.mjs context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
-See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives. Python is also published on PyPI, Java on Maven Central, and Go through its versioned module; Rust registry publication remains pending. Search rank and future indexing are not guaranteed.
+See the [main package guide](packages/feature-standards/README.md), [AI integration guide](docs/ai-integration.md), and [npm discovery guide](docs/npm-discovery.md). The [0.2.0 release receipt](docs/npm-workflow-release-2026-11-04.json) records public artifact integrity, fresh registry installation, all 15 contexts, actual installed workflows, and observed `jongko54` search results. [GitHub release assets](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provide verified server archives. Python is also published on PyPI, Java on Maven Central, Rust on crates.io, and Go through its versioned module. The [2026-11-05 registry snapshot](docs/registry-status-2026-11-05.json) checks availability of all seven published package versions. Search rank and future indexing are not guaranteed.
 
 ## How an AI integration works
 
@@ -91,6 +91,15 @@ Java consumers can resolve the plain library directly from Maven Central:
 ```
 
 The [Java release receipt](docs/java-release-1.0.0.json) records the published signed artifacts, an initially empty private Maven repository, and four passing consumer tests including real loopback login/logout, CSRF rejection, and safe storage-error behavior.
+
+Rust consumers can use [feature-standards-auth 0.1.0](https://crates.io/crates/feature-standards-auth/0.1.0) from crates.io:
+
+```toml
+[dependencies]
+feature-standards-auth = "0.1.0"
+```
+
+The [Rust release receipt](docs/rust-release-0.1.0.json) records matching registry/CI crate checksums, owner `jongko54`, installation into a fresh private Cargo home, one router integration test, and 19 passing common HTTP tests against the separate consumer's real loopback server. This release verification targets memory v1; PostgreSQL, SMTP, and browser checks were not rerun.
 
 The main package exposes the feature context. The following npm packages are authentication components within Feature Standards:
 

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-05T13:53:31.752023+00:00",
+  "name": "feature-standards-auth",
+  "version": "0.1.0",
+  "projectUrl": "https://crates.io/crates/feature-standards-auth/0.1.0",
+  "metadataUrl": "https://crates.io/api/v1/crates/feature-standards-auth/0.1.0",
+  "downloadUrl": "https://static.crates.io/crates/feature-standards-auth/feature-standards-auth-0.1.0.crate",
+  "sha256": "75413f01e585b1d3a7965898c0365a4dcd52a1f2ec84d773b2313f4ee11cb03d",
+  "matchesCiArtifact": true,
+  "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+  "sourceDirty": false,
+  "owners": [
+    "jongko54"
+  ],
+  "yanked": false,
+  "publishedAt": "2026-11-05T13:53:03.411700Z",
+  "anonymousPublicDownload": true,
+  "published": true,
+  "tag": "implementations/rust-axum/v0.1.0",
+  "sourceCi": {
+    "runId": 41667686875,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/41667686875"
+  },
+  "packageVerification": {
+    "name": "feature-standards-auth",
+    "version": "0.1.0",
+    "sha256": "75413f01e585b1d3a7965898c0365a4dcd52a1f2ec84d773b2313f4ee11cb03d",
+    "matchesCiArtifact": true,
+    "sourceCommit": "2b64e5201d6ebe5029dcc67704a7f46d7b735b59",
+    "sourceDirty": false,
+    "packageVerificationPassed": true
+  },
+  "consumerVerification": {
+    "freshExternalProject": true,
+    "initiallyEmptyPrivateCargoHome": true,
+    "registryAuthenticationUsed": false,
+    "localPathOrPatchDependency": false,
+    "packageLoadedFromPrivateRegistryCache": true,
+    "registrySource": "registry+https://github.com/rust-lang/crates.io-index",
+    "version": "0.1.0",
+    "downloadedCrateMatchesRegistryAndCi": true,
+    "consumerLockfileSha256": "165cf40816fc6a193c434fbc65615164a9740206d786c2b080a008d74bcd2dac",
+    "routerConsumerTests": 1,
+    "commonHttpConformance": {
+      "profile": "browser-session-v1",
+      "tests": 19,
+      "passed": true
+    },
+    "browserExecuted": false,
+    "postgresExecuted": false,
+    "smtpExecuted": false,
+    "ownServerStopped": true
+  },
+  "toolchain": {
+    "cargo": "cargo 1.93.1 (083ac5135 2025-12-15)",
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)"
+  },
+  "publicationMethod": "Initial manual cargo publish --locked --registry crates-io from the immutable source commit after full main-branch CI passed. The owner authenticated locally; no token is recorded in this receipt or added to repository secrets.",
+  "scope": [
+    "The public checksum, anonymous crate download, Cargo cache download and reviewed CI archive identify identical bytes.",
+    "The independent consumer uses exact registry version =0.1.0 and a new Cargo home without publisher credentials; no local path or patch dependency is used.",
+    "One in-process Axum integration test and all 19 common v1 tests against a real loopback consumer server passed; its own server process was stopped.",
+    "Browser, PostgreSQL, SMTP and OIDC trusted-publisher execution were not rerun or established by this initial manual release.",
+    "Existing cache-permission warnings from the publisher did not prevent verification or publication; no user-cache permissions were changed."
+  ]
+}

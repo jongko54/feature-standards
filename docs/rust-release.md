@@ -2,6 +2,19 @@
 
 `feature-standards-auth` is the reusable Axum library and reference binary. Its current source version is `0.1.0`. A successful local package or workflow build is not a crates.io publication.
 
+## Published 0.1.0
+
+Version [0.1.0](https://crates.io/crates/feature-standards-auth/0.1.0) was published on 2026-11-05 under owner `jongko54`, from clean commit `2b64e5201d6ebe5029dcc67704a7f46d7b735b59` after its full main-branch CI succeeded. Tag `implementations/rust-axum/v0.1.0` identifies this initial manual release without triggering the `rust-auth-v*` automated publisher. The public registry checksum and downloaded crate matched the reviewed CI artifact. A fresh external Cargo consumer used the registry version with no local path/patch dependency or publisher credentials, passed its router integration test, and passed all 19 common memory-v1 HTTP tests through its real loopback server. See the [release receipt](rust-release-0.1.0.json).
+
+Installing this library uses normal crates.io resolution:
+
+```toml
+[dependencies]
+feature-standards-auth = "0.1.0"
+```
+
+The release did not rerun browser, PostgreSQL, or SMTP checks and does not establish that the account's OIDC trusted-publisher binding is configured. Version 0.1.0 is already published; future uploads must use a new version.
+
 The [Rust release workflow](../.github/workflows/publish-rust.yml) supports two operations:
 
 | Trigger | Behavior |
@@ -11,20 +24,20 @@ The [Rust release workflow](../.github/workflows/publish-rust.yml) supports two 
 
 The workflow pins Rust/Cargo `1.93.1` and the official `rust-lang/crates-io-auth-action` v1.0.6 commit `3268eb413133e2960fa4ae0e963ca76380c54cd9`. Only the publish job receives `id-token: write`; it exchanges the GitHub identity for a short-lived crates.io token. No long-lived Cargo token is stored in repository secrets. The action revokes its temporary token when the job finishes. See the [official action](https://github.com/rust-lang/crates-io-auth-action/tree/3268eb413133e2960fa4ae0e963ca76380c54cd9).
 
-## First publication and account setup
+## Initial publication and future publisher setup
 
-As documented by [crates.io trusted publishing](https://crates.io/docs/trusted-publishing), the crate must already exist and the configuring account must own it. The first publication uses a normal crates.io API token. Creating this workflow does not reserve the crate name or create that trust relationship.
+As documented by [crates.io trusted publishing](https://crates.io/docs/trusted-publishing), the crate must already exist and the configuring account must own it. The initial 0.1.0 publication used a normal crates.io API token after account email verification. Creating this workflow does not create the trusted-publisher relationship. Before future automated releases, complete and verify that account binding:
 
 1. Sign in to crates.io with the intended GitHub identity and complete email/account verification.
 2. Review the clean release commit and its successful full main-branch CI. Authenticate privately with `cargo login`; keep tokens out of Git, shell history, issue comments and chat.
-3. Perform the first manual `0.1.0` publication from that reviewed checkout:
+3. For a future manual release, first update to an unpublished version and require its full source CI. Then publish from that reviewed checkout; do not repeat the existing 0.1.0:
 
    ```sh
    cargo publish --locked --registry crates-io \
      --manifest-path implementations/rust-axum/Cargo.toml
    ```
 
-4. Verify the public version and a fresh registry consumer before marking the package published in `feature-standards.json`.
+4. Verify the public version and a fresh registry consumer before recording publication. This was completed for 0.1.0 in the receipt above.
 5. Open the crate's **Settings → Trusted Publishing**, select GitHub, and configure these exact fields:
 
    | Field | Value |

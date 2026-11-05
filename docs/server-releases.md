@@ -7,7 +7,7 @@ Building, publishing, and installing from a public registry are separate verific
 | Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | Published on PyPI and independently installed; [receipt](python-release-0.2.0.json) |
 | Go | `github.com/jongko54/feature-standards/implementations/go-net-http` 0.1.0 | nested-module Git tag | Published and independently installed; [receipt](go-release-0.1.0.json) |
 | Java | `io.github.jongko54:java-spring-auth:1.0.0` | executable JAR, `library` classifier, sources + Javadoc | Published on Maven Central and independently installed; [receipt](java-release-1.0.0.json) |
-| Rust | `feature-standards-auth` 0.1.0 | standalone `.crate` | crates.io account and email verification |
+| Rust | `feature-standards-auth` 0.1.0 | standalone `.crate` | Published on crates.io and independently installed; [receipt](rust-release-0.1.0.json) |
 
 The initial 2026-11-03 PyPI and crates.io project-not-found observations remain in the dated validation report. Python 0.2.0 was subsequently published on PyPI on 2026-11-05 through the configured GitHub OIDC publisher. Both public archives matched the original CI artifacts byte for byte. A fresh external virtual environment installed the named version from the public PyPI index, passed all 19 common v1 HTTP tests, and verified the public `current_user` dependency, CSRF rejection, and server-side revocation of a copied logout cookie. See the [Python release receipt](python-release-0.2.0.json). This publication check did not rerun browser, PostgreSQL, or SMTP tests.
 
@@ -15,7 +15,7 @@ The Maven group changed from the unpublished `dev.featurestandards` coordinate t
 
 ## Build and verify
 
-The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets remain an alternative distribution path. Rust registry publication is pending; Python and Java now have separate public-registry receipts above.
+The [feature-standards-v0.2.0 GitHub release](https://github.com/jongko54/feature-standards/releases/tag/feature-standards-v0.2.0) provides server archives, the original Java POM, MIT license, `SOURCE.json`, and `SHA256SUMS` from successful exact-source CI. All eight anonymous public downloads matched the reviewed CI files. The Python wheel was also installed from its public release URL into a fresh external virtual environment and its public APIs imported successfully. See the [release receipt](npm-workflow-release-2026-11-04.json). These assets remain an alternative distribution path; the table above links the later public-registry receipts for all four backends.
 
 Install Python from the public registry with Python 3.12 or later:
 
@@ -34,7 +34,16 @@ For Java, select the published library dependency:
 </dependency>
 ```
 
-Consumers select `io.github.jongko54:java-spring-auth:1.0.0` with classifier `library`. The POM is required for transitive dependencies; the executable application JAR is not the library artifact. Rust consumers can extract the release's `feature-standards-auth-0.1.0.crate` into their own vendor directory and use the unpacked library as a Cargo path dependency. The [independent distribution checker](validation-server-distributions-2026-11-04.md) verifies that unpacked-crate consumption outside the original checkout. Keep the recorded version/checksum when vendoring; this is separate from crates.io version resolution.
+Consumers select `io.github.jongko54:java-spring-auth:1.0.0` with classifier `library`. The POM is required for transitive dependencies; the executable application JAR is not the library artifact.
+
+Rust consumers can resolve the published library from crates.io:
+
+```toml
+[dependencies]
+feature-standards-auth = "0.1.0"
+```
+
+Alternatively, extract the GitHub release's `.crate` into a private vendor directory and use the unpacked library as a Cargo path dependency. The [independent distribution checker](validation-server-distributions-2026-11-04.md) verifies that unpacked-crate consumption outside the original checkout. Keep the recorded version/checksum when vendoring; the [Rust registry receipt](rust-release-0.1.0.json) separately verifies normal crates.io resolution.
 
 The Java dependency follows [Apache Maven's dependency reference](https://maven.apache.org/pom.html#dependencies); unpacked Rust consumption follows [Cargo path dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-path-dependencies).
 
@@ -85,13 +94,15 @@ This publishes permanently and waits for the Portal's publication status. Consum
 
 ## Rust / crates.io
 
-After account and email verification, run `cargo login` privately and publish from a clean reviewed checkout:
+Version 0.1.0 was published on 2026-11-05 from clean, full-CI-verified commit `2b64e5201d6ebe5029dcc67704a7f46d7b735b59`. Public metadata identifies owner `jongko54`, and the downloaded crate matches the reviewed CI archive byte for byte. A separate consumer with an initially empty Cargo home and no registry credentials resolved the version from crates.io, passed its router lifecycle test, and passed all 19 common v1 HTTP tests against its real loopback server. See the [release receipt](rust-release-0.1.0.json).
+
+For a future manual release, select a new unpublished version, require its full source CI, and authenticate privately with `cargo login` before publishing from the reviewed checkout:
 
 ```sh
 cargo publish --locked --manifest-path implementations/rust-axum/Cargo.toml
 ```
 
-No long-lived Cargo token is added to CI. The [Rust release workflow and setup guide](rust-release.md) provide build-only dispatch, exact source/tag checks, temporary OIDC credentials and artifact comparisons. Trusted publishing still requires initial account/release setup; see [crates.io's guide](https://crates.io/docs/trusted-publishing). Packaging alone does not reserve the crate name or publish it.
+No long-lived Cargo token is added to CI. The [Rust release workflow and setup guide](rust-release.md) provide build-only dispatch, exact source/tag checks, temporary OIDC credentials and artifact comparisons. This initial manual release does not verify an OIDC publisher binding; configure and verify that binding before an automated release. See [crates.io's guide](https://crates.io/docs/trusted-publishing). Do not upload the already published 0.1.0 again.
 
 ## Go versioned module
 

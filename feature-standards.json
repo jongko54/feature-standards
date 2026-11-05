@@ -247,7 +247,7 @@
       "package": {
         "kind": "cargo-path",
         "name": "feature-standards-auth",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {
