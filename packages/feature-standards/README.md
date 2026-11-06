@@ -9,13 +9,13 @@ This main package distributes a curated contract snapshot, a read-only context s
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# Published 0.2.0 provides authentication contexts and workflows.
-npm install --save-dev feature-standards@0.2.0
+# The registry release is separate from this source snapshot.
+npm install --save-dev feature-standards@0.3.1
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-**This checkout is source version 0.3.0; it has not been published by this change.** Build and use the repository commands below to select all three features. The new core libraries are also unpublished. Installing the registry's 0.2.0 release does not provide the new contexts.
+**This checkout is source version 0.3.1.** It includes registry receipts and captured publication state for core packages. Check actual registry availability before installing this version; source readiness alone is not publication. The bundled receipt records Python, Rust and Go core 0.1.0; npm core and Java remain pending maintainer authentication. Main 0.3.0 was published separately and provides all three feature contexts with their earlier source-only core state.
 
 `list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
 

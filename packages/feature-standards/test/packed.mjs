@@ -40,7 +40,7 @@ try {
   assert.deepEqual(files(installed).sort(), expectedFiles);
   const metadata = JSON.parse(readFileSync(join(installed, 'package.json'), 'utf8'));
   assert.equal(metadata.name, 'feature-standards');
-  assert.equal(metadata.version, '0.3.0');
+  assert.equal(metadata.version, JSON.parse(readFileSync(join(PACKAGE, 'package.json'), 'utf8')).version);
   assert.deepEqual(metadata.author, { name: 'jongko54', url: 'https://github.com/jongko54' });
   assert.equal(metadata.repository.directory, 'packages/feature-standards');
   for (const keyword of ['jongko54', 'ai', 'cross-language', 'contracts']) assert.ok(metadata.keywords.includes(keyword));

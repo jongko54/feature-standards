@@ -1,11 +1,11 @@
 ---
 name: integrate-core
-description: Integrate the source authorization or listing contracts in Python, Go, Java, Rust or JavaScript/TypeScript.
+description: Integrate the authorization or listing contracts in Python, Go, Java, Rust or JavaScript/TypeScript.
 ---
 
 # Integrate core features
 
-Read the target project's instructions and dirty state. Preserve its auth and product behavior. Select one feature and stack from `features/catalog.json`; read only that catalog's selected specification, entrypoints and library README. New core packages are unpublished source APIs: use a path dependency or the checked-out source. Do not invent a registry version or silently use the authentication generator.
+Read the target project's instructions and dirty state. Preserve its auth and product behavior. Select one feature and stack from `features/catalog.json`; read only that catalog's selected specification, entrypoints and library README. Check the selected package publication field and `docs/core-release-0.1.0.json`. If a matching public download and fresh registry consumer are recorded, use that pinned registry version in the target project. Otherwise use a path dependency or the checked-out source. Do not infer publication from a package name or enabled publish metadata, invent a registry version, or silently use the authentication generator.
 
 For authorization, preserve the target's real authenticated identity. Load current membership and resource attributes from trusted server services on each request. Never accept roles, subject or tenant from browser headers/body/query. Declare explicit role-permission-scope grants; deny by default, enforce tenant isolation, require subject ownership for owner scope, and fail closed when membership is unavailable. Client helpers control presentation only.
 

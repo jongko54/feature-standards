@@ -241,6 +241,35 @@ def _package(root: Path, stack: dict) -> None:
         raise ValueError(f"Feature catalog package coordinate mismatch: {identifier}")
 
 
+def _publication(root: Path, stack: dict) -> None:
+    """Only a matching recorded public download and fresh consumer can mark publication."""
+    receipt = root / "docs/core-release-0.1.0.json"
+    entry = None
+    if receipt.exists():
+        document = json.loads(
+            checked_path(root, "docs/core-release-0.1.0.json").read_text()
+        )
+        entry = document.get("targets", {}).get(stack["id"])
+    verified = bool(
+        isinstance(entry, dict)
+        and entry.get("name") == stack["package"]["name"]
+        and entry.get("version") == stack["package"].get("version")
+        and all(
+            entry.get(field) is True
+            for field in (
+                "registryVerified",
+                "publicDownloadVerified",
+                "freshConsumerVerified",
+            )
+        )
+        and re.fullmatch(r"[a-f0-9]{40}", entry.get("sourceCommit", ""))
+        and re.fullmatch(r"[a-f0-9]{64}", entry.get("artifactSha256", ""))
+        and entry.get("metadataUrl", "").startswith("https://")
+    )
+    if stack["package"]["published"] is not verified:
+        raise ValueError("Core publication flag must match a verified release receipt")
+
+
 def validate_catalog(catalog: dict, root: Path = ROOT) -> None:
     if not isinstance(catalog, dict):
         raise TypeError("Feature catalog must be an object")
@@ -280,8 +309,6 @@ def validate_catalog(catalog: dict, root: Path = ROOT) -> None:
             raise ValueError("Feature catalog stack profile mismatch")
         if stack["role"] != ("client" if stack["id"] == "react" else "backend"):
             raise ValueError("Feature catalog stack role mismatch")
-        if stack["package"]["published"] is not False:
-            raise ValueError("New core feature package is unpublished")
         if (
             not checked_path(root, stack["root"]).is_dir()
             or not checked_path(root, stack["consumer"]).is_dir()
@@ -293,6 +320,7 @@ def validate_catalog(catalog: dict, root: Path = ROOT) -> None:
             _symbols(root, stack, entrypoint)
         auth_catalog._commands(root, stack["install"] + stack["checks"])
         _package(root, stack)
+        _publication(root, stack)
 
 
 def select(catalog: dict, stack_id: str, profile_id: str | None = None) -> dict:

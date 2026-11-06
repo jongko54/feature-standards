@@ -105,7 +105,7 @@ export function getContext(options = {}) {
       consumerGuide: doc(stack.consumer + '/README.md'),
       integrationSkill: doc(selected.integration_skill),
       integrationGuide: doc(selected.integration_guide),
-      ...(isAuth ? { generatorGuide: doc('docs/create-feature-auth.md') } : {}),
+      ...(isAuth ? { generatorGuide: doc('docs/create-feature-auth.md') } : { releaseReceipt: doc('docs/core-release-0.1.0.json') }),
       profileReferences: [
         ...(isAuth && profileIndex >= 1 ? [doc('skills/integrate-auth/references/postgres.md')] : []),
         ...(isAuth && profileIndex >= 2 ? [doc('skills/integrate-auth/references/accounts.md')] : []),

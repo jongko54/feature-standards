@@ -40,7 +40,7 @@
         "kind": "wheel",
         "name": "feature-standards-core",
         "version": "0.1.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {
@@ -78,7 +78,7 @@
         "kind": "go-module",
         "name": "github.com/jongko54/feature-standards/libraries/go",
         "version": "0.1.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {
@@ -154,7 +154,7 @@
         "kind": "cargo-path",
         "name": "feature-standards-core",
         "version": "0.1.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

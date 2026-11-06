@@ -41,7 +41,8 @@ test('new core features select ten real source contexts without enabling auth wo
       assert.match(doc.sha256, /^[a-f0-9]{64}$/);
     }
     assert.equal(JSON.parse(readFileSync(context.packagedDocuments.scenarios.readPath, 'utf8')).profile, profile);
-    assert.equal(context.sourceCheckout.packageMetadata.published, false);
+    const manifest = JSON.parse(readFileSync(context.packagedDocuments.manifest.readPath, 'utf8'));
+    assert.equal(context.sourceCheckout.packageMetadata.published, manifest.stacks.find(entry => entry.id === stack).package.published);
     assert.equal(context.sourceCheckout.packageMetadata.registryStatusVerifiedByThisTool, false);
     assert.equal(context.sourceCheckout.generator.supportedForStack, false);
     if (feature === 'authorization' && stack === 'react') assert.ok(context.limits.some(limit => /presentation advice only/.test(limit)));

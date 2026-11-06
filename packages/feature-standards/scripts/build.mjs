@@ -44,6 +44,7 @@ export const SOURCE_FILES = Object.freeze([
   'docs/smtp-delivery.md',
   'docs/versioning.md',
   'docs/core-standards.md',
+  'docs/core-release-0.1.0.json',
   'libraries/python/README.md',
   'libraries/go/README.md',
   'libraries/java/README.md',

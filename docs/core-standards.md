@@ -1,6 +1,6 @@
 # Three feature standards
 
-The source catalog now contains **auth**, **authorization**, and **listing**. Authentication retains its published packages and three session profiles. Authorization (`rbac-v1`) and listing (`offset-list-v1`) are experimental, unpublished source libraries at 0.1.0. The main CLI source is 0.3.0; the registry release remains separate. Do not install the new core package names from registries yet.
+The source catalog now contains **auth**, **authorization**, and **listing**. Authentication retains its published packages and three session profiles. Authorization (`rbac-v1`) and listing (`offset-list-v1`) are experimental 0.1.0 libraries. [The registry receipt](core-release-0.1.0.json) verifies Python, Rust and Go downloads and fresh consumers; Java and npm core are awaiting maintainer authentication. Main CLI 0.3.0 was published separately and captures the earlier source-only core context. Publication and API maturity remain separate.
 
 | Feature | Responsibility | Shared implementations |
 | --- | --- | --- |

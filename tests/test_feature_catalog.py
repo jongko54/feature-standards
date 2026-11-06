@@ -20,6 +20,45 @@ from feature_catalog import (
 
 
 class FeatureCatalogTests(unittest.TestCase):
+    def test_publication_requires_matching_public_download_and_consumer_receipt(self):
+        from feature_catalog import _publication
+
+        stack = copy.deepcopy(load_catalog("authorization", ROOT)["stacks"][0])
+        stack["package"]["published"] = True
+        entry = {
+            "name": stack["package"]["name"],
+            "version": "0.1.0",
+            "sourceCommit": "a" * 40,
+            "artifactSha256": "b" * 64,
+            "metadataUrl": "https://pypi.org/pypi/feature-standards-core/0.1.0/json",
+            "registryVerified": True,
+            "publicDownloadVerified": True,
+            "freshConsumerVerified": True,
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "docs").mkdir()
+            receipt = root / "docs/core-release-0.1.0.json"
+            with self.assertRaises(ValueError):
+                _publication(root, stack)
+            receipt.write_text(json.dumps({"targets": {"python": entry}}))
+            _publication(root, stack)
+            for field in (
+                "registryVerified",
+                "publicDownloadVerified",
+                "freshConsumerVerified",
+                "name",
+                "version",
+                "artifactSha256",
+            ):
+                broken = {
+                    **entry,
+                    field: False if field.endswith("Verified") else "wrong",
+                }
+                receipt.write_text(json.dumps({"targets": {"python": broken}}))
+                with self.subTest(field=field), self.assertRaises(ValueError):
+                    _publication(root, stack)
+
     def setUp(self):
         self.index = load_index(ROOT)
 
@@ -63,7 +102,8 @@ class FeatureCatalogTests(unittest.TestCase):
                     if mutation == "profile":
                         broken["profiles"][0]["openapi"] = "features/auth/openapi.json"
                     elif mutation == "published":
-                        broken["stacks"][0]["package"]["published"] = True
+                        current = broken["stacks"][0]["package"]["published"]
+                        broken["stacks"][0]["package"]["published"] = not current
                     else:
                         broken["invented_capability"] = True
                     with self.assertRaises(ValueError):

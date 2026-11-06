@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import os
@@ -195,6 +196,8 @@ def main():
             (project / "consumer.mjs").write_text(NODE_SMOKE)
             run(["node", "consumer.mjs", ROOT], cwd=project, env=env)
         if "rust" in targets:
+            package_env = os.environ.copy()
+            package_env["CARGO_TARGET_DIR"] = str(temporary / "rust-package-target")
             argv = [
                 "cargo",
                 "package",
@@ -206,12 +209,14 @@ def main():
             ]
             if args.allow_dirty:
                 argv.append("--allow-dirty")
-            run(argv)
+            run(argv, env=package_env)
             details = metadata("rust-core")
             stem = details["name"] + "-" + details["version"]
-            archive = ROOT / f"libraries/rust/target/package/{stem}.crate"
+            archive = temporary / f"rust-package-target/package/{stem}.crate"
             destination = output / archive.name
             shutil.copyfile(archive, destination)
+            # A stale shorter archive must not retain bytes from an earlier build.
+            gzip.decompress(destination.read_bytes())
             artifacts.append(destination)
             extracted = temporary / "rust"
             extracted.mkdir()

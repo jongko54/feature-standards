@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "version": "0.1.0",
+  "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+  "sourceCi": {
+    "runId": 42199611648,
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42199611648",
+    "conclusion": "success"
+  },
+  "artifactBuild": {
+    "runId": 42199662926,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42199662926"
+  },
+  "targets": {
+    "rust": {
+      "name": "feature-standards-core",
+      "version": "0.1.0",
+      "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+      "observedAt": "2026-11-06T10:21:23.955002+00:00",
+      "metadataUrl": "https://crates.io/api/v1/crates/feature-standards-core/0.1.0",
+      "artifactUrl": "https://static.crates.io/crates/feature-standards-core/feature-standards-core-0.1.0.crate",
+      "artifactSha256": "4d658356e7df94697925c7ff005d9346acf05a916fe247e424e90adc32c83d7b",
+      "registryVerified": true,
+      "publicDownloadVerified": true,
+      "matchesReviewedArtifact": true,
+      "freshConsumerVerified": true
+    },
+    "go": {
+      "name": "github.com/jongko54/feature-standards/libraries/go",
+      "version": "0.1.0",
+      "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+      "observedAt": "2026-11-06T10:21:36.891219+00:00",
+      "metadataUrl": "https://proxy.golang.org/github.com/jongko54/feature-standards/libraries/go/@v/v0.1.0.info",
+      "artifactUrl": "https://proxy.golang.org/github.com/jongko54/feature-standards/libraries/go/@v/v0.1.0.zip",
+      "artifactSha256": "b2d4c01e4e0c6167ccc38cc50b08e1a4d834fce6071edda51b05665f5d10718e",
+      "registryVerified": true,
+      "publicDownloadVerified": true,
+      "freshConsumerVerified": true,
+      "versionedTagAndSourceVerified": true
+    },
+    "python": {
+      "name": "feature-standards-core",
+      "version": "0.1.0",
+      "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+      "observedAt": "2026-11-06T10:27:27.145541+00:00",
+      "metadataUrl": "https://pypi.org/pypi/feature-standards-core/0.1.0/json",
+      "artifactUrl": "https://files.pythonhosted.org/packages/c1/ff/9f2cef40497bd602f523c7a473879d46c81ba497c44bff4c47791885c001/feature_standards_core-0.1.0-py3-none-any.whl",
+      "artifactSha256": "adac14d13605f1df0a633a436a5137ba02df9b4af2835d21d416288fdda4d351",
+      "registryVerified": true,
+      "publicDownloadVerified": true,
+      "matchesReviewedArtifact": true,
+      "freshConsumerVerified": true,
+      "publishWorkflow": {
+        "runId": 42202660587,
+        "conclusion": "success",
+        "workflowCommit": "bd2438e8015fcdb90e060c4bcc211f5e296558c1",
+        "url": "https://github.com/jongko54/feature-standards/actions/runs/42202660587"
+      }
+    }
+  },
+  "pendingTargets": {
+    "react": "Initial publication requires npm account 2FA; the first challenge expired before completion.",
+    "java": "Prepared plain JAR/POM/sources/Javadoc; existing production GPG key requires private terminal passphrase entry."
+  }
+}

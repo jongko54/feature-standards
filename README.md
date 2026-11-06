@@ -4,7 +4,7 @@
 
 Feature Standards organizes a feature's behavior, public APIs, stack guides, and conformance checks in one place. An agent chooses the feature, profile, and stack; reads the relevant contract and API; reuses the implementation; and checks the integration against the same behavior across stacks. The goal is to reduce repeated implementation and unnecessary exploration during AI-assisted development.
 
-**Three feature standards are available in source: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. They are experimental, unpublished core APIs; [read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
+**Three feature standards are available in source: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. They are experimental core APIs; [registry-specific availability](docs/core-release-0.1.0.json) is tracked separately. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
 ## Start with the feature catalog
 
