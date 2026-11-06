@@ -1,0 +1,2142 @@
+{
+  "feature": "authorization",
+  "profile": "rbac-v1",
+  "cases": [
+    {
+      "id": "owner-allowed",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": true,
+        "code": "ALLOWED"
+      }
+    },
+    {
+      "id": "tenant-collection-allowed",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:list",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": null
+      },
+      "expected": {
+        "allowed": true,
+        "code": "ALLOWED"
+      }
+    },
+    {
+      "id": "anonymous",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": null,
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "id": "anonymous-invalid-permission",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": null,
+      "permission": "*",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "UNAUTHENTICATED"
+      }
+    },
+    {
+      "id": "other-owner",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "other"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "missing-owner",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "cross-tenant",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-b",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "unknown-permission",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:delete",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "empty-roles",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": []
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "unknown-role",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "admin"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "mixed-roles",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "unknown",
+          "editor"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "other"
+      },
+      "expected": {
+        "allowed": true,
+        "code": "ALLOWED"
+      }
+    },
+    {
+      "id": "admin-no-cross-tenant",
+      "grants": [
+        {
+          "role": "admin",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "admin"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-b"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "duplicate-principal-roles",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer",
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "too-many-roles",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "role0",
+          "role1",
+          "role2",
+          "role3",
+          "role4",
+          "role5",
+          "role6",
+          "role7",
+          "role8",
+          "role9",
+          "role10",
+          "role11",
+          "role12",
+          "role13",
+          "role14",
+          "role15",
+          "role16"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "empty-subject",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "subject-newline",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1\n",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "permission-newline",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read\n",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "role-newline",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer\n"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "invalid-resource",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:read",
+          "scope": "owner"
+        },
+        {
+          "role": "editor",
+          "permission": "documents:read",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "bad/owner"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "empty-policy",
+      "grants": [],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "allowed": false,
+        "code": "FORBIDDEN"
+      }
+    },
+    {
+      "id": "duplicate-policy",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    },
+    {
+      "id": "conflicting-policy",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "tenant"
+        },
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "owner"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    },
+    {
+      "id": "wildcard-policy",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "*",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    },
+    {
+      "id": "policy-newline",
+      "grants": [
+        {
+          "role": "viewer\n",
+          "permission": "documents:list",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    },
+    {
+      "id": "invalid-scope",
+      "grants": [
+        {
+          "role": "viewer",
+          "permission": "documents:list",
+          "scope": "global"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    },
+    {
+      "id": "too-many-grants",
+      "grants": [
+        {
+          "role": "r0",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r1",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r2",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r3",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r4",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r5",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r6",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r7",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r8",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r9",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r10",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r11",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r12",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r13",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r14",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r15",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r16",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r17",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r18",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r19",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r20",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r21",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r22",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r23",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r24",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r25",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r26",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r27",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r28",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r29",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r30",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r31",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r32",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r33",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r34",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r35",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r36",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r37",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r38",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r39",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r40",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r41",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r42",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r43",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r44",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r45",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r46",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r47",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r48",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r49",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r50",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r51",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r52",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r53",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r54",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r55",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r56",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r57",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r58",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r59",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r60",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r61",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r62",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r63",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r64",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r65",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r66",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r67",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r68",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r69",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r70",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r71",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r72",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r73",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r74",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r75",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r76",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r77",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r78",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r79",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r80",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r81",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r82",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r83",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r84",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r85",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r86",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r87",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r88",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r89",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r90",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r91",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r92",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r93",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r94",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r95",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r96",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r97",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r98",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r99",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r100",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r101",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r102",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r103",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r104",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r105",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r106",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r107",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r108",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r109",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r110",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r111",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r112",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r113",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r114",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r115",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r116",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r117",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r118",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r119",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r120",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r121",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r122",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r123",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r124",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r125",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r126",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r127",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r128",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r129",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r130",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r131",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r132",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r133",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r134",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r135",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r136",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r137",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r138",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r139",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r140",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r141",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r142",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r143",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r144",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r145",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r146",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r147",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r148",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r149",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r150",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r151",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r152",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r153",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r154",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r155",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r156",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r157",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r158",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r159",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r160",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r161",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r162",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r163",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r164",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r165",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r166",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r167",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r168",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r169",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r170",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r171",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r172",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r173",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r174",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r175",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r176",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r177",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r178",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r179",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r180",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r181",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r182",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r183",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r184",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r185",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r186",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r187",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r188",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r189",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r190",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r191",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r192",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r193",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r194",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r195",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r196",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r197",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r198",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r199",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r200",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r201",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r202",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r203",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r204",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r205",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r206",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r207",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r208",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r209",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r210",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r211",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r212",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r213",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r214",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r215",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r216",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r217",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r218",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r219",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r220",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r221",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r222",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r223",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r224",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r225",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r226",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r227",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r228",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r229",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r230",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r231",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r232",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r233",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r234",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r235",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r236",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r237",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r238",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r239",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r240",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r241",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r242",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r243",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r244",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r245",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r246",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r247",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r248",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r249",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r250",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r251",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r252",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r253",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r254",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r255",
+          "permission": "p",
+          "scope": "tenant"
+        },
+        {
+          "role": "r256",
+          "permission": "p",
+          "scope": "tenant"
+        }
+      ],
+      "principal": {
+        "subjectId": "user-1",
+        "tenantId": "tenant-a",
+        "roles": [
+          "viewer"
+        ]
+      },
+      "permission": "documents:read",
+      "resource": {
+        "tenantId": "tenant-a",
+        "ownerId": "user-1"
+      },
+      "expected": {
+        "error": "INVALID_AUTHORIZATION_POLICY"
+      }
+    }
+  ]
+}

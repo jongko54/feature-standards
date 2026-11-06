@@ -28,7 +28,7 @@ func code(t *testing.T, err error, want string) {
 }
 func TestSharedVectors(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
-	raw, err := os.ReadFile(filepath.Join(filepath.Dir(file), "../../../features/listing/scenarios.json"))
+	raw, err := os.ReadFile(filepath.Join(filepath.Dir(file), "../testdata/listing.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

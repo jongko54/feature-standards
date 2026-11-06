@@ -219,13 +219,9 @@ def _package(root: Path, stack: dict) -> None:
     elif identifier == "rust":
         data = tomllib.loads((directory / "Cargo.toml").read_text())["package"]
         expected, version = data["name"], data["version"]
-        if data.get("publish") is not False:
-            raise ValueError("Unpublished core Rust package must disable publication")
     else:
         data = json.loads((directory / "package.json").read_text())
         expected, version = data["name"], data["version"]
-        if data.get("private") is not True:
-            raise ValueError("Unpublished core npm package must be private")
         export = data.get("exports", {}).get(".", {})
         for kind, suffix in (("import", ".mjs"), ("types", ".d.mts")):
             target = export.get(kind)

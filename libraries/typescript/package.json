@@ -1,8 +1,7 @@
 {
   "name": "@ugauga/feature-standards-core",
   "version": "0.1.0",
-  "private": true,
-  "description": "Framework-independent authorization and listing helpers (unpublished)",
+  "description": "Contract-tested authorization and listing helpers for JavaScript and TypeScript",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -23,6 +22,39 @@
     }
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "prepublishOnly": "npm test"
+  },
+  "author": {
+    "name": "jongko54",
+    "url": "https://github.com/jongko54"
+  },
+  "keywords": [
+    "jongko54",
+    "feature-standards",
+    "authorization",
+    "pagination",
+    "rbac",
+    "typescript",
+    "ai"
+  ],
+  "files": [
+    "src/*.mjs",
+    "src/*.d.mts",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jongko54/feature-standards.git",
+    "directory": "libraries/typescript"
+  },
+  "homepage": "https://github.com/jongko54/feature-standards/tree/main/libraries/typescript",
+  "bugs": {
+    "url": "https://github.com/jongko54/feature-standards/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

@@ -3,9 +3,16 @@ name = "feature-standards-core"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.93.1"
-publish = false
+publish = ["crates-io"]
 license = "MIT"
 description = "Framework-independent authorization and listing contracts"
+
+authors = ["jongko54"]
+repository = "https://github.com/jongko54/feature-standards"
+homepage = "https://github.com/jongko54/feature-standards"
+readme = "README.md"
+keywords = ["jongko54", "authorization", "pagination", "rbac", "contracts"]
+include = ["src/**", "tests/fixtures/*.json", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
 
 [dependencies]
 serde_json = "1.0"

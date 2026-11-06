@@ -10,7 +10,7 @@ import (
 
 func TestSharedVectors(t *testing.T) {
 	_, filename, _, _ := runtime.Caller(0)
-	data, err := os.ReadFile(filepath.Join(filepath.Dir(filename), "../../../features/authorization/scenarios.json"))
+	data, err := os.ReadFile(filepath.Join(filepath.Dir(filename), "../testdata/authorization.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

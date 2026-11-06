@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-06T09:57:18.843002+00:00",
+  "name": "feature-standards",
+  "version": "0.3.0",
+  "sourceCommit": "2a9490a937dd79e370869e103b858a87ed7c0356",
+  "sourceCi": {
+    "runId": 42176908034,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42176908034"
+  },
+  "publishWorkflow": {
+    "runId": 42197820852,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42197820852"
+  },
+  "registryMetadataUrl": "https://registry.npmjs.org/feature-standards/0.3.0",
+  "dist": {
+    "shasum": "1592a1af0ff23269cb09cbb179271dba74c85406",
+    "tarball": "https://registry.npmjs.org/feature-standards/-/feature-standards-0.3.0.tgz",
+    "fileCount": 62,
+    "integrity": "sha512-onSeTc8uQiyms6+RqqfAhDlAXJerhZzjOznosT5D7qH1SjLKFRrTO/Dpc2rvbjAVpnj81WnFdBi3U0WX72Wv0w==",
+    "signatures": [
+      {
+        "sig": "MEUCIQC3T7ER2aXajkPw4YFPn0HtwARuUpiucojcVK1fgW2OtgIgDzZ2abtF2L10wF/dSOCOgSto6p9trJWLEN6VA/x59mc=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEYCIQC9U5/M8SP4vVLRPzXuE39FtLNjqOUDqpCni8/LnQ7McAIhAMdFqlQRnLHv9NpY2xZy30SHlFazcerQvJleM6PrdDtU",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/feature-standards@0.3.0",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 479546
+  },
+  "localArtifactSha256": "28f095409a45857a3f9321298f882caa3ad1e27967a2b8d5c2349b8c5c35ece2",
+  "registry_verified": true,
+  "public_download_verified": true,
+  "reviewedCiArtifactMatchesRegistry": true,
+  "freshRegistryConsumer": {
+    "version": "0.3.0",
+    "features": [
+      "auth",
+      "authorization",
+      "listing"
+    ],
+    "contexts": 25,
+    "sourceCommit": "2a9490a937dd79e370869e103b858a87ed7c0356",
+    "sourceDirty": false
+  },
+  "scope": "Publishes the three-feature contract/context catalog. New core runtime packages have separate publication receipts; no auth package versions changed."
+}

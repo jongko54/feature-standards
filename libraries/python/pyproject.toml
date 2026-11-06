@@ -9,9 +9,17 @@ authors = [{name = "jongko54"}]
 requires-python = ">=3.12"
 dependencies = []
 
+[project.urls]
+Repository = "https://github.com/jongko54/feature-standards"
+Documentation = "https://github.com/jongko54/feature-standards/tree/main/libraries/python"
+Issues = "https://github.com/jongko54/feature-standards/issues"
+
 [build-system]
 requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["feature_standards"]
+
+[tool.hatch.build.targets.sdist]
+include = ["feature_standards", "pyproject.toml", "README.md", "LICENSE"]

@@ -146,7 +146,7 @@ mod tests {
     fn shared_vectors() {
         let fixture: Value = serde_json::from_str(include_str!(concat!(
             env!("CARGO_MANIFEST_DIR"),
-            "/../../features/authorization/scenarios.json"
+            "/tests/fixtures/authorization.json"
         )))
         .unwrap();
         for case in fixture["cases"].as_array().unwrap() {

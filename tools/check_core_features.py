@@ -18,23 +18,52 @@ def command(stack, feature):
     env = os.environ.copy()
     cwd = ROOT
     if stack == "python":
-        env["PYTHONPATH"] = str(ROOT / "libraries/python") + os.pathsep + env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = (
+            str(ROOT / "libraries/python") + os.pathsep + env.get("PYTHONPATH", "")
+        )
         pattern = "test_*.py" if feature == "all" else f"test_{feature}.py"
-        argv = [sys.executable, "-m", "unittest", "discover", "-s", "libraries/python/tests", "-p", pattern, "-v"]
+        argv = [
+            sys.executable,
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "libraries/python/tests",
+            "-p",
+            pattern,
+            "-v",
+        ]
     elif stack == "go":
         cwd = ROOT / "libraries/go"
         argv = ["go", "test", "-race", "./..." if feature == "all" else f"./{feature}"]
     elif stack == "java":
-        argv = [str(ROOT / "implementations/java-spring/mvnw"), "-q", "-f", "libraries/java/pom.xml"]
+        argv = [
+            str(ROOT / "implementations/java-spring/mvnw"),
+            "-q",
+            "-f",
+            "libraries/java/pom.xml",
+        ]
         if feature != "all":
-            argv.append(f"-Dtest=*{'Authorization' if feature == 'authorization' else 'Listing'}*")
+            argv.append(
+                f"-Dtest=*{'Authorization' if feature == 'authorization' else 'Listing'}*"
+            )
         argv.append("test")
     elif stack == "rust":
-        argv = ["cargo", "test", "--locked", "--manifest-path", "libraries/rust/Cargo.toml"]
+        argv = [
+            "cargo",
+            "test",
+            "--locked",
+            "--manifest-path",
+            "libraries/rust/Cargo.toml",
+        ]
         if feature != "all":
             argv.append(f"{feature}::")
     else:
-        files = [ROOT / f"libraries/typescript/test/{f}.test.mjs" for f in FEATURES if feature in ("all", f)]
+        files = [
+            ROOT / f"libraries/typescript/test/{f}.test.mjs"
+            for f in FEATURES
+            if feature in ("all", f)
+        ]
         argv = ["node", "--test", *map(str, files)]
     return argv, cwd, env
 
@@ -44,11 +73,32 @@ def main():
     parser.add_argument("--feature", choices=(*FEATURES, "all"), default="all")
     parser.add_argument("--stack", choices=(*STACKS, "all"), default="all")
     args = parser.parse_args()
+    for stack in ("go", "rust"):
+        if args.stack not in ("all", stack):
+            continue
+        for feature in FEATURES:
+            if args.feature not in ("all", feature):
+                continue
+            local = (
+                ROOT
+                / f"libraries/{stack}"
+                / ("testdata" if stack == "go" else "tests/fixtures")
+                / f"{feature}.json"
+            )
+            if (
+                local.read_bytes()
+                != (ROOT / f"features/{feature}/scenarios.json").read_bytes()
+            ):
+                raise ValueError(
+                    f"{stack}/{feature}: packaged shared vectors differ from canonical contract"
+                )
     for stack in STACKS if args.stack == "all" else (args.stack,):
         argv, cwd, env = command(stack, args.feature)
         print(f"Core {args.feature} / {stack}", flush=True)
         subprocess.run(argv, cwd=cwd, env=env, check=True)
-    print("Requested native core checks passed; HTTP, browser and registry evidence is separate.")
+    print(
+        "Requested native core checks passed; HTTP, browser and registry evidence is separate."
+    )
 
 
 if __name__ == "__main__":

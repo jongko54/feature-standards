@@ -391,7 +391,7 @@ mod tests {
     #[test]
     fn shared_vectors() {
         let fixture: Value =
-            serde_json::from_str(include_str!("../../../features/listing/scenarios.json")).unwrap();
+            serde_json::from_str(include_str!("../tests/fixtures/listing.json")).unwrap();
         for vector in fixture["cases"].as_array().unwrap() {
             let result = fixture_schema(&vector["schema"]).and_then(|selected| {
                 parse_query(vector["query"].as_str().unwrap(), &selected)

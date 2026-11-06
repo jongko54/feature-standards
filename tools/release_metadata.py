@@ -12,6 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {
+    "npm-core": ("libraries/typescript", "npm-core-v", "npm"),
+    "python-core": ("libraries/python", "python-core-v", "python"),
+    "java-core": ("libraries/java", "java-core-v", "java"),
+    "rust-core": ("libraries/rust", "rust-core-v", "rust"),
     "npm-standards": ("packages/feature-standards", "feature-standards-v", "npm"),
     "npm-react-auth": ("clients/react", "npm-react-auth-v", "npm"),
     "npm-cli": ("packages/create-feature-auth", "npm-create-feature-auth-v", "npm"),
