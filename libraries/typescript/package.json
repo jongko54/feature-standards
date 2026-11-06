@@ -1,0 +1,28 @@
+{
+  "name": "@ugauga/feature-standards-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Framework-independent authorization and listing helpers (unpublished)",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.d.mts",
+      "import": "./src/index.mjs"
+    },
+    "./authorization": {
+      "types": "./src/authorization.d.mts",
+      "import": "./src/authorization.mjs"
+    },
+    "./listing": {
+      "types": "./src/listing.d.mts",
+      "import": "./src/listing.mjs"
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}

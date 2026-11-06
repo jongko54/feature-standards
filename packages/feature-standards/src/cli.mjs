@@ -5,14 +5,15 @@ import { pathToFileURL } from 'node:url';
 import { checkProject, getContext, initFeature, listFeatures } from './index.mjs';
 
 const HELP = `feature-standards list
-feature-standards context --stack python|go|java|rust|react [--feature auth] [--profile browser-session-v1|browser-session-v2|browser-session-v3]
+feature-standards context --stack python|go|java|rust|react [--feature auth|authorization|listing] [--profile PROFILE]
 feature-standards init --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--feature auth] [--profile browser-session-v1|browser-session-v2|browser-session-v3] [--check]
 feature-standards check --project GENERATED_DIRECTORY
 
 Read-only list/context select feature contracts and AI integration context, emitted as JSON.
-Authentication is the first and currently available feature. Feature defaults to auth; profile defaults to browser-session-v1.
+Available features: auth (browser-session-v1/v2/v3), authorization (rbac-v1), listing (offset-list-v1).
+Feature defaults to auth; profile defaults to the selected feature's first profile.
 Packaged document read paths are separate from source-checkout API entrypoints and command guidance.
-Explicit init creates a new project through a trusted source checkout's generator >=0.2.0.
+Explicit init supports auth only and creates a new project through a trusted source checkout's generator >=0.2.0.
 Explicit check or init --check executes trusted project code and toolchains for the selected profile.
 Database checks require FEATURE_STANDARDS_TEST_DATABASE_URL and use a new isolated test database.
 list/context never execute checks, migrations, installation, generation or project edits.

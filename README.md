@@ -4,7 +4,7 @@
 
 Feature Standards organizes a feature's behavior, public APIs, stack guides, and conformance checks in one place. An agent chooses the feature, profile, and stack; reads the relevant contract and API; reuses the implementation; and checks the integration against the same behavior across stacks. The goal is to reduce repeated implementation and unnecessary exploration during AI-assisted development.
 
-**Authentication is the first and currently available feature.** Python/FastAPI, Go/net/http, Java/Spring, and Rust/Axum implement shared browser-session contracts. React is one client adapter for those servers. The catalog currently contains `auth`; additional features are future work.
+**Three feature standards are available in source: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. They are experimental, unpublished core APIs; [read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
 ## Start with the feature catalog
 
@@ -176,6 +176,6 @@ The [CI workflow](.github/workflows/ci.yml) and [matching template](ci/github-ac
 
 An earlier paired AI evaluation passed **24/24 authentication integrations** across four backends, two context conditions, and three repeats per condition. It measured the earlier **v1** integration workflow. Time and token results were mixed and do not establish a general efficiency improvement or benchmark the new `feature-standards` package. See the [repeated evaluation and its source/sampling limits](docs/validation-ai-paired-2026-11-03.md). Reducing repeated work is the product goal; improvement must be measured for the actual workflow and environment.
 
-These specifications are experimental repository conventions, not an accredited international standard. In-memory state is lost on restart. Database mode has no automatic DDL, seeding, or in-memory fallback. Role management and MFA are not included. Production integration needs review of HTTPS, proxy trust, secrets, database privileges and backups, observability, and outbox access and retention. SMTP acceptance does not prove inbox delivery. This project has not undergone a production security audit.
+These specifications are experimental repository conventions, not an accredited international standard. In-memory state is lost on restart. Database mode has no automatic DDL, seeding, or in-memory fallback. The new core authorization library evaluates explicit role grants; role-management APIs and MFA are not included. Production integration needs review of HTTPS, proxy trust, secrets, database privileges and backups, observability, and outbox access and retention. SMTP acceptance does not prove inbox delivery. This project has not undergone a production security audit.
 
 See the [versioning policy](docs/versioning.md), [contribution guide](CONTRIBUTING.md), [security scope](SECURITY.md), and [prior research](docs/research.md). Created by [jongko54](https://github.com/jongko54). Licensed under [MIT](LICENSE).

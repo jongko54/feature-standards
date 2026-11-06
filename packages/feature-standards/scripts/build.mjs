@@ -11,6 +11,7 @@ const REPOSITORY = 'https://github.com/jongko54/feature-standards';
 // Deliberately enumerate every source file. Never copy source directories recursively.
 export const SOURCE_FILES = Object.freeze([
   'feature-standards.json',
+  'features/catalog.json',
   'README.md',
   'SECURITY.md',
   'features/auth/catalog.schema.json',
@@ -28,12 +29,28 @@ export const SOURCE_FILES = Object.freeze([
   'features/auth/postgres/001_initial.sql',
   'features/auth/postgres/002_accounts.sql',
   'features/auth/postgres/003_mail_delivery.sql',
+  'features/authorization/catalog.json',
+  'features/authorization/specification.md',
+  'features/authorization/openapi.json',
+  'features/authorization/scenarios.json',
+  'features/listing/catalog.json',
+  'features/listing/specification.md',
+  'features/listing/openapi.json',
+  'features/listing/scenarios.json',
   'docs/ai-integration.md',
   'docs/create-feature-auth.md',
   'docs/postgres-v2.md',
   'docs/account-v3.md',
   'docs/smtp-delivery.md',
   'docs/versioning.md',
+  'docs/core-standards.md',
+  'libraries/python/README.md',
+  'libraries/go/README.md',
+  'libraries/java/README.md',
+  'libraries/rust/README.md',
+  'libraries/typescript/README.md',
+  'examples/core-python/README.md',
+  'skills/integrate-core/SKILL.md',
   'implementations/python-fastapi/README.md',
   'implementations/go-net-http/README.md',
   'implementations/java-spring/README.md',
@@ -51,6 +68,7 @@ export const SOURCE_FILES = Object.freeze([
 ]);
 const STACKS = ['python', 'go', 'java', 'rust', 'react'];
 const PROFILES = ['browser-session-v1', 'browser-session-v2', 'browser-session-v3'];
+const FEATURES = Object.freeze({ auth: PROFILES, authorization: ['rbac-v1'], listing: ['offset-list-v1'] });
 const allowed = new Set(SOURCE_FILES);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
@@ -92,9 +110,10 @@ function exactIds(entries, expected, label) {
   }
 }
 
-function validateManifest(manifest, sources) {
-  if (manifest.schema_version !== 1 || manifest.feature !== 'auth') throw new Error('unsupported-manifest-feature');
-  exactIds(manifest.profiles, PROFILES, 'profiles');
+function validateManifest(manifest, sources, feature) {
+  if (manifest.schema_version !== 1 || manifest.feature !== feature || !Object.hasOwn(FEATURES, feature)) throw new Error('unsupported-manifest-feature');
+  const profiles = FEATURES[feature];
+  exactIds(manifest.profiles, profiles, 'profiles');
   exactIds(manifest.stacks, STACKS, 'stacks');
   for (const profile of manifest.profiles) {
     for (const name of ['specification', 'openapi', 'scenarios', 'guide']) requireDocument(profile[name]);
@@ -102,14 +121,17 @@ function validateManifest(manifest, sources) {
     profile.migrations.forEach(requireDocument);
     const api = JSON.parse(sources.get(profile.openapi));
     const scenarios = JSON.parse(sources.get(profile.scenarios));
-    if (api.paths?.['/healthz']?.get?.responses?.['200']?.content?.['application/json']?.schema?.properties?.profile?.const !== profile.id || scenarios.profile !== profile.id) {
+    const apiProfile = feature === 'auth'
+      ? api.paths?.['/healthz']?.get?.responses?.['200']?.content?.['application/json']?.schema?.properties?.profile?.const
+      : api['x-feature-standards-profile'];
+    if (apiProfile !== profile.id || scenarios.profile !== profile.id) {
       throw new Error('manifest-contract-profile-mismatch: ' + profile.id);
     }
   }
   for (const stack of manifest.stacks) {
     requireDocument(stack.guide);
     requireDocument(stack.consumer + '/README.md');
-    if (!Array.isArray(stack.profiles) || [...stack.profiles].sort().join() !== [...PROFILES].sort().join()) {
+    if (!Array.isArray(stack.profiles) || [...stack.profiles].sort().join() !== [...profiles].sort().join()) {
       throw new Error('unsupported-manifest-stack-profiles: ' + stack.id);
     }
     if (!Array.isArray(stack.entrypoints) || stack.entrypoints.length === 0) throw new Error('missing-source-entrypoints');
@@ -121,10 +143,22 @@ function validateManifest(manifest, sources) {
   }
 }
 
+function validateIndex(index, sources) {
+  if (index.schema_version !== 1) throw new Error('unsupported-feature-index');
+  exactIds(index.features, Object.keys(FEATURES), 'features');
+  for (const feature of index.features) {
+    for (const name of ['catalog', 'integration_skill', 'integration_guide']) requireDocument(feature[name]);
+    if (feature.default_profile !== FEATURES[feature.id][0] || typeof feature.description !== 'string' || !feature.description.trim()) {
+      throw new Error('invalid-feature-index-entry: ' + feature.id);
+    }
+    validateManifest(JSON.parse(sources.get(feature.catalog)), sources, feature.id);
+  }
+}
+
 export function buildSnapshot() {
   // Read and validate every input before replacing this package's generated directory.
   const sources = new Map(SOURCE_FILES.map(path => [path, readFileSync(regularSource(path))]));
-  validateManifest(JSON.parse(sources.get('feature-standards.json')), sources);
+  validateIndex(JSON.parse(sources.get('features/catalog.json')), sources);
   const sourceCommit = git(['rev-parse', 'HEAD']).stdout.toString('utf8').trim();
   if (!/^[a-f0-9]{40,64}$/.test(sourceCommit)) throw new Error('invalid-source-commit');
   const files = Object.fromEntries([...sources].map(([path, bytes]) => {

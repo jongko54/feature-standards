@@ -427,6 +427,14 @@ def main() -> int:
     validate_profile(v1, version="0.1.0", profile="browser-session-v1")
     validate_profile(v2, version="0.2.0", profile="browser-session-v2")
     validate_profile(v3, version="0.3.0", profile="browser-session-v3")
+    for feature, profile in (("authorization", "rbac-v1"), ("listing", "offset-list-v1")):
+        core = json.loads((ROOT / f"features/{feature}/openapi.json").read_text())
+        validate(core)
+        require(core["x-feature-standards-profile"] == profile, f"{feature}: profile drift")
+        require(
+            core["components"]["securitySchemes"]["sessionCookie"]["name"] == "fs_session",
+            f"{feature}: consumer cookie drift",
+        )
     manifest = json.loads((ROOT / "features/auth/scenarios.json").read_text())
     require(manifest["profile"] == "browser-session-v1", "v1 scenario profile drift")
     mapped = [row["test"] for row in manifest["scenarios"]]

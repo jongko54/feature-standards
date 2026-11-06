@@ -1,0 +1,1959 @@
+{
+  "feature": "listing",
+  "profile": "offset-list-v1",
+  "cases": [
+    {
+      "id": "default-id",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "name": "Alpha",
+            "score": 1,
+            "active": true
+          },
+          {
+            "id": "b",
+            "name": "Alpha",
+            "score": 2,
+            "active": true
+          },
+          {
+            "id": "c",
+            "name": "Beta",
+            "score": 2,
+            "active": false
+          }
+        ],
+        "total": 3,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "stable-descending",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=-score",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "b",
+            "name": "Alpha",
+            "score": 2,
+            "active": true
+          },
+          {
+            "id": "c",
+            "name": "Beta",
+            "score": 2,
+            "active": false
+          },
+          {
+            "id": "a",
+            "name": "Alpha",
+            "score": 1,
+            "active": true
+          }
+        ],
+        "total": 3,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "filter-before-total",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.active=true",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "name": "Alpha",
+            "score": 1,
+            "active": true
+          },
+          {
+            "id": "b",
+            "name": "Alpha",
+            "score": 2,
+            "active": true
+          }
+        ],
+        "total": 2,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "first-page",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=2",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "name": "Alpha",
+            "score": 1,
+            "active": true
+          },
+          {
+            "id": "b",
+            "name": "Alpha",
+            "score": 2,
+            "active": true
+          }
+        ],
+        "total": 3,
+        "limit": 2,
+        "offset": 0,
+        "nextOffset": 2
+      }
+    },
+    {
+      "id": "last-page",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=2&offset=2",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "c",
+            "name": "Beta",
+            "score": 2,
+            "active": false
+          }
+        ],
+        "total": 3,
+        "limit": 2,
+        "offset": 2,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "offset-beyond-end",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "offset=10000",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [],
+        "total": 3,
+        "limit": 20,
+        "offset": 10000,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "empty",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "",
+      "items": [],
+      "expected": {
+        "items": [],
+        "total": 0,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "form-plus-space",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=Alpha+Beta",
+      "items": [
+        {
+          "id": "a",
+          "name": "Alpha Beta",
+          "score": 0,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "name": "Alpha Beta",
+            "score": 0,
+            "active": true
+          }
+        ],
+        "total": 1,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "encoded-key",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "%6cimit=1",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "name": "Alpha",
+            "score": 1,
+            "active": true
+          }
+        ],
+        "total": 3,
+        "limit": 1,
+        "offset": 0,
+        "nextOffset": 1
+      }
+    },
+    {
+      "id": "unicode-scalar-order",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=name",
+      "items": [
+        {
+          "id": "astral",
+          "name": "\ud800\udc00"
+        },
+        {
+          "id": "bmp",
+          "name": "\ue000"
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "bmp",
+            "name": "\ue000"
+          },
+          {
+            "id": "astral",
+            "name": "\ud800\udc00"
+          }
+        ],
+        "total": 2,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "integer-number-equivalence",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.score=1",
+      "items": [
+        {
+          "id": "a",
+          "score": 1.0
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "score": 1.0
+          }
+        ],
+        "total": 1,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "safe-integer-bound",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.score=9007199254740991",
+      "items": [
+        {
+          "id": "a",
+          "score": 9007199254740991
+        }
+      ],
+      "expected": {
+        "items": [
+          {
+            "id": "a",
+            "score": 9007199254740991
+          }
+        ],
+        "total": 1,
+        "limit": 20,
+        "offset": 0,
+        "nextOffset": null
+      }
+    },
+    {
+      "id": "zero-limit",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=0",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "leading-zero",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "offset=01",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "negative-offset",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "offset=-1",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "plus-limit",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=%2B1",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "oversize-limit",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=101",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "oversize-offset",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "offset=10001",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "duplicate",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=1&limit=2",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "encoded-duplicate",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=1&%6cimit=2",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "unknown",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "tenant=a",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "sort-injection",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=id%2Cname",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "filter-injection",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=x%00y",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "bad-percent",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=%GG",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "short-percent",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=%A",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "invalid-utf8",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=%FF",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "overlong-utf8",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=%C0%AF",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "surrogate-utf8",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=%ED%A0%80",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "empty-pair",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit=1&",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "missing-equals",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "limit",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "question-prefix",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "?limit=1",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "empty-filter",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "integer-leading-zero",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.score=01",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "integer-minus-zero",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.score=-0",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "unsafe-integer",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.score=9007199254740992",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "bad-boolean",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.active=True",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "too-long-string",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "too-long-query",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.name=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "too-many-pairs",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "k0=v&k1=v&k2=v&k3=v&k4=v&k5=v&k6=v&k7=v&k8=v&k9=v&k10=v&k11=v&k12=v&k13=v&k14=v&k15=v&k16=v",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_QUERY"
+      }
+    },
+    {
+      "id": "missing-id-schema",
+      "schema": {
+        "sortFields": {
+          "name": "string"
+        },
+        "filterFields": {}
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_SCHEMA"
+      }
+    },
+    {
+      "id": "schema-type-conflict",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "score": "integer"
+        },
+        "filterFields": {
+          "score": "string"
+        }
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_SCHEMA"
+      }
+    },
+    {
+      "id": "schema-field-newline",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name\n": "string"
+        },
+        "filterFields": {}
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "c",
+          "name": "Beta",
+          "score": 2,
+          "active": false
+        },
+        {
+          "id": "b",
+          "name": "Alpha",
+          "score": 2,
+          "active": true
+        },
+        {
+          "id": "a",
+          "name": "Alpha",
+          "score": 1,
+          "active": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_SCHEMA"
+      }
+    },
+    {
+      "id": "duplicate-ids",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "a"
+        },
+        {
+          "id": "a"
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "missing-id",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "",
+      "items": [
+        {
+          "name": "A"
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "id-newline",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "",
+      "items": [
+        {
+          "id": "a\n"
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "missing-sort",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=score",
+      "items": [
+        {
+          "id": "a"
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "bad-integer",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=score",
+      "items": [
+        {
+          "id": "a",
+          "score": 1.5
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "bool-is-not-integer",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=score",
+      "items": [
+        {
+          "id": "a",
+          "score": true
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "unsafe-row-integer",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "sort=score",
+      "items": [
+        {
+          "id": "a",
+          "score": 9007199254740992
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    },
+    {
+      "id": "null-filter-value",
+      "schema": {
+        "sortFields": {
+          "id": "string",
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        },
+        "filterFields": {
+          "name": "string",
+          "score": "integer",
+          "active": "boolean"
+        }
+      },
+      "query": "filter.active=true",
+      "items": [
+        {
+          "id": "a",
+          "active": null
+        }
+      ],
+      "expected": {
+        "error": "INVALID_LIST_DATA"
+      }
+    }
+  ]
+}

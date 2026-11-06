@@ -54,6 +54,7 @@ test('invalid selectors and ambiguous flags fail before importing the generator 
   const prefix = ['init', '--source', source, '--dest', dest];
   for (const args of [
     [...prefix, '--stack', 'react'], [...prefix, '--stack', 'python', '--feature', 'billing'],
+    [...prefix, '--stack', 'python', '--feature', 'authorization'], [...prefix, '--stack', 'python', '--feature', 'listing'],
     [...prefix, '--stack', 'python', '--profile', 'unknown'], [...prefix, '--stack', 'python', '--check', '--check'],
     [...prefix, '--stack', 'python', '--stack', 'go'], [...prefix, '--stack'],
     [...prefix, '--stack', 'python', '--execute'], ['check', '--project', dest, '--check'],
@@ -82,6 +83,22 @@ test('legacy source generators and generated runners are refused before executin
   assert.equal(oldProject.status, 1);
   assert.match(oldProject.stderr, /project-check-protocol-unsupported/);
   assert.ok(!oldProject.stderr.includes('legacy-runner-must-not-be-imported'));
+}));
+
+test('check refuses new feature metadata before importing a project runner', () => temporary(scratch => {
+  const source = fixtureSource(join(scratch, 'source'));
+  const dest = join(scratch, 'new-app');
+  assert.equal(run(initArgs(source, dest), scratch).status, 0);
+  const metadataFile = join(dest, 'feature-auth.json');
+  const metadata = JSON.parse(readFileSync(metadataFile, 'utf8'));
+  writeFileSync(join(dest, 'project.mjs'), "throw new Error('unsupported-runner-must-not-run');");
+  for (const feature of ['authorization', 'listing']) {
+    writeFileSync(metadataFile, JSON.stringify({ ...metadata, feature }));
+    const result = run(['check', '--project', dest], scratch);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /unsupported-feature/);
+    assert.ok(!result.stderr.includes('unsupported-runner-must-not-run'));
+  }
 }));
 
 test('symlinked sources, generator files, projects and runners are refused', () => temporary(scratch => {

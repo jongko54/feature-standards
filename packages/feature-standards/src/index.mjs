@@ -8,9 +8,14 @@ const readJson = path => JSON.parse(readFileSync(join(PACKAGE, path), 'utf8'));
 
 function snapshot() {
   try {
+    const provenance = readJson('snapshot/provenance.json');
+    const index = readJson('snapshot/features/catalog.json');
     return {
-      manifest: readJson('snapshot/feature-standards.json'),
-      provenance: readJson('snapshot/provenance.json'),
+      features: index.features.map(feature => ({
+        ...feature,
+        manifest: JSON.parse(readFileSync(document(provenance, feature.catalog).readPath, 'utf8')),
+      })),
+      provenance,
       packageMetadata: readJson('package.json'),
     };
   } catch (error) {
@@ -49,26 +54,30 @@ function commands(entries) {
 
 /** List only features actually represented by this release's contract snapshot. */
 export function listFeatures() {
-  const { manifest, provenance, packageMetadata } = snapshot();
+  const { features, provenance, packageMetadata } = snapshot();
   return {
     schemaVersion: 1,
     package: { name: packageMetadata.name, version: packageMetadata.version },
     provenance: metadata(provenance),
-    features: [{
+    features: features.map(({ manifest, description }) => ({
       id: manifest.feature,
-      description: 'Authentication is the first and currently available reusable feature standard.',
+      description,
       profiles: manifest.profiles.map(profile => profile.id),
       stacks: manifest.stacks.map(({ id, role, language, framework }) => ({ id, role, language, framework })),
-    }],
+    })),
   };
 }
 
 /** Select local contract documents and separate source-checkout guidance. Never execute it. */
 export function getContext(options = {}) {
   if (options === null || typeof options !== 'object' || Array.isArray(options)) throw new Error('invalid-options');
-  const { feature = 'auth', stack: stackId, profile: profileId = 'browser-session-v1' } = options;
-  const { manifest, provenance, packageMetadata } = snapshot();
-  if (feature !== manifest.feature) throw new Error('unsupported-feature: choose ' + manifest.feature);
+  const { feature = 'auth', stack: stackId } = options;
+  const { features, provenance, packageMetadata } = snapshot();
+  const selected = features.find(candidate => candidate.id === feature);
+  if (!selected) throw new Error('unsupported-feature: choose ' + features.map(candidate => candidate.id).join('|'));
+  const { manifest } = selected;
+  const { profile: profileId = selected.default_profile } = options;
+  const isAuth = feature === 'auth';
   if (!stackId) throw new Error('stack-required: choose ' + manifest.stacks.map(stack => stack.id).join('|'));
   const stack = manifest.stacks.find(candidate => candidate.id === stackId);
   if (!stack) throw new Error('unsupported-stack: choose ' + manifest.stacks.map(candidate => candidate.id).join('|'));
@@ -85,7 +94,7 @@ export function getContext(options = {}) {
     stack: { id: stack.id, role: stack.role, language: stack.language, framework: stack.framework },
     provenance: metadata(provenance),
     packagedDocuments: {
-      manifest: doc('feature-standards.json'),
+      manifest: doc(selected.catalog),
       specification: doc(profile.specification),
       relatedSpecifications: manifest.profiles.slice(0, profileIndex).map(candidate => doc(candidate.specification)),
       openapi: doc(profile.openapi),
@@ -94,12 +103,12 @@ export function getContext(options = {}) {
       profileGuide: doc(profile.guide),
       apiGuide: doc(stack.guide),
       consumerGuide: doc(stack.consumer + '/README.md'),
-      integrationSkill: doc('skills/integrate-auth/SKILL.md'),
-      integrationGuide: doc('docs/ai-integration.md'),
-      generatorGuide: doc('docs/create-feature-auth.md'),
+      integrationSkill: doc(selected.integration_skill),
+      integrationGuide: doc(selected.integration_guide),
+      ...(isAuth ? { generatorGuide: doc('docs/create-feature-auth.md') } : {}),
       profileReferences: [
-        ...(profileIndex >= 1 ? [doc('skills/integrate-auth/references/postgres.md')] : []),
-        ...(profileIndex >= 2 ? [doc('skills/integrate-auth/references/accounts.md')] : []),
+        ...(isAuth && profileIndex >= 1 ? [doc('skills/integrate-auth/references/postgres.md')] : []),
+        ...(isAuth && profileIndex >= 2 ? [doc('skills/integrate-auth/references/accounts.md')] : []),
       ],
     },
     sourceCheckout: {
@@ -118,7 +127,7 @@ export function getContext(options = {}) {
       environment: profile.environment,
       install: commands(stack.install),
       checks: commands([...stack.checks, ...profile.checks]),
-      generator: stack.role === 'backend' ? {
+      generator: isAuth && stack.role === 'backend' ? {
         supportedForStack: true,
         scope: 'source-checkout',
         cwd: '.',
@@ -127,10 +136,11 @@ export function getContext(options = {}) {
         note: 'Optional existing generator. Replace the placeholders and run it explicitly from a trusted checkout. No generator or runner is included here.',
       } : {
         supportedForStack: false,
-        note: 'The existing generator supports backend consumers. Use the React consumer guide for client integration.',
+        note: isAuth ? 'The existing generator supports backend consumers. Use the React consumer guide for client integration.'
+          : 'The existing generator supports auth only. Integrate these reusable APIs explicitly and run the listed source conformance checks.',
       },
     },
-    optionalAddons: manifest.addons.filter(addon => addon.requires_profile === profile.id).map(addon => ({
+    optionalAddons: (isAuth ? manifest.addons : []).filter(addon => addon.requires_profile === profile.id).map(addon => ({
       id: addon.id,
       requiresProfile: addon.requires_profile,
       packagedDocuments: {
@@ -145,6 +155,7 @@ export function getContext(options = {}) {
       'Read-only contract selection: no project edits, dependency installation, checks, migrations, servers or model calls.',
       'Implementation source and conformance harnesses require the source checkout; packaged guides may link to files that are not bundled.',
       'This snapshot is not an automatic update mechanism or a security certification. Test results and AI speed improvements are not established by selecting context.',
+      ...(feature === 'authorization' && stack.id === 'react' ? ['Browser authorization helpers provide presentation advice only. Server-owned principals, resources and policy enforcement remain authoritative.'] : []),
     ],
   };
 }

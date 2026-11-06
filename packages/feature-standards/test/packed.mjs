@@ -40,7 +40,7 @@ try {
   assert.deepEqual(files(installed).sort(), expectedFiles);
   const metadata = JSON.parse(readFileSync(join(installed, 'package.json'), 'utf8'));
   assert.equal(metadata.name, 'feature-standards');
-  assert.equal(metadata.version, '0.2.0');
+  assert.equal(metadata.version, '0.3.0');
   assert.deepEqual(metadata.author, { name: 'jongko54', url: 'https://github.com/jongko54' });
   assert.equal(metadata.repository.directory, 'packages/feature-standards');
   for (const keyword of ['jongko54', 'ai', 'cross-language', 'contracts']) assert.ok(metadata.keywords.includes(keyword));
@@ -55,11 +55,12 @@ try {
   }
   const bin = join(consumer, 'node_modules/.bin/feature-standards');
   const listed = JSON.parse(run(bin, ['list'], consumer));
-  assert.equal(listed.features[0].id, 'auth');
+  assert.deepEqual(listed.features.map(feature => feature.id), ['auth', 'authorization', 'listing']);
   assert.match(run(bin, ['--help'], consumer), /Read-only/);
   let contexts = 0;
-  for (const stack of listed.features[0].stacks) for (const profile of listed.features[0].profiles) {
-    const context = JSON.parse(run(bin, ['context', '--feature', 'auth', '--stack', stack.id, '--profile', profile], consumer));
+  for (const feature of listed.features) for (const stack of feature.stacks) for (const profile of feature.profiles) {
+    const context = JSON.parse(run(bin, ['context', '--feature', feature.id, '--stack', stack.id, '--profile', profile], consumer));
+    assert.equal(context.feature, feature.id);
     assert.equal(context.stack.id, stack.id);
     assert.equal(context.profile, profile);
     assert.ok(context.packagedDocuments.specification.readPath.startsWith(installed + '/'));
@@ -67,7 +68,7 @@ try {
     for (const entrypoint of context.sourceCheckout.entrypoints) assert.ok(!existsSync(join(installed, 'snapshot', entrypoint.checkoutPath)));
     contexts++;
   }
-  assert.equal(contexts, 15);
+  assert.equal(contexts, 25);
   const imported = JSON.parse(run(process.execPath, ['--input-type=module', '-e', "import { listFeatures, getContext } from 'feature-standards'; console.log(JSON.stringify({ feature: listFeatures().features[0].id, stack: getContext({ stack: 'rust' }).stack.id }));"], consumer));
   assert.deepEqual(imported, { feature: 'auth', stack: 'rust' });
   const source = fixtureSource(join(scratch, 'trusted-source'));
@@ -85,5 +86,12 @@ try {
   assert.equal(refused.status, 1);
   assert.equal(refused.stdout, '');
   assert.match(refused.stderr, /unsupported-feature/);
+  for (const feature of ['authorization', 'listing']) {
+    const dest = join(scratch, 'unsupported-' + feature);
+    const result = spawnSync(bin, ['init', '--feature', feature, '--stack', 'python', '--source', source, '--dest', dest], { cwd: consumer, encoding: 'utf8' });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /unsupported-feature/);
+    assert.ok(!existsSync(dest));
+  }
   console.log(JSON.stringify({ package: metadata.name, version: metadata.version, files: expectedFiles.length, snapshotFiles: SOURCE_FILES.length, freshOfflineInstall: true, installedBin: true, contexts, nodeExports: true, explicitWorkflowFixture: true, realBackendTestedByThisSmoke: false, authorAndKeywords: true, sha256: tarballSha256, sourceCommit: provenance.sourceCommit, sourceDirty: provenance.sourceDirty, snapshotDirty: provenance.snapshotDirty }, null, 2));
 } finally { rmSync(scratch, { recursive: true, force: true }); }

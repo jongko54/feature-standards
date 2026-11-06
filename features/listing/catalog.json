@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "feature": "listing",
+  "profiles": [
+    {
+      "id": "offset-list-v1",
+      "specification": "features/listing/specification.md",
+      "openapi": "features/listing/openapi.json",
+      "scenarios": "features/listing/scenarios.json",
+      "guide": "docs/core-standards.md",
+      "environment": {},
+      "migrations": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "all"
+          ]
+        }
+      ]
+    }
+  ],
+  "stacks": [
+    {
+      "id": "python",
+      "role": "backend",
+      "language": "Python",
+      "framework": "framework-independent",
+      "root": "libraries/python",
+      "guide": "libraries/python/README.md",
+      "profiles": [
+        "offset-list-v1"
+      ],
+      "package": {
+        "kind": "wheel",
+        "name": "feature-standards-core",
+        "version": "0.1.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "libraries/python/feature_standards/listing.py",
+          "symbol": "ListingSchema; parse_query; page"
+        }
+      ],
+      "consumer": "examples/core-python",
+      "install": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "python"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "go",
+      "role": "backend",
+      "language": "Go",
+      "framework": "framework-independent",
+      "root": "libraries/go",
+      "guide": "libraries/go/README.md",
+      "profiles": [
+        "offset-list-v1"
+      ],
+      "package": {
+        "kind": "go-module",
+        "name": "github.com/jongko54/feature-standards/libraries/go",
+        "version": "0.1.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "libraries/go/listing/listing.go",
+          "symbol": "NewSchema; ParseQuery; Page"
+        }
+      ],
+      "consumer": "libraries/go",
+      "install": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "go"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "java",
+      "role": "backend",
+      "language": "Java",
+      "framework": "framework-independent",
+      "root": "libraries/java",
+      "guide": "libraries/java/README.md",
+      "profiles": [
+        "offset-list-v1"
+      ],
+      "package": {
+        "kind": "maven",
+        "name": "io.github.jongko54:feature-standards-core:0.1.0",
+        "version": "0.1.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "libraries/java/src/main/java/dev/featurestandards/core/listing/Listing.java",
+          "symbol": "Listing.Schema; Listing.parseQuery; Listing.page"
+        }
+      ],
+      "consumer": "libraries/java",
+      "install": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "java"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rust",
+      "role": "backend",
+      "language": "Rust",
+      "framework": "framework-independent",
+      "root": "libraries/rust",
+      "guide": "libraries/rust/README.md",
+      "profiles": [
+        "offset-list-v1"
+      ],
+      "package": {
+        "kind": "cargo-path",
+        "name": "feature-standards-core",
+        "version": "0.1.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "libraries/rust/src/listing.rs",
+          "symbol": "Schema; parse_query; page"
+        }
+      ],
+      "consumer": "libraries/rust",
+      "install": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "rust"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react",
+      "role": "client",
+      "language": "TypeScript",
+      "framework": "framework-independent",
+      "root": "libraries/typescript",
+      "guide": "libraries/typescript/README.md",
+      "profiles": [
+        "offset-list-v1"
+      ],
+      "package": {
+        "kind": "npm",
+        "name": "@ugauga/feature-standards-core",
+        "version": "0.1.0",
+        "published": false
+      },
+      "entrypoints": [
+        {
+          "path": "libraries/typescript/src/listing.mjs",
+          "symbol": "createListingSchema; parseListQuery; listPage"
+        }
+      ],
+      "consumer": "libraries/typescript",
+      "install": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_features.py",
+            "--feature",
+            "listing",
+            "--stack",
+            "react"
+          ]
+        }
+      ]
+    }
+  ],
+  "addons": []
+}

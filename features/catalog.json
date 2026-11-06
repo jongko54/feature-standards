@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "features": [
+    {
+      "id": "auth",
+      "catalog": "feature-standards.json",
+      "description": "Session authentication and account lifecycle",
+      "default_profile": "browser-session-v1",
+      "integration_skill": "skills/integrate-auth/SKILL.md",
+      "integration_guide": "README.md"
+    },
+    {
+      "id": "authorization",
+      "catalog": "features/authorization/catalog.json",
+      "description": "Explicit role permissions with tenant and owner isolation",
+      "default_profile": "rbac-v1",
+      "integration_skill": "skills/integrate-core/SKILL.md",
+      "integration_guide": "docs/core-standards.md"
+    },
+    {
+      "id": "listing",
+      "catalog": "features/listing/catalog.json",
+      "description": "Strict typed filtering, deterministic sorting and offset pagination",
+      "default_profile": "offset-list-v1",
+      "integration_skill": "skills/integrate-core/SKILL.md",
+      "integration_guide": "docs/core-standards.md"
+    }
+  ]
+}

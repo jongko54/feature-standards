@@ -55,7 +55,7 @@ function currentGenerator(version) {
 function selection(options) {
   const feature = options.feature ?? 'auth';
   const profile = options.profile ?? 'browser-session-v1';
-  if (feature !== 'auth') throw new Error('unsupported-feature: choose auth');
+  if (feature !== 'auth') throw new Error('unsupported-feature: init/check support auth only; use context for authorization or listing integration guidance');
   if (!STACKS.includes(options.stack)) throw new Error('unsupported-generation-stack: choose python|go|java|rust');
   if (!PROFILES.includes(profile)) throw new Error('unsupported-profile: choose ' + PROFILES.join('|'));
   return { feature, stack: options.stack, profile };

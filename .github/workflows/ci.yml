@@ -70,6 +70,16 @@ jobs:
           uv run --frozen --project tools python tools/check_contract.py
           uv run --frozen --project tools python tools/check_mail_contract.py
           uv run --frozen --project tools python tools/auth_catalog.py --check
+      - name: Verify authorization and listing across five native stacks
+        run: |
+          uv run --frozen --project tools python tools/feature_catalog.py --check
+          uv run --frozen --project tools python tools/check_core_features.py --feature all --stack all
+          uv sync --frozen --project examples/core-python
+          uv run --frozen --project examples/core-python python tests/core_consumer_conformance.py
+      - name: Check core TypeScript public declarations
+        run: |
+          npm ci --prefix clients/react
+          clients/react/node_modules/.bin/tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 libraries/typescript/test/types.mts
       - name: Test local process harness
         run: uv run --frozen --project tools python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Test delayed registry availability and integrity checks

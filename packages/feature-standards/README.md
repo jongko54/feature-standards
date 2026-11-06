@@ -1,6 +1,6 @@
 # Feature Standards
 
-Reusable feature standards for AI-assisted development across languages. **Authentication is the first and currently available feature**: Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum, and a React client, with three browser-session profiles.
+Reusable feature standards for AI-assisted development across languages: authentication, authorization, and pagination/sorting/filtering. Authentication has Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum, and React integrations. The new authorization and listing standards have framework-independent Python, Go, Java, Rust, and browser JavaScript/TypeScript libraries.
 
 This main package distributes a curated contract snapshot, a read-only context selector, and explicit `init` / `check` entry points. It gives an AI the selected specification, OpenAPI, scenarios, schema SQL, public API guides, and integration guidance. Application generation delegates to an existing trusted source checkout; selected-profile checks execute the generated application's runner. The API implementations and conformance harnesses live in the [source repository](https://github.com/jongko54/feature-standards). The React runtime is a separate package.
 
@@ -9,25 +9,29 @@ This main package distributes a curated contract snapshot, a read-only context s
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# Published 0.2.0; fresh registry installation and actual workflows verified.
+# Published 0.2.0 provides authentication contexts and workflows.
 npm install --save-dev feature-standards@0.2.0
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-`list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth` and `--profile` defaults to `browser-session-v1`. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
+**This checkout is source version 0.3.0; it has not been published by this change.** Build and use the repository commands below to select all three features. The new core libraries are also unpublished. Installing the registry's 0.2.0 release does not provide the new contexts.
 
-| Selection | Available values |
-| --- | --- |
-| Feature | `auth` |
-| Stack | `python`, `go`, `java`, `rust`, `react` |
-| Profile | `browser-session-v1`, `browser-session-v2`, `browser-session-v3` |
+`list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
+
+| Feature | Profiles (first is the default) | Stacks |
+| --- | --- | --- |
+| `auth` | `browser-session-v1`, `browser-session-v2`, `browser-session-v3` | `python`, `go`, `java`, `rust`, `react` |
+| `authorization` | `rbac-v1` | `python`, `go`, `java`, `rust`, `react` |
+| `listing` | `offset-list-v1` | `python`, `go`, `java`, `rust`, `react` |
 
 v1 uses memory sessions. v2 uses PostgreSQL sessions. v3 adds registration, email verification, and password reset. SMTP delivery is an optional v3 addon with separate configuration. React is a client stack; the other four stacks are backends. `list` and `context` perform no checks, migrations, dependency installation, generation, project edits, server startup, or model calls.
 
+`rbac-v1` evaluates explicit tenant/owner grants against server-owned identities and resources. `offset-list-v1` strictly parses an allowlisted query and filters, sorts, and pages a bounded in-memory collection. The `react` selections refer to JavaScript/TypeScript helpers; browser authorization decisions are presentation advice and never replace server enforcement. Read the [core standards guide](https://github.com/jongko54/feature-standards/blob/main/docs/core-standards.md) for integration and conformance commands.
+
 ## Generate and check an application
 
-The explicit workflow commands require a trusted source checkout containing `@ugauga/create-feature-auth` version 0.2.0 or later. The source checkout is separate from this npm package. Existing targets, linked paths, unsupported selections, and older runners that only check memory v1 are refused.
+The explicit workflow commands support `auth` only and require a trusted source checkout containing `@ugauga/create-feature-auth` version 0.2.0 or later. The source checkout is separate from this npm package. Requests to initialize `authorization` or `listing` fail before importing a generator or creating a target. Their contexts provide reusable API entrypoints and explicit source conformance commands. Existing targets, linked paths, unsupported selections, and older runners that only check memory v1 are refused.
 
 ```sh
 feature-standards init --feature auth \
@@ -89,13 +93,15 @@ const receipt = await checkProject({ project: project.destination });
 npm --prefix packages/feature-standards run build
 node packages/feature-standards/src/cli.mjs list
 node packages/feature-standards/src/cli.mjs context --feature auth --stack react --profile browser-session-v3
+node packages/feature-standards/src/cli.mjs context --feature authorization --stack go
+node packages/feature-standards/src/cli.mjs context --feature listing --stack react
 
 npm --prefix packages/feature-standards test
 npm --prefix packages/feature-standards run check:pack
 ```
 
-`prepack` rebuilds `snapshot/` from an explicit positive file whitelist. Only the canonical manifest, contracts, schema SQL, selected guides, consumer READMEs, and integration skill references are copied. No implementation code, dependency trees, binaries, credentials, caches, model traces, or evaluation artifacts are bundled. The packed package includes the three runtime JavaScript files, its metadata, README, and MIT license. Its build/test scripts remain in the source repository.
+`prepack` rebuilds `snapshot/` from an explicit positive file whitelist. Only the feature index and catalogs, contracts, schema SQL, selected guides, consumer READMEs, and integration skill references are copied. No implementation code, dependency trees, binaries, credentials, caches, model traces, or evaluation artifacts are bundled. The packed package includes the three runtime JavaScript files, its metadata, README, and MIT license. Its build/test scripts remain in the source repository.
 
-`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 15 stack/profile contexts and Node exports. It also checks the explicit workflow boundary against a synthetic trusted generator/runner fixture; this smoke check does not build or exercise authentication backends. Actual generated backend/profile checks are separate. Local packing and offline installation are separate from verified npm publication.
+`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 25 feature/stack/profile contexts and Node exports. It also checks the explicit workflow boundary against a synthetic trusted generator/runner fixture; this smoke check does not build or exercise native feature libraries or authentication backends. Actual library and generated backend/profile checks are separate. Local packing and offline installation are separate from verified npm publication.
 
 Created by [jongko54](https://github.com/jongko54). [Source and issues](https://github.com/jongko54/feature-standards).
