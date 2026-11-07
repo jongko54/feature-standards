@@ -678,11 +678,8 @@ class ReplaySafetyTests(unittest.TestCase):
     def test_replay_output_overlap_normalizes_parent_components_first(self):
         with self.assertRaisesRegex(auth_eval.EvalError, "output-overlaps-original"):
             replay_smoke.replay(self.work, self.work / "bridge/../replay-new")
-        with (
-            patch.dict("os.environ", {"HOME": str(self.work)}),
-            self.assertRaisesRegex(auth_eval.EvalError, "output-overlaps-original"),
-        ):
-            replay_smoke.replay(self.work, Path("~/replay-new"))
+        with self.assertRaisesRegex(auth_eval.EvalError, "output-overlaps-original"):
+            replay_smoke.replay(Path.home(), Path("~/replay-new"))
         self.assertFalse((self.work / "replay-new").exists())
 
     def test_workspace_needs_independent_trace_and_consistent_artifact_references(self):
