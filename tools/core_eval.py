@@ -16,6 +16,7 @@ import stat
 import subprocess
 import tarfile
 import tempfile
+import xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
@@ -28,6 +29,8 @@ SOURCE_COMMIT = "752e4e498e0647684c57b6e2ec749da99eaa4b79"
 CATALOG_VERSION = "0.3.2"
 CATALOG_SHA256 = "b89882db7f1dc165e253b6cc3e4dd57a970fddd5626417e2c382992d30c1db18"
 PROFILE = "auth-rbac-offset-v1"
+CORE_CACHE_PARTS = {".uv-cache", ".m2"}
+CORE_IGNORED_PARTS = auth_eval.IGNORED_PARTS | CORE_CACHE_PARTS
 SCOPES = {
     "implementations",
     "libraries",
@@ -403,8 +406,41 @@ def core_http_grade(port, origin, deadline, membership_file):
     return checks
 
 
+def dependency_evidence(generated):
+    """Parse dependency metadata separately from language comment stripping."""
+    artifacts = set()
+    for path in generated.rglob("*.xml"):
+        if any(
+            part in CORE_IGNORED_PARTS for part in path.relative_to(generated).parts
+        ):
+            continue
+        auth_eval.no_symlink(path)
+        if path.stat().st_size > 2_000_000:
+            raise EvalError("generated-source-too-large")
+        try:
+            document = ET.fromstring(path.read_bytes())
+        except ET.ParseError as exc:
+            raise EvalError("generated-java-xml-syntax") from exc
+        for dependency in document.iter():
+            if dependency.tag.rsplit("}", 1)[-1] == "dependency":
+                for field in dependency:
+                    if field.tag.rsplit("}", 1)[-1] == "artifactId" and re.fullmatch(
+                        r"[A-Za-z0-9._-]{1,120}", field.text or ""
+                    ):
+                        artifacts.add(field.text)
+    return "\n".join(sorted(artifacts))
+
+
 def core_reuse_check(generated, stack, source, commit):
-    auth_eval.reuse_check(generated, stack, source, commit)
+    metadata = dependency_evidence(generated) if stack == "java" else ""
+    auth_eval.reuse_check(
+        generated,
+        stack,
+        source,
+        commit,
+        ignored_parts=CORE_IGNORED_PARTS,
+        metadata_evidence=metadata,
+    )
     digests = {
         digest
         for name, digest in source.items()
@@ -415,8 +451,7 @@ def core_reuse_check(generated, stack, source, commit):
     texts, trees = [], []
     for path in generated.rglob("*"):
         if any(
-            part in auth_eval.IGNORED_PARTS
-            for part in path.relative_to(generated).parts
+            part in CORE_IGNORED_PARTS for part in path.relative_to(generated).parts
         ):
             continue
         if path.is_file() and path.suffix in {
@@ -446,6 +481,15 @@ def core_reuse_check(generated, stack, source, commit):
                     imported.update(
                         {alias.asname or alias.name: alias.name for alias in node.names}
                     )
+                    if node.module == "feature_standards":
+                        modules.update(
+                            {
+                                alias.asname or alias.name: "feature_standards."
+                                + alias.name
+                                for alias in node.names
+                                if alias.name in {"authorization", "listing"}
+                            }
+                        )
                 if isinstance(node, ast.Import):
                     modules.update(
                         {
@@ -467,6 +511,7 @@ def core_reuse_check(generated, stack, source, commit):
         good = {"Policy", "parse_query", "page"}.issubset(used)
     else:
         text = re.sub(r"/\*.*?\*/|//[^\n]*", "", "\n".join(texts), flags=re.DOTALL)
+        text += "\n" + metadata
         patterns = {
             "go": (
                 r"libraries/go/authorization",
@@ -550,15 +595,14 @@ def trial_contract():
         http_grader=lambda generated, env, port, origin, deadline: core_http_grade(
             port, origin, deadline, Path(env["CORE_MEMBERSHIP_FILE"])
         ),
+        ignored_parts=CORE_CACHE_PARTS,
     )
 
 
-def pair_order(conditions, repeat, stack_index, stack_count):
+def pair_order(conditions, repeat, stack_index, _stack_count):
     """Balance pair order across stacks as well as repeated rounds."""
     return (
-        conditions
-        if (repeat * stack_count + stack_index) % 2 == 0
-        else tuple(reversed(conditions))
+        conditions if (repeat + stack_index) % 2 == 0 else tuple(reversed(conditions))
     )
 
 

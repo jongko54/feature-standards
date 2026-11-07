@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import importlib.util
 import io
 import json
 import secrets
@@ -25,6 +26,12 @@ sys.path.insert(0, str(ROOT / "libraries/python"))
 import auth_eval
 import core_eval
 from feature_standards.listing import ListingError, ListingSchema, page, parse_query
+
+REPLAY_SPEC = importlib.util.spec_from_file_location(
+    "core_smoke_replay", ROOT / "evals/core/replay_smoke.py"
+)
+replay_smoke = importlib.util.module_from_spec(REPLAY_SPEC)
+REPLAY_SPEC.loader.exec_module(replay_smoke)
 
 DOCUMENTS = [
     {
@@ -477,6 +484,69 @@ class CoreEvalTests(unittest.TestCase):
         )
         self.assertEqual(core_eval.pair_order(order, 1, 0, 1), tuple(reversed(order)))
 
+    def test_each_stack_flips_pair_order_on_second_four_stack_repeat(self):
+        conditions = ("baseline", "catalog")
+        for stack in range(4):
+            first = core_eval.pair_order(conditions, 0, stack, 4)
+            second = core_eval.pair_order(conditions, 1, stack, 4)
+            self.assertEqual(second, tuple(reversed(first)))
+
+    def test_core_checker_accepts_uv_cache_but_auth_default_remains_strict(self):
+        generated = self.root / "generated"
+        generated.mkdir()
+        auth_eval.write_json(
+            generated / "integration.json",
+            {
+                "stack": "python",
+                "profile": "browser-session-v1",
+                "source_commit": "a" * 40,
+            },
+        )
+        (generated / "app.py").write_text(
+            "from feature_auth import create_app, current_user\nfrom feature_standards import Policy, parse_query, page\napp=create_app()\ndef profile(request): return current_user(request)\ndef product(): return page([],parse_query('',None),Policy([]))\n"
+        )
+        cache = generated / ".uv-cache"
+        cache.mkdir()
+        (cache / "cache-link").symlink_to(self.root / "not-source")
+        with self.assertRaisesRegex(auth_eval.EvalError, "generated-source-symlink"):
+            auth_eval.reuse_check(generated, "python", {}, "a" * 40)
+        core_eval.core_reuse_check(generated, "python", {}, "a" * 40)
+
+    def test_python_module_import_style_is_valid_core_reuse(self):
+        generated = self.root / "generated"
+        generated.mkdir()
+        auth_eval.write_json(
+            generated / "integration.json",
+            {
+                "stack": "python",
+                "profile": "browser-session-v1",
+                "source_commit": "a" * 40,
+            },
+        )
+        (generated / "app.py").write_text(
+            "from feature_auth import create_app, current_user\nfrom feature_standards import authorization as az, listing as ls\napp=create_app()\ndef profile(request): return current_user(request)\ndef product(): return ls.page([],ls.parse_query('',None),az.Policy([]))\n"
+        )
+        core_eval.core_reuse_check(generated, "python", {}, "a" * 40)
+
+    def test_java_one_line_namespaced_pom_is_valid_dependency_evidence(self):
+        generated = self.root / "generated"
+        generated.mkdir()
+        auth_eval.write_json(
+            generated / "integration.json",
+            {
+                "stack": "java",
+                "profile": "browser-session-v1",
+                "source_commit": "a" * 40,
+            },
+        )
+        (generated / "Main.java").write_text(
+            "import dev.featurestandards.auth.AuthService;\nimport dev.featurestandards.core.authorization.AuthorizationPolicy;\nimport dev.featurestandards.core.listing.Listing;\nclass Main { void product() { policy.decide(); Listing.parseQuery(); Listing.page(); }}\n"
+        )
+        (generated / "pom.xml").write_text(
+            '<project xmlns="http://maven.apache.org/POM/4.0.0"><dependencies><dependency><artifactId>java-spring-auth</artifactId></dependency><dependency><artifactId>feature-standards-core</artifactId></dependency></dependencies></project>'
+        )
+        core_eval.core_reuse_check(generated, "java", {}, "a" * 40)
+
     def test_model_and_timeout_validation_happens_before_account_or_output_work(self):
         base = [
             "core_eval.py",
@@ -512,6 +582,12 @@ class CoreEvalTests(unittest.TestCase):
             f"#!{sys.executable}\nimport json,sys\nfrom pathlib import Path\nif '--version' in sys.argv:\n print('fixture-core-cli 1.0');raise SystemExit(0)\nPath('prompt.txt').write_text(sys.stdin.read())\nprint(json.dumps({{'type':'turn.completed','usage':{{'input_tokens':1,'cached_input_tokens':0,'output_tokens':1}}}}))\n"
         )
         cli.chmod(0o700)
+        cli.write_text(
+            cli.read_text().replace(
+                "Path('prompt.txt')",
+                "Path('.uv-cache').mkdir(); Path('.uv-cache/link').symlink_to('../../source.txt'); Path('prompt.txt')",
+            )
+        )
         events = []
 
         def artifacts(generated, stack, source, commit):
@@ -536,6 +612,7 @@ class CoreEvalTests(unittest.TestCase):
             prepare_grader=prepare,
             http_grader=http,
         )
+        contract.ignored_parts = (".uv-cache",)
 
         def grade(generated, output, env, port, origin, deadline, *, http_grader):
             return http_grader(port, origin, deadline)
@@ -564,6 +641,143 @@ class CoreEvalTests(unittest.TestCase):
         self.assertIsNone(result["baseline_ref"])
         self.assertEqual(events, ["artifact-check", "prepare-grader", "http-grader"])
         self.assertTrue(result["source_unchanged"])
+        self.assertFalse((self.root / "trial/snapshot/generated/.uv-cache").exists())
         self.assertEqual(
             (self.root / "trial/result.json").stat().st_mode & 0o777, 0o600
         )
+
+
+class ReplaySafetyTests(unittest.TestCase):
+    def setUp(self):
+        self.directory = tempfile.TemporaryDirectory()
+        self.addCleanup(self.directory.cleanup)
+        self.work = Path(self.directory.name).resolve()
+        self.generated = self.work / "generated"
+        self.generated.mkdir()
+        self.trace = self.work / "trace.jsonl"
+        with tempfile.TemporaryDirectory(prefix="feature-auth-eval-") as name:
+            self.original = Path(name).resolve()
+
+    def event(self, command="pwd", root=None):
+        root = root or self.original
+        self.trace.write_text(
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": command,
+                        "exit_code": 0,
+                        "aggregated_output": str(root / "snapshot/generated") + "\n",
+                    },
+                }
+            )
+            + "\n"
+        )
+
+    def test_replay_output_overlap_normalizes_parent_components_first(self):
+        with self.assertRaisesRegex(auth_eval.EvalError, "output-overlaps-original"):
+            replay_smoke.replay(self.work, self.work / "bridge/../replay-new")
+        with (
+            patch.dict("os.environ", {"HOME": str(self.work)}),
+            self.assertRaisesRegex(auth_eval.EvalError, "output-overlaps-original"),
+        ):
+            replay_smoke.replay(self.work, Path("~/replay-new"))
+        self.assertFalse((self.work / "replay-new").exists())
+
+    def test_workspace_needs_independent_trace_and_consistent_artifact_references(self):
+        self.event()
+        source = self.generated / "pom.xml"
+        source.write_text(str(self.original / "snapshot/libraries/java"))
+        self.assertEqual(
+            replay_smoke.proven_root(self.trace, self.generated), self.original
+        )
+        self.event(command="echo claimed-pwd")
+        with self.assertRaisesRegex(auth_eval.EvalError, "unproven"):
+            replay_smoke.proven_root(self.trace, self.generated)
+        self.trace.write_text(
+            json.dumps(
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "type": "command_execution",
+                        "command": "echo catalog/package/src/cli.mjs context",
+                        "exit_code": 0,
+                        "aggregated_output": json.dumps(
+                            {
+                                "readPath": str(
+                                    self.original / "snapshot/catalog/package/README.md"
+                                )
+                            }
+                        ),
+                    },
+                }
+            )
+            + "\n"
+        )
+        with self.assertRaisesRegex(auth_eval.EvalError, "unproven"):
+            replay_smoke.proven_root(self.trace, self.generated)
+        self.event()
+        source.write_text(
+            str(self.original.parent / "feature-auth-eval-aaaaaaaa/snapshot")
+        )
+        with self.assertRaisesRegex(auth_eval.EvalError, "conflicting"):
+            replay_smoke.proven_root(self.trace, self.generated)
+
+    def test_workspace_rejects_existing_symlink_and_wrong_parent(self):
+        self.event()
+        self.original.symlink_to(self.generated, target_is_directory=True)
+        try:
+            with self.assertRaisesRegex(auth_eval.EvalError, "symlink"):
+                replay_smoke.proven_root(self.trace, self.generated)
+        finally:
+            self.original.unlink()
+        self.original.mkdir()
+        try:
+            with self.assertRaisesRegex(auth_eval.EvalError, "exists"):
+                replay_smoke.proven_root(self.trace, self.generated)
+        finally:
+            self.original.rmdir()
+        self.event(root=self.work / "feature-auth-eval-aaaaaaaa")
+        with self.assertRaisesRegex(auth_eval.EvalError, "outside-owned-temp"):
+            replay_smoke.proven_root(self.trace, self.generated)
+
+    def test_generated_hash_ignores_only_exact_fixture_and_tool_cache(self):
+        source = self.generated / "main.py"
+        source.write_text("print('original')")
+        fixture = self.generated / ".core-membership-" / "not-a-fixture.json"
+        fixture.parent.mkdir()
+        fixture.write_text("trusted-looking file is still source")
+        before = replay_smoke.selected_files(self.generated)
+        reference = auth_eval.fingerprint(self.work)
+        self.assertTrue(replay_smoke.unchanged(self.work, before, reference))
+        source.write_text("print('changed')")
+        self.assertNotEqual(before, replay_smoke.selected_files(self.generated))
+        self.assertFalse(replay_smoke.unchanged(self.work, before, reference))
+        cache = self.generated / ".uv-cache"
+        cache.mkdir()
+        (cache / "link").symlink_to(self.work)
+        self.assertIn(
+            str(fixture.relative_to(self.generated)),
+            replay_smoke.selected_files(self.generated),
+        )
+        source.unlink()
+        source.symlink_to(fixture)
+        with self.assertRaisesRegex(auth_eval.EvalError, "generated-symlink"):
+            replay_smoke.selected_files(self.generated)
+
+    def test_cleanup_refuses_replaced_root(self):
+        self.original.mkdir(mode=0o700)
+        owner = self.original.stat()
+        identity = owner.st_dev, owner.st_ino
+        displaced = self.original.with_name(self.original.name + "-displaced")
+        self.original.rename(displaced)
+        self.original.mkdir()
+        try:
+            with self.assertRaisesRegex(auth_eval.EvalError, "replaced"):
+                replay_smoke.remove_owned_root(self.original, identity)
+            self.assertTrue(self.original.is_dir())
+            self.assertTrue(displaced.is_dir())
+        finally:
+            self.original.rmdir()
+            displaced.rmdir()

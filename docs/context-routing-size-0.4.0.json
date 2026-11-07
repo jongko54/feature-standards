@@ -1,0 +1,224 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-07T14:34:29.182Z",
+  "sourceCommit": "6036df67f750a4fdd01eae82898ae0ec6f303827",
+  "sourceDirty": false,
+  "snapshotDirty": false,
+  "version": "0.4.0",
+  "metric": "UTF-8 bytes of JSON.stringify routing output; not model tokens, referenced-document size, speed or billing",
+  "pathLengthDependent": true,
+  "contexts": 26,
+  "minReductionPercent": 52.96,
+  "medianReductionPercent": 58.5,
+  "maxReductionPercent": 65.68,
+  "rows": [
+    {
+      "feature": "auth",
+      "stack": "python",
+      "profile": "browser-session-v1",
+      "fullBytes": 8099,
+      "compactBytes": 3294,
+      "reductionPercent": 59.33
+    },
+    {
+      "feature": "auth",
+      "stack": "python",
+      "profile": "browser-session-v2",
+      "fullBytes": 9692,
+      "compactBytes": 3768,
+      "reductionPercent": 61.12
+    },
+    {
+      "feature": "auth",
+      "stack": "python",
+      "profile": "browser-session-v3",
+      "fullBytes": 14067,
+      "compactBytes": 4828,
+      "reductionPercent": 65.68
+    },
+    {
+      "feature": "auth",
+      "stack": "go",
+      "profile": "browser-session-v1",
+      "fullBytes": 7967,
+      "compactBytes": 3319,
+      "reductionPercent": 58.34
+    },
+    {
+      "feature": "auth",
+      "stack": "go",
+      "profile": "browser-session-v2",
+      "fullBytes": 9560,
+      "compactBytes": 3793,
+      "reductionPercent": 60.32
+    },
+    {
+      "feature": "auth",
+      "stack": "go",
+      "profile": "browser-session-v3",
+      "fullBytes": 13935,
+      "compactBytes": 4853,
+      "reductionPercent": 65.17
+    },
+    {
+      "feature": "auth",
+      "stack": "java",
+      "profile": "browser-session-v1",
+      "fullBytes": 8151,
+      "compactBytes": 3347,
+      "reductionPercent": 58.94
+    },
+    {
+      "feature": "auth",
+      "stack": "java",
+      "profile": "browser-session-v2",
+      "fullBytes": 9744,
+      "compactBytes": 3821,
+      "reductionPercent": 60.79
+    },
+    {
+      "feature": "auth",
+      "stack": "java",
+      "profile": "browser-session-v3",
+      "fullBytes": 14119,
+      "compactBytes": 4881,
+      "reductionPercent": 65.43
+    },
+    {
+      "feature": "auth",
+      "stack": "rust",
+      "profile": "browser-session-v1",
+      "fullBytes": 7927,
+      "compactBytes": 3278,
+      "reductionPercent": 58.65
+    },
+    {
+      "feature": "auth",
+      "stack": "rust",
+      "profile": "browser-session-v2",
+      "fullBytes": 9520,
+      "compactBytes": 3752,
+      "reductionPercent": 60.59
+    },
+    {
+      "feature": "auth",
+      "stack": "rust",
+      "profile": "browser-session-v3",
+      "fullBytes": 13895,
+      "compactBytes": 4812,
+      "reductionPercent": 65.37
+    },
+    {
+      "feature": "auth",
+      "stack": "react",
+      "profile": "browser-session-v1",
+      "fullBytes": 7645,
+      "compactBytes": 3256,
+      "reductionPercent": 57.41
+    },
+    {
+      "feature": "auth",
+      "stack": "react",
+      "profile": "browser-session-v2",
+      "fullBytes": 9238,
+      "compactBytes": 3730,
+      "reductionPercent": 59.62
+    },
+    {
+      "feature": "auth",
+      "stack": "react",
+      "profile": "browser-session-v3",
+      "fullBytes": 13613,
+      "compactBytes": 4790,
+      "reductionPercent": 64.81
+    },
+    {
+      "feature": "authorization",
+      "stack": "python",
+      "profile": "rbac-v1",
+      "fullBytes": 7868,
+      "compactBytes": 3634,
+      "reductionPercent": 53.81
+    },
+    {
+      "feature": "authorization",
+      "stack": "go",
+      "profile": "rbac-v1",
+      "fullBytes": 7910,
+      "compactBytes": 3610,
+      "reductionPercent": 54.36
+    },
+    {
+      "feature": "authorization",
+      "stack": "java",
+      "profile": "rbac-v1",
+      "fullBytes": 9282,
+      "compactBytes": 4149,
+      "reductionPercent": 55.3
+    },
+    {
+      "feature": "authorization",
+      "stack": "rust",
+      "profile": "rbac-v1",
+      "fullBytes": 7923,
+      "compactBytes": 3602,
+      "reductionPercent": 54.54
+    },
+    {
+      "feature": "authorization",
+      "stack": "react",
+      "profile": "rbac-v1",
+      "fullBytes": 8016,
+      "compactBytes": 3771,
+      "reductionPercent": 52.96
+    },
+    {
+      "feature": "listing",
+      "stack": "python",
+      "profile": "offset-list-v1",
+      "fullBytes": 7737,
+      "compactBytes": 3594,
+      "reductionPercent": 53.55
+    },
+    {
+      "feature": "listing",
+      "stack": "python",
+      "profile": "postgres-list-v1",
+      "fullBytes": 8464,
+      "compactBytes": 3864,
+      "reductionPercent": 54.35
+    },
+    {
+      "feature": "listing",
+      "stack": "go",
+      "profile": "offset-list-v1",
+      "fullBytes": 7796,
+      "compactBytes": 3586,
+      "reductionPercent": 54
+    },
+    {
+      "feature": "listing",
+      "stack": "java",
+      "profile": "offset-list-v1",
+      "fullBytes": 7930,
+      "compactBytes": 3654,
+      "reductionPercent": 53.92
+    },
+    {
+      "feature": "listing",
+      "stack": "rust",
+      "profile": "offset-list-v1",
+      "fullBytes": 7795,
+      "compactBytes": 3565,
+      "reductionPercent": 54.27
+    },
+    {
+      "feature": "listing",
+      "stack": "react",
+      "profile": "offset-list-v1",
+      "fullBytes": 7762,
+      "compactBytes": 3608,
+      "reductionPercent": 53.52
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { getContext, listFeatures } from '../src/index.mjs';
+import { getCompactContext, getContext, listFeatures } from '../src/index.mjs';
 
 const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CLI = join(PACKAGE, 'src/cli.mjs');
@@ -53,6 +53,23 @@ test('compact context routes to selected documents without emitting the full com
   for (const args of [['list', '--compact'], ['context', '--stack', 'go', '--compact', '--compact'], ['init', '--compact']]) {
     assert.notEqual(run(args).status, 0);
   }
+});
+
+test('compact mode retains trust and migration boundaries within the routing size budget', () => {
+  let contexts = 0;
+  for (const feature of listFeatures().features) for (const stack of feature.stacks) for (const profile of stack.profiles) {
+    const options = { feature: feature.id, stack: stack.id, profile };
+    const full = getContext(options);
+    const compact = getCompactContext(options);
+    assert.deepEqual(compact.limits, full.limits);
+    assert.equal(compact.source.commit, full.provenance.sourceCommit);
+    assert.equal(compact.source.sourceDirty, full.provenance.sourceDirty);
+    assert.deepEqual(compact.migrations.map(doc => doc.sha256), full.packagedDocuments.migrations.map(doc => doc.sha256));
+    assert.deepEqual(compact.optionalAddons.map(addon => addon.id), full.optionalAddons.map(addon => addon.id));
+    assert.ok(Buffer.byteLength(JSON.stringify(compact)) < Buffer.byteLength(JSON.stringify(full)) * 0.65, `${feature.id}/${stack.id}/${profile}`);
+    contexts++;
+  }
+  assert.equal(contexts, 26);
 });
 
 test('list describes three implemented features with five stack roles and their profiles', () => {

@@ -65,13 +65,21 @@ class TrialContract:
     """Optional task hooks; the default auth-v1 evaluation remains unchanged."""
 
     def __init__(
-        self, *, profile, prompt_builder, artifact_checker, prepare_grader, http_grader
+        self,
+        *,
+        profile,
+        prompt_builder,
+        artifact_checker,
+        prepare_grader,
+        http_grader,
+        ignored_parts=(),
     ):
         self.profile = profile
         self.prompt_builder = prompt_builder
         self.artifact_checker = artifact_checker
         self.prepare_grader = prepare_grader
         self.http_grader = http_grader
+        self.ignored_parts = tuple(ignored_parts)
 
 
 def private_file(path: Path):
@@ -577,7 +585,16 @@ def load_run(
     )
 
 
-def reuse_check(generated: Path, stack: str, source: dict, commit: str) -> None:
+def reuse_check(
+    generated: Path,
+    stack: str,
+    source: dict,
+    commit: str,
+    *,
+    ignored_parts=None,
+    metadata_evidence="",
+) -> None:
+    ignored_parts = IGNORED_PARTS if ignored_parts is None else ignored_parts
     provenance = generated / "integration.json"
     no_symlink(provenance)
     value = json.loads(provenance.read_text())
@@ -599,7 +616,7 @@ def reuse_check(generated: Path, stack: str, source: dict, commit: str) -> None:
     }
     for path in generated.rglob("*"):
         relative = path.relative_to(generated)
-        if any(part in IGNORED_PARTS for part in relative.parts):
+        if any(part in ignored_parts for part in relative.parts):
             continue
         if path.is_symlink():
             raise EvalError("generated-source-symlink")
@@ -660,6 +677,7 @@ def reuse_check(generated: Path, stack: str, source: dict, commit: str) -> None:
             raise EvalError("library-reuse-evidence-missing")
         return
     text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.DOTALL)
+    text += "\n" + metadata_evidence
     patterns = {
         "python": (
             r"(?:from\s+feature_auth\s+import|import\s+feature_auth)",
@@ -1156,7 +1174,9 @@ def run_trial(
             work,
             output / "snapshot",
             symlinks=True,
-            ignore=shutil.ignore_patterns(*IGNORED_PARTS),
+            ignore=shutil.ignore_patterns(
+                *IGNORED_PARTS, *(contract.ignored_parts if contract else ())
+            ),
         )
         write_json(output / "result.json", result)
         workspace.cleanup()
