@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-07T01:51:30.227439+00:00",
+  "name": "feature-standards",
+  "version": "0.3.2",
+  "sourceCommit": "752e4e498e0647684c57b6e2ec749da99eaa4b79",
+  "sourceCi": {
+    "runId": 42324408528,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42324408528"
+  },
+  "publishWorkflow": {
+    "runId": 42326038082,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42326038082"
+  },
+  "registryMetadataUrl": "https://registry.npmjs.org/feature-standards/0.3.2",
+  "dist": {
+    "shasum": "ddf613e8b21cb1fb847ee0a4d8b20028e9e89188",
+    "tarball": "https://registry.npmjs.org/feature-standards/-/feature-standards-0.3.2.tgz",
+    "fileCount": 63,
+    "integrity": "sha512-18HDUJ2S71DeKKRAuuj+SctfSCyJO19/+sjQHdVzyazdi/W1/RefRgrIS1GrKLqjEMAoVkuSHurpclL9vwpzTg==",
+    "signatures": [
+      {
+        "sig": "MEUCIEjUsYldWnzSQnUjdv8OLe2wCEeenDfjIt4F6RZ2IdidAiEA31Pfc2MRyZwDPhDaDi3TAqndzCEvgDy3wwDUny8IUZQ=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIBo7VnzGQ4f7Hp3V+DZlsIFwdh2TMm1uXr5UyjO2O9BTAiEApdV72nwd7cMFT9mNyOFDJ7dQjIxKarNni9LBs3tRpFI=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/feature-standards@0.3.2",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 495482
+  },
+  "localArtifactSha256": "b89882db7f1dc165e253b6cc3e4dd57a970fddd5626417e2c382992d30c1db18",
+  "registry_verified": true,
+  "public_download_verified": true,
+  "reviewedCiArtifactMatchesRegistry": true,
+  "freshRegistryConsumer": {
+    "version": "0.3.2",
+    "features": [
+      "auth",
+      "authorization",
+      "listing"
+    ],
+    "contexts": 25,
+    "coreContextsWithVerifiedPublication": 10,
+    "sourceCommit": "752e4e498e0647684c57b6e2ec749da99eaa4b79",
+    "sourceDirty": false,
+    "snapshotDirty": false,
+    "installedBin": true
+  },
+  "scope": "Publishes the three-feature contract/context catalog with independently verified publication receipts for all five core ecosystems. Runtime library versions and auth APIs are unchanged."
+}

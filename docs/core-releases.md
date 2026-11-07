@@ -2,6 +2,8 @@
 
 The core 0.1.0 packages contain authorization and listing together. Authentication remains in its existing packages. Main catalogs [0.3.0](npm-release-0.3.0.json) and [0.3.1](npm-release-0.3.1.json) were published separately; their receipts confirm exact public tarballs and fresh installed consumers resolving all 25 contexts. Each catalog captures the publication evidence available when it was built.
 
+Catalog [0.3.2](npm-release-0.3.2.json) captures the verified releases for all five core ecosystems. Its public archive matches the reviewed CI artifact. An empty-cache registry installation passed the installed binary and all 25 contexts, including ten core selections with matching published package receipts.
+
 ## Coordinates and publication state
 
 | Ecosystem | Core coordinate | Initial release path |

@@ -4,7 +4,7 @@
 
 | Role | Package ID | Published npm version |
 |---|---|---|
-| Main feature catalog and explicit workflow CLI | `feature-standards` | `0.3.1` |
+| Main feature catalog and explicit workflow CLI | `feature-standards` | `0.3.2` |
 | Browser authentication API adapter | `@ugauga/feature-standards-react-auth` | `0.1.4` |
 | Authentication application generator for four server stacks | `@ugauga/create-feature-auth` | `0.2.0` |
 | JavaScript/TypeScript authorization and listing runtime | `@ugauga/feature-standards-core` | `0.1.0` |
@@ -33,17 +33,17 @@ node packages/feature-standards/src/cli.mjs context \
 
 The main package includes curated contracts, a manifest, and stack guides. `list` and `context` provide JSON guidance without executing commands. The published CLI retains explicit authentication `init` and `check` commands using a trusted source checkout and generated project. Server runtime libraries and executable harnesses require the source checkout or their separate distributions. See the [main package guide](../packages/feature-standards/README.md) and [AI integration guide](ai-integration.md).
 
-The [published main version](npm-release-0.3.1.json) was independently installed from the registry and all 25 contexts were checked. Its npm commands are:
+The [published main version](npm-release-0.3.2.json) was independently installed from the registry and all 25 contexts were checked. Its npm commands are:
 
 ```sh
-npx feature-standards@0.3.1 list
-npx feature-standards@0.3.1 context \
+npx feature-standards@0.3.2 list
+npx feature-standards@0.3.2 context \
   --feature auth --stack react --profile browser-session-v3
 ```
 
 ## Verify publication and search separately
 
-The initial namespace setup used `feature-standards@0.0.0-bootstrap` under the **`bootstrap`** dist-tag. This separate three-file archive contains only metadata, README, and license so the existing npm account could configure a GitHub trusted publisher. It has no CLI or runtime exports. Main `0.3.1` has independent public-download and fresh-install verification; query the registry for the current `latest` tag. Existing actual authentication workflow execution is recorded separately in the 0.2.0 receipt. The release workflow keeps the bootstrap artifact separate from the normal package artifact and never publishes it automatically.
+The initial namespace setup used `feature-standards@0.0.0-bootstrap` under the **`bootstrap`** dist-tag. This separate three-file archive contains only metadata, README, and license so the existing npm account could configure a GitHub trusted publisher. It has no CLI or runtime exports. Main `0.3.2` has independent public-download and fresh-install verification; query the registry for the current `latest` tag. Existing actual authentication workflow execution is recorded separately in the 0.2.0 receipt. The release workflow keeps the bootstrap artifact separate from the normal package artifact and never publishes it automatically.
 
 Inspect each actual tarball's name, version, author, keywords, description, and README before upload. After publishing, check the exact registry version and integrity, install it in a new project, then inspect `npm search jongko54` and the keyword query separately. Search indexing may differ from registry availability. Record the query date and observed package IDs instead of assuming an index update from the metadata patch.
 
