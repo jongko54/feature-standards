@@ -23,6 +23,7 @@ from urllib.request import Request, urlopen
 
 import auth_eval
 from auth_eval import EvalError
+from source_evidence import strip_c_style_comments
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_COMMIT = "752e4e498e0647684c57b6e2ec749da99eaa4b79"
@@ -510,7 +511,7 @@ def core_reuse_check(generated, stack, source, commit):
                             used.add(node.func.attr)
         good = {"Policy", "parse_query", "page"}.issubset(used)
     else:
-        text = re.sub(r"/\*.*?\*/|//[^\n]*", "", "\n".join(texts), flags=re.DOTALL)
+        text = "\n".join(strip_c_style_comments(part, language=stack) for part in texts)
         text += "\n" + metadata
         patterns = {
             "go": (

@@ -329,6 +329,7 @@ def main():
             ("core_runner_sha256", core_eval.__file__),
             ("reading_runner_sha256", reading.__file__),
             ("trace_runner_sha256", ROOT / "tools/reading_trace.py"),
+            ("source_evidence_sha256", ROOT / "tools/source_evidence.py"),
         ):
             metadata[key] = hashlib.sha256(Path(path).read_bytes()).hexdigest()
         metadata["runner_source_commit"] = subprocess.check_output(

@@ -1,0 +1,2550 @@
+{
+  "suite": "core-reading-candidate-v1",
+  "catalog_version": "0.4.0",
+  "catalog_sha256": "7ab98af2d4854743bd1641d38f101df9464cad129a409179f402b9f46105b71b",
+  "catalog_kind": "local-source-candidate",
+  "catalog_public_download_verified": false,
+  "candidate_source_commit": "78686cc60ec18c13e093158a1330e323d8b7c893",
+  "requested_model": "gpt-6.1-sol",
+  "timeout_seconds": 600,
+  "repeats": 2,
+  "source_commit": "78686cc60ec18c13e093158a1330e323d8b7c893",
+  "source_dirty": false,
+  "implementation_source_sha256": "1071e8ca732678ee92e55c1ed27948b9634bb246754395fe5636437921c9bd4c",
+  "source_sha256": "5de5d0c9242bcf6de2a5bec0cd75bc1b7fc89fe6c17c19a4c34b0188d6d6423b",
+  "catalog_snapshot_sha256": "8d1466453a3b566dca8320f653e047c4666e694d6064f0d0e72fdfbb6f0ecd86",
+  "runner_sha256": "69a3ae13d58859c0d8bbfc786f360f21426e6e6a169baf19df12744f0cfcba10",
+  "auth_runner_sha256": "b7af6bd4802e06ad4014f5d14b510441743504da703a3f819f58e31bfe562543",
+  "core_runner_sha256": "e491a9a41cbd2f93377ed8c299f2a0c111c0d92a4914ebd9e66a0efe3603ca74",
+  "trace_runner_sha256": "a834805b2b18a8960be96c26cc4d3b28bebd299d3a018e1dd5aaff6925242174",
+  "tasks_sha256": "6d4471fcdac0a3692fe64e2d26c82f3f2f5506d11cd4657606ca5c795ddfd5f2",
+  "runner_source_commit": "83b7633b06e1a60376cc671a4325b107d131e088",
+  "limits": [
+    "Two observations per stack/condition are exploratory, not a population estimate or proof of causation.",
+    "Assigned entrypoint differs; all conditions have the identical candidate archive, source, task and tool environment.",
+    "Serial execution and rotated/reversed condition order reduce some confounds; shared warm dependency caches and server prompt caches remain.",
+    "Input includes cached input. Total=input+output; uncached=input-cached. These are token counts, not price or unique prompt size.",
+    "All complete paired attempts and joint-success pairs are separate. Failed or missing-usage trials are never silently dropped or replaced by zero.",
+    "Observed commands, static public-API call evidence and independent HTTP success are distinct evidence. None measures external adoption or model internal reasoning.",
+    "Task is auth+RBAC+materialized listing. New PostgreSQL-listing APIs, React UI and other models are not measured."
+  ],
+  "planned_model_calls": 24,
+  "actual_model_calls": 24,
+  "passed": 23,
+  "groups": {
+    "manual": {
+      "attempts": 8,
+      "passed": 8,
+      "complete_usage": 8,
+      "static_reuse_pass": 8,
+      "static_reuse_and_http_pass": 8
+    },
+    "catalog_full": {
+      "attempts": 8,
+      "passed": 8,
+      "complete_usage": 8,
+      "static_reuse_pass": 8,
+      "static_reuse_and_http_pass": 8
+    },
+    "catalog_compact": {
+      "attempts": 8,
+      "passed": 7,
+      "complete_usage": 8,
+      "static_reuse_pass": 7,
+      "static_reuse_and_http_pass": 7
+    }
+  },
+  "comparisons": [
+    {
+      "reference": "manual",
+      "variant": "catalog_full",
+      "reference_attempts": 8,
+      "variant_attempts": 8,
+      "reference_failures": 0,
+      "variant_failures": 0,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 8,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 6644344,
+            "variant_sum": 6707454,
+            "reduction_percent": -0.95,
+            "paired_median_reduction_percent": -12.471
+          },
+          "cached_input_tokens": {
+            "reference_sum": 6298368,
+            "variant_sum": 6331264,
+            "reduction_percent": -0.522,
+            "paired_median_reduction_percent": -13.139
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 345976,
+            "variant_sum": 376190,
+            "reduction_percent": -8.733,
+            "paired_median_reduction_percent": -8.539
+          },
+          "output_tokens": {
+            "reference_sum": 43168,
+            "variant_sum": 49358,
+            "reduction_percent": -14.339,
+            "paired_median_reduction_percent": 0.222
+          },
+          "total_tokens": {
+            "reference_sum": 6687512,
+            "variant_sum": 6756812,
+            "reduction_percent": -1.036,
+            "paired_median_reduction_percent": -12.844
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 8,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 6644344,
+            "variant_sum": 6707454,
+            "reduction_percent": -0.95,
+            "paired_median_reduction_percent": -12.471
+          },
+          "cached_input_tokens": {
+            "reference_sum": 6298368,
+            "variant_sum": 6331264,
+            "reduction_percent": -0.522,
+            "paired_median_reduction_percent": -13.139
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 345976,
+            "variant_sum": 376190,
+            "reduction_percent": -8.733,
+            "paired_median_reduction_percent": -8.539
+          },
+          "output_tokens": {
+            "reference_sum": 43168,
+            "variant_sum": 49358,
+            "reduction_percent": -14.339,
+            "paired_median_reduction_percent": 0.222
+          },
+          "total_tokens": {
+            "reference_sum": 6687512,
+            "variant_sum": 6756812,
+            "reduction_percent": -1.036,
+            "paired_median_reduction_percent": -12.844
+          }
+        }
+      }
+    },
+    {
+      "reference": "manual",
+      "variant": "catalog_compact",
+      "reference_attempts": 8,
+      "variant_attempts": 8,
+      "reference_failures": 0,
+      "variant_failures": 1,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 8,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 6644344,
+            "variant_sum": 5379772,
+            "reduction_percent": 19.032,
+            "paired_median_reduction_percent": 10.485
+          },
+          "cached_input_tokens": {
+            "reference_sum": 6298368,
+            "variant_sum": 4975232,
+            "reduction_percent": 21.008,
+            "paired_median_reduction_percent": 11.151
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 345976,
+            "variant_sum": 404540,
+            "reduction_percent": -16.927,
+            "paired_median_reduction_percent": -8.27
+          },
+          "output_tokens": {
+            "reference_sum": 43168,
+            "variant_sum": 48751,
+            "reduction_percent": -12.933,
+            "paired_median_reduction_percent": -6.314
+          },
+          "total_tokens": {
+            "reference_sum": 6687512,
+            "variant_sum": 5428523,
+            "reduction_percent": 18.826,
+            "paired_median_reduction_percent": 10.406
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 7,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 5721093,
+            "variant_sum": 4508036,
+            "reduction_percent": 21.203,
+            "paired_median_reduction_percent": 14.166
+          },
+          "cached_input_tokens": {
+            "reference_sum": 5441152,
+            "variant_sum": 4157184,
+            "reduction_percent": 23.597,
+            "paired_median_reduction_percent": 14.709
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 279941,
+            "variant_sum": 350852,
+            "reduction_percent": -25.331,
+            "paired_median_reduction_percent": -8.665
+          },
+          "output_tokens": {
+            "reference_sum": 38429,
+            "variant_sum": 40088,
+            "reduction_percent": -4.317,
+            "paired_median_reduction_percent": -2.834
+          },
+          "total_tokens": {
+            "reference_sum": 5759522,
+            "variant_sum": 4548124,
+            "reduction_percent": 21.033,
+            "paired_median_reduction_percent": 13.956
+          }
+        }
+      }
+    },
+    {
+      "reference": "catalog_full",
+      "variant": "catalog_compact",
+      "reference_attempts": 8,
+      "variant_attempts": 8,
+      "reference_failures": 0,
+      "variant_failures": 1,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 8,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 6707454,
+            "variant_sum": 5379772,
+            "reduction_percent": 19.794,
+            "paired_median_reduction_percent": 19.643
+          },
+          "cached_input_tokens": {
+            "reference_sum": 6331264,
+            "variant_sum": 4975232,
+            "reduction_percent": 21.418,
+            "paired_median_reduction_percent": 20.195
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 376190,
+            "variant_sum": 404540,
+            "reduction_percent": -7.536,
+            "paired_median_reduction_percent": 4.782
+          },
+          "output_tokens": {
+            "reference_sum": 49358,
+            "variant_sum": 48751,
+            "reduction_percent": 1.23,
+            "paired_median_reduction_percent": -2.494
+          },
+          "total_tokens": {
+            "reference_sum": 6756812,
+            "variant_sum": 5428523,
+            "reduction_percent": 19.659,
+            "paired_median_reduction_percent": 19.424
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 7,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 5641332,
+            "variant_sum": 4508036,
+            "reduction_percent": 20.089,
+            "paired_median_reduction_percent": 20.54
+          },
+          "cached_input_tokens": {
+            "reference_sum": 5316224,
+            "variant_sum": 4157184,
+            "reduction_percent": 21.802,
+            "paired_median_reduction_percent": 20.983
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 325108,
+            "variant_sum": 350852,
+            "reduction_percent": -7.919,
+            "paired_median_reduction_percent": 7.898
+          },
+          "output_tokens": {
+            "reference_sum": 39202,
+            "variant_sum": 40088,
+            "reduction_percent": -2.26,
+            "paired_median_reduction_percent": -3.371
+          },
+          "total_tokens": {
+            "reference_sum": 5680534,
+            "variant_sum": 4548124,
+            "reduction_percent": 19.935,
+            "paired_median_reduction_percent": 20.409
+          }
+        }
+      }
+    }
+  ],
+  "runs": [
+    {
+      "stack": "python",
+      "condition": "manual",
+      "repeat": 1,
+      "sequence": 1,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 251.551,
+      "agent_seconds": 249.925,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 27,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "ed5c0bd38c2a19df11ab5d02a5dca398d7d9f80e691e29fe3f82a534eb641293",
+      "trace_sha256": "2922e796f0170dc746e6ff778745844ec356aaaba631102969ab9cc778b82800",
+      "prompt_sha256": "9fc2cae27bc84f8fd680eb9fead9745214640288a523fc1794d448a960b1452d",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 1490755,
+        "cached_input_tokens": 1442688,
+        "output_tokens": 7749,
+        "uncached_input_tokens": 48067,
+        "total_tokens": 1498504
+      },
+      "reported_models": [],
+      "command_count": 29
+    },
+    {
+      "stack": "python",
+      "condition": "catalog_full",
+      "repeat": 1,
+      "sequence": 2,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 258.323,
+      "agent_seconds": 254.672,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-python-react/README.md",
+            "kind": "consumer",
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-python/README.md",
+            "kind": "consumer",
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/python-fastapi/README.md",
+            "kind": "public_api_guide",
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/python/README.md",
+            "kind": "public_api_guide",
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 21,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "0a0e25539a0a406b676d2c380b234294900ccba278e2bfc7bd7cddab19876496",
+      "trace_sha256": "728ece7c645699f5b58949368ba3863a7d16692b362d3e9c95a89def7b9ff719",
+      "prompt_sha256": "fc70cffc9ec381cf0fc64ba5205b348cbe7a718c6275bd80524788b672bfa720",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 1291390,
+        "cached_input_tokens": 1244672,
+        "output_tokens": 7233,
+        "uncached_input_tokens": 46718,
+        "total_tokens": 1298623
+      },
+      "reported_models": [],
+      "command_count": 31
+    },
+    {
+      "stack": "python",
+      "condition": "catalog_compact",
+      "repeat": 1,
+      "sequence": 3,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 169.499,
+      "agent_seconds": 168.504,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-python-react/README.md",
+            "kind": "consumer",
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-python/README.md",
+            "kind": "consumer",
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/python-fastapi/README.md",
+            "kind": "public_api_guide",
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/python/README.md",
+            "kind": "public_api_guide",
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 14,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "36e6347aa15d9889ebf9ce84151ffe5998cfaf51655255f49172ba991d53eb1d",
+      "trace_sha256": "00546ca277a9b94cabc1aa5f172fa71da629def8257e5d1a94f3e0030e33c57f",
+      "prompt_sha256": "f4308beff5d8734377e53a633251f27badf18277b88d0b0ed0409abb04fbce9a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 738835,
+        "cached_input_tokens": 642944,
+        "output_tokens": 5613,
+        "uncached_input_tokens": 95891,
+        "total_tokens": 744448
+      },
+      "reported_models": [],
+      "command_count": 19
+    },
+    {
+      "stack": "go",
+      "condition": "catalog_full",
+      "repeat": 1,
+      "sequence": 4,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 165.787,
+      "agent_seconds": 164.413,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-go/README.md",
+            "kind": "consumer",
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-go/README.md",
+            "kind": "consumer",
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/go-net-http/README.md",
+            "kind": "public_api_guide",
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/go/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 11,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "78ca439ca5628b0335d18a6e115fc97bdb8acca687817e60089baba9dee73701",
+      "trace_sha256": "0cab41afaf653736862f822c478d60c4c8fb0d8be2dc1ae20f0df059dfbc5dfc",
+      "prompt_sha256": "a50c2ccc07aa11c55463855627c5bc2a14e91fb6d0e1ac30d4ac53fcb7f0f0e5",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 623193,
+        "cached_input_tokens": 580352,
+        "output_tokens": 5594,
+        "uncached_input_tokens": 42841,
+        "total_tokens": 628787
+      },
+      "reported_models": [],
+      "command_count": 17
+    },
+    {
+      "stack": "go",
+      "condition": "catalog_compact",
+      "repeat": 1,
+      "sequence": 5,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 132.875,
+      "agent_seconds": 131.549,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-go/README.md",
+            "kind": "consumer",
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-go/README.md",
+            "kind": "consumer",
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/go-net-http/README.md",
+            "kind": "public_api_guide",
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/go/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 10,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "841eef9e04899543bc5568141d438f92dc8d9565d10e99611d3b8d4968bef002",
+      "trace_sha256": "38084c8480b2a368b8711aeb28cfee392c79e36ddc115963ad800ef0a9462e5d",
+      "prompt_sha256": "a0477542b34758453c09fbd3b0dd076432af549973131971c796d8b72718a94a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 488648,
+        "cached_input_tokens": 452736,
+        "output_tokens": 4507,
+        "uncached_input_tokens": 35912,
+        "total_tokens": 493155
+      },
+      "reported_models": [],
+      "command_count": 15
+    },
+    {
+      "stack": "go",
+      "condition": "manual",
+      "repeat": 1,
+      "sequence": 6,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 112.001,
+      "agent_seconds": 110.675,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 12,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "df7230a8f267c71354d7473b79192fe1b04920896ec41a752daa30abfa322ebb",
+      "trace_sha256": "722a3d05c2f1f7b6d4bc5e34a006a83abd1ba9992e9ae716c6886893de49ff7b",
+      "prompt_sha256": "1317b18c379c60f821a7064c59cec28475b0f127d055dd28a6bcf9eada3674b6",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 569296,
+        "cached_input_tokens": 530816,
+        "output_tokens": 3844,
+        "uncached_input_tokens": 38480,
+        "total_tokens": 573140
+      },
+      "reported_models": [],
+      "command_count": 13
+    },
+    {
+      "stack": "java",
+      "condition": "catalog_compact",
+      "repeat": 1,
+      "sequence": 7,
+      "passed": false,
+      "original_http_passed": false,
+      "original_error_code": "core-library-reuse-evidence-missing",
+      "error_code": "core-library-reuse-evidence-missing",
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 230.667,
+      "agent_seconds": 230.164,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-java/README.md",
+            "kind": "consumer",
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-java/README.md",
+            "kind": "consumer",
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/java-spring/README.md",
+            "kind": "public_api_guide",
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/java/README.md",
+            "kind": "public_api_guide",
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+            "kind": "skill",
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+            "kind": "skill",
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 16,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": false,
+        "error_code": "core-library-reuse-evidence-missing",
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "a59df4885ac663ae7a3553a0dd540a138db76eab8d5a909a242ee2a6ab67feb9",
+      "trace_sha256": "e8724286067d83743271cc731198f024bb490911b79ee3e3a4456e95533cc7c7",
+      "prompt_sha256": "5e833a31d2701ef88d6e9ca676a011bf8f8fd328f0981d7f77b4da3790b4d368",
+      "http_assertions": 0,
+      "tokens": {
+        "input_tokens": 871736,
+        "cached_input_tokens": 818048,
+        "output_tokens": 8663,
+        "uncached_input_tokens": 53688,
+        "total_tokens": 880399
+      },
+      "reported_models": [],
+      "command_count": 21
+    },
+    {
+      "stack": "java",
+      "condition": "manual",
+      "repeat": 1,
+      "sequence": 8,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 169.816,
+      "agent_seconds": 157.676,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 18,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "06c9eb99fdc91e6b90910907e03446f8ab7f401ed6b22662d6d6f678bdfea5b8",
+      "trace_sha256": "f5a392c0065c52bf1bfdf4fdd518a069da1d4deaae2985fae019d55d80a9b689",
+      "prompt_sha256": "2d330e689a3264cbee0bae70912fa7df6ecd1b22e72087c3688c9537aec4e171",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 923251,
+        "cached_input_tokens": 857216,
+        "output_tokens": 4739,
+        "uncached_input_tokens": 66035,
+        "total_tokens": 927990
+      },
+      "reported_models": [],
+      "command_count": 18
+    },
+    {
+      "stack": "java",
+      "condition": "catalog_full",
+      "repeat": 1,
+      "sequence": 9,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 279.995,
+      "agent_seconds": 269.083,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-java/README.md",
+            "kind": "consumer",
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-java/README.md",
+            "kind": "consumer",
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/java-spring/README.md",
+            "kind": "public_api_guide",
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/java/README.md",
+            "kind": "public_api_guide",
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 19,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "77614c3ebfae0034a65c971974312d6160477be81c8fb258382135201ef5a234",
+      "trace_sha256": "6aafeaf33ce69862fd49212d411b730f5ff6fb14803102a1d16323f829b360a0",
+      "prompt_sha256": "b08d99be6cac7f1bd48abe6ee33eb5b16afc15e5f1a5ace4fa83f3bf4430676c",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 1066122,
+        "cached_input_tokens": 1015040,
+        "output_tokens": 10156,
+        "uncached_input_tokens": 51082,
+        "total_tokens": 1076278
+      },
+      "reported_models": [],
+      "command_count": 21
+    },
+    {
+      "stack": "rust",
+      "condition": "manual",
+      "repeat": 1,
+      "sequence": 10,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 98.043,
+      "agent_seconds": 84.502,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "examples/consumer-rust/src/lib.rs",
+            "kind": "consumer",
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/core-rust/Cargo.toml",
+            "kind": "consumer",
+            "sha256": "bbd3da4ea42334c61e941acce077efcc03d723ce28be827e4cd5ea2e6734ffe5",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/core-rust/src/lib.rs",
+            "kind": "consumer",
+            "sha256": "74cea92e8ac850d45a77b2d04c343aafeed1fa57f62f69ee69497ac72ee9afe0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/core-rust/src/main.rs",
+            "kind": "consumer",
+            "sha256": "f67980814464ae23b73b04b23f8155835f2860305975ae95bc7247b658f45b18",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "features/authorization/specification.md",
+            "kind": "specification",
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "features/listing/specification.md",
+            "kind": "specification",
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "libraries/rust/README.md",
+            "kind": "public_api_guide",
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 11,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "3527267f8b33eb9a8e7c732e7c1a17a57dd5466e5b8ee7909b0175a645673d1b",
+      "trace_sha256": "190f267b4a26fcdff3a19cf5293ce55bf8fca3a5e519c6af60f557eb4ca041d9",
+      "prompt_sha256": "16e61e230eca139b1bdf2ab3dd4612b8e0b01d14c8c9ce7ea2eaf06a3aea437a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 509840,
+        "cached_input_tokens": 472192,
+        "output_tokens": 2749,
+        "uncached_input_tokens": 37648,
+        "total_tokens": 512589
+      },
+      "reported_models": [],
+      "command_count": 12
+    },
+    {
+      "stack": "rust",
+      "condition": "catalog_full",
+      "repeat": 1,
+      "sequence": 11,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 181.529,
+      "agent_seconds": 170.977,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 2,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-rust/README.md",
+            "kind": "consumer",
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-rust/README.md",
+            "kind": "consumer",
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/rust-axum/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/rust/README.md",
+            "kind": "public_api_guide",
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/consumer-rust/Cargo.toml",
+            "kind": "consumer",
+            "sha256": "fa9333e48c99c37bfd7345ed06bcdb6d0fb0e0b4bfc6aaa1d3c573da0f9ffdd2",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/consumer-rust/src/main.rs",
+            "kind": "consumer",
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 14,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "43c9534b03c85da68daa4417878d85fb2789b9f32e57a6df89d9605c84e16b59",
+      "trace_sha256": "2f384a699266aa2a4b2188b3004165d20957dca615d8034b299bd54c14320593",
+      "prompt_sha256": "debaeaf0ddae5d2e1d016567eda88683ea5029d8289a413528b442975ad44a66",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 721392,
+        "cached_input_tokens": 671744,
+        "output_tokens": 5703,
+        "uncached_input_tokens": 49648,
+        "total_tokens": 727095
+      },
+      "reported_models": [],
+      "command_count": 21
+    },
+    {
+      "stack": "rust",
+      "condition": "catalog_compact",
+      "repeat": 1,
+      "sequence": 12,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 190.977,
+      "agent_seconds": 177.905,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-rust/README.md",
+            "kind": "consumer",
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-rust/README.md",
+            "kind": "consumer",
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/rust-axum/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/rust/README.md",
+            "kind": "public_api_guide",
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 14,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "553a238c3bf9f574bc8faddf053fa64061fb95ab467dcc9aed7b0257fc7d6df2",
+      "trace_sha256": "37f28c4f44de06db054ef2e5acfb334c21fbb3e253f8c12aba8e318222a63a08",
+      "prompt_sha256": "621081d349f17620ad361fa4533501d6b507b308e773c3be93dafc55fe2d2dc5",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 586163,
+        "cached_input_tokens": 543616,
+        "output_tokens": 6857,
+        "uncached_input_tokens": 42547,
+        "total_tokens": 593020
+      },
+      "reported_models": [],
+      "command_count": 16
+    },
+    {
+      "stack": "python",
+      "condition": "catalog_compact",
+      "repeat": 2,
+      "sequence": 13,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 178.096,
+      "agent_seconds": 177.018,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 2,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/docs/core-standards.md",
+            "kind": "documentation",
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/consumer-python-react/README.md",
+            "kind": "consumer",
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-python/README.md",
+            "kind": "consumer",
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/python-fastapi/README.md",
+            "kind": "public_api_guide",
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/python/README.md",
+            "kind": "public_api_guide",
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 13,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "d81c680f03ab0da1091737ca1a5ab68d6fac022982f72afb7d31ec983c832b8d",
+      "trace_sha256": "134a11e5a87497772827239926d5ab48a0111abaca53a7a89ecdf9491a7069c9",
+      "prompt_sha256": "f4308beff5d8734377e53a633251f27badf18277b88d0b0ed0409abb04fbce9a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 726587,
+        "cached_input_tokens": 685440,
+        "output_tokens": 5529,
+        "uncached_input_tokens": 41147,
+        "total_tokens": 732116
+      },
+      "reported_models": [],
+      "command_count": 19
+    },
+    {
+      "stack": "python",
+      "condition": "catalog_full",
+      "repeat": 2,
+      "sequence": 14,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 200.23,
+      "agent_seconds": 196.691,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 2,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/docs/core-standards.md",
+            "kind": "documentation",
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/consumer-python-react/README.md",
+            "kind": "consumer",
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-python/README.md",
+            "kind": "consumer",
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/python-fastapi/README.md",
+            "kind": "public_api_guide",
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/python/README.md",
+            "kind": "public_api_guide",
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 15,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "6ef51e17484a55bd71cfc8f4fe5cd892662b3eedae259e6af8701875500241fa",
+      "trace_sha256": "e7382a49c80f6f357e142b71eaeecdaa7d310adc230702d64b83b2c9865b454f",
+      "prompt_sha256": "fc70cffc9ec381cf0fc64ba5205b348cbe7a718c6275bd80524788b672bfa720",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 914402,
+        "cached_input_tokens": 867456,
+        "output_tokens": 5441,
+        "uncached_input_tokens": 46946,
+        "total_tokens": 919843
+      },
+      "reported_models": [],
+      "command_count": 22
+    },
+    {
+      "stack": "python",
+      "condition": "manual",
+      "repeat": 2,
+      "sequence": 15,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 195.548,
+      "agent_seconds": 191.99,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 16,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "6d71a735bc537165460452d4cbfa3227d8e3c923dad8145ad357f484054c6ae6",
+      "trace_sha256": "43254b689c9aa2d06bc5cb0c7c89552889583ba7806c862d0b5e55784b6e3060",
+      "prompt_sha256": "9fc2cae27bc84f8fd680eb9fead9745214640288a523fc1794d448a960b1452d",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 779626,
+        "cached_input_tokens": 741760,
+        "output_tokens": 6375,
+        "uncached_input_tokens": 37866,
+        "total_tokens": 786001
+      },
+      "reported_models": [],
+      "command_count": 16
+    },
+    {
+      "stack": "go",
+      "condition": "manual",
+      "repeat": 2,
+      "sequence": 16,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 136.812,
+      "agent_seconds": 135.489,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 12,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "2fc2b48d2e4c052f605411e33c799b2557b2dfcb10e1f89ca5ae57594f4ae9db",
+      "trace_sha256": "9ecd35bfa1a956fdc1fb71a532328a71ccf7c704e24b6eead21c25ea4c5f4369",
+      "prompt_sha256": "1317b18c379c60f821a7064c59cec28475b0f127d055dd28a6bcf9eada3674b6",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 710269,
+        "cached_input_tokens": 672768,
+        "output_tokens": 4728,
+        "uncached_input_tokens": 37501,
+        "total_tokens": 714997
+      },
+      "reported_models": [],
+      "command_count": 13
+    },
+    {
+      "stack": "go",
+      "condition": "catalog_compact",
+      "repeat": 2,
+      "sequence": 17,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 139.91,
+      "agent_seconds": 138.767,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 13,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "258b41eeaba4559aaad16aee8b741aa490295cd9d6f84766d19cbcd3a9292484",
+      "trace_sha256": "09b55d71389d3b5af32ed0e760a3c83f8c9319288db85eb911d87572fc39ba63",
+      "prompt_sha256": "a0477542b34758453c09fbd3b0dd076432af549973131971c796d8b72718a94a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 582866,
+        "cached_input_tokens": 543872,
+        "output_tokens": 4862,
+        "uncached_input_tokens": 38994,
+        "total_tokens": 587728
+      },
+      "reported_models": [],
+      "command_count": 17
+    },
+    {
+      "stack": "go",
+      "condition": "catalog_full",
+      "repeat": 2,
+      "sequence": 18,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 111.805,
+      "agent_seconds": 110.494,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-go/README.md",
+            "kind": "consumer",
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-go/README.md",
+            "kind": "consumer",
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/go-net-http/README.md",
+            "kind": "public_api_guide",
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/go/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 8,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "2dae1909ddc91f5e28f7885883e1ccae96bfb2b06ffd34756c2f83d8d9ad084a",
+      "trace_sha256": "aa98c68f16e604484ce3087c69d9f86d9d7b38ec09908782c5a1e2c4f6930830",
+      "prompt_sha256": "a50c2ccc07aa11c55463855627c5bc2a14e91fb6d0e1ac30d4ac53fcb7f0f0e5",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 470887,
+        "cached_input_tokens": 431232,
+        "output_tokens": 4294,
+        "uncached_input_tokens": 39655,
+        "total_tokens": 475181
+      },
+      "reported_models": [],
+      "command_count": 15
+    },
+    {
+      "stack": "java",
+      "condition": "catalog_full",
+      "repeat": 2,
+      "sequence": 19,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 221.119,
+      "agent_seconds": 209.23,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 3,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 1,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-java/README.md",
+            "kind": "consumer",
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-java/README.md",
+            "kind": "consumer",
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/java-spring/README.md",
+            "kind": "public_api_guide",
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/java/README.md",
+            "kind": "public_api_guide",
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 18,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "110e7f54602a419f0f24a07bd1ae7a60ec4bc4386be376cf4c57578be4004da4",
+      "trace_sha256": "89fcce70670b8e1e01c9700682314b4993d0496d3c94a34204d2ce79ad0fa463",
+      "prompt_sha256": "b08d99be6cac7f1bd48abe6ee33eb5b16afc15e5f1a5ace4fa83f3bf4430676c",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 1187918,
+        "cached_input_tokens": 1130624,
+        "output_tokens": 7179,
+        "uncached_input_tokens": 57294,
+        "total_tokens": 1195097
+      },
+      "reported_models": [],
+      "command_count": 24
+    },
+    {
+      "stack": "java",
+      "condition": "manual",
+      "repeat": 2,
+      "sequence": 20,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 185.341,
+      "agent_seconds": 179.744,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "examples/core-java/pom.xml",
+            "kind": "consumer",
+            "sha256": "109495a6fe096f3abdf599da77c150b0c51c9bc18f3afa0bbf7f128472813127",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "features/authorization/specification.md",
+            "kind": "specification",
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "features/listing/specification.md",
+            "kind": "specification",
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "libraries/java/README.md",
+            "kind": "public_api_guide",
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 14,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "2ae8d2be420ad7a3655091ad3eb263ad036a83998ff50e2678c6914fc8c5b580",
+      "trace_sha256": "511f9beaa50555e8deac4fdd41eadf8bbec74ebb764da7319104937681eb4b9d",
+      "prompt_sha256": "2d330e689a3264cbee0bae70912fa7df6ecd1b22e72087c3688c9537aec4e171",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 825761,
+        "cached_input_tokens": 785792,
+        "output_tokens": 6759,
+        "uncached_input_tokens": 39969,
+        "total_tokens": 832520
+      },
+      "reported_models": [],
+      "command_count": 16
+    },
+    {
+      "stack": "java",
+      "condition": "catalog_compact",
+      "repeat": 2,
+      "sequence": 21,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 210.173,
+      "agent_seconds": 200.277,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 3,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-java/README.md",
+            "kind": "consumer",
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-java/README.md",
+            "kind": "consumer",
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/java-spring/README.md",
+            "kind": "public_api_guide",
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/java/README.md",
+            "kind": "public_api_guide",
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 14,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "8ff058c4ad889190339f6dc5524039999715656673120771d8993dced72ca96c",
+      "trace_sha256": "94050b29df3204f659c98142574aa872aed19bfe8f52ae0ef08f6c6da4b55f04",
+      "prompt_sha256": "5e833a31d2701ef88d6e9ca676a011bf8f8fd328f0981d7f77b4da3790b4d368",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 863777,
+        "cached_input_tokens": 811008,
+        "output_tokens": 7421,
+        "uncached_input_tokens": 52769,
+        "total_tokens": 871198
+      },
+      "reported_models": [],
+      "command_count": 20
+    },
+    {
+      "stack": "rust",
+      "condition": "catalog_compact",
+      "repeat": 2,
+      "sequence": 22,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 153.67,
+      "agent_seconds": 138.914,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 2,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-rust/README.md",
+            "kind": "consumer",
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-rust/README.md",
+            "kind": "consumer",
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/rust-axum/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/rust/README.md",
+            "kind": "public_api_guide",
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "examples/consumer-rust/src/main.rs",
+            "kind": "consumer",
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 12,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "a77120a24ed8ce122c70f1fad09db4286e2636cdf1c8caf7f4487253813d6f9a",
+      "trace_sha256": "344d50ce9c2e84c355ad03179fabed0b5be64025d535c62edbab7590bece17b3",
+      "prompt_sha256": "621081d349f17620ad361fa4533501d6b507b308e773c3be93dafc55fe2d2dc5",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 521160,
+        "cached_input_tokens": 477568,
+        "output_tokens": 5299,
+        "uncached_input_tokens": 43592,
+        "total_tokens": 526459
+      },
+      "reported_models": [],
+      "command_count": 16
+    },
+    {
+      "stack": "rust",
+      "condition": "catalog_full",
+      "repeat": 2,
+      "sequence": 23,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 115.744,
+      "agent_seconds": 104.212,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 1,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "catalog/package/snapshot/examples/consumer-rust/README.md",
+            "kind": "consumer",
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/examples/core-rust/README.md",
+            "kind": "consumer",
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/implementations/rust-axum/README.md",
+            "kind": "public_api_guide",
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "catalog/package/snapshot/libraries/rust/README.md",
+            "kind": "public_api_guide",
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 10,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "40052a20639b43b6b9500fe26b6c3874a159a4fc04ee4570d0e2f0bb0b9aa8ce",
+      "trace_sha256": "c3248f6d16e3314257eff40c25c256e3cda3823b1111536f65cf56bab0b6e9e2",
+      "prompt_sha256": "debaeaf0ddae5d2e1d016567eda88683ea5029d8289a413528b442975ad44a66",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 432150,
+        "cached_input_tokens": 390144,
+        "output_tokens": 3758,
+        "uncached_input_tokens": 42006,
+        "total_tokens": 435908
+      },
+      "reported_models": [],
+      "command_count": 12
+    },
+    {
+      "stack": "rust",
+      "condition": "manual",
+      "repeat": 2,
+      "sequence": 24,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 192.714,
+      "agent_seconds": 177.928,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "documents": [],
+        "unclassified_commands": 21,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "passed": true,
+        "kind": "static-public-auth-and-core-call-evidence",
+        "runtime_causality_proven": false
+      },
+      "original_result_sha256": "621f1ee6380a8ef56311a10b8b2d1b0c4f4e877cd6e219c95e49368297fbf0f7",
+      "trace_sha256": "c1d2373f343ae5bc0411e11f79e7a353ad30f81d2edbe409561517bbaa09105e",
+      "prompt_sha256": "16e61e230eca139b1bdf2ab3dd4612b8e0b01d14c8c9ce7ea2eaf06a3aea437a",
+      "http_assertions": 143,
+      "tokens": {
+        "input_tokens": 835546,
+        "cached_input_tokens": 795136,
+        "output_tokens": 6225,
+        "uncached_input_tokens": 40410,
+        "total_tokens": 841771
+      },
+      "reported_models": [],
+      "command_count": 21
+    }
+  ],
+  "blocked": null,
+  "complete": true
+}

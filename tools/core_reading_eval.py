@@ -13,10 +13,12 @@ import statistics
 import subprocess
 import tarfile
 import tempfile
+from itertools import combinations
 from pathlib import Path
 
 import auth_eval
 import core_eval
+import source_evidence
 from auth_eval import EvalError
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,6 +42,7 @@ IDENTITY = (
     "profile",
     "timeout_seconds",
 )
+OPTIONAL_IDENTITY = ("protocol_id", "protocol_sha256", "source_evidence_sha256")
 LIMITS = [
     "Two observations per stack/condition are exploratory, not a population estimate or proof of causation.",
     "Assigned entrypoint differs; all conditions have the identical candidate archive, source, task and tool environment.",
@@ -67,12 +70,12 @@ def tokens(result):
     }
 
 
-def schedule(stacks, repeats):
+def schedule(stacks, repeats, conditions=CONDITIONS):
     result = []
     for repeat in range(repeats):
         for index, stack in enumerate(stacks):
-            rotation = index % len(CONDITIONS)
-            order = CONDITIONS[rotation:] + CONDITIONS[:rotation]
+            rotation = index % len(conditions)
+            order = conditions[rotation:] + conditions[:rotation]
             if repeat % 2:
                 order = order[::-1]
             result.extend((stack, repeat + 1, condition) for condition in order)
@@ -187,9 +190,15 @@ def comparison(rows, reference, variant):
             continue
         models = set((left.get("agent") or {}).get("models", []))
         models.update((right.get("agent") or {}).get("models", []))
-        if any(
-            left.get(k) != right.get(k) or not left.get(k) for k in IDENTITY
-        ) or not models.issubset({left.get("requested_model")}):
+        if (
+            any(left.get(k) != right.get(k) or not left.get(k) for k in IDENTITY)
+            or any(
+                (k in left or k in right)
+                and (not left.get(k) or left.get(k) != right.get(k))
+                for k in OPTIONAL_IDENTITY
+            )
+            or not models.issubset({left.get("requested_model")})
+        ):
             mismatch += 1
             continue
         baseline, alternative = tokens(left), tokens(right)
@@ -242,7 +251,7 @@ def comparison(rows, reference, variant):
     }
 
 
-def summarize(rows, metadata, *, planned_total):
+def summarize(rows, metadata, *, planned_total, conditions=CONDITIONS, limits=None):
     public = []
     for row in rows:
         public.append(
@@ -278,7 +287,7 @@ def summarize(rows, metadata, *, planned_total):
             }
         )
     groups = {}
-    for condition in CONDITIONS:
+    for condition in conditions:
         values = [row for row in rows if row["condition"] == condition]
         groups[condition] = {
             "attempts": len(values),
@@ -293,21 +302,14 @@ def summarize(rows, metadata, *, planned_total):
             ),
         }
     return {
-        "suite": "core-reading-candidate-v1",
+        "suite": metadata.get("protocol_id", "core-reading-candidate-v1"),
         **metadata,
-        "limits": LIMITS,
+        "limits": LIMITS if limits is None else limits,
         "planned_model_calls": planned_total,
         "actual_model_calls": len(rows),
         "passed": sum(bool(r["passed"]) for r in rows),
         "groups": groups,
-        "comparisons": [
-            comparison(rows, a, b)
-            for a, b in (
-                ("manual", "catalog_full"),
-                ("manual", "catalog_compact"),
-                ("catalog_full", "catalog_compact"),
-            )
-        ],
+        "comparisons": [comparison(rows, a, b) for a, b in combinations(conditions, 2)],
         "runs": public,
     }
 
@@ -387,17 +389,95 @@ def terminal_block_reason(trace, stderr):
     return None
 
 
-def main():
+def experiment_settings(experiment):
+    """Select trusted local protocol callbacks without performing file I/O."""
+    if experiment is None:
+        return {
+            "conditions": CONDITIONS,
+            "prompt": prompt,
+            "contract_factory": core_eval.trial_contract,
+            "default_repeats": 2,
+            "limits": LIMITS,
+            "allowed_stacks": auth_eval.STACKS,
+            "reuse_checker": static_reuse,
+        }
+    required = {
+        "id",
+        "conditions",
+        "prompt",
+        "contract_factory",
+        "source_file",
+        "default_repeats",
+        "limits",
+    }
+    optional = {"allowed_stacks", "reuse_checker", "source_validator"}
+    if (
+        not isinstance(experiment, dict)
+        or not required.issubset(experiment)
+        or set(experiment) - required - optional
+    ):
+        raise EvalError("invalid-experiment-descriptor")
+    settings = {
+        "allowed_stacks": auth_eval.STACKS,
+        "reuse_checker": static_reuse,
+    } | experiment
+    if (
+        not isinstance(settings["id"], str)
+        or not re.fullmatch(r"[a-z][a-z0-9._-]{0,79}", settings["id"])
+        or type(settings["default_repeats"]) is not int
+        or settings["default_repeats"] not in range(1, 5)
+        or not isinstance(settings["limits"], (list, tuple))
+        or not all(isinstance(v, str) for v in settings["limits"])
+    ):
+        raise EvalError("invalid-experiment-descriptor")
+    for name in ("conditions", "allowed_stacks"):
+        values = settings[name]
+        if (
+            not isinstance(values, (list, tuple))
+            or not values
+            or not all(isinstance(v, str) for v in values)
+            or len(set(values)) != len(values)
+        ):
+            raise EvalError("invalid-experiment-descriptor")
+        settings[name] = tuple(values)
+    if (
+        not all(
+            re.fullmatch(r"[a-z][a-z0-9_]{0,63}", c) for c in settings["conditions"]
+        )
+        or not set(settings["allowed_stacks"]).issubset(auth_eval.STACKS)
+        or not all(
+            callable(settings[n])
+            for n in ("prompt", "contract_factory", "reuse_checker")
+        )
+        or (
+            settings.get("source_validator") is not None
+            and not callable(settings["source_validator"])
+        )
+    ):
+        raise EvalError("invalid-experiment-descriptor")
+    return settings
+
+
+def main(*, experiment=None):
+    settings = experiment_settings(experiment)
+    conditions = settings["conditions"]
+    selected_prompt = settings["prompt"]
+    reuse_checker = settings["reuse_checker"]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact", type=Path, required=True)
     parser.add_argument("--artifact-sha256", required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--stack", choices=(*auth_eval.STACKS, "all"), default="all")
-    parser.add_argument("--repeats", type=int, choices=(1, 2, 3, 4), default=2)
+    parser.add_argument(
+        "--repeats", type=int, choices=(1, 2, 3, 4), default=settings["default_repeats"]
+    )
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    stacks = settings["allowed_stacks"] if args.stack == "all" else (args.stack,)
+    if not set(stacks).issubset(settings["allowed_stacks"]):
+        parser.error("Selected stack is unsupported by this experiment")
     if (
         not re.fullmatch(auth_eval.MODEL_PATTERN, args.model)
         or not re.fullmatch(r"[a-f0-9]{40}", args.source_commit)
@@ -415,14 +495,14 @@ def main():
     output = auth_eval.prepare_output(args.output)
     tasks_bytes = (ROOT / "evals/core/tasks.json").read_bytes()
     tasks = json.loads(tasks_bytes)
-    stacks = auth_eval.STACKS if args.stack == "all" else (args.stack,)
-    trials = schedule(stacks, args.repeats)
+    trials = schedule(stacks, args.repeats, conditions)
     rows = []
     metadata = {
         **catalog_metadata,
         "requested_model": args.model,
         "timeout_seconds": args.timeout,
         "repeats": args.repeats,
+        "tasks_sha256": hashlib.sha256(tasks_bytes).hexdigest(),
     }
     blocked = None
     with tempfile.TemporaryDirectory(prefix="feature-reading-source-") as temporary:
@@ -437,17 +517,41 @@ def main():
             ("auth_runner_sha256", auth_eval.__file__),
             ("core_runner_sha256", core_eval.__file__),
             ("trace_runner_sha256", ROOT / "tools/reading_trace.py"),
-            ("tasks_sha256", ROOT / "evals/core/tasks.json"),
+            ("source_evidence_sha256", source_evidence.__file__),
         ):
             metadata[key] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
         metadata["runner_source_commit"] = subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
-        contract = core_eval.trial_contract()
-        contract.prompt_builder = prompt
+        if experiment is not None:
+            protocol_file = Path(settings["source_file"])
+            auth_eval.no_symlink(protocol_file)
+            metadata.update(
+                protocol_id=settings["id"],
+                protocol_sha256=hashlib.sha256(protocol_file.read_bytes()).hexdigest(),
+                conditions=list(conditions),
+                allowed_stacks=list(settings["allowed_stacks"]),
+            )
+        if settings.get("source_validator") is not None:
+            reference = auth_eval.fingerprint(template)
+            settings["source_validator"](template, metadata, stacks)
+            if auth_eval.fingerprint(template) != reference:
+                raise EvalError("source-validator-modified-source")
+        contract = settings["contract_factory"]()
+        contract.prompt_builder = selected_prompt
+
+        def report_rows():
+            return summarize(
+                rows,
+                metadata,
+                planned_total=len(trials),
+                conditions=conditions,
+                limits=settings["limits"],
+            )
+
         checkpoint(
             output / "progress.json",
-            summarize(rows, metadata, planned_total=len(trials)),
+            report_rows(),
         )
         for stack, repeat, condition in trials:
             name = f"{stack}-{condition}-trial-{repeat}"
@@ -476,13 +580,15 @@ def main():
                     original_result
                 ).hexdigest()
                 result["prompt_sha256"] = hashlib.sha256(
-                    prompt(stack, args.source_commit, tasks, condition).encode()
+                    selected_prompt(
+                        stack, args.source_commit, tasks, condition
+                    ).encode()
                 ).hexdigest()
                 result["reading_evidence"] = reading_evidence(
                     trace, stack, retained / "snapshot"
                 )
                 result["trace_sha256"] = hashlib.sha256(trace.read_bytes()).hexdigest()
-                result["static_reuse"] = static_reuse(
+                result["static_reuse"] = reuse_checker(
                     retained / "snapshot/generated",
                     auth_eval.fingerprint(template),
                     stack,
@@ -492,11 +598,12 @@ def main():
                 result["passed"] = False
                 result["error_code"] = "postprocessing-failed"
                 result["postprocessing_error"] = type(exc).__name__
-            if result["original_error_code"] == "agent-failed":
+            errors = ""
+            if result["original_error_code"]:
                 errors = (retained / "agent.log").read_text(errors="replace")
-                blocked = terminal_block_reason(trace, errors)
+            blocked = terminal_block_reason(trace, errors)
             auth_eval.write_json(retained / "analysis.json", result)
-            report = summarize(rows, metadata, planned_total=len(trials))
+            report = report_rows()
             report["blocked"] = blocked
             checkpoint(output / "progress.json", report)
             print(
@@ -506,7 +613,7 @@ def main():
             )
             if blocked:
                 break
-        report = summarize(rows, metadata, planned_total=len(trials))
+        report = report_rows()
         report["blocked"] = blocked
         report["complete"] = len(rows) == len(trials) and blocked is None
         auth_eval.write_json(output / "summary.json", report)

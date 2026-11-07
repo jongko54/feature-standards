@@ -547,6 +547,31 @@ class CoreEvalTests(unittest.TestCase):
         )
         core_eval.core_reuse_check(generated, "java", {}, "a" * 40)
 
+    def test_java_string_wildcard_does_not_hide_another_files_api_calls(self):
+        generated = self.root / "generated"
+        generated.mkdir()
+        auth_eval.write_json(generated / "integration.json", {
+            "stack":"java","profile":"browser-session-v1","source_commit":"a"*40})
+        auth = generated / "A.java"
+        controller = generated / "B.java"
+        advice = generated / "C.java"
+        pom = generated / "pom.xml"
+        auth.write_text('import dev.featurestandards.auth.AuthService;\nclass A { String path = "/**"; }\n')
+        controller.write_text(
+            "import dev.featurestandards.core.authorization.*;\n"
+            "import dev.featurestandards.core.listing.Listing;\n"
+            "class B { void route() { policy.decide(); Listing.parseQuery(); Listing.page(); } }\n")
+        advice.write_text("/** independent advice comment */\nclass C {}\n")
+        pom.write_text("<project><dependencies><dependency><artifactId>java-spring-auth</artifactId></dependency><dependency><artifactId>feature-standards-core</artifactId></dependency></dependencies></project>")
+        files = [auth, controller, advice, pom]
+        original_rglob = Path.rglob
+        def ordered(path, pattern):
+            if path == generated:
+                return iter([p for p in files if p.match(pattern)])
+            return original_rglob(path, pattern)
+        with patch.object(Path, "rglob", ordered):
+            core_eval.core_reuse_check(generated, "java", {}, "a" * 40)
+
     def test_model_and_timeout_validation_happens_before_account_or_output_work(self):
         base = [
             "core_eval.py",

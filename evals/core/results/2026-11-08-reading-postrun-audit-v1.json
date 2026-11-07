@@ -1,0 +1,4169 @@
+{
+  "suite": "core-reading-separate-postrun-audit-v1",
+  "original_summary_sha256": "7aaf0bcf4b8adec413df07197dad92278c17de4b6abaa4f0d43994a012d3294e",
+  "original_outcome_preserved": {
+    "passed": 23,
+    "attempts": 24
+  },
+  "corrected_static": {
+    "passed": 24,
+    "attempts": 24
+  },
+  "historical_java_http_regrade": {
+    "status": "unavailable-workspace-not-independently-proven",
+    "new_model_sessions": 0,
+    "new_http_assertions": 0
+  },
+  "checker_sha256": {
+    "source_evidence.py": "bc51f949f97fca63132b6a45a1336a57dc4f2b307b458f35dffe0560f117ec62",
+    "auth_eval.py": "c080283d516fb4342ce0b0978044d13917b8d3872a7899809cb3b089b45f62ac",
+    "core_eval.py": "3e35573bd76c53be2a6b9ea178982508d4d22bb29f524b43173332b55bcb82cd",
+    "reading_document_audit.py": "f3fc3343df8255797cb5ac6b38c88acabf0465d9e97e0a94a817d6846afd88b0"
+  },
+  "limits": [
+    "Whole-document output inclusion does not prove model consumption, understanding, skill activation, CLI execution or runtime API reuse.",
+    "This is a separate post-run audit. It does not replace or correct original automated reading counts, outcomes, timing or token metrics.",
+    "Only nonempty strict UTF-8 files smaller than 2000000 bytes in a fixed stack-specific whitelist are candidates; symlinks and partial or normalized matches are excluded.",
+    "Identical source and packaged bytes share one content hash; output alone cannot identify which identical path emitted the content.",
+    "A failed compound command can emit complete earlier documents. Successful, failed and unknown command outcomes are counted separately.",
+    "Complete selected context data was observed in tool output. This does not prove CLI execution, model consumption, understanding, skill activation or runtime API reuse; echoing the data can also produce this evidence.",
+    "This separate post-run audit supplements strict CLI argv evidence and never overwrites original metrics. Failed compound commands can contain valid earlier context output.",
+    "Only complete JSON objects matching the captured 0.4.0 package, stack, feature/profile, source commit and packaged document-reference hashes are counted. Quoted JSON strings and partial/malformed objects are excluded.",
+    "Counts are output events, deduplicated within each mode/feature and by terminal event ID. Unique selections ignore full/compact rendering mode. Reference matching checks captured metadata, not command origin.",
+    "This audit never replaces the original 23/24 HTTP outcome or original token/timing metrics.",
+    "Raw cache-write/reasoning counters are supplemental. Reasoning is part of output and is never added again to total. These are not invoice or price measurements."
+  ],
+  "runs": [
+    {
+      "trial": "go-catalog_compact-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d3ae282c9390f6755b13228f8c0df29bae5d710cf4f450a0ac8efa9105020088",
+            "paths": [
+              "examples/consumer-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 162
+      }
+    },
+    {
+      "trial": "go-catalog_compact-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 451
+      }
+    },
+    {
+      "trial": "go-catalog_full-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "42c43956fd421f0c8e64e24ee4651931397c2424200e85bc64412c0b5829262d",
+            "paths": [
+              "examples/core-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 596
+      }
+    },
+    {
+      "trial": "go-catalog_full-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d3ae282c9390f6755b13228f8c0df29bae5d710cf4f450a0ac8efa9105020088",
+            "paths": [
+              "examples/consumer-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 206
+      }
+    },
+    {
+      "trial": "go-manual-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "42c43956fd421f0c8e64e24ee4651931397c2424200e85bc64412c0b5829262d",
+            "paths": [
+              "examples/core-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d3ae282c9390f6755b13228f8c0df29bae5d710cf4f450a0ac8efa9105020088",
+            "paths": [
+              "examples/consumer-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 5
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 305
+      }
+    },
+    {
+      "trial": "go-manual-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "42c43956fd421f0c8e64e24ee4651931397c2424200e85bc64412c0b5829262d",
+            "paths": [
+              "examples/core-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d3ae282c9390f6755b13228f8c0df29bae5d710cf4f450a0ac8efa9105020088",
+            "paths": [
+              "examples/consumer-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 805
+      }
+    },
+    {
+      "trial": "java-catalog_compact-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreController.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "bab365dd11bca106072400f51975c547bba7ae3751bbfbc6717a2c25cf2faaac",
+            "paths": [
+              "examples/consumer-java/src/main/java/dev/featurestandards/examples/ConsumerApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "c19d0184b92cd2536fb12bc8a1eedddb192b887acdd782cff9fd013eb03e613d",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1108
+      }
+    },
+    {
+      "trial": "java-catalog_compact-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "bab365dd11bca106072400f51975c547bba7ae3751bbfbc6717a2c25cf2faaac",
+            "paths": [
+              "examples/consumer-java/src/main/java/dev/featurestandards/examples/ConsumerApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 785
+      }
+    },
+    {
+      "trial": "java-catalog_full-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "bab365dd11bca106072400f51975c547bba7ae3751bbfbc6717a2c25cf2faaac",
+            "paths": [
+              "examples/consumer-java/src/main/java/dev/featurestandards/examples/ConsumerApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1350
+      }
+    },
+    {
+      "trial": "java-catalog_full-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "39bb364abdd1d4f1b7d2a91d1405a1f6a4420b9f6e6e9b93d37a68929fc05d81",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/MembershipProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreController.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ee8af0900283288070521658c3cde3bff28b2b0d763206308bab9a36ad8d6",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/DocumentProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "c19d0184b92cd2536fb12bc8a1eedddb192b887acdd782cff9fd013eb03e613d",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 981
+      }
+    },
+    {
+      "trial": "java-manual-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "39bb364abdd1d4f1b7d2a91d1405a1f6a4420b9f6e6e9b93d37a68929fc05d81",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/MembershipProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreController.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ee8af0900283288070521658c3cde3bff28b2b0d763206308bab9a36ad8d6",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/DocumentProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "c19d0184b92cd2536fb12bc8a1eedddb192b887acdd782cff9fd013eb03e613d",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 5
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 563
+      }
+    },
+    {
+      "trial": "java-manual-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "39bb364abdd1d4f1b7d2a91d1405a1f6a4420b9f6e6e9b93d37a68929fc05d81",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/MembershipProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreController.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ee8af0900283288070521658c3cde3bff28b2b0d763206308bab9a36ad8d6",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/DocumentProvider.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "bab365dd11bca106072400f51975c547bba7ae3751bbfbc6717a2c25cf2faaac",
+            "paths": [
+              "examples/consumer-java/src/main/java/dev/featurestandards/examples/ConsumerApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "c19d0184b92cd2536fb12bc8a1eedddb192b887acdd782cff9fd013eb03e613d",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 807
+      }
+    },
+    {
+      "trial": "python-catalog_compact-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 666
+      }
+    },
+    {
+      "trial": "python-catalog_compact-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 696
+      }
+    },
+    {
+      "trial": "python-catalog_full-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 675
+      }
+    },
+    {
+      "trial": "python-catalog_full-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 447
+      }
+    },
+    {
+      "trial": "python-manual-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "992bf508ba397cbc43ccf20b557ecd0359372e6b998a135a50c08e03d7831c1a",
+            "paths": [
+              "implementations/python-fastapi/PACKAGE.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "b54958bf1d2ecb1a9d7ddd14e765b0f1417416d0fedc01a2a9b12f6861c46621",
+            "paths": [
+              "examples/core-python/app.py"
+            ],
+            "output_event_counts": {
+              "successful": 0,
+              "failed": 1,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 5
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1714
+      }
+    },
+    {
+      "trial": "python-manual-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "992bf508ba397cbc43ccf20b557ecd0359372e6b998a135a50c08e03d7831c1a",
+            "paths": [
+              "implementations/python-fastapi/PACKAGE.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "b54958bf1d2ecb1a9d7ddd14e765b0f1417416d0fedc01a2a9b12f6861c46621",
+            "paths": [
+              "examples/core-python/app.py"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1062
+      }
+    },
+    {
+      "trial": "rust-catalog_compact-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1051
+      }
+    },
+    {
+      "trial": "rust-catalog_compact-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 511
+      }
+    },
+    {
+      "trial": "rust-catalog_full-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 773
+      }
+    },
+    {
+      "trial": "rust-catalog_full-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "74cea92e8ac850d45a77b2d04c343aafeed1fa57f62f69ee69497ac72ee9afe0",
+            "paths": [
+              "examples/core-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 255
+      }
+    },
+    {
+      "trial": "rust-manual-trial-1",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "74cea92e8ac850d45a77b2d04c343aafeed1fa57f62f69ee69497ac72ee9afe0",
+            "paths": [
+              "examples/core-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "76cb5d964673e66b6af7149d8b671a04590a039be6330786917cc72c6b49c719",
+            "paths": [
+              "catalog/package/snapshot/features/auth/specification.md",
+              "features/auth/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "f67980814464ae23b73b04b23f8155835f2860305975ae95bc7247b658f45b18",
+            "paths": [
+              "examples/core-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 5
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 279
+      }
+    },
+    {
+      "trial": "rust-manual-trial-2",
+      "corrected_static": {
+        "passed": true
+      },
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "74cea92e8ac850d45a77b2d04c343aafeed1fa57f62f69ee69497ac72ee9afe0",
+            "paths": [
+              "examples/core-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "7deece259be5877ff9b70deb1bb6c00c20e2b0aaae081e647b9bbd55a4f7216d",
+            "paths": [
+              "README.md",
+              "catalog/package/snapshot/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      },
+      "additional_cli_reported_usage": {
+        "cache_write_input_tokens": 0,
+        "reasoning_output_tokens": 1108
+      }
+    }
+  ]
+}

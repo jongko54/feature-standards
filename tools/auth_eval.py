@@ -19,6 +19,8 @@ import threading
 import time
 from pathlib import Path
 
+from source_evidence import strip_c_style_comments
+
 ROOT = Path(__file__).resolve().parents[1]
 BASELINE_REF = "2a18bbd50f142b2fc0a991fe0d40ccf7032476b9"
 STACKS = ("python", "go", "java", "rust")
@@ -676,7 +678,7 @@ def reuse_check(
         if not {"current_user", "create_app"}.issubset(used):
             raise EvalError("library-reuse-evidence-missing")
         return
-    text = re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.DOTALL)
+    text = "\n".join(strip_c_style_comments(part, language=stack) for part in sources)
     text += "\n" + metadata_evidence
     patterns = {
         "python": (

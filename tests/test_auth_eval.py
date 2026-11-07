@@ -20,6 +20,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from unittest.mock import patch
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
+
 SPEC = importlib.util.spec_from_file_location(
     "auth_eval", Path(__file__).resolve().parents[1] / "tools/auth_eval.py"
 )
