@@ -205,8 +205,12 @@ wheels = [
 
 [[package]]
 name = "feature-standards-core"
-version = "0.1.0"
+version = "0.2.0"
 source = { directory = "../../libraries/python" }
+
+[package.metadata]
+requires-dist = [{ name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = ">=3.2,<4" }]
+provides-extras = ["postgres"]
 
 [[package]]
 name = "feature-standards-core-consumer"

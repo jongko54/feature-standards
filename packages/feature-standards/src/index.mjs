@@ -63,7 +63,7 @@ export function listFeatures() {
       id: manifest.feature,
       description,
       profiles: manifest.profiles.map(profile => profile.id),
-      stacks: manifest.stacks.map(({ id, role, language, framework }) => ({ id, role, language, framework })),
+      stacks: manifest.stacks.map(({ id, role, language, framework, profiles }) => ({ id, role, language, framework, profiles })),
     })),
   };
 }
@@ -79,10 +79,11 @@ export function getContext(options = {}) {
   const { profile: profileId = selected.default_profile } = options;
   const isAuth = feature === 'auth';
   if (!stackId) throw new Error('stack-required: choose ' + manifest.stacks.map(stack => stack.id).join('|'));
-  const stack = manifest.stacks.find(candidate => candidate.id === stackId);
-  if (!stack) throw new Error('unsupported-stack: choose ' + manifest.stacks.map(candidate => candidate.id).join('|'));
+  const baseStack = manifest.stacks.find(candidate => candidate.id === stackId);
+  if (!baseStack) throw new Error('unsupported-stack: choose ' + manifest.stacks.map(candidate => candidate.id).join('|'));
   const profile = manifest.profiles.find(candidate => candidate.id === profileId);
-  if (!profile || !stack.profiles.includes(profileId)) throw new Error('unsupported-profile: choose ' + stack.profiles.join('|'));
+  if (!profile || !baseStack.profiles.includes(profileId)) throw new Error('unsupported-profile: choose ' + baseStack.profiles.join('|'));
+  const stack = { ...baseStack, ...(profile.stack_overrides?.[stackId] ?? {}) };
   const doc = path => document(provenance, path);
   const ref = (path, directory = false) => checkoutReference(provenance, path, directory);
   const profileIndex = manifest.profiles.findIndex(candidate => candidate.id === profile.id);
@@ -121,8 +122,9 @@ export function getContext(options = {}) {
       entrypoints: stack.entrypoints.map(({ path, symbol }) => ({ ...ref(path), symbol })),
       packageMetadata: {
         ...stack.package,
+        ...(!isAuth ? { recordedPublishedVersion: readJson('snapshot/docs/core-release-0.1.0.json').targets?.[stackId]?.version ?? null } : {}),
         registryStatusVerifiedByThisTool: false,
-        note: 'Publication fields are captured manifest metadata, not a live registry check. This npm package does not include these runtime APIs.',
+        note: 'Publication fields are captured manifest metadata, not a live registry check. A release receipt may describe an earlier version and does not publish a newer source candidate. This npm package does not include these runtime APIs.',
       },
       environment: profile.environment,
       install: commands(stack.install),
@@ -157,5 +159,50 @@ export function getContext(options = {}) {
       'This snapshot is not an automatic update mechanism or a security certification. Test results and AI speed improvements are not established by selecting context.',
       ...(feature === 'authorization' && stack.id === 'react' ? ['Browser authorization helpers provide presentation advice only. Server-owned principals, resources and policy enforcement remain authoritative.'] : []),
     ],
+  };
+}
+
+/** Route initial reading without eagerly emitting every installation/check command. */
+export function getCompactContext(options = {}) {
+  const selected = getContext(options);
+  const reference = ({ readPath, sha256, sourceModified }) => ({ readPath, sha256, sourceModified });
+  const documents = selected.packagedDocuments;
+  const packageMetadata = Object.fromEntries(
+    ['kind', 'name', 'version', 'published', 'recordedPublishedVersion', 'registryStatusVerifiedByThisTool']
+      .filter(key => Object.hasOwn(selected.sourceCheckout.packageMetadata, key))
+      .map(key => [key, selected.sourceCheckout.packageMetadata[key]]),
+  );
+  return {
+    schemaVersion: 1,
+    mode: 'compact',
+    readOnly: true,
+    package: selected.package,
+    feature: selected.feature,
+    profile: selected.profile,
+    stack: selected.stack,
+    readFirst: [documents.apiGuide, documents.consumerGuide, documents.integrationSkill].map(reference),
+    contract: Object.fromEntries(
+      ['specification', 'openapi', 'scenarios', 'profileGuide', 'manifest', 'releaseReceipt']
+        .filter(key => documents[key]).map(key => [key, reference(documents[key])]),
+    ),
+    relatedSpecifications: documents.relatedSpecifications.map(reference),
+    migrations: documents.migrations.map(reference),
+    optionalAddons: selected.optionalAddons.map(addon => ({
+      id: addon.id,
+      read: [addon.packagedDocuments.guide, addon.packagedDocuments.integrationReference].map(reference),
+      note: addon.note,
+    })),
+    packageMetadata,
+    source: {
+      required: selected.sourceCheckout.required,
+      repositoryUrl: selected.provenance.repositoryUrl,
+      commit: selected.provenance.sourceCommit,
+      sourceDirty: selected.provenance.sourceDirty,
+      snapshotDirty: selected.provenance.snapshotDirty,
+      entrypoints: selected.sourceCheckout.entrypoints.map(({ checkoutPath, symbol }) => ({ checkoutPath, symbol })),
+    },
+    verification: 'Read contract.manifest for source-checkout install/check argv. This selector executes no commands.',
+    fullContext: { argv: ['feature-standards', 'context', '--feature', selected.feature, '--stack', selected.stack.id, '--profile', selected.profile], executed: false },
+    limits: selected.limits,
   };
 }

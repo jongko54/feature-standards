@@ -15,7 +15,7 @@ npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-**This checkout is source version 0.3.2.** Its bundled core receipt verifies npm, Python, Rust, Java and Go `0.1.0` through public downloads and fresh consumers. Check actual registry availability before installing this CLI version; source readiness alone is not publication. Main 0.3.0 captured the earlier source-only core context, and 0.3.1 captured the first Python, Rust and Go core receipts. Publication fields describe this version's bundled evidence; they are not live registry queries.
+**This checkout is source candidate 0.4.0, with 26 supported contexts.** The installation command above selects the separately published 0.3.2 catalog, which has 25 contexts. Use the source build commands below for the new Python-only `postgres-list-v1` profile. Python core 0.2.0 is also a source candidate; its captured publication flag is false. The bundled historical core receipt verifies npm, Python, Rust, Java and Go `0.1.0`. `recordedPublishedVersion` distinguishes that prior release from the selected source version. Publication fields are captured evidence, not live registry queries.
 
 `list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
 
@@ -24,6 +24,17 @@ npx feature-standards context --feature auth --stack python --profile browser-se
 | `auth` | `browser-session-v1`, `browser-session-v2`, `browser-session-v3` | `python`, `go`, `java`, `rust`, `react` |
 | `authorization` | `rbac-v1` | `python`, `go`, `java`, `rust`, `react` |
 | `listing` | `offset-list-v1` | `python`, `go`, `java`, `rust`, `react` |
+| `listing` | `postgres-list-v1` (source candidate) | `python` |
+
+In source 0.4.0, `list` includes `profiles` on each stack. Iterate these stack-specific profiles rather than taking the Cartesian product of every feature profile and stack; unsupported database selections fail explicitly.
+
+Source 0.4.0 also adds an opt-in compact reading card:
+
+```sh
+node packages/feature-standards/src/cli.mjs context --feature authorization --stack go --compact
+```
+
+It returns API/consumer/rule documents under `readFirst`, contract document pointers, hashes, source entrypoints and captured package status. It leaves the full install/check inventory behind the manifest and `fullContext` reference. This selector is read-only and preserves source/registry and browser/server trust limits. The default full output remains available. `getCompactContext(options)` exposes the same card from the source Node API. The published 0.3.2 CLI does not support this new flag/export. Smaller routing JSON does not establish lower model token use or faster integration; reading the referenced documents still costs context.
 
 v1 uses memory sessions. v2 uses PostgreSQL sessions. v3 adds registration, email verification, and password reset. SMTP delivery is an optional v3 addon with separate configuration. React is a client stack; the other four stacks are backends. `list` and `context` perform no checks, migrations, dependency installation, generation, project edits, server startup, or model calls.
 
@@ -95,6 +106,7 @@ node packages/feature-standards/src/cli.mjs list
 node packages/feature-standards/src/cli.mjs context --feature auth --stack react --profile browser-session-v3
 node packages/feature-standards/src/cli.mjs context --feature authorization --stack go
 node packages/feature-standards/src/cli.mjs context --feature listing --stack react
+node packages/feature-standards/src/cli.mjs context --feature listing --stack python --profile postgres-list-v1
 
 npm --prefix packages/feature-standards test
 npm --prefix packages/feature-standards run check:pack
@@ -102,6 +114,6 @@ npm --prefix packages/feature-standards run check:pack
 
 `prepack` rebuilds `snapshot/` from an explicit positive file whitelist. Only the feature index and catalogs, contracts, schema SQL, selected guides, consumer READMEs, and integration skill references are copied. No implementation code, dependency trees, binaries, credentials, caches, model traces, or evaluation artifacts are bundled. The packed package includes the three runtime JavaScript files, its metadata, README, and MIT license. Its build/test scripts remain in the source repository.
 
-`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 25 feature/stack/profile contexts and Node exports. It also checks the explicit workflow boundary against a synthetic trusted generator/runner fixture; this smoke check does not build or exercise native feature libraries or authentication backends. Actual library and generated backend/profile checks are separate. Local packing and offline installation are separate from verified npm publication.
+`check:pack` packs the actual artifact, checks the exact file inventory and metadata, installs it into a fresh directory using an empty npm cache in offline mode, and runs the installed binary plus all 26 supported feature/stack/profile contexts and Node exports. It also checks the explicit workflow boundary against a synthetic trusted generator/runner fixture; this smoke check does not build or exercise native feature libraries or authentication backends. Actual library and generated backend/profile checks are separate. Local packing and offline installation are separate from verified npm publication.
 
 Created by [jongko54](https://github.com/jongko54). [Source and issues](https://github.com/jongko54/feature-standards).

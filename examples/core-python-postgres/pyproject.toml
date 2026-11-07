@@ -1,0 +1,9 @@
+[project]
+name = "feature-standards-postgres-core-consumer"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["feature-standards-python-auth", "feature-standards-core[postgres]", "uvicorn"]
+
+[tool.uv.sources]
+feature-standards-python-auth = { path = "../../implementations/python-fastapi" }
+feature-standards-core = { path = "../../libraries/python" }

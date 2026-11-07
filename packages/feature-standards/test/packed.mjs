@@ -58,7 +58,7 @@ try {
   assert.deepEqual(listed.features.map(feature => feature.id), ['auth', 'authorization', 'listing']);
   assert.match(run(bin, ['--help'], consumer), /Read-only/);
   let contexts = 0;
-  for (const feature of listed.features) for (const stack of feature.stacks) for (const profile of feature.profiles) {
+  for (const feature of listed.features) for (const stack of feature.stacks) for (const profile of stack.profiles) {
     const context = JSON.parse(run(bin, ['context', '--feature', feature.id, '--stack', stack.id, '--profile', profile], consumer));
     assert.equal(context.feature, feature.id);
     assert.equal(context.stack.id, stack.id);
@@ -68,9 +68,9 @@ try {
     for (const entrypoint of context.sourceCheckout.entrypoints) assert.ok(!existsSync(join(installed, 'snapshot', entrypoint.checkoutPath)));
     contexts++;
   }
-  assert.equal(contexts, 25);
-  const imported = JSON.parse(run(process.execPath, ['--input-type=module', '-e', "import { listFeatures, getContext } from 'feature-standards'; console.log(JSON.stringify({ feature: listFeatures().features[0].id, stack: getContext({ stack: 'rust' }).stack.id }));"], consumer));
-  assert.deepEqual(imported, { feature: 'auth', stack: 'rust' });
+  assert.equal(contexts, 26);
+  const imported = JSON.parse(run(process.execPath, ['--input-type=module', '-e', "import { listFeatures, getContext, getCompactContext } from 'feature-standards'; console.log(JSON.stringify({ feature: listFeatures().features[0].id, stack: getContext({ stack: 'rust' }).stack.id, mode: getCompactContext({ stack: 'rust' }).mode }));"], consumer));
+  assert.deepEqual(imported, { feature: 'auth', stack: 'rust', mode: 'compact' });
   const source = fixtureSource(join(scratch, 'trusted-source'));
   const generated = join(scratch, 'generated-app');
   const initialized = JSON.parse(run(bin, ['init', '--source', source, '--stack', 'python', '--profile', 'browser-session-v3', '--dest', generated], consumer));

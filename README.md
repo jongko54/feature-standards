@@ -6,6 +6,8 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 **Three feature standards are available: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. Core `0.1.0` is published in all five ecosystems; [the registry receipt](docs/core-release-0.1.0.json) verifies public downloads and fresh consumers independently. These are experimental core APIs. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
+The current source adds real three-feature HTTP consumers for [Go](examples/core-go/README.md), [Java](examples/core-java/README.md) and [Rust](examples/core-rust/README.md), plus a Python-only [PostgreSQL listing profile](docs/postgres-listing.md). Catalog `0.4.0` and Python core `0.2.0` are source candidates; the published versions below retain their recorded behavior. The source catalog exposes 26 supported contexts and preserves the 10,000-row materialized profile separately from database listing.
+
 ## Start with the feature catalog
 
 The main npm package is **[`feature-standards@0.3.2`](https://www.npmjs.com/package/feature-standards)**. It provides curated contracts, stack context, and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The [0.3.2 receipt](docs/npm-release-0.3.2.json) verifies the reviewed public archive and all 25 contexts from a fresh registry installation.

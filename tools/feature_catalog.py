@@ -18,9 +18,18 @@ ROOT = Path(__file__).resolve().parents[1]
 FEATURES = {
     "auth": ("browser-session-v1", "browser-session-v2", "browser-session-v3"),
     "authorization": ("rbac-v1",),
-    "listing": ("offset-list-v1",),
+    "listing": ("offset-list-v1", "postgres-list-v1"),
 }
 STACKS = {"python", "go", "java", "rust", "react"}
+
+
+def supported_profiles(feature: str, stack: str) -> tuple[str, ...]:
+    """A source profile is advertised only for stacks with its implementation."""
+    return tuple(
+        profile
+        for profile in FEATURES[feature]
+        if profile != "postgres-list-v1" or stack == "python"
+    )
 
 
 def checked_path(root: Path, relative: str) -> Path:
@@ -108,7 +117,27 @@ def _shape(catalog: dict, root: Path) -> None:
     schema["properties"]["feature"] = {"enum": list(FEATURES)[1:]}
     # Source coordinates may name their initial version, but are never release receipts.
     package = schema["properties"]["stacks"]["items"]["properties"]["package"]
-    package["properties"]["version"] = {"type": "string", "const": "0.1.0"}
+    package["properties"]["version"] = {
+        "type": "string",
+        "pattern": r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$",
+    }
+    stack_properties = schema["properties"]["stacks"]["items"]["properties"]
+    schema["properties"]["profiles"]["items"]["properties"]["stack_overrides"] = {
+        "type": "object",
+        "properties": {
+            stack: {
+                "type": "object",
+                "properties": {
+                    name: copy.deepcopy(stack_properties[name])
+                    for name in ("entrypoints", "consumer")
+                },
+                "required": ["entrypoints", "consumer"],
+                "additionalProperties": False,
+            }
+            for stack in STACKS
+        },
+        "additionalProperties": False,
+    }
     schema["properties"]["stacks"]["items"]["properties"]["install"]["minItems"] = 0
     schema["properties"]["addons"]["minItems"] = 0
     errors = sorted(
@@ -243,12 +272,14 @@ def _package(root: Path, stack: dict) -> None:
 
 def _publication(root: Path, stack: dict) -> None:
     """Only a matching recorded public download and fresh consumer can mark publication."""
-    receipt = root / "docs/core-release-0.1.0.json"
+    version = stack["package"].get("version", "")
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+        raise ValueError("Core publication requires a stable version")
+    relative_receipt = f"docs/core-release-{version}.json"
+    receipt = root / relative_receipt
     entry = None
     if receipt.exists():
-        document = json.loads(
-            checked_path(root, "docs/core-release-0.1.0.json").read_text()
-        )
+        document = json.loads(checked_path(root, relative_receipt).read_text())
         entry = document.get("targets", {}).get(stack["id"])
     verified = bool(
         isinstance(entry, dict)
@@ -304,8 +335,20 @@ def validate_catalog(catalog: dict, root: Path = ROOT) -> None:
         ):
             raise ValueError("Feature catalog/OpenAPI/scenario profile mismatch")
         auth_catalog._commands(root, profile["checks"])
+        overrides = profile.get("stack_overrides", {})
+        if set(overrides) != (
+            {"python"} if profile["id"] == "postgres-list-v1" else set()
+        ):
+            raise ValueError("Feature catalog profile source bindings mismatch")
+        for stack_id, override in overrides.items():
+            stack = next(item for item in catalog["stacks"] if item["id"] == stack_id)
+            if profile["id"] not in stack["profiles"]:
+                raise ValueError("Feature catalog override targets unsupported stack")
+            checked_path(root, override["consumer"] + "/README.md")
+            for entrypoint in override["entrypoints"]:
+                _symbols(root, stack, entrypoint)
     for stack in catalog["stacks"]:
-        if stack["profiles"] != list(expected_profiles):
+        if stack["profiles"] != list(supported_profiles(feature, stack["id"])):
             raise ValueError("Feature catalog stack profile mismatch")
         if stack["role"] != ("client" if stack["id"] == "react" else "backend"):
             raise ValueError("Feature catalog stack role mismatch")
@@ -329,7 +372,12 @@ def select(catalog: dict, stack_id: str, profile_id: str | None = None) -> dict:
         if profiles is None:
             raise ValueError("Unknown feature")
         profile_id = profiles[0]
-    return auth_catalog.select(catalog, stack_id, profile_id)
+    result = auth_catalog.select(catalog, stack_id, profile_id)
+    override = result["profile"].get("stack_overrides", {}).get(stack_id)
+    if override:
+        result = copy.deepcopy(result)
+        result["stack"].update(copy.deepcopy(override))
+    return result
 
 
 def main() -> int:
@@ -343,8 +391,13 @@ def main() -> int:
         index = load_index()
         validate_index(index)
         if args.check:
+            contexts = sum(
+                len(stack["profiles"])
+                for descriptor in index["features"]
+                for stack in load_catalog(descriptor["id"])["stacks"]
+            )
             print(
-                "Feature catalogs: PASS (3 features, 25 source contexts; no commands executed)"
+                f"Feature catalogs: PASS (3 features, {contexts} source contexts; no commands executed)"
             )
         elif args.stack:
             print(

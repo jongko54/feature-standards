@@ -39,8 +39,8 @@
       "package": {
         "kind": "wheel",
         "name": "feature-standards-core",
-        "version": "0.1.0",
-        "published": true
+        "version": "0.2.0",
+        "published": false
       },
       "entrypoints": [
         {
@@ -86,7 +86,7 @@
           "symbol": "NewPolicy; Policy.Decide"
         }
       ],
-      "consumer": "libraries/go",
+      "consumer": "examples/core-go",
       "install": [],
       "checks": [
         {
@@ -96,6 +96,15 @@
             "tools/check_core_features.py",
             "--feature",
             "authorization",
+            "--stack",
+            "go"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "go"
           ]
@@ -140,7 +149,7 @@
           "symbol": "Decision"
         }
       ],
-      "consumer": "libraries/java",
+      "consumer": "examples/core-java",
       "install": [],
       "checks": [
         {
@@ -150,6 +159,15 @@
             "tools/check_core_features.py",
             "--feature",
             "authorization",
+            "--stack",
+            "java"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "java"
           ]
@@ -178,7 +196,7 @@
           "symbol": "Policy; Grant; Principal; Resource"
         }
       ],
-      "consumer": "libraries/rust",
+      "consumer": "examples/core-rust",
       "install": [],
       "checks": [
         {
@@ -188,6 +206,15 @@
             "tools/check_core_features.py",
             "--feature",
             "authorization",
+            "--stack",
+            "rust"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "rust"
           ]

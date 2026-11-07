@@ -1,6 +1,6 @@
 [project]
 name = "feature-standards-core"
-version = "0.1.0"
+version = "0.2.0"
 description = "Shared authorization and listing feature contracts"
 readme = "README.md"
 license = "MIT"
@@ -8,6 +8,9 @@ license-files = ["LICENSE"]
 authors = [{name = "jongko54"}]
 requires-python = ">=3.12"
 dependencies = []
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2,<4"]
 
 [project.urls]
 Repository = "https://github.com/jongko54/feature-standards"

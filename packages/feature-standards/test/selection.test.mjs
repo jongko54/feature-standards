@@ -13,6 +13,48 @@ const STACKS = ['python', 'go', 'java', 'rust', 'react'];
 const PROFILES = ['browser-session-v1', 'browser-session-v2', 'browser-session-v3'];
 const run = (args, options = {}) => spawnSync(process.execPath, [CLI, ...args], { encoding: 'utf8', ...options });
 
+test('database listing context selects Python-only API and exposes supported stack profiles', () => {
+  const selected = getContext({ feature: 'listing', stack: 'python', profile: 'postgres-list-v1' });
+  assert.equal(selected.sourceCheckout.consumer.checkoutPath, 'examples/core-python-postgres');
+  assert.equal(selected.sourceCheckout.entrypoints[0].checkoutPath, 'libraries/python/feature_standards/postgres_listing.py');
+  assert.equal(selected.sourceCheckout.packageMetadata.published, false);
+  const listing = listFeatures().features.find(feature => feature.id === 'listing');
+  assert.deepEqual(listing.stacks.find(stack => stack.id === 'python').profiles, ['offset-list-v1', 'postgres-list-v1']);
+  for (const stack of STACKS.filter(stack => stack !== 'python')) {
+    assert.deepEqual(listing.stacks.find(entry => entry.id === stack).profiles, ['offset-list-v1']);
+    assert.throws(() => getContext({ feature: 'listing', stack, profile: 'postgres-list-v1' }), /unsupported-profile/);
+  }
+});
+
+test('compact context routes to selected documents without emitting the full command inventory', () => {
+  const full = run(['context', '--feature', 'authorization', '--stack', 'go']);
+  const compact = run(['context', '--feature', 'authorization', '--stack', 'go', '--compact']);
+  assert.equal(full.status, 0, full.stderr);
+  assert.equal(compact.status, 0, compact.stderr);
+  const original = JSON.parse(full.stdout);
+  const card = JSON.parse(compact.stdout);
+  assert.equal(card.mode, 'compact');
+  assert.equal(card.readOnly, true);
+  assert.equal(card.profile, original.profile);
+  assert.deepEqual(card.readFirst.map(doc => doc.readPath), [
+    original.packagedDocuments.apiGuide.readPath,
+    original.packagedDocuments.consumerGuide.readPath,
+    original.packagedDocuments.integrationSkill.readPath,
+  ]);
+  for (const doc of [...card.readFirst, ...Object.values(card.contract)]) {
+    assert.ok(existsSync(doc.readPath));
+    assert.match(doc.sha256, /^[a-f0-9]{64}$/);
+  }
+  assert.deepEqual(card.source.entrypoints, original.sourceCheckout.entrypoints.map(({ checkoutPath, symbol }) => ({ checkoutPath, symbol })));
+  assert.equal(card.packageMetadata.registryStatusVerifiedByThisTool, false);
+  assert.equal(card.commands, undefined);
+  assert.equal(card.source.install, undefined);
+  assert.ok(Buffer.byteLength(compact.stdout) < Buffer.byteLength(full.stdout) * 0.65);
+  for (const args of [['list', '--compact'], ['context', '--stack', 'go', '--compact', '--compact'], ['init', '--compact']]) {
+    assert.notEqual(run(args).status, 0);
+  }
+});
+
 test('list describes three implemented features with five stack roles and their profiles', () => {
   const result = listFeatures();
   assert.deepEqual(result.features.map(feature => feature.id), ['auth', 'authorization', 'listing']);
@@ -20,8 +62,8 @@ test('list describes three implemented features with five stack roles and their 
   assert.deepEqual(result.features[0].profiles, PROFILES);
   assert.deepEqual(result.features[0].stacks.map(stack => stack.id), STACKS);
   assert.equal(result.features[0].stacks.find(stack => stack.id === 'react').role, 'client');
-  for (const [index, profile] of [[1, 'rbac-v1'], [2, 'offset-list-v1']]) {
-    assert.deepEqual(result.features[index].profiles, [profile]);
+  for (const [index, profiles] of [[1, ['rbac-v1']], [2, ['offset-list-v1', 'postgres-list-v1']]]) {
+    assert.deepEqual(result.features[index].profiles, profiles);
     assert.deepEqual(result.features[index].stacks.map(stack => stack.id), STACKS);
   }
   assert.match(result.provenance.sourceCommit, /^[a-f0-9]{40,64}$/);
@@ -155,8 +197,8 @@ test('context only reads package data, even from an unrelated caller directory w
     writeFileSync(join(caller, 'feature-standards.json'), '{"feature":"do-not-read-caller"}');
     writeFileSync(join(caller, 'mine.txt'), 'keep');
     const before = readdirSync(caller).map(name => [name, readFileSync(join(caller, name), 'utf8')]);
-    for (const feature of listFeatures().features) for (const stack of STACKS) for (const profile of feature.profiles) {
-      const result = run(['context', '--feature', feature.id, '--stack', stack, '--profile', profile], { cwd: caller, env: { ...process.env, PATH: '' } });
+    for (const feature of listFeatures().features) for (const stack of feature.stacks) for (const profile of stack.profiles) for (const format of [[], ['--compact']]) {
+      const result = run(['context', '--feature', feature.id, '--stack', stack.id, '--profile', profile, ...format], { cwd: caller, env: { ...process.env, PATH: '' } });
       assert.equal(result.status, 0, result.stderr);
       assert.equal(JSON.parse(result.stdout).feature, feature.id);
     }

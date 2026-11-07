@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "feature": "listing",
+  "profile": "postgres-list-v1",
+  "implemented_stacks": [
+    "python"
+  ],
+  "scope": "Executable test-method map; boundary tests are driver-free, database tests use an owned real PostgreSQL fixture. This is not the five-language materialized v1 vector set.",
+  "cases": [
+    {
+      "id": "visibility-requires-explicit-valid-tenant-and-owner-choice",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_visibility_requires_explicit_valid_tenant_and_owner_choice"
+    },
+    {
+      "id": "only-explicit-relation-and-typed-projection-are-accepted",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_only_explicit_relation_and_typed_projection_are_accepted"
+    },
+    {
+      "id": "configuration-is-an-immutable-copy",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_configuration_is_an_immutable_copy"
+    },
+    {
+      "id": "bad-query-is-rejected-before-connection-or-driver-use",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_bad_query_is_rejected_before_connection_or_driver_use"
+    },
+    {
+      "id": "absent-or-forged-scope-fails-before-database-use",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_absent_or_forged_scope_fails_before_database_use"
+    },
+    {
+      "id": "import-and-configuration-do-not-import-the-optional-driver",
+      "path": "libraries/python/tests/test_postgres_listing.py",
+      "test": "PostgresListingBoundaryTests.test_import_and_configuration_do_not_import_the_optional_driver"
+    },
+    {
+      "id": "inherited-libpq-defaults-are-rejected-before-fixture-or-connection-io",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "ListingDatabaseGuard.test_inherited_libpq_defaults_are_rejected_before_fixture_or_connection_io"
+    },
+    {
+      "id": "configured-connection-pins-validated-loopback-hostaddr",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "ListingDatabaseGuard.test_configured_connection_pins_validated_loopback_hostaddr"
+    },
+    {
+      "id": "even-empty-inherited-defaults-are-rejected-before-fixture-or-connection-io",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "ListingDatabaseGuard.test_even_empty_inherited_defaults_are_rejected_before_fixture_or_connection_io"
+    },
+    {
+      "id": "visibility-scopes-rows-before-totals-and-projection",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_visibility_scopes_rows_before_totals_and_projection"
+    },
+    {
+      "id": "typed-filters-stable-ties-and-sql-injection-values",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_typed_filters_stable_ties_and_sql_injection_values"
+    },
+    {
+      "id": "unicode-scalar-sort-and-string-equality-ignore-database-locale",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_unicode_scalar_sort_and_string_equality_ignore_database_locale"
+    },
+    {
+      "id": "database-dataset-can-exceed-materialized-v1-cap",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_database_dataset_can_exceed_materialized_v1_cap"
+    },
+    {
+      "id": "count-and-page-share-snapshot-across-committed-writer",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_count_and_page_share_snapshot_across_committed_writer"
+    },
+    {
+      "id": "active-caller-transaction-is-preserved-and-refused",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_active_caller_transaction_is_preserved_and_refused"
+    },
+    {
+      "id": "read-only-isolation-and-error-rollback-leave-connection-usable",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_read_only_isolation_and_error_rollback_leave_connection_usable"
+    },
+    {
+      "id": "missing-relation-and-closed-connection-are-sanitized",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_missing_relation_and_closed_connection_are_sanitized"
+    },
+    {
+      "id": "database-constraints-reject-invalid-trusted-values",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_database_constraints_reject_invalid_trusted_values"
+    },
+    {
+      "id": "selected-trusted-data-is-validated-and-transaction-rolled-back",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_selected_trusted_data_is_validated_and_transaction_rolled_back"
+    },
+    {
+      "id": "session-defaults-are-preserved-for-non-autocommit-connection",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_session_defaults_are_preserved_for_non_autocommit_connection"
+    },
+    {
+      "id": "owned-or-configured-connection-has-explicit-destination-parameters",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_owned_or_configured_connection_has_explicit_destination_parameters"
+    },
+    {
+      "id": "startup-failure-stops-only-its-owned-postmaster-before-removal",
+      "path": "tests/postgres_listing_conformance.py",
+      "test": "PostgresListingContract.test_startup_failure_stops_only_its_owned_postmaster_before_removal"
+    }
+  ]
+}

@@ -168,6 +168,18 @@ def main():
                 env=env,
             )
             run([python, "-c", PYTHON_SMOKE, ROOT], cwd=temporary, env=env)
+            if (
+                ROOT / "libraries/python/feature_standards/postgres_listing.py"
+            ).exists():
+                run(
+                    [
+                        python,
+                        "-c",
+                        "import importlib.util; from feature_standards.listing import ListingSchema; from feature_standards.postgres_listing import PostgresListing, VisibilityScope; assert importlib.util.find_spec('psycopg') is None; PostgresListing(schema=ListingSchema({'id':'string'}, {}), table=('public','documents'), columns={'id':'id'}, tenant_column='tenant_id', owner_column='owner_id'); VisibilityScope('tenant-a', 'user-1'); print('Installed optional PostgreSQL API configures without the driver')",
+                    ],
+                    cwd=temporary,
+                    env=env,
+                )
         if "npm" in targets:
             records = json.loads(
                 run(

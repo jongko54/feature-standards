@@ -61,6 +61,19 @@ class EvalError(Exception):
     """Only safe, fixed diagnostic codes are surfaced in reports."""
 
 
+class TrialContract:
+    """Optional task hooks; the default auth-v1 evaluation remains unchanged."""
+
+    def __init__(
+        self, *, profile, prompt_builder, artifact_checker, prepare_grader, http_grader
+    ):
+        self.profile = profile
+        self.prompt_builder = prompt_builder
+        self.artifact_checker = artifact_checker
+        self.prepare_grader = prepare_grader
+        self.http_grader = http_grader
+
+
 def private_file(path: Path):
     return os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb")
 
@@ -677,8 +690,11 @@ def request(
     body=None,
     cookie=None,
     csrf=None,
+    extra_headers=None,
 ):
     headers = {"Origin": origin}
+    if extra_headers is not None:
+        headers.update(extra_headers)
     if body is not None:
         headers["Content-Type"] = "application/json"
     if cookie is not None:
@@ -885,7 +901,14 @@ def environment(port: int, origin: str) -> dict:
 
 
 def grade(
-    generated: Path, output: Path, env: dict, port: int, origin: str, deadline: float
+    generated: Path,
+    output: Path,
+    env: dict,
+    port: int,
+    origin: str,
+    deadline: float,
+    *,
+    http_grader=None,
 ) -> list[str]:
     builds, (argv, cwd) = load_run(generated)
     # Credentials authenticate only the model CLI; generated programs do not inherit them.
@@ -920,7 +943,7 @@ def grade(
                     break
                 except (OSError, http.client.HTTPException):
                     time.sleep(min(0.1, remaining(ready_deadline)))
-            return http_grade(port, origin, deadline)
+            return (http_grader or http_grade)(port, origin, deadline)
         finally:
             stop_group(child, tree)
 
@@ -963,6 +986,7 @@ def run_trial(
     tasks: dict | None = None,
     repeat: int = 1,
     sequence: int = 1,
+    contract: TrialContract | None = None,
 ) -> dict:
     if not re.fullmatch(MODEL_PATTERN, model):
         raise EvalError("invalid-model-id")
@@ -1009,7 +1033,7 @@ def run_trial(
         stderr=subprocess.DEVNULL,
     )
     generated = work / "generated"
-    generated.mkdir()
+    generated.mkdir(mode=0o700)
     with socket.socket() as sock:
         sock.bind(("127.0.0.1", 0))
         port = sock.getsockname()[1]
@@ -1035,13 +1059,13 @@ def run_trial(
         "stack": stack,
         "condition": condition,
         **source_metadata,
-        "profile": "browser-session-v1",
+        "profile": contract.profile if contract else "browser-session-v1",
         "repeat": repeat,
         "sequence": sequence,
         "timeout_seconds": timeout,
         "requested_model": model,
         "cli_version": cli_version,
-        "baseline_ref": BASELINE_REF,
+        "baseline_ref": None if contract else BASELINE_REF,
         "snapshot_sha256": digest_hashes(before),
         "passed": False,
         "checks": [],
@@ -1079,7 +1103,11 @@ def run_trial(
             env,
             trace,
             min(deadline, started + timeout * 0.67),
-            prompt(stack, commit, tasks).encode(),
+            (
+                contract.prompt_builder(stack, commit, tasks, condition)
+                if contract
+                else prompt(stack, commit, tasks)
+            ).encode(),
             output / "agent.log",
         )
         result["agent_seconds"] = round(time.monotonic() - agent_started, 3)
@@ -1090,8 +1118,23 @@ def run_trial(
             raise EvalError("agent-trace-incomplete")
         if fingerprint(work) != before:
             raise EvalError("source-modified")
-        reuse_check(generated, stack, before, commit)
-        result["checks"] = grade(generated, output, env, port, origin, deadline)
+        if contract:
+            contract.artifact_checker(generated, stack, before, commit)
+            contract.prepare_grader(generated, env)
+            result["checks"] = grade(
+                generated,
+                output,
+                env,
+                port,
+                origin,
+                deadline,
+                http_grader=lambda port, origin, deadline: contract.http_grader(
+                    generated, env, port, origin, deadline
+                ),
+            )
+        else:
+            reuse_check(generated, stack, before, commit)
+            result["checks"] = grade(generated, output, env, port, origin, deadline)
         if fingerprint(work) != before:
             raise EvalError("source-modified")
         result["passed"] = True

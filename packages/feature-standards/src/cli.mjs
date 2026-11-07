@@ -2,16 +2,17 @@
 import { realpathSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { checkProject, getContext, initFeature, listFeatures } from './index.mjs';
+import { checkProject, getCompactContext, getContext, initFeature, listFeatures } from './index.mjs';
 
 const HELP = `feature-standards list
-feature-standards context --stack python|go|java|rust|react [--feature auth|authorization|listing] [--profile PROFILE]
+feature-standards context --stack python|go|java|rust|react [--feature auth|authorization|listing] [--profile PROFILE] [--compact]
 feature-standards init --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--feature auth] [--profile browser-session-v1|browser-session-v2|browser-session-v3] [--check]
 feature-standards check --project GENERATED_DIRECTORY
 
 Read-only list/context select feature contracts and AI integration context, emitted as JSON.
-Available features: auth (browser-session-v1/v2/v3), authorization (rbac-v1), listing (offset-list-v1).
+Available features: auth (browser-session-v1/v2/v3), authorization (rbac-v1), listing (offset-list-v1; Python-only postgres-list-v1 source candidate).
 Feature defaults to auth; profile defaults to the selected feature's first profile.
+--compact gives selected reading paths first; full context retains source command/environment guidance.
 Packaged document read paths are separate from source-checkout API entrypoints and command guidance.
 Explicit init supports auth only and creates a new project through a trusted source checkout's generator >=0.2.0.
 Explicit check or init --check executes trusted project code and toolchains for the selected profile.
@@ -37,6 +38,11 @@ export function parseArguments(argv) {
       result.check = true;
       continue;
     }
+    if (command === 'context' && argument === '--compact') {
+      if (Object.hasOwn(result, 'compact')) throw new Error('duplicate-argument: --compact');
+      result.compact = true;
+      continue;
+    }
     if (!flags.includes(argument)) throw new Error('unknown-argument: see --help');
     const key = argument.slice(2);
     if (Object.hasOwn(result, key)) throw new Error('duplicate-argument: ' + argument);
@@ -54,8 +60,8 @@ export function parseArguments(argv) {
 export async function main(argv = process.argv.slice(2)) {
   const options = parseArguments(argv);
   if (options.help) { console.log(HELP); return; }
-  const { command, ...selection } = options;
-  const result = command === 'list' ? listFeatures() : command === 'context' ? getContext(selection)
+  const { command, compact, ...selection } = options;
+  const result = command === 'list' ? listFeatures() : command === 'context' ? (compact ? getCompactContext(selection) : getContext(selection))
     : command === 'init' ? await initFeature(selection) : await checkProject(selection);
   console.log(JSON.stringify(result, null, 2));
 }

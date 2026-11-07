@@ -37,6 +37,9 @@ export const SOURCE_FILES = Object.freeze([
   'features/listing/specification.md',
   'features/listing/openapi.json',
   'features/listing/scenarios.json',
+  'features/listing/postgres-list-v1.md',
+  'features/listing/openapi-postgres.json',
+  'features/listing/scenarios-postgres.json',
   'docs/ai-integration.md',
   'docs/create-feature-auth.md',
   'docs/postgres-v2.md',
@@ -44,6 +47,7 @@ export const SOURCE_FILES = Object.freeze([
   'docs/smtp-delivery.md',
   'docs/versioning.md',
   'docs/core-standards.md',
+  'docs/postgres-listing.md',
   'docs/core-release-0.1.0.json',
   'libraries/python/README.md',
   'libraries/go/README.md',
@@ -51,6 +55,10 @@ export const SOURCE_FILES = Object.freeze([
   'libraries/rust/README.md',
   'libraries/typescript/README.md',
   'examples/core-python/README.md',
+  'examples/core-python-postgres/README.md',
+  'examples/core-go/README.md',
+  'examples/core-java/README.md',
+  'examples/core-rust/README.md',
   'skills/integrate-core/SKILL.md',
   'implementations/python-fastapi/README.md',
   'implementations/go-net-http/README.md',
@@ -69,7 +77,8 @@ export const SOURCE_FILES = Object.freeze([
 ]);
 const STACKS = ['python', 'go', 'java', 'rust', 'react'];
 const PROFILES = ['browser-session-v1', 'browser-session-v2', 'browser-session-v3'];
-const FEATURES = Object.freeze({ auth: PROFILES, authorization: ['rbac-v1'], listing: ['offset-list-v1'] });
+const FEATURES = Object.freeze({ auth: PROFILES, authorization: ['rbac-v1'], listing: ['offset-list-v1', 'postgres-list-v1'] });
+const supportedProfiles = (feature, stack) => FEATURES[feature].filter(profile => profile !== 'postgres-list-v1' || stack === 'python');
 const allowed = new Set(SOURCE_FILES);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
@@ -128,11 +137,20 @@ function validateManifest(manifest, sources, feature) {
     if (apiProfile !== profile.id || scenarios.profile !== profile.id) {
       throw new Error('manifest-contract-profile-mismatch: ' + profile.id);
     }
+    const overrides = profile.stack_overrides ?? {};
+    const expectedOverrides = profile.id === 'postgres-list-v1' ? ['python'] : [];
+    if (Object.keys(overrides).sort().join() !== expectedOverrides.join()) throw new Error('unsupported-profile-source-bindings');
+    for (const override of Object.values(overrides)) {
+      if (Object.keys(override).sort().join() !== 'consumer,entrypoints') throw new Error('unsupported-profile-override');
+      requireDocument(override.consumer + '/README.md');
+      if (!Array.isArray(override.entrypoints) || override.entrypoints.length === 0) throw new Error('missing-source-entrypoints');
+      for (const entrypoint of override.entrypoints) regularSource(entrypoint.path);
+    }
   }
   for (const stack of manifest.stacks) {
     requireDocument(stack.guide);
     requireDocument(stack.consumer + '/README.md');
-    if (!Array.isArray(stack.profiles) || [...stack.profiles].sort().join() !== [...profiles].sort().join()) {
+    if (!Array.isArray(stack.profiles) || [...stack.profiles].sort().join() !== [...supportedProfiles(feature, stack.id)].sort().join()) {
       throw new Error('unsupported-manifest-stack-profiles: ' + stack.id);
     }
     if (!Array.isArray(stack.entrypoints) || stack.entrypoints.length === 0) throw new Error('missing-source-entrypoints');

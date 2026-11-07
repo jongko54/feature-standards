@@ -1,0 +1,14 @@
+{
+  "stacks": {
+    "python": "Build a new Python/FastAPI consumer importing existing authentication, authorization and listing libraries.",
+    "go": "Build a new Go/net/http consumer importing existing authentication, authorization and listing libraries.",
+    "java": "Build a new Java/Spring consumer importing existing authentication, authorization and listing libraries.",
+    "rust": "Build a new Rust/Axum consumer importing existing authentication, authorization and listing libraries."
+  },
+  "documents": [
+    {"id":"own-b","name":"Beta","score":2,"active":false,"tenantId":"tenant-a","ownerId":"demo-user"},
+    {"id":"other-owner","name":"Private","score":10,"active":true,"tenantId":"tenant-a","ownerId":"other-user"},
+    {"id":"other-tenant","name":"Secret","score":99,"active":true,"tenantId":"tenant-b","ownerId":"demo-user"},
+    {"id":"own-a","name":"Alpha","score":2,"active":true,"tenantId":"tenant-a","ownerId":"demo-user"}
+  ]
+}

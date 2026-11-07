@@ -6,6 +6,8 @@
 |---|---|---|
 | 대표 npm 패키지 | `0.3.2` 게시 | `feature-standards`; 세 기능의 25개 문맥과 인증 전용 `init`/`check`; [게시 기록](npm-release-0.3.2.json) |
 | 권한·목록 코어 패키지 | `0.1.0` 게시 | npm·PyPI·crates.io·Maven Central·Go 모듈; [언어별 게시·소비 검증](core-release-0.1.0.json) |
+| 현재 CLI 소스 후보 | `0.4.0` 미게시 | Python 전용 DB 프로필과 스택별 지원 프로필을 포함하는 26개 문맥 |
+| 현재 Python 코어 소스 후보 | `0.2.0` 미게시 | 선택 의존성 `[postgres]`와 `postgres-list-v1`; 기존 0.1.0 게시 기록과 구분 |
 | 생성기 npm 패키지 | `0.2.0` 게시 | `@ugauga/create-feature-auth`; 새 생성 앱은 `checkProtocolVersion: 1`로 선택 프로필 검사 결과를 반환 |
 | React npm API 패키지 | `0.1.4` | `@ugauga/feature-standards-react-auth`, 작성자·검색 metadata 개선; [배포 기록](npm-release.md) |
 | v1 OpenAPI `info.version` | `0.1.0` | 기존 단일 사용자·메모리 계약 |

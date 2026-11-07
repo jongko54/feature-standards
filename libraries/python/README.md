@@ -12,6 +12,8 @@ result = page([{"id": "a", "score": 1}], parse_query("limit=20&sort=-score", sch
 
 Install the published package with `pip install feature-standards-core==0.1.0`. For checkout development, use `uv pip install ./libraries/python` or a local path dependency. Python >=3.12, no runtime dependencies. A separate real HTTP consumer is in `examples/core-python`.
 
+This checkout is a **0.2.0 source candidate**. It adds an optional Python-only PostgreSQL adapter under `feature_standards.postgres_listing`; the published 0.1.0 wheel does not contain it. Install the candidate from source with `uv pip install './libraries/python[postgres]'`. Normal core imports remain driver-free. `PostgresListing` requires a trusted typed relation and explicit `VisibilityScope(tenant_id, owner_id)`; pass an idle psycopg connection and the original raw query to `page`. See [the database profile guide](../../docs/postgres-listing.md) for constraints, scope, navigation bounds and errors. This source version is not marked published without a matching registry receipt.
+
 Run both native feature suites from the repository root:
 
 ```sh

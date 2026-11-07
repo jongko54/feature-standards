@@ -23,6 +23,42 @@
           ]
         }
       ]
+    },
+    {
+      "id": "postgres-list-v1",
+      "specification": "features/listing/postgres-list-v1.md",
+      "openapi": "features/listing/openapi-postgres.json",
+      "scenarios": "features/listing/scenarios-postgres.json",
+      "guide": "docs/postgres-listing.md",
+      "environment": {},
+      "migrations": [],
+      "checks": [
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_postgres_listing_contract.py"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tests/postgres_listing_conformance.py"
+          ]
+        }
+      ],
+      "stack_overrides": {
+        "python": {
+          "entrypoints": [
+            {
+              "path": "libraries/python/feature_standards/postgres_listing.py",
+              "symbol": "PostgresListing; VisibilityScope"
+            }
+          ],
+          "consumer": "examples/core-python-postgres"
+        }
+      }
     }
   ],
   "stacks": [
@@ -34,13 +70,14 @@
       "root": "libraries/python",
       "guide": "libraries/python/README.md",
       "profiles": [
-        "offset-list-v1"
+        "offset-list-v1",
+        "postgres-list-v1"
       ],
       "package": {
         "kind": "wheel",
         "name": "feature-standards-core",
-        "version": "0.1.0",
-        "published": true
+        "version": "0.2.0",
+        "published": false
       },
       "entrypoints": [
         {
@@ -86,7 +123,7 @@
           "symbol": "NewSchema; ParseQuery; Page"
         }
       ],
-      "consumer": "libraries/go",
+      "consumer": "examples/core-go",
       "install": [],
       "checks": [
         {
@@ -96,6 +133,15 @@
             "tools/check_core_features.py",
             "--feature",
             "listing",
+            "--stack",
+            "go"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "go"
           ]
@@ -124,7 +170,7 @@
           "symbol": "Listing.Schema; Listing.parseQuery; Listing.page"
         }
       ],
-      "consumer": "libraries/java",
+      "consumer": "examples/core-java",
       "install": [],
       "checks": [
         {
@@ -134,6 +180,15 @@
             "tools/check_core_features.py",
             "--feature",
             "listing",
+            "--stack",
+            "java"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "java"
           ]
@@ -162,7 +217,7 @@
           "symbol": "Schema; parse_query; page"
         }
       ],
-      "consumer": "libraries/rust",
+      "consumer": "examples/core-rust",
       "install": [],
       "checks": [
         {
@@ -172,6 +227,15 @@
             "tools/check_core_features.py",
             "--feature",
             "listing",
+            "--stack",
+            "rust"
+          ]
+        },
+        {
+          "cwd": ".",
+          "argv": [
+            "python3",
+            "tools/check_core_consumers.py",
             "--stack",
             "rust"
           ]

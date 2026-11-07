@@ -20,6 +20,24 @@ from feature_catalog import (
 
 
 class FeatureCatalogTests(unittest.TestCase):
+    def test_postgres_listing_is_explicitly_python_only_and_selects_its_own_api(self):
+        catalog = load_catalog("listing", ROOT)
+        self.assertIn("postgres-list-v1", [p["id"] for p in catalog["profiles"]])
+        selected = select(catalog, "python", "postgres-list-v1")
+        self.assertEqual(selected["stack"]["consumer"], "examples/core-python-postgres")
+        self.assertEqual(
+            selected["stack"]["entrypoints"][0]["path"],
+            "libraries/python/feature_standards/postgres_listing.py",
+        )
+        for stack in ("go", "java", "rust", "react"):
+            with self.subTest(stack=stack), self.assertRaises(ValueError):
+                select(catalog, stack, "postgres-list-v1")
+        materialized = select(catalog, "python", "offset-list-v1")
+        self.assertEqual(materialized["stack"]["consumer"], "examples/core-python")
+        self.assertNotEqual(
+            materialized["stack"]["entrypoints"], selected["stack"]["entrypoints"]
+        )
+
     def test_publication_requires_matching_public_download_and_consumer_receipt(self):
         from feature_catalog import _publication
 
@@ -27,7 +45,7 @@ class FeatureCatalogTests(unittest.TestCase):
         stack["package"]["published"] = True
         entry = {
             "name": stack["package"]["name"],
-            "version": "0.1.0",
+            "version": stack["package"]["version"],
             "sourceCommit": "a" * 40,
             "artifactSha256": "b" * 64,
             "metadataUrl": "https://pypi.org/pypi/feature-standards-core/0.1.0/json",
@@ -38,7 +56,7 @@ class FeatureCatalogTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             (root / "docs").mkdir()
-            receipt = root / "docs/core-release-0.1.0.json"
+            receipt = root / f"docs/core-release-{stack['package']['version']}.json"
             with self.assertRaises(ValueError):
                 _publication(root, stack)
             receipt.write_text(json.dumps({"targets": {"python": entry}}))
@@ -62,7 +80,7 @@ class FeatureCatalogTests(unittest.TestCase):
     def setUp(self):
         self.index = load_index(ROOT)
 
-    def test_current_index_and_all_25_contexts_bind_to_real_source(self):
+    def test_current_index_and_all_26_contexts_bind_to_real_source(self):
         validate_index(self.index, ROOT)
         count = 0
         for feature in self.index["features"]:
@@ -74,7 +92,7 @@ class FeatureCatalogTests(unittest.TestCase):
                     self.assertEqual(result["stack"]["id"], stack["id"])
                     json.dumps(result)
                     count += 1
-        self.assertEqual(count, 25)
+        self.assertEqual(count, 26)
 
     def test_duplicate_or_unknown_feature_cannot_mask_an_existing_feature(self):
         for identifier in ("auth", "invented"):

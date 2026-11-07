@@ -74,10 +74,17 @@ jobs:
         run: |
           uv run --frozen --project tools python tools/feature_catalog.py --check
           uv run --frozen --project tools python tools/check_core_features.py --feature all --stack all
-          uv sync --frozen --project examples/core-python
-          uv run --frozen --project examples/core-python python tests/core_consumer_conformance.py
       - name: Verify standalone core distributions in external consumers
         run: uv run --frozen --project tools python tools/check_core_distributions.py --target all --out-dir dist/core-checked
+      - name: Verify auth authorization listing through four real HTTP consumers
+        run: uv run --frozen --project tools python tools/check_core_consumers.py --stack all
+      - name: Verify Python PostgreSQL listing and actual HTTP composition
+        env:
+          FEATURE_STANDARDS_LISTING_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test?sslmode=disable
+        run: |
+          uv run --frozen --project tools python tools/check_postgres_listing_contract.py
+          uv run --frozen --project tools python tests/postgres_listing_conformance.py
+          uv run --frozen --project examples/core-python-postgres python -m unittest discover -s examples/core-python-postgres -p test_app.py -v
       - name: Check core TypeScript public declarations
         run: |
           npm ci --prefix clients/react
@@ -103,7 +110,7 @@ jobs:
           AUTH_ACCOUNT_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_v3_python?sslmode=disable
         run: |
           uv run --frozen --project implementations/python-fastapi pytest implementations/python-fastapi/tests
-          uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools packages/create-feature-auth/src/check-db.py packages/create-feature-auth/test/check_db.py
+          uv run --frozen --project implementations/python-fastapi ruff check implementations/python-fastapi tests tools packages/create-feature-auth/src/check-db.py packages/create-feature-auth/test/check_db.py libraries/python/feature_standards/postgres_listing.py libraries/python/tests/test_postgres_listing.py examples/core-python examples/core-python-postgres
       - name: Go tests and race detection
         env:
           AUTH_TEST_DATABASE_URL: postgresql://feature_test:feature_test@127.0.0.1:5432/feature_standards_test_go?sslmode=disable

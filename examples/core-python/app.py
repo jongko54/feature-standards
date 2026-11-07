@@ -9,20 +9,50 @@ from feature_auth import Settings, create_app, current_user
 from feature_standards.authorization import Grant, Policy, Principal, Resource
 from feature_standards.listing import ListingError, ListingSchema, page, parse_query
 
-POLICY = Policy([
-    Grant("viewer", "documents:list", "tenant"),
-    Grant("viewer", "documents:read", "owner"),
-])
+POLICY = Policy(
+    [
+        Grant("viewer", "documents:list", "tenant"),
+        Grant("viewer", "documents:read", "owner"),
+    ]
+)
 SCHEMA = ListingSchema(
     {"id": "string", "name": "string", "score": "integer", "active": "boolean"},
     {"name": "string", "score": "integer", "active": "boolean"},
 )
 # Product-owned fixtures, deliberately containing inaccessible records.
 DOCUMENTS = (
-    {"id": "own-b", "name": "Beta", "score": 2, "active": False, "tenantId": "tenant-a", "ownerId": "demo-user"},
-    {"id": "other-owner", "name": "Private", "score": 10, "active": True, "tenantId": "tenant-a", "ownerId": "other-user"},
-    {"id": "other-tenant", "name": "Secret", "score": 99, "active": True, "tenantId": "tenant-b", "ownerId": "demo-user"},
-    {"id": "own-a", "name": "Alpha", "score": 2, "active": True, "tenantId": "tenant-a", "ownerId": "demo-user"},
+    {
+        "id": "own-b",
+        "name": "Beta",
+        "score": 2,
+        "active": False,
+        "tenantId": "tenant-a",
+        "ownerId": "demo-user",
+    },
+    {
+        "id": "other-owner",
+        "name": "Private",
+        "score": 10,
+        "active": True,
+        "tenantId": "tenant-a",
+        "ownerId": "other-user",
+    },
+    {
+        "id": "other-tenant",
+        "name": "Secret",
+        "score": 99,
+        "active": True,
+        "tenantId": "tenant-b",
+        "ownerId": "demo-user",
+    },
+    {
+        "id": "own-a",
+        "name": "Alpha",
+        "score": 2,
+        "active": True,
+        "tenantId": "tenant-a",
+        "ownerId": "demo-user",
+    },
 )
 
 
@@ -63,28 +93,36 @@ def create_core_app(
         return response
 
     def principal_for(user):
+        subject = user["id"]
         try:
-            principal = membership(user)
+            principal = membership(dict(user))
         except Exception:  # noqa: BLE001 -- Provider failure must deny without exposing internals.
             return None, error(503, "AUTHORIZATION_UNAVAILABLE")
         # Missing membership denies; the authenticated session alone grants nothing.
-        if not isinstance(principal, Principal) or principal.subject_id != user["id"]:
+        if not isinstance(principal, Principal) or principal.subject_id != subject:
             return None, error(403, "FORBIDDEN")
         return principal, None
 
     @application.get("/api/documents")
-    def documents(request: Request, user: Annotated[dict[str, str], Depends(current_user)]):
+    def documents(
+        request: Request, user: Annotated[dict[str, str], Depends(current_user)]
+    ):
         principal, failure = principal_for(user)
         if failure is not None:
             return failure
-        if not POLICY.decide(principal, "documents:list", Resource(principal.tenant_id)).allowed:
+        if not POLICY.decide(
+            principal, "documents:list", Resource(principal.tenant_id)
+        ).allowed:
             return error(403, "FORBIDDEN")
         try:
             # Scope before totals, filtering, sorting, or pagination.
             visible = [
-                public_document(document) for document in DOCUMENTS
+                public_document(document)
+                for document in DOCUMENTS
                 if POLICY.decide(
-                    principal, "documents:read", Resource(document["tenantId"], document["ownerId"])
+                    principal,
+                    "documents:read",
+                    Resource(document["tenantId"], document["ownerId"]),
                 ).allowed
             ]
             raw = request.scope["query_string"].decode("utf-8", "strict")
@@ -96,14 +134,21 @@ def create_core_app(
             return error(400 if exc.code == "INVALID_LIST_QUERY" else 500, exc.code)
 
     @application.get("/api/documents/{document_id}")
-    def document(document_id: str, user: Annotated[dict[str, str], Depends(current_user)]):
+    def document(
+        document_id: str, user: Annotated[dict[str, str], Depends(current_user)]
+    ):
         principal, failure = principal_for(user)
         if failure is not None:
             return failure
         found = next((item for item in DOCUMENTS if item["id"] == document_id), None)
-        if found is None or not POLICY.decide(
-            principal, "documents:read", Resource(found["tenantId"], found["ownerId"])
-        ).allowed:
+        if (
+            found is None
+            or not POLICY.decide(
+                principal,
+                "documents:read",
+                Resource(found["tenantId"], found["ownerId"]),
+            ).allowed
+        ):
             return error(403, "FORBIDDEN")
         try:
             return public_document(found)
