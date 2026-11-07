@@ -7,7 +7,7 @@ import "github.com/jongko54/feature-standards/libraries/go/authorization"
 import "github.com/jongko54/feature-standards/libraries/go/listing"
 ```
 
-After its versioned tag is published, use `go get github.com/jongko54/feature-standards/libraries/go@v0.1.0`. For checkout development use a local `replace github.com/jongko54/feature-standards/libraries/go => /path/to/feature-standards/libraries/go` in a consumer. `authorization.NewPolicy` creates immutable grants; `Policy.Decide` consumes server-owned Principal and Resource. `listing.NewSchema`, `ParseQuery`, and `Page` operate on typed map records. Check returned errors; never treat a failed parse/policy constructor as an allow. Go 1.26, standard library only.
+Install the published module with `go get github.com/jongko54/feature-standards/libraries/go@v0.1.0`. For checkout development use a local `replace github.com/jongko54/feature-standards/libraries/go => /path/to/feature-standards/libraries/go` in a consumer. `authorization.NewPolicy` creates immutable grants; `Policy.Decide` consumes server-owned Principal and Resource. `listing.NewSchema`, `ParseQuery`, and `Page` operate on typed map records. Check returned errors; never treat a failed parse/policy constructor as an allow. Go 1.26, standard library only.
 
 Run both native feature suites from the repository root:
 

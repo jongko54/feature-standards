@@ -2,7 +2,7 @@
 
 Experimental 0.1.0 APIs for `authorization/rbac-v1` and `listing/offset-list-v1`. Authentication remains in its existing package. These modules implement the [shared normative contracts](https://github.com/jongko54/feature-standards/blob/main/docs/core-standards.md).
 
-After publication: `npm install @ugauga/feature-standards-core@0.1.0`. Before publication, use a local directory dependency. ES modules and `.d.mts` declarations are provided without a build step or runtime dependency. Node >=22.12 runs the tests; browser consumers can use their normal bundler.
+Install the published package with `npm install @ugauga/feature-standards-core@0.1.0`. For checkout development, use a local directory dependency. ES modules and `.d.mts` declarations are provided without a build step or runtime dependency. Node >=22.12 runs the tests; browser consumers can use their normal bundler.
 
 ```js
 import { Grant, Policy, Principal, Resource, createListingSchema, parseListQuery, listPage } from '@ugauga/feature-standards-core';

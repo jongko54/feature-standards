@@ -1,6 +1,6 @@
 # Authentication + authorization + listing consumer
 
-A separate FastAPI project importing three reusable source libraries. No auth code is copied. The core libraries are unpublished; uv resolves both local packages from this checkout.
+A separate FastAPI project importing three reusable source libraries. No auth code is copied. Python core 0.1.0 is published on PyPI; this source conformance example intentionally resolves both local packages from this checkout. See [the registry receipt](../../docs/core-release-0.1.0.json) for independent public-download and fresh-consumer checks.
 
 ```sh
 uv sync --frozen --project examples/core-python

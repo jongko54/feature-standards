@@ -1,6 +1,6 @@
 # Three feature standards
 
-The source catalog now contains **auth**, **authorization**, and **listing**. Authentication retains its published packages and three session profiles. Authorization (`rbac-v1`) and listing (`offset-list-v1`) are experimental 0.1.0 libraries. [The registry receipt](core-release-0.1.0.json) verifies Python, Rust and Go downloads and fresh consumers; Java and npm core are awaiting maintainer authentication. Main CLI 0.3.0 was published separately and captures the earlier source-only core context. Publication and API maturity remain separate.
+The catalog contains **auth**, **authorization**, and **listing**. Authentication retains its published packages and three session profiles. Authorization (`rbac-v1`) and listing (`offset-list-v1`) are experimental 0.1.0 libraries. [The registry receipt](core-release-0.1.0.json) records each ecosystem's public download and fresh consumer checks. Main CLI releases capture publication evidence at build time; consult the receipt bundled with the selected version. Publication and API maturity remain separate.
 
 | Feature | Responsibility | Shared implementations |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ python3 tools/feature_catalog.py --check
 python3 tools/check_core_features.py --feature all --stack all
 ```
 
-Use the CLI command declared in its package.json if invoking from another checkout. `init` and the generated-application `check` workflow still support authentication only. The new core libraries are integrated directly from source; unsupported generation fails before creating files.
+Use the CLI command declared in its package.json if invoking from another checkout. `init` and the generated-application `check` workflow still support authentication only. Integrate core APIs through their pinned registry packages when the matching receipt verifies publication, or use a local path for checkout development. Unsupported generation fails before creating files.
 
 ## Compose authentication and permissions
 

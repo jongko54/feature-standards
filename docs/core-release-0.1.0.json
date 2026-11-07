@@ -13,6 +13,20 @@
     "url": "https://github.com/jongko54/feature-standards/actions/runs/42199662926"
   },
   "targets": {
+    "react": {
+      "name": "@ugauga/feature-standards-core",
+      "version": "0.1.0",
+      "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+      "observedAt": "2026-11-07T01:12:26.849237+00:00",
+      "metadataUrl": "https://registry.npmjs.org/@ugauga%2ffeature-standards-core/0.1.0",
+      "artifactUrl": "https://registry.npmjs.org/@ugauga/feature-standards-core/-/feature-standards-core-0.1.0.tgz",
+      "artifactSha256": "1345fe265447132af5189b513ee9951671ce10ab06b222c3b02206404da60749",
+      "registryVerified": true,
+      "publicDownloadVerified": true,
+      "freshConsumerVerified": true,
+      "matchesReviewedArtifact": true,
+      "publicationMethod": "Reviewed CI tarball published through maintainer npm CLI authentication and 2FA; core OIDC binding is not established by this publication."
+    },
     "rust": {
       "name": "feature-standards-core",
       "version": "0.1.0",
@@ -57,10 +71,157 @@
         "workflowCommit": "bd2438e8015fcdb90e060c4bcc211f5e296558c1",
         "url": "https://github.com/jongko54/feature-standards/actions/runs/42202660587"
       }
+    },
+    "java": {
+      "name": "io.github.jongko54:feature-standards-core:0.1.0",
+      "version": "0.1.0",
+      "sourceCommit": "8aabcb515f46ff229da6d4cbece6921fc17fdfab",
+      "observedAt": "2026-11-07T01:29:14.761535+00:00",
+      "metadataUrl": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom",
+      "artifactUrl": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar",
+      "artifactSha256": "916d85381008278a5a80c0d4ea4534ab3a264ff2c58a9f3a25a37836a19f8cdc",
+      "registryVerified": true,
+      "publicDownloadVerified": true,
+      "freshConsumerVerified": true,
+      "matchesReviewedArtifact": true,
+      "centralPortal": {
+        "deploymentId": "3a731aa2-f304-42af-8dc7-ddb1791be5c1",
+        "state": "PUBLISHED",
+        "url": "https://central.sonatype.com/publishing/deployments"
+      },
+      "signedPublicFiles": {
+        "observedAt": "2026-11-07T01:29:07.555318+00:00",
+        "allPublicFilesMatchSignedBundle": true,
+        "filesVerified": 24,
+        "signer": "892B5FC971080E67186FF29DD8E42CD147DAB7C7",
+        "signaturesVerified": 4,
+        "artifactChecksumsVerified": 16,
+        "allThreeJarsMatchReviewedCiArtifacts": true,
+        "signedBundleSha256": "f6e765d0390f2cfd36b61f4e022eda58ee3f323a91228ccc122cecdf96ce3bd6",
+        "files": [
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar",
+            "sha256": "5ce8f1970437d2e56bac71f22558e8af180a914defc1dd664f73ff95a3ae7438"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar.asc",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar.asc",
+            "sha256": "c478e9f3ef7f1393b7bc72c5572870288c1afbec593444f5da93e9b31f5b4015"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar.md5",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar.md5",
+            "sha256": "94e007b69f29267880afbaf6a1a727dbcd6b39a2b86224b7b288ceb483751b91"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar.sha1",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar.sha1",
+            "sha256": "676aa4414830a47c943a0b4e7d94e75838b7571fd748c03b932656d61624fdbd"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar.sha256",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar.sha256",
+            "sha256": "f53760454d7150a356ef31067b3848f2a0a98e650230f026fa31fe022a727a35"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-javadoc.jar.sha512",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-javadoc.jar.sha512",
+            "sha256": "684118b1c022e53cefb5dab6e8bb2ed65747880fcc1c2f2eeb827f7748fa3ae3"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar",
+            "sha256": "7fc0ae2867167f6a8c0bf7c1bf0cee577c0264078b4ef94e1c14f4bae04f591f"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar.asc",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar.asc",
+            "sha256": "6a0af1ad011acd12e5acb07bb81ed7b8697c9b6dc8259f2b796bcd4fcd49102b"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar.md5",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar.md5",
+            "sha256": "ccf2938d4629eb5c4007391971b9c3adce3ac7a25e1fb060af80a0d87cf7afc4"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar.sha1",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar.sha1",
+            "sha256": "4faaf4fb2483aa2b4e05d63f996b794a3b1ed43a03318db9875278160d3ef5a1"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar.sha256",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar.sha256",
+            "sha256": "299b421377145518b26a95428a44244bb6bb38af97efd7e94f3f4fa5dff33417"
+          },
+          {
+            "name": "feature-standards-core-0.1.0-sources.jar.sha512",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0-sources.jar.sha512",
+            "sha256": "a31757bf53a48f23b8d8322c6603f6d709fbcab826f151641f9c2d85a84b8eb8"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar",
+            "sha256": "916d85381008278a5a80c0d4ea4534ab3a264ff2c58a9f3a25a37836a19f8cdc"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar.asc",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar.asc",
+            "sha256": "6ec5ef1d8de50fb2ce7730864d4aa45684c600b2cb2440cb513ffe00e6b67e07"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar.md5",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar.md5",
+            "sha256": "466a9b64947c1fd120762286e0a3bd5403a15fdd2ebc7137ed37fa3649eee25f"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar.sha1",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar.sha1",
+            "sha256": "34a6cd4bd4617784f41e725ac89fbece2ea447d62343c8a06cc7db00f3d3e749"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar.sha256",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar.sha256",
+            "sha256": "7b33d3c1c4b0ad1e1ce88963597f0808ad35f2967c61b3bf6a50708a611294f6"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.jar.sha512",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.jar.sha512",
+            "sha256": "443bc18b25397a124d01066375a4ad0944aff04cb266faeefd606f56232b0293"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom",
+            "sha256": "9f374ca63a3cd1e57d13aa9432a710da8fabe5d4195ec94b865fb36e44a68999"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom.asc",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom.asc",
+            "sha256": "fd954239e36ee6c23700f0af9ae5895ccd28b5b87d3b3b621dce49338e335400"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom.md5",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom.md5",
+            "sha256": "386bd37964bd1482deed7d8fba05b04266bca70914ad4893951894596d4c622b"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom.sha1",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom.sha1",
+            "sha256": "39d93a5f35f8d15ff19ab61ae249462fbe06599dbb746b011fe39c22342c4edb"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom.sha256",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom.sha256",
+            "sha256": "670b61dec1bee8fb285be307c60d7206c0ac43f29e76ca0df2f8fea0e2c15772"
+          },
+          {
+            "name": "feature-standards-core-0.1.0.pom.sha512",
+            "url": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/0.1.0/feature-standards-core-0.1.0.pom.sha512",
+            "sha256": "698586859fb96fd24de1cbbebbc2cb467155c81be007e6243f27b5ad1bc6e9cc"
+          }
+        ]
+      }
     }
   },
-  "pendingTargets": {
-    "react": "Initial publication requires npm account 2FA; the first challenge expired before completion.",
-    "java": "Prepared plain JAR/POM/sources/Javadoc; existing production GPG key requires private terminal passphrase entry."
-  }
+  "pendingTargets": {}
 }

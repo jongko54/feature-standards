@@ -10,7 +10,7 @@ schema = ListingSchema({"id": "string", "score": "integer"}, {"score": "integer"
 result = page([{"id": "a", "score": 1}], parse_query("limit=20&sort=-score", schema), schema)
 ```
 
-After publication: `pip install feature-standards-core==0.1.0`. Before publication, use `uv pip install ./libraries/python` from a checkout or a local path dependency. Python >=3.12, no runtime dependencies. A separate real HTTP consumer is in `examples/core-python`.
+Install the published package with `pip install feature-standards-core==0.1.0`. For checkout development, use `uv pip install ./libraries/python` or a local path dependency. Python >=3.12, no runtime dependencies. A separate real HTTP consumer is in `examples/core-python`.
 
 Run both native feature suites from the repository root:
 

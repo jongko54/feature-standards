@@ -2,7 +2,17 @@
 
 Experimental 0.1.0 APIs for `authorization/rbac-v1` and `listing/offset-list-v1`. Authentication remains in its existing package. These modules implement the [shared normative contracts](https://github.com/jongko54/feature-standards/blob/main/docs/core-standards.md).
 
-Build with JDK 21: `implementations/java-spring/mvnw -f libraries/java/pom.xml install`. This is a plain JAR with no Spring runtime dependency. The local artifact is `io.github.jongko54:feature-standards-core:0.1.0`; its publication is tracked in the release receipts.
+Use JDK 21 and the plain JAR coordinate `io.github.jongko54:feature-standards-core:0.1.0`. It has no Spring runtime dependency. Check [the registry receipt](https://github.com/jongko54/feature-standards/blob/main/docs/core-release-0.1.0.json) for public-download and fresh-consumer verification.
+
+```xml
+<dependency>
+  <groupId>io.github.jongko54</groupId>
+  <artifactId>feature-standards-core</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
+
+For checkout development, build/install locally with `implementations/java-spring/mvnw -f libraries/java/pom.xml install`.
 
 Public APIs: `dev.featurestandards.core.authorization.AuthorizationPolicy` plus Principal/Resource/Grant/Decision records, and `dev.featurestandards.core.listing.Listing` with Schema/Query and `parseQuery`/`page`. Unit tests provide complete importable examples and execute the common JSON vectors. Jackson is a test dependency only.
 

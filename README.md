@@ -4,17 +4,17 @@
 
 Feature Standards organizes a feature's behavior, public APIs, stack guides, and conformance checks in one place. An agent chooses the feature, profile, and stack; reads the relevant contract and API; reuses the implementation; and checks the integration against the same behavior across stacks. The goal is to reduce repeated implementation and unnecessary exploration during AI-assisted development.
 
-**Three feature standards are available in source: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. They are experimental core APIs; [registry-specific availability](docs/core-release-0.1.0.json) is tracked separately. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
+**Three feature standards are available: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. Core `0.1.0` is published in all five ecosystems; [the registry receipt](docs/core-release-0.1.0.json) verifies public downloads and fresh consumers independently. These are experimental core APIs. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
 ## Start with the feature catalog
 
-The main npm package is **[`feature-standards@0.3.0`](https://www.npmjs.com/package/feature-standards)**. It provides curated contracts, stack context, and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements.
+The main npm package is **[`feature-standards@0.3.1`](https://www.npmjs.com/package/feature-standards)**. It provides curated contracts, stack context, and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The [0.3.1 receipt](docs/npm-release-0.3.1.json) verifies the reviewed public archive and all 25 contexts from a fresh registry installation.
 
 Run the published catalog:
 
 ```sh
-npx feature-standards@0.3.0 list
-npx feature-standards@0.3.0 context \
+npx feature-standards@0.3.1 list
+npx feature-standards@0.3.1 context \
   --feature auth --stack python --profile browser-session-v1
 ```
 
@@ -23,10 +23,10 @@ Select `python`, `go`, `java`, `rust`, or `react` and one of the authentication 
 The published workflow provides explicit `init` and `check` commands. From a trusted Feature Standards source checkout:
 
 ```sh
-npx feature-standards@0.3.0 init \
+npx feature-standards@0.3.1 init \
   --feature auth --source "$PWD" --stack python \
   --profile browser-session-v1 --dest ../my-auth-app --check
-npx feature-standards@0.3.0 check --project ../my-auth-app
+npx feature-standards@0.3.1 check --project ../my-auth-app
 ```
 
 `init` creates a new application using the checkout's generator `0.2.0` or newer. `check` and `init --check` explicitly build and exercise that trusted application's selected profile. v1 uses a temporary memory server. v2/v3 require `FEATURE_STANDARDS_TEST_DATABASE_URL` pointing to a dedicated loopback test database with an explicit port and a `feature_standards_test*` name; the test role needs permission to create databases. Each check creates and drops its own UUID database, leaving the base database's schema and data unchanged. v2 verifies persistence across a server restart; v3 also verifies registration, email verification, password reset, and session revocation without sending SMTP mail. A JSON receipt identifies the profile and completed checks. See the [generation guide](docs/create-feature-auth.md).

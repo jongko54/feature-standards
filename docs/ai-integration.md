@@ -1,12 +1,12 @@
 # AI가 적용하는 Feature Standards
 
-Feature Standards의 목적은 여러 언어에서 같은 기능 계약을 찾고, 해당 스택의 기존 라이브러리를 재사용해 AI가 통합 작업을 수행하도록 돕는 것이다. 기능·프로필·스택을 선택한 뒤 필요한 계약과 공개 API를 읽고, 구현을 연결하고, 공통 conformance와 대상 앱 검증을 실행하는 흐름을 제공한다. 현재 소스는 인증(`auth`), 권한(`authorization/rbac-v1`), 목록(`listing/offset-list-v1`)을 제공한다. 새 두 기능은 Python·Go·Java·Rust·JS/TS의 미배포 코어 라이브러리이며, [기능 인덱스](../features/catalog.json)와 [통합 안내](core-standards.md)에서 진입한다. 게시된 npm 0.2.0은 인증만 포함한다.
+Feature Standards의 목적은 여러 언어에서 같은 기능 계약을 찾고, 해당 스택의 기존 라이브러리를 재사용해 AI가 통합 작업을 수행하도록 돕는 것이다. 기능·프로필·스택을 선택한 뒤 필요한 계약과 공개 API를 읽고, 구현을 연결하고, 공통 conformance와 대상 앱 검증을 실행하는 흐름을 제공한다. 인증(`auth`), 권한(`authorization/rbac-v1`), 목록(`listing/offset-list-v1`)을 제공한다. 새 두 기능은 Python·Go·Java·Rust·JS/TS의 코어 라이브러리이며, [배포 기록](core-release-0.1.0.json)의 공개 다운로드·새 소비자 검증 여부를 확인해 해당 버전을 설치한다. [기능 인덱스](../features/catalog.json)와 [통합 안내](core-standards.md)에서 진입한다. 게시된 npm 0.3.1은 세 기능의 25개 문맥을 포함한다.
 
 반복 구현과 불필요한 탐색을 줄이는 것이 목표다. 이전 v1 평가에서는 네 백엔드×두 조건×조건별 3회의 **24/24 통합**이 통과했지만 시간·토큰 결과는 혼합되어 일괄 개선을 입증하지 못했다. 이 결과는 새 `feature-standards` npm 패키지의 성능 측정이 아니다. [반복 평가 결과와 한계](validation-ai-paired-2026-11-03.md)를 확인한다. 첫 **8/8 smoke 평가**는 [별도 기록](validation-ai-2026-11-03.md)으로 보존한다.
 
 ## 주 진입점: 기능과 스택 문맥
 
-주 npm 패키지 `feature-standards@0.2.0`은 게시와 새 registry 설치를 확인했다. 선별한 계약·스택 문맥과 명시적인 앱 생성·프로필 검사를 제공한다. 실제 생성·검증은 지정한 원본 checkout과 해당 언어 도구 체인을 사용한다. [게시·설치·15개 문맥·실제 워크플로·검색 기록](npm-workflow-release-2026-11-04.json)을 함께 확인한다.
+주 npm 패키지 `feature-standards@0.3.1`은 게시와 새 registry 설치를 확인했다. 선별한 세 기능의 계약·스택 문맥과 인증 전용 앱 생성·프로필 검사를 제공한다. 실제 생성·검증은 지정한 원본 checkout과 해당 언어 도구 체인을 사용한다. [게시·새 설치·25개 문맥 기록](npm-release-0.3.1.json)과 기존 인증의 [실제 워크플로·검색 기록](npm-workflow-release-2026-11-04.json)을 함께 확인한다.
 
 원본 checkout에서 실행할 수도 있다.
 
@@ -21,11 +21,11 @@ node packages/feature-standards/src/cli.mjs context \
 
 소스의 첫 실행 전 `build`는 배포할 문서 스냅샷을 만든다. JSON의 `packagedDocuments`에는 번들에 실제 포함한 문서의 `readPath`, 원본 경로·URL, 해시가 있다. `sourceCheckout`의 런타임 진입점은 별도 원본 checkout을 기준으로 하며, 설치·검증 명령에는 `executed: false`를 표시한다. `provenance`의 원본 커밋·dirty 상태와 각 문서의 해시를 함께 확인한다. `sourceModified: true` 문서는 커밋 URL에 없는 로컬 수정을 포함하므로 번들의 실제 `readPath`를 읽는다. 이 문서 경로를 서버 코드 경로로 사용하지 않는다.
 
-게시된 `feature-standards@0.2.0`의 npm 진입점은 다음과 같다.
+게시된 `feature-standards@0.3.1`의 npm 진입점은 다음과 같다.
 
 ```sh
-npx feature-standards@0.2.0 list
-npx feature-standards@0.2.0 context \
+npx feature-standards@0.3.1 list
+npx feature-standards@0.3.1 context \
   --feature auth --stack go --profile browser-session-v2
 ```
 
@@ -49,7 +49,7 @@ uv run --frozen --project tools python tools/auth_catalog.py --stack python --pr
 
 | 역할 | 배포 단위 | 원본과 안내 |
 |---|---|---|
-| 기능 탐색·생성·검증 | 주 패키지 `feature-standards` `0.2.0` 게시 확인 | [패키지 안내](../packages/feature-standards/README.md) |
+| 기능 탐색·생성·검증 | 주 패키지 `feature-standards` `0.3.1` 게시 확인 | [패키지 안내](../packages/feature-standards/README.md) |
 | 인증 서버 라이브러리 | Python·Go·Java·Rust의 개별 패키지 | [서버 배포 상태](server-releases.md) |
 | 브라우저 인증 API 어댑터 | `@ugauga/feature-standards-react-auth` `0.1.4` 게시 확인 | [공개 API 안내](../clients/react/README.md), [게시 기록](npm-release.md) |
 | 인증 소비 앱 생성기 | `@ugauga/create-feature-auth` `0.2.0` 게시 확인 | [생성 도구 안내](create-feature-auth.md) |

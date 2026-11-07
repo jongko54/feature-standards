@@ -1,18 +1,18 @@
 # Core library releases
 
-The core 0.1.0 packages contain authorization and listing together. Authentication remains in its existing packages. Main catalog 0.3.0 was published separately from commit `2a9490a`; [its receipt](npm-release-0.3.0.json) confirms the exact public tarball and a fresh installed consumer resolving all 25 contexts.
+The core 0.1.0 packages contain authorization and listing together. Authentication remains in its existing packages. Main catalogs [0.3.0](npm-release-0.3.0.json) and [0.3.1](npm-release-0.3.1.json) were published separately; their receipts confirm exact public tarballs and fresh installed consumers resolving all 25 contexts. Each catalog captures the publication evidence available when it was built.
 
 ## Coordinates and publication state
 
 | Ecosystem | Core coordinate | Initial release path |
 | --- | --- | --- |
 | npm | `@ugauga/feature-standards-core@0.1.0` | Reviewed tarball, maintainer CLI authentication; future `npm-core-v*` OIDC tags |
-| Python | `feature-standards-core==0.1.0` | Pending project publisher for `publish-core.yml`, environment `pypi`; `python-core-v*` tag |
+| Python | `feature-standards-core==0.1.0` | Verified PyPI Trusted Publisher for `publish-core.yml`, environment `pypi`; initial recovery run and immutable `python-core-v0.1.0` tag |
 | Rust | `feature-standards-core@0.1.0` | Maintainer Cargo credential; future `rust-core-v*` OIDC tags after binding the crate publisher |
 | Java | `io.github.jongko54:feature-standards-core:0.1.0` | Production-signed plain JAR/POM/sources/Javadoc bundle uploaded through Central Portal |
 | Go | `github.com/jongko54/feature-standards/libraries/go@v0.1.0` | Immutable `libraries/go/v0.1.0` module tag and public module proxy verification |
 
-[The registry receipt](core-release-0.1.0.json) currently verifies Python, Rust and Go 0.1.0 through public downloads and fresh consumers. npm core and Java remain prepared candidates awaiting maintainer authentication. Record public registry downloads and fresh consumer execution before setting `published: true`. A pending PyPI publisher does not reserve a name or prove an upload. The current account registered the new project's exact repository/workflow/environment publisher on 2026-11-06.
+[The registry receipt](core-release-0.1.0.json) verifies all five core packages through public downloads and fresh consumers. Java additionally has Portal `PUBLISHED` status, all 24 public files matching the signed bundle, four production signatures, sixteen checksums and all three JARs matching reviewed CI artifacts. Set `published: true` only when the exact coordinate has both download and consumer checks. Creating an account publisher, accepting an upload and making its public files available are separate states. The npm core first publication used maintainer CLI authentication and 2FA; it does not prove a future OIDC binding. Python's configured publisher completed its recorded OIDC recovery run.
 
 ## Build and verify without uploading
 
@@ -37,6 +37,8 @@ uv run --frozen --project tools python tools/sign_core_maven.py \
 ```
 
 The script creates `dist/core/central/feature-standards-core-0.1.0-bundle.zip`, verifies four production-key signatures and creates sixteen artifact checksums. It signs the unchanged source POM and a plain runtime JAR with sources/Javadoc. It never uploads, exports a private key, requests a new key, or stores a passphrase. Upload that reviewed bundle to the existing `io.github.jongko54` namespace, then verify Portal publication, all public files and a fresh dependency consumer independently.
+
+If the existing signing setup stores its passphrase in macOS Keychain, check that setup before requesting manual input. An empty GPG agent cache does not mean the stored credential is missing. Retrieve only the configured service/account for the exact production fingerprint, pass the value privately through a file descriptor, and keep it out of logs, command arguments, environment variables and temporary files. Do not create a replacement key or reset its passphrase to recover an existing release.
 
 Never move a published tag or overwrite an existing registry version. Inspect public state before retrying an upload that might already have been accepted. Initial registry availability, search indexing, artifact integrity, full CI and production readiness are separate claims.
 

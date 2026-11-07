@@ -116,7 +116,7 @@
         "kind": "maven",
         "name": "io.github.jongko54:feature-standards-core:0.1.0",
         "version": "0.1.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {
@@ -192,7 +192,7 @@
         "kind": "npm",
         "name": "@ugauga/feature-standards-core",
         "version": "0.1.0",
-        "published": false
+        "published": true
       },
       "entrypoints": [
         {

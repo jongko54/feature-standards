@@ -2,7 +2,7 @@
 
 Experimental 0.1.0 APIs for `authorization/rbac-v1` and `listing/offset-list-v1`. Authentication remains in its existing package. These modules implement the [shared normative contracts](https://github.com/jongko54/feature-standards/blob/main/docs/core-standards.md).
 
-After publication use `feature-standards-core = "0.1.0"`. A source checkout can use a path dependency:
+Install the published crate with `feature-standards-core = "=0.1.0"`. A source checkout can use a path dependency:
 
 ```toml
 [dependencies]

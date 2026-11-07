@@ -10,12 +10,12 @@ Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
 # The registry release is separate from this source snapshot.
-npm install --save-dev feature-standards@0.3.1
+npm install --save-dev feature-standards@0.3.2
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-**This checkout is source version 0.3.1.** It includes registry receipts and captured publication state for core packages. Check actual registry availability before installing this version; source readiness alone is not publication. The bundled receipt records Python, Rust and Go core 0.1.0; npm core and Java remain pending maintainer authentication. Main 0.3.0 was published separately and provides all three feature contexts with their earlier source-only core state.
+**This checkout is source version 0.3.2.** Its bundled core receipt verifies npm, Python, Rust, Java and Go `0.1.0` through public downloads and fresh consumers. Check actual registry availability before installing this CLI version; source readiness alone is not publication. Main 0.3.0 captured the earlier source-only core context, and 0.3.1 captured the first Python, Rust and Go core receipts. Publication fields describe this version's bundled evidence; they are not live registry queries.
 
 `list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
 

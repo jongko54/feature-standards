@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "name": "feature-standards",
+  "version": "0.3.1",
+  "sourceCommit": "b7cd98897ee311b6c3c9b62559289b9af5373841",
+  "sourceCi": {
+    "runId": 42203705776,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42203705776"
+  },
+  "publishWorkflow": {
+    "runId": 42321964506,
+    "conclusion": "success",
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/42321964506"
+  },
+  "registryMetadataUrl": "https://registry.npmjs.org/feature-standards/0.3.1",
+  "dist": {
+    "shasum": "b6ac684f05dceb410e3278c85c2a17d348b7e94f",
+    "tarball": "https://registry.npmjs.org/feature-standards/-/feature-standards-0.3.1.tgz",
+    "fileCount": 63,
+    "integrity": "sha512-akl0j1xLPonw3Go+SJ0/2ijPtnXMqehdubZRYZgPToPs+59Vg2+wDq0iduHOj5NSLeUMQCHcODK5x2u0ufLpRw==",
+    "signatures": [
+      {
+        "sig": "MEUCIAXo12Lt1hYfPSU65WsWndNTZsDSOKoMTWKUx6B88gKgAiEAoYENL6GjK3awWLpFBtIYDARD9Q6OWg778Yxp+3yfCH4=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "sig": "MEUCIQDMx1VQBcomwZXyeME1utoyJLoFaJQ+O4+SBG9WPbaaXQIgQP5oa5UOmRVgOTqkDKAjgXvo1gjtWi1XLmvSSsyWT4A=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/feature-standards@0.3.1",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 484389
+  },
+  "localArtifactSha256": "d4ba5c2d227f60f4ac425756092857d33a1a7199728e78ed1fd5633e3850631a",
+  "registry_verified": true,
+  "public_download_verified": true,
+  "reviewedCiArtifactMatchesRegistry": true,
+  "freshRegistryConsumer": {
+    "version": "0.3.1",
+    "features": [
+      "auth",
+      "authorization",
+      "listing"
+    ],
+    "contexts": 25,
+    "sourceCommit": "b7cd98897ee311b6c3c9b62559289b9af5373841",
+    "sourceDirty": false
+  },
+  "observedAt": "2026-11-07T01:17:49.183305+00:00"
+}
