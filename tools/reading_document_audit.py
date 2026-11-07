@@ -58,6 +58,7 @@ def _whitelist(stack):
         f"examples/{consumer}/README.md",
         f"examples/core-{stack}/README.md",
         "docs/core-standards.md",
+        f"docs/ai-briefs/{stack}.md",
         *[
             f"features/{feature}/specification.md"
             for feature in ("auth", "authorization", "listing")

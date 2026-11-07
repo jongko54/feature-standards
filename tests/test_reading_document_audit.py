@@ -85,6 +85,26 @@ class DocumentOutputAuditTests(unittest.TestCase):
         ):
             self.assertNotIn(private, serialized)
 
+    def test_selected_stack_brief_output_is_audited_without_other_stack_credit(self):
+        selected = b"# Selected Python brief\nUse public APIs.\n"
+        other = b"# Rust brief\nOther API.\n"
+        self.document("docs/ai-briefs/python.md", selected)
+        self.document("catalog/package/snapshot/docs/ai-briefs/python.md", selected)
+        self.document("docs/ai-briefs/rust.md", other)
+        self.event(selected.decode() + other.decode())
+        result = self.audit()
+        self.assertEqual(len(result["documents"]), 1)
+        self.assertEqual(
+            result["documents"][0]["paths"],
+            [
+                "catalog/package/snapshot/docs/ai-briefs/python.md",
+                "docs/ai-briefs/python.md",
+            ],
+        )
+        self.assertEqual(
+            result["documents"][0]["sha256"], hashlib.sha256(selected).hexdigest()
+        )
+
     def test_failed_compound_output_is_evidence_but_not_successful_command(self):
         self.document()
         self.event(

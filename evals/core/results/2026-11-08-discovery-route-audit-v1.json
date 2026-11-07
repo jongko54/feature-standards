@@ -1,0 +1,197 @@
+{
+  "suite": "discovery-independent-source-route-audit-v1",
+  "limits": [
+    "Source-route review and independent HTTP behavior are distinct. Neither proves runtime causality of every imported library.",
+    "Exact source-file copy checks cover complete files over 200 bytes, excluding test/cache material; no conclusion about partial copying or algorithm originality.",
+    "One session per backend in a supplied checkout is not an external adoption rate."
+  ],
+  "runs": [
+    {
+      "stack": "python",
+      "http_passed": true,
+      "http_assertions": 143,
+      "source_unchanged": true,
+      "generated_files_sha256": {
+        "app.py": "c8cd028a4c5ce774ecce01a90c0fcc339dce71dfdfbb8db3ae084c0120c1074a"
+      },
+      "features": {
+        "auth": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "app.py:117 own session lookup",
+            "app.py:150 login logout profile dispatch",
+            "app.py:162 random session tokens",
+            "app.py:174 CSRF comparison",
+            "app.py:175 session revocation"
+          ]
+        },
+        "authorization": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "app.py:28 current membership file",
+            "app.py:181 subject and roles",
+            "app.py:183 tenant owner visibility"
+          ]
+        },
+        "listing": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "app.py:48 own raw query parser",
+            "app.py:193 sorting",
+            "app.py:196 scoped total",
+            "app.py:197 slicing"
+          ]
+        }
+      },
+      "library_connected_features": 0,
+      "direct_implementation_features": 3,
+      "exact_source_file_copy_matches": 0,
+      "uncertain_features": 0
+    },
+    {
+      "stack": "go",
+      "http_passed": false,
+      "http_assertions": 0,
+      "original_error_code": "generated-source-too-large",
+      "functional_outcome": "not-graded-artifact-boundary-failure",
+      "source_unchanged": true,
+      "generated_files_sha256": {
+        "main.go": "5ea1da87840695c798f174d83025c0a85f2532f62a0078da3819eeec9c4442b9",
+        "go.mod": "75042550fe7b9396276880375b602f99f689ebe7686c79fc3cf76c1207e5dbec",
+        "run.json": "1339e07c85d0962eb4466bae0bf69c8c7a7e86fd5a71f9b4015d8c68c17c3949"
+      },
+      "artifact_boundary": {
+        "relative_path": "server",
+        "regular_file": true,
+        "executable_mode": true,
+        "bytes": 8732034,
+        "maximum_file_bytes": 2000000
+      },
+      "features": {
+        "auth": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "main.go:47 token creation",
+            "main.go:54 own sessions",
+            "main.go:64 HTTP handler",
+            "main.go:124 authentication"
+          ]
+        },
+        "authorization": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "main.go:159 membership",
+            "main.go:197 subject",
+            "main.go:203 roles",
+            "main.go:208 permission",
+            "main.go:214 tenant owner visibility"
+          ]
+        },
+        "listing": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "main.go:229 own query parser",
+            "main.go:241 sort page",
+            "main.go:311 paging helpers"
+          ]
+        }
+      },
+      "library_connected_features": 0,
+      "direct_implementation_features": 3,
+      "exact_source_file_copy_matches": 0,
+      "copy_evidence_kind": "manual-source-file-hash-comparison-excluding-tests-and-build-output",
+      "uncertain_features": 0
+    },
+    {
+      "stack": "java",
+      "http_passed": true,
+      "http_assertions": 143,
+      "source_unchanged": true,
+      "generated_files_sha256": {
+        "Main.java": "6dc994f16d3c9935810c87acefeb6e155b5f2a8f2b2e0905e5d187e6bf0bd527"
+      },
+      "features": {
+        "auth": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "Main.java:26 random tokens",
+            "Main.java:31 own session lookup",
+            "Main.java:35 request handler",
+            "Main.java:43 login logout profile"
+          ]
+        },
+        "authorization": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "Main.java:55 current membership",
+            "Main.java:56 subject roles",
+            "Main.java:57 tenant owner visibility",
+            "Main.java:67 membership implementation"
+          ]
+        },
+        "listing": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "Main.java:58 direct list call",
+            "Main.java:80 raw query parser",
+            "Main.java:93 filter comparator sort total slice"
+          ]
+        }
+      },
+      "library_connected_features": 0,
+      "direct_implementation_features": 3,
+      "exact_source_file_copy_matches": 0,
+      "uncertain_features": 0
+    },
+    {
+      "stack": "rust",
+      "http_passed": true,
+      "http_assertions": 143,
+      "source_unchanged": true,
+      "generated_files_sha256": {
+        "src/main.rs": "5b500220cd920a00f82ba59cf1a89869dae20bd47d2c664f18b92491c5f0cb88",
+        "Cargo.toml": "883bbe5f01e055aa02082dda9919a95d7900eb21f76542a74f2913be839239fc",
+        "run.json": "d7ad3d3fb842080098ee147120370dcd638848ecc3ee28a95b5ac3bf4d2ef41b"
+      },
+      "features": {
+        "auth": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "src/main.rs:30 own token user session",
+            "src/main.rs:314 dispatch",
+            "src/main.rs:331 login logout profile"
+          ]
+        },
+        "authorization": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "src/main.rs:70 current membership implementation",
+            "src/main.rs:408 product route membership",
+            "src/main.rs:412 subject roles",
+            "src/main.rs:415 tenant owner visibility"
+          ]
+        },
+        "listing": {
+          "route_classification": "direct_independent",
+          "evidence": [
+            "src/main.rs:195 own raw query parser",
+            "src/main.rs:425 query parsing",
+            "src/main.rs:435 sorting",
+            "src/main.rs:450 skip take",
+            "src/main.rs:456 next offset"
+          ]
+        }
+      },
+      "library_connected_features": 0,
+      "direct_implementation_features": 3,
+      "exact_source_file_copy_matches": 0,
+      "uncertain_features": 0
+    }
+  ],
+  "original_summary_sha256": "f8a8530511aadb68030a34bdebf90de3fdd47a1383f857407d2996c342dd8455",
+  "sessions": 4,
+  "library_connected_sessions": 0,
+  "library_connected_features": 0,
+  "direct_implementation_features": 12,
+  "executed_runner_source_commit": "30d5e600393f2f245110d46bbb45f6ca77fd5fce"
+}

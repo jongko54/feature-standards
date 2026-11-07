@@ -38,9 +38,13 @@ It returns API/consumer/rule documents under `readFirst`, contract document poin
 
 The [routing-size measurement](https://github.com/jongko54/feature-standards/blob/main/docs/context-routing-size-0.4.0.json) records 26 clean-source selections: compact UTF-8 JSON payloads were 52.96–65.68% smaller (median 58.50%). These are JSON bytes, not model tokens or integration time, and installed path lengths affect the counts.
 
+The separate [real-model reading study](https://github.com/jongko54/feature-standards/blob/main/docs/validation-ai-reading-2026-11-08.md) preserves 24 fresh sessions with original HTTP outcomes of 23/24. Compact guidance reduced paired input-token sums by 19.032% versus manual guidance, while uncached input increased by 16.927% and output by 12.933%. These observations do not establish lower cost, general improvement or external adoption. Source candidate snapshots also bundle optional `snapshot/docs/ai-briefs/{python,go,java,rust}.md` reading guides for memory-session/RBAC/materialized-listing integration; those guides do not cover database or account profiles.
+
 v1 uses memory sessions. v2 uses PostgreSQL sessions. v3 adds registration, email verification, and password reset. SMTP delivery is an optional v3 addon with separate configuration. React is a client stack; the other four stacks are backends. `list` and `context` perform no checks, migrations, dependency installation, generation, project edits, server startup, or model calls.
 
 `rbac-v1` evaluates explicit tenant/owner grants against server-owned identities and resources. `offset-list-v1` strictly parses an allowlisted query and filters, sorts, and pages a bounded in-memory collection. The `react` selections refer to JavaScript/TypeScript helpers; browser authorization decisions are presentation advice and never replace server enforcement. Read the [core standards guide](https://github.com/jongko54/feature-standards/blob/main/docs/core-standards.md) for integration and conformance commands.
+
+In a separate eight-session similar-task pilot, the optional briefs achieved 8/8 HTTP passes with input-token sums 71.442% lower, uncached input 58.301% lower and output 50.176% lower than compact guidance. This is one pair per backend with shared caches; it does not guarantee general or billing savings. Four unprescribed-reuse sessions independently implemented the features. The report separates these observations from the original 24 sessions and from external adoption.
 
 ## Generate and check an application
 

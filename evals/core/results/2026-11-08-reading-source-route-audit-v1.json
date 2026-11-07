@@ -1,0 +1,1083 @@
+{
+  "suite": "core-reading-independent-source-route-audit-v1",
+  "original_summary_sha256": "7aaf0bcf4b8adec413df07197dad92278c17de4b6abaa4f0d43994a012d3294e",
+  "executed_runner_source_commit": "83b7633b06e1a60376cc671a4325b107d131e088",
+  "review_parts": [
+    {
+      "part": "primary-source-routes-python-go.json",
+      "sha256": "6426206348097e3cf1da7405d0cc35b00c772aeb4727850bddc5d9284fdb1326"
+    },
+    {
+      "part": "primary-source-routes-java-rust.json",
+      "sha256": "c6ba827db4d5b6a58d27d2286c431961f96d8e9cdb88067d9c489735e612f279"
+    }
+  ],
+  "sessions": 24,
+  "library_connected_sessions": 24,
+  "library_connected_features": 72,
+  "original_http_passed_sessions": 23,
+  "limits": [
+    "Independent source-route inspection connects declared build/start entrypoints and product handlers to public auth, authorization and listing APIs. This is source evidence, not instrumentation of runtime causality.",
+    "Each feature is library_connected through generated routes or local helpers. Own membership parsing, projection and error adapters are application glue. No dead-import-only evidence or replacement feature engine was found.",
+    "The original Java compact first trial has zero HTTP assertions. This review never changes the original 23/24 outcome, timing, tokens or result bytes.",
+    "Raw generated programs remain private. Relative locations and SHA-256 identify reviewed bytes. Whole-file anti-copy results do not establish absence of partial copying."
+  ],
+  "runs": [
+    {
+      "trial": "go-catalog_compact-trial-1",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:86 auth.NewServer constructs the shared service",
+            "main.go:91 auth routes mount the shared service",
+            "main.go:93 profile calls CurrentUser",
+            "main.go:100 product calls CurrentUser",
+            "main.go:146 mounts product list",
+            "main.go:147 mounts product detail"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:78 authorization.NewPolicy constructs the grants",
+            "main.go:114 Policy.Decide gates collection",
+            "main.go:120 Policy.Decide scopes visible rows",
+            "main.go:139 Policy.Decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:124 listing.ParseQuery consumes RawQuery",
+            "main.go:129 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "run.json:1 builds the generated main package and starts its binary",
+        "main.go:161 constructs the handler",
+        "main.go:166 serves that handler",
+        "go.mod:19 local auth replacement; line21 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "8e39006b550dc506148f2afbeaf56f9eddafcda130daa920047c432599036b3f",
+        "main.go": "d852a158f78e1a05b29f0169244efc62b33c947c1bd81e122698ee617c3c10d0",
+        "go.mod": "b441b8d02d67d53f4c68bea87969c891f0fbded498a274729967260b96d42c83"
+      }
+    },
+    {
+      "trial": "go-catalog_compact-trial-2",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:160 auth.NewServer constructs the shared service",
+            "main.go:87 auth routes mount the shared service",
+            "main.go:90 profile calls CurrentUser",
+            "main.go:97 product calls CurrentUser",
+            "main.go:147 mounts product list",
+            "main.go:148 mounts product detail"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:73 authorization.NewPolicy constructs the grants",
+            "main.go:111 Policy.Decide gates collection",
+            "main.go:117 Policy.Decide scopes visible rows",
+            "main.go:140 Policy.Decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:121 listing.ParseQuery consumes RawQuery",
+            "main.go:126 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "run.json:1 builds the generated main package and starts its binary",
+        "main.go:160 constructs the auth service",
+        "main.go:165 constructs the handler",
+        "main.go:169 serves that handler",
+        "go.mod:19 local auth replacement; line21 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "ef2390d226ddc6da512346368653f42619a5eabce3e254b9831915814a246f99",
+        "main.go": "79c3214681076a04133b60fc5bbed8264ef56cdfaa2047503238feb6f7bbf454",
+        "go.mod": "367c6f613e70725964e948ee6287881a378624340ab9429150edb59da236976c"
+      }
+    },
+    {
+      "trial": "go-catalog_full-trial-1",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:68 auth.NewServer constructs the shared service",
+            "main.go:74 auth routes mount the shared service",
+            "main.go:78 CurrentUser protects all API dispatch",
+            "main.go:82 profile branch",
+            "main.go:106 list branch",
+            "main.go:128 detail branch"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:54 authorization.NewPolicy constructs the grants",
+            "main.go:107 Policy.Decide gates collection",
+            "main.go:113 Policy.Decide scopes visible rows",
+            "main.go:131 Policy.Decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:117 listing.ParseQuery consumes RawQuery",
+            "main.go:122 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.sh:5 builds the generated main package",
+        "main.go:156 constructs newApp",
+        "main.go:162 serves its handler",
+        "go.mod:21 local auth replacement; line23 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "829d0c79ef414725b02417a0d7ba3b57ff133cc20414fb24231fec36b8bd4b36",
+        "build.sh": "a5f918c8c6e789b63d04c20df4d15f69a7a51593f48c0f28ec58f85c4de47eaf",
+        "main.go": "354a739a57c09c43cfca5c6ac2cd2139b0e151a06d23dc2c0ed6c0f93a3f74bd",
+        "go.mod": "3677b15a5b03b4f52a45009374c2ac8acaa8dab004240f3935478177bafd8ca8"
+      }
+    },
+    {
+      "trial": "go-catalog_full-trial-2",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:77 auth.NewServer constructs the shared service",
+            "main.go:82 auth routes mount the shared service",
+            "main.go:85 profile calls CurrentUser",
+            "main.go:93 product calls CurrentUser",
+            "main.go:140 mounts product list branch",
+            "main.go:141 mounts product detail branch"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:66 authorization.NewPolicy constructs the grants",
+            "main.go:109 Policy.Decide gates detail",
+            "main.go:117 Policy.Decide gates collection",
+            "main.go:123 Policy.Decide scopes visible rows"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:127 listing.ParseQuery consumes RawQuery",
+            "main.go:132 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.sh:4 builds the generated main package",
+        "main.go:156 constructs the handler",
+        "main.go:161 serves that handler",
+        "go.mod:21 local auth replacement; line23 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "50417868bbcab18bdf4be27dc736dab09044e7bf64cbc58191682ae84ec63c42",
+        "build.sh": "0682fa26a47792f8316db646538412574847a21076d08aab50cf51dec7962c90",
+        "main.go": "6f728a457fc66837e5e55ff624eec4c254ea6b228d70869b2f1cae2cde006df3",
+        "go.mod": "d433696e7b769208fb344492036735b7e2285cc8857c8e319a7b348d4fc30f17"
+      }
+    },
+    {
+      "trial": "go-manual-trial-1",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:99 auth.NewServer constructs the shared service",
+            "main.go:138 auth routes mount the shared service",
+            "main.go:141 profile calls CurrentUser",
+            "main.go:113 principalFor calls CurrentUser",
+            "main.go:148 list reaches principalFor",
+            "main.go:189 detail reaches principalFor"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:85 authorization.NewPolicy constructs the grants",
+            "main.go:152 Policy.Decide gates collection",
+            "main.go:158 Policy.Decide scopes visible rows",
+            "main.go:197 Policy.Decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:168 listing.ParseQuery consumes RawQuery",
+            "main.go:170 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.sh:4 builds the generated main package",
+        "main.go:234 constructs the handler",
+        "main.go:240 serves that handler",
+        "go.mod:21 local auth replacement; line23 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "50417868bbcab18bdf4be27dc736dab09044e7bf64cbc58191682ae84ec63c42",
+        "build.sh": "87f3227e6391be661253c78263bf1dc8dd5ccec8abb0f37d9c2dc84849ba1af6",
+        "main.go": "bceee8f0e214a52d0530a5edb8fc2032462a55faea5af3c3f34824a2e4d31036",
+        "go.mod": "c8369e64a505a35d503bee2203b2a5afc41375eed21b01e121fe9656dda43510"
+      }
+    },
+    {
+      "trial": "go-manual-trial-2",
+      "stack": "go",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:81 auth.NewServer constructs the shared service",
+            "main.go:120 auth routes mount the shared service",
+            "main.go:123 profile calls CurrentUser",
+            "main.go:95 principalFor calls CurrentUser",
+            "main.go:130 list reaches principalFor",
+            "main.go:171 detail reaches principalFor"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:67 authorization.NewPolicy constructs the grants",
+            "main.go:134 Policy.Decide gates collection",
+            "main.go:140 Policy.Decide scopes visible rows",
+            "main.go:179 Policy.Decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.go:150 listing.ParseQuery consumes RawQuery",
+            "main.go:152 listing.Page produces the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.sh:4 builds the generated main package",
+        "main.go:223 constructs the handler",
+        "main.go:229 serves that handler",
+        "go.mod:21 local auth replacement; line23 local core replacement"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "5dfe96170e908a19945ed48ce21a24a7e6bf286b963211c4bbf710ad5192ec80",
+        "build.sh": "a055f66e534af0bcd7e4e2b76bb74b7fffc78195c0acda8fb162410c5d277d34",
+        "main.go": "ce0386ea468cdfaee449d2b657762476cf34189faff6978f22098cd1d2cc32f2",
+        "go.mod": "d433696e7b769208fb344492036735b7e2285cc8857c8e319a7b348d4fc30f17"
+      }
+    },
+    {
+      "trial": "java-catalog_compact-trial-1",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/Application.java:27 public AuthFilter registration using application AuthService",
+            "src/main/java/app/DocumentsController.java:40 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/DocumentsController.java:71 collection permission through public AuthorizationPolicy",
+            "src/main/java/app/DocumentsController.java:75 per-document policy visibility",
+            "src/main/java/app/DocumentsController.java:83 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/DocumentsController.java:77 public Listing.parseQuery used by collection handler",
+            "src/main/java/app/DocumentsController.java:77 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.py:9 declared Spring Boot jar entrypoint documents",
+        "src/main/java/app/Application.java:16 Spring application main",
+        "src/main/java/app/DocumentsController.java:68 product collection handler or filter branch"
+      ],
+      "http_assertions": 0,
+      "original_http_passed": false,
+      "generated_files_sha256": {
+        "start.py": "b5088d855519c28d2a4bfe90b85eb045700757e7942ee82596637fff6c4b1cc4",
+        "src/main/java/app/Application.java": "93ca5589e02eec2de984348b20e65bc61902c5e67d6862db5282a7a54654c9c2",
+        "src/main/java/app/DocumentsController.java": "6488644a48ea20daa79ae5c75e226315769f0a8bacbd920a1a406a56ecd8c4ae"
+      }
+    },
+    {
+      "trial": "java-catalog_compact-trial-2",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/consumer/Application.java:31 public AuthFilter registration using application AuthService",
+            "src/main/java/consumer/Application.java:78 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/consumer/Application.java:90 collection permission through public AuthorizationPolicy",
+            "src/main/java/consumer/Application.java:92 per-document policy visibility",
+            "src/main/java/consumer/Application.java:98 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/consumer/Application.java:93 public Listing.parseQuery used by collection handler",
+            "src/main/java/consumer/Application.java:94 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.py:8 declared Spring Boot jar entrypoint documents",
+        "src/main/java/consumer/Application.java:21 Spring application main",
+        "src/main/java/consumer/Application.java:89 product collection handler or filter branch",
+        "src/main/java/consumer/Application.java:35 ProductFilter bean registered for product URLs"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "start.py": "7357a934fc7e4695fdeab2ef5bf1d733afb2513f40865d08366bf00ee255f1fe",
+        "src/main/java/consumer/Application.java": "74e8af93eee9c5d3cade85e54d9311658eac14470f1225ebbedee870cb54dfc5"
+      }
+    },
+    {
+      "trial": "java-catalog_full-trial-1",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/Application.java:25 public AuthFilter registration using application AuthService",
+            "src/main/java/app/ProductFilter.java:49 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/ProductFilter.java:68 collection permission through public AuthorizationPolicy",
+            "src/main/java/app/ProductFilter.java:72 per-document policy visibility",
+            "src/main/java/app/ProductFilter.java:80 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/app/ProductFilter.java:75 public Listing.parseQuery used by collection handler",
+            "src/main/java/app/ProductFilter.java:76 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.py:8 declared Spring Boot jar entrypoint documents-consumer",
+        "src/main/java/app/Application.java:14 Spring application main",
+        "src/main/java/app/ProductFilter.java:67 product collection handler or filter branch",
+        "src/main/java/app/Application.java:31 ProductFilter bean registered for product URLs"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "start.py": "55834672b558bdf06eaec590f3c741096488bb64e5f14b960acc887e92cd3a0d",
+        "src/main/java/app/Application.java": "50e8552610d31c80d8d494dbf334547399b6ce279dd3294a353202d8c42a4f60",
+        "src/main/java/app/ProductFilter.java": "6ca244ed8cc684103c277a5a5f06dee78c12ff7270cb8263039ea44d4a3bdb92"
+      }
+    },
+    {
+      "trial": "java-catalog_full-trial-2",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreApplication.java:34 public AuthFilter registration using application AuthService",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:41 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:85 collection permission through public AuthorizationPolicy",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:90 per-document policy visibility",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:104 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:93 public Listing.parseQuery used by collection handler",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:94 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.py:8 declared Spring Boot jar entrypoint consumer",
+        "src/main/java/dev/featurestandards/examples/core/CoreApplication.java:22 Spring application main",
+        "src/main/java/dev/featurestandards/examples/core/CoreController.java:82 product collection handler or filter branch"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "start.py": "15983cc2b4bd9c012fbcb469e8d6e01e442366a253dc7c849e376521994a8341",
+        "src/main/java/dev/featurestandards/examples/core/CoreApplication.java": "a5db3c8ef8af90bad5eea32fad92433bbdd9cb08c5bb65783ba782c99cfe6c3d",
+        "src/main/java/dev/featurestandards/examples/core/CoreController.java": "6efa8bedcd72f0634a3e6f210d8c6d9b8615f03a90b73070ab21329202f556ca"
+      }
+    },
+    {
+      "trial": "java-manual-trial-1",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreApplication.java:34 public AuthFilter registration using application AuthService",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:41 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:78 collection permission through public AuthorizationPolicy",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:83 per-document policy visibility",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:97 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:86 public Listing.parseQuery used by collection handler",
+            "src/main/java/dev/featurestandards/examples/core/CoreController.java:87 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.py:8 declared Spring Boot jar entrypoint core-java",
+        "src/main/java/dev/featurestandards/examples/core/CoreApplication.java:22 Spring application main",
+        "src/main/java/dev/featurestandards/examples/core/CoreController.java:75 product collection handler or filter branch"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "start.py": "43b1eea019f5110bb9c686b8aebfc934b811c287d68992e3922574f6e0b013a7",
+        "src/main/java/dev/featurestandards/examples/core/CoreApplication.java": "0b6d93c4c0a36eeec4e54a851a4067e00097f7b7b398d4a72e8a9371a3778e11",
+        "src/main/java/dev/featurestandards/examples/core/CoreController.java": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad"
+      }
+    },
+    {
+      "trial": "java-manual-trial-2",
+      "stack": "java",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app/src/main/java/dev/featurestandards/examples/core/CoreApplication.java:34 public AuthFilter registration using application AuthService",
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:41 product principal helper calls public AuthService.session"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:85 collection permission through public AuthorizationPolicy",
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:90 per-document policy visibility",
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:104 detail policy decision"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:93 public Listing.parseQuery used by collection handler",
+            "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:94 public Listing.page receives visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "start.sh:5 declared Spring Boot jar entrypoint consumer",
+        "app/src/main/java/dev/featurestandards/examples/core/CoreApplication.java:22 Spring application main",
+        "app/src/main/java/dev/featurestandards/examples/core/CoreController.java:82 product collection handler or filter branch"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "start.sh": "a008d6a3690262d164d163e3d4bf8e861f86a06a51c7df3dabc34d0cc2172760",
+        "app/src/main/java/dev/featurestandards/examples/core/CoreApplication.java": "88f39f019e46a461ced6f8384bab7e8ff341cab8c3c0f6f80a7518a95d54252e",
+        "app/src/main/java/dev/featurestandards/examples/core/CoreController.java": "6efa8bedcd72f0634a3e6f210d8c6d9b8615f03a90b73070ab21329202f556ca"
+      }
+    },
+    {
+      "trial": "python-catalog_compact-trial-1",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.py:13 create_app supplies auth routes",
+            "main.py:79 profile calls current_user",
+            "main.py:86 list calls current_user",
+            "main.py:101 detail calls current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.py:14 Policy constructs the grants",
+            "main.py:74 readable calls Policy.decide",
+            "main.py:87 collection calls Policy.decide",
+            "main.py:89 visible rows reach readable",
+            "main.py:103 detail reaches readable"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "main.py:92 list response calls parse_query and page"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "main.py:109 serves the application constructed in this module",
+        "main.py:13 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "ed970a63bb00b04f6b30ad9648ad77109523055164758fccd1a48dda3d75c0e9",
+        "main.py": "c7a82de10fa34b6c7c9d7703ceba79ea2da6afeb17910abe1b1460694e38a7a7",
+        "pyproject.toml": "01388405d004ec4e313386df8bb1e7735a7cbc53d3e18394c2e6189980d95152"
+      }
+    },
+    {
+      "trial": "python-catalog_compact-trial-2",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:13 create_app supplies auth routes",
+            "app.py:77 profile calls current_user",
+            "app.py:83 list calls current_user",
+            "app.py:98 detail calls current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:14 Policy constructs the grants",
+            "app.py:68 can_read calls Policy.decide",
+            "app.py:84 collection calls Policy.decide",
+            "app.py:86 visible rows reach can_read",
+            "app.py:100 detail reaches can_read"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:89 list response calls parse_query and page"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "serve.py:6 serves the app module application",
+        "app.py:13 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "1cefa7c406c53e1442ec64fe79ee347d6cb034b2ab56b82e867c27893702349e",
+        "serve.py": "ceec4b466e70a3668eab7d774a7a76a7f2a07656b829eccae8a1a5b193fc3b3b",
+        "app.py": "5c0ea80940e393040f8527523e1bea8ad61482b5e6cebafa4ccd4b362e9e175e",
+        "pyproject.toml": "01388405d004ec4e313386df8bb1e7735a7cbc53d3e18394c2e6189980d95152"
+      }
+    },
+    {
+      "trial": "python-catalog_full-trial-1",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:79 create_app supplies auth routes",
+            "app.py:92 profile depends on current_user",
+            "app.py:63 membership depends on current_user",
+            "app.py:97 list depends on membership",
+            "app.py:109 detail depends on membership"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:14 Policy constructs the grants",
+            "app.py:72 readable calls Policy.decide",
+            "app.py:76 visible_documents reaches readable",
+            "app.py:98 collection calls Policy.decide",
+            "app.py:111 detail reaches readable"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:103 list response calls parse_query and page"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.py:8 resolves the local project dependencies",
+        "serve.py:5 serves the app module application",
+        "app.py:79 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "c6a6ca56be3c7fa46ccd231415e0c067b80342b802ada5e48cf255fee65884c9",
+        "build.py": "4f122b8c72697924d07812c09fb42b018be9154671c50e395d02ca4e25b6425a",
+        "serve.py": "43aa173c69a9d4ed1bbd4695cbeba403e6539cea4d401d7a95b4d911ffa916c9",
+        "app.py": "92a7175ef2530742daa83483845a34e60b5770d251db35d780d450df9921821d",
+        "pyproject.toml": "183464a7b22f4fc6eda093bbc7b2871f1460f3ec6f43fdcc3bf8d4ccd92f98b6"
+      }
+    },
+    {
+      "trial": "python-catalog_full-trial-2",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:12 create_app supplies auth routes",
+            "app.py:82 profile calls current_user",
+            "app.py:50 principal_for calls current_user",
+            "app.py:88 list reaches principal_for",
+            "app.py:103 detail reaches principal_for"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:13 Policy constructs the grants",
+            "app.py:73 readable calls Policy.decide",
+            "app.py:89 collection calls Policy.decide",
+            "app.py:91 visible rows reach readable",
+            "app.py:105 detail reaches readable"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:94 list response calls parse_query and page"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "build.py:5 resolves the local project dependencies",
+        "start.py:5 serves the app module application",
+        "app.py:12 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "f06782dfb8c4d41dd01fde96caafa45af16ac9d26892748e289be32877296e6a",
+        "build.py": "143d90f0e2e68810e7cc2e2477a3214f499014ff6ec94bc977110cc4059c6077",
+        "start.py": "a8ab558a3f8c62b87a27f6bd88e9c89f0d6832206b59c93505b2c6455218cd9a",
+        "app.py": "a0b89c97d82875e1ec16c616ff3a57e60fd8be6ebce26fc5e17c595c3f339dae",
+        "pyproject.toml": "183464a7b22f4fc6eda093bbc7b2871f1460f3ec6f43fdcc3bf8d4ccd92f98b6"
+      }
+    },
+    {
+      "trial": "python-manual-trial-1",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:98 create_app supplies auth routes",
+            "app.py:120 current_user dependency protects profile",
+            "app.py:132 current_user dependency protects list",
+            "app.py:162 current_user dependency protects detail"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:15 Policy constructs the grants",
+            "app.py:124 Policy.decide gates profile",
+            "app.py:137 Policy.decide gates collection",
+            "app.py:146 Policy.decide scopes visible rows",
+            "app.py:170 Policy.decide gates detail"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:153 parse_query consumes the route raw query",
+            "app.py:154 page returns the list response"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "server.py:10 serves the app module application",
+        "app.py:185 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "9c2614ec053a143b25c735760c3a41dc114f5cbb89600cb19e9da6dd9d9098d0",
+        "server.py": "8b9c767b71d9189d41acdeee1cae90f39bb4030fa39acae12ece118c24baa210",
+        "app.py": "66304d3c6c45a3283d776d98d173bfd2c1bb88dcdd8eb15c760bde05696d0ba6",
+        "pyproject.toml": "eab9472be904e4480e9a209486523f47dc710a51cf1730510d67977a508b69f2"
+      }
+    },
+    {
+      "trial": "python-manual-trial-2",
+      "stack": "python",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:69 create_app supplies auth routes",
+            "app.py:101 current_user dependency alias",
+            "app.py:105 profile uses that dependency",
+            "app.py:113 list uses that dependency",
+            "app.py:128 detail uses that dependency"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:14 Policy constructs the grants",
+            "app.py:94 allowed delegates to Policy.decide",
+            "app.py:107 profile reaches allowed",
+            "app.py:115 collection reaches allowed",
+            "app.py:117 visible rows reach allowed",
+            "app.py:131 detail reaches allowed"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "app.py:120 list response calls parse_query and page"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "run.json:1 declared start selects the reviewed entrypoint",
+        "server.py:6 serves the app module application",
+        "app.py:69 constructs the served application",
+        "pyproject.toml:8 local auth dependency; line9 local core dependency"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "run.json": "c716810e399a60b61e20a38b26a22c5ff0beba4065222d30e4777fc0c76401e7",
+        "server.py": "99e1da8ced1921fcf8d7fa152bdabe939bc61b8709ffa168145be2247e629523",
+        "app.py": "038c89a857633a92852294b515df1f492a2acf6923cf3c2d34ffea1960573952",
+        "pyproject.toml": "eab9472be904e4480e9a209486523f47dc710a51cf1730510d67977a508b69f2"
+      }
+    },
+    {
+      "trial": "rust-catalog_compact-trial-1",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:11 public auth imports",
+            "src/main.rs:228 public app_with_service merged with product router",
+            "src/main.rs:62 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:185 public Policy construction",
+            "src/main.rs:119 collection policy decision",
+            "src/main.rs:90 visibility helper or per-document public Policy decision",
+            "src/main.rs:163 detail policy decision or call to visible helper",
+            "src/main.rs:124 collection handler calls visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:125 public parse_query in product collection handler",
+            "src/main.rs:135 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:236 application main or generated local app construction",
+        "src/main.rs:225 collection router binding",
+        "src/main.rs:226 detail router binding",
+        "src/main.rs:240 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "e27210c02a3932be8263c24649ac9f8b0adb26aee15af9352e4b8468b84fdb02"
+      }
+    },
+    {
+      "trial": "rust-catalog_compact-trial-2",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:9 public auth imports",
+            "src/main.rs:204 public app_with_service merged with product router",
+            "src/main.rs:91 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:179 public Policy construction",
+            "src/main.rs:106 collection policy decision",
+            "src/main.rs:117 visibility helper or per-document public Policy decision",
+            "src/main.rs:154 detail policy decision or call to visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:122 public parse_query in product collection handler",
+            "src/main.rs:132 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:175 application main or generated local app construction",
+        "src/main.rs:200 collection router binding",
+        "src/main.rs:201 detail router binding",
+        "src/main.rs:209 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "a2239b839aafee1d4319b15da4c135fba509fae841d0a9a3fa727fb87f640546"
+      }
+    },
+    {
+      "trial": "rust-catalog_full-trial-1",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:9 public auth imports",
+            "src/main.rs:227 public app_with_service merged with product router",
+            "src/main.rs:53 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:177 public Policy construction",
+            "src/main.rs:102 collection policy decision",
+            "src/main.rs:78 visibility helper or per-document public Policy decision",
+            "src/main.rs:153 detail policy decision or call to visible helper",
+            "src/main.rs:116 collection handler calls visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:119 public parse_query in product collection handler",
+            "src/main.rs:129 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:206 application main or generated local app construction",
+        "src/main.rs:223 collection router binding",
+        "src/main.rs:224 detail router binding",
+        "src/main.rs:232 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "b7ea435b90c51daca8048204a146e366d7231ebdf907bf2777e1b9dd516d2083"
+      }
+    },
+    {
+      "trial": "rust-catalog_full-trial-2",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:9 public auth imports",
+            "src/main.rs:196 public app_with_service merged with product router",
+            "src/main.rs:45 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:156 public Policy construction",
+            "src/main.rs:88 collection policy decision",
+            "src/main.rs:99 visibility helper or per-document public Policy decision",
+            "src/main.rs:129 detail policy decision or call to visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/main.rs:104 public parse_query in product collection handler",
+            "src/main.rs:105 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:152 application main or generated local app construction",
+        "src/main.rs:193 collection router binding",
+        "src/main.rs:194 detail router binding",
+        "src/main.rs:201 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "7e7b17b710f6e95eee3bae0aabd2ce11706a7aed0ffaef1c4ed70d382b062979"
+      }
+    },
+    {
+      "trial": "rust-manual-trial-1",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:8 public auth imports",
+            "src/lib.rs:123 public app_with_service merged with product router",
+            "src/lib.rs:162 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:84 public Policy construction",
+            "src/lib.rs:211 collection policy decision",
+            "src/lib.rs:229 visibility helper or per-document public Policy decision",
+            "src/lib.rs:269 detail policy decision or call to visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:235 public parse_query in product collection handler",
+            "src/lib.rs:236 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:8 application main or generated local app construction",
+        "src/lib.rs:113 collection router binding",
+        "src/lib.rs:114 detail router binding",
+        "src/main.rs:12 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "f6247c9f17347165d127e91fd9320b282f6a10a20b441196ae9a3dca9c629372",
+        "src/lib.rs": "43c3a680105ee222c5d7f2ccdb5e39f74d26c82fb9209940f445d435046ef398"
+      }
+    },
+    {
+      "trial": "rust-manual-trial-2",
+      "stack": "rust",
+      "features": {
+        "auth": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:8 public auth imports",
+            "src/lib.rs:123 public app_with_service merged with product router",
+            "src/lib.rs:162 product principal helper or handler calls public current_user"
+          ]
+        },
+        "authorization": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:84 public Policy construction",
+            "src/lib.rs:211 collection policy decision",
+            "src/lib.rs:229 visibility helper or per-document public Policy decision",
+            "src/lib.rs:269 detail policy decision or call to visible helper"
+          ]
+        },
+        "listing": {
+          "classification": "library_connected",
+          "evidence": [
+            "src/lib.rs:235 public parse_query in product collection handler",
+            "src/lib.rs:236 public page applied to visible records"
+          ]
+        }
+      },
+      "entrypoint_evidence": [
+        "src/main.rs:8 application main or generated local app construction",
+        "src/lib.rs:113 collection router binding",
+        "src/lib.rs:114 detail router binding",
+        "src/main.rs:12 Axum serve uses constructed app"
+      ],
+      "http_assertions": 143,
+      "original_http_passed": true,
+      "generated_files_sha256": {
+        "src/main.rs": "58a8632391b235a2234aa8f150fbfc945a963bc72e0753325f9fd74f7a12a37a",
+        "src/lib.rs": "16ed9180284aa3ea937e483be9268f8bd7da5165edadac380adf979cb0c7a835"
+      }
+    }
+  ]
+}

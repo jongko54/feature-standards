@@ -247,16 +247,58 @@ def _public_calls(tree):
             and constructors.get(_qualified(node.func, bindings)) == "PostgresListing"
         )
 
+    factories = set()
+    for function in tree.body:
+        if not isinstance(function, ast.FunctionDef) or function.decorator_list:
+            continue
+        args = function.args
+        if (
+            args.posonlyargs
+            or args.args
+            or args.kwonlyargs
+            or args.vararg
+            or args.kwarg
+        ):
+            continue
+        body = function.body
+        if (
+            body
+            and isinstance(body[0], ast.Expr)
+            and isinstance(body[0].value, ast.Constant)
+            and isinstance(body[0].value.value, str)
+        ):
+            body = body[1:]
+        if (
+            len(body) == 1
+            and isinstance(body[0], ast.Return)
+            and is_constructor(body[0].value)
+        ):
+            factories.add(function.name)
+
+    def is_factory_call(node):
+        return (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id in factories
+            and not node.args
+            and not node.keywords
+        )
+
     assignments = [
         n for n in ast.walk(tree) if isinstance(n, (ast.Assign, ast.AnnAssign))
     ]
-    # A small fixed point recognizes aliases and `store or PostgresListing(...)`.
+    # Only direct constructors, narrowly bounded factories and instance aliases.
     for _ in range(len(assignments) + 1):
         before = set(instances)
         for assignment in assignments:
             value = assignment.value
             values = value.values if isinstance(value, ast.BoolOp) else [value]
-            if any(is_constructor(v) or _qualified(v, {}) in instances for v in values):
+            if any(
+                is_constructor(v)
+                or is_factory_call(v)
+                or _qualified(v, {}) in instances
+                for v in values
+            ):
                 targets = (
                     assignment.targets
                     if isinstance(assignment, ast.Assign)

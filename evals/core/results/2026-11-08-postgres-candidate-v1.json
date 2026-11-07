@@ -1,0 +1,155 @@
+{
+  "suite": "auth-rbac-postgres-v1",
+  "catalog_version": "0.4.0",
+  "catalog_sha256": "89951dbf86ad271a5d85017eac10d3cf182c9336e6ef19f7e2024838a2837eb2",
+  "catalog_kind": "local-source-candidate",
+  "catalog_public_download_verified": false,
+  "candidate_source_commit": "30d5e600393f2f245110d46bbb45f6ca77fd5fce",
+  "requested_model": "gpt-6.1-sol",
+  "timeout_seconds": 600,
+  "repeats": 1,
+  "tasks_sha256": "6d4471fcdac0a3692fe64e2d26c82f3f2f5506d11cd4657606ca5c795ddfd5f2",
+  "source_commit": "30d5e600393f2f245110d46bbb45f6ca77fd5fce",
+  "source_dirty": false,
+  "implementation_source_sha256": "1fe8a14a4d811491e8d930b531f18f93a1889a628907dcb7a53b80512caed7c3",
+  "source_sha256": "e9545548d40953d05d9d1a3099b20070c8cca80c683e00b44fa185c466556ad0",
+  "catalog_snapshot_sha256": "250fa42caf8c203f973ec219015f5d97c6f652b8e7b04438ec99d7c83fe25ff6",
+  "runner_sha256": "739f91a973bece57e2b6704a20b393e14a8b2a3d8995873a7464ff234f4a422e",
+  "auth_runner_sha256": "c080283d516fb4342ce0b0978044d13917b8d3872a7899809cb3b089b45f62ac",
+  "core_runner_sha256": "3e35573bd76c53be2a6b9ea178982508d4d22bb29f524b43173332b55bcb82cd",
+  "trace_runner_sha256": "a834805b2b18a8960be96c26cc4d3b28bebd299d3a018e1dd5aaff6925242174",
+  "source_evidence_sha256": "bc51f949f97fca63132b6a45a1336a57dc4f2b307b458f35dffe0560f117ec62",
+  "runner_source_commit": "30d5e600393f2f245110d46bbb45f6ca77fd5fce",
+  "protocol_id": "auth-rbac-postgres-v1",
+  "protocol_sha256": "7a7b318dc7515b36a4d9264f1e5433f9071a3e931d6147468a50a06d33bbfd3a",
+  "conditions": [
+    "catalog_compact"
+  ],
+  "allowed_stacks": [
+    "python"
+  ],
+  "postgres_runtime_inputs_sha256": {
+    "tests/postgres_listing_conformance.py": "d4415b62fb909f2d7fa3064d0cd9b933ebe310edff0c2a66b4ae9685b0689179",
+    "tests/fixtures/core_listing.sql": "21450dd2db7c7ed7dab197aaecbd0a98845866e71191d1f8d2b4527be6f5f467",
+    "evals/core/tasks.json": "6d4471fcdac0a3692fe64e2d26c82f3f2f5506d11cd4657606ca5c795ddfd5f2"
+  },
+  "limits": [
+    "One Python integration feasibility observation, not an efficiency comparison or population estimate.",
+    "Python core 0.2.0 and postgres-list-v1 are source candidates, not registry-publication evidence.",
+    "Tokens are this execution's observed counts, not price, savings, unique prompt size or model internal reasoning.",
+    "Static public-API call cues, unchanged source and independent HTTP success are distinct evidence; runtime reuse causality is not proved.",
+    "The grader owns an isolated temporary PostgreSQL cluster; no application, shared test or production database is used.",
+    "The large-row check covers scoped SQL data beyond 10000 rows and bounded navigation, not load, cursor traversal or a security audit.",
+    "Authentication remains browser-session-v1 memory; no other language, React, SMTP or deployment is measured."
+  ],
+  "planned_model_calls": 1,
+  "actual_model_calls": 1,
+  "passed": 0,
+  "groups": {
+    "catalog_compact": {
+      "attempts": 1,
+      "passed": 0,
+      "complete_usage": 1,
+      "static_reuse_pass": 0,
+      "static_reuse_and_http_pass": 0
+    }
+  },
+  "comparisons": [],
+  "runs": [
+    {
+      "stack": "python",
+      "condition": "catalog_compact",
+      "repeat": 1,
+      "sequence": 1,
+      "passed": false,
+      "original_http_passed": false,
+      "original_error_code": "postgres-library-reuse-evidence-missing",
+      "error_code": "postgres-library-reuse-evidence-missing",
+      "postprocessing_error": null,
+      "source_unchanged": true,
+      "elapsed_seconds": 193.277,
+      "agent_seconds": 193.04,
+      "cli_version": "codex-cli 0.167.0",
+      "model_selection": "not_reported",
+      "reading_evidence": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 2,
+        "by_feature": {
+          "auth": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "authorization": {
+            "full_context": 0,
+            "compact_context": 1,
+            "failed_cli_attempts": 0
+          },
+          "listing": {
+            "full_context": 0,
+            "compact_context": 0,
+            "failed_cli_attempts": 0
+          }
+        },
+        "failed_cli_attempts": 0,
+        "unmatched_cli_attempts": 1,
+        "doc_read_commands": 1,
+        "doc_search_commands": 0,
+        "documents": [
+          {
+            "path": "docs/postgres-listing.md",
+            "kind": "documentation",
+            "sha256": "293e930f79169e7fb78c4e8669df8d9f56a6c40233cda4f0c28857465d39fbdb",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "implementations/python-fastapi/README.md",
+            "kind": "public_api_guide",
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "read_commands": 1,
+            "search_commands": 0
+          },
+          {
+            "path": "libraries/python/README.md",
+            "kind": "public_api_guide",
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "read_commands": 1,
+            "search_commands": 0
+          }
+        ],
+        "unclassified_commands": 16,
+        "malformed_events": 0,
+        "evidence_kind": "observed-command-and-document-reference-evidence",
+        "limits": [
+          "Observed CLI argv and estimated document references do not prove model understanding, skill activation, internal reasoning or runtime API reuse.",
+          "Document reads/searches are conservative command estimates; ranges, truncation and output consumption are not measured. A hash identifies corresponding snapshot bytes, not bytes consumed.",
+          "Only simple commands and && chains are supported. Other shell control, substitutions, heredocs, pipelines, Node -e and indirect scripts remain unclassified; coverage is incomplete.",
+          "Static API call evidence and independent HTTP outcomes must be reported separately; neither proves complete anti-copy protection or production security."
+        ]
+      },
+      "static_reuse": {
+        "kind": "static-public-auth-rbac-postgres-call-evidence",
+        "runtime_causality_proven": false,
+        "passed": false,
+        "error_code": "postgres-library-reuse-evidence-missing"
+      },
+      "original_result_sha256": "5899ceb509ae31def0306f4faba68df308f72d4be7310cfbba50c8380979d639",
+      "trace_sha256": "b25a52f52f7b3d12e5983ccc64bf4d33b95009bfac94a094a3f4bfaad5674d32",
+      "prompt_sha256": "881e9389e5c929ca2b80f0674c3aa229d5203bc39f32f8972a95d91d71bd8a9b",
+      "http_assertions": 0,
+      "tokens": {
+        "input_tokens": 674215,
+        "cached_input_tokens": 634880,
+        "output_tokens": 6630,
+        "uncached_input_tokens": 39335,
+        "total_tokens": 680845
+      },
+      "reported_models": [],
+      "command_count": 20
+    }
+  ],
+  "blocked": null,
+  "complete": true
+}

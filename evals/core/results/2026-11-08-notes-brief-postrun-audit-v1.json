@@ -1,0 +1,1484 @@
+{
+  "suite": "notes-brief-separate-output-and-pair-audit-v1",
+  "original_summary_sha256": "a651c4fca1c544ec7e4be23d12d4a673b3de5f6c536534b8e01606f05236363b",
+  "auditor_sha256": "4f96f9137203e04b1ec530a17974cb59f1c2b8b94d4c9d0b06fca038a356dfc5",
+  "conditions": [
+    "catalog_compact",
+    "brief"
+  ],
+  "per_stack_comparisons": {
+    "python": {
+      "reference": "catalog_compact",
+      "variant": "brief",
+      "reference_attempts": 1,
+      "variant_attempts": 1,
+      "reference_failures": 0,
+      "variant_failures": 0,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 1270948,
+            "variant_sum": 179551,
+            "reduction_percent": 85.873,
+            "paired_median_reduction_percent": 85.873
+          },
+          "cached_input_tokens": {
+            "reference_sum": 1224832,
+            "variant_sum": 159232,
+            "reduction_percent": 87.0,
+            "paired_median_reduction_percent": 87.0
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 46116,
+            "variant_sum": 20319,
+            "reduction_percent": 55.939,
+            "paired_median_reduction_percent": 55.939
+          },
+          "output_tokens": {
+            "reference_sum": 7018,
+            "variant_sum": 2940,
+            "reduction_percent": 58.108,
+            "paired_median_reduction_percent": 58.108
+          },
+          "total_tokens": {
+            "reference_sum": 1277966,
+            "variant_sum": 182491,
+            "reduction_percent": 85.72,
+            "paired_median_reduction_percent": 85.72
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 1270948,
+            "variant_sum": 179551,
+            "reduction_percent": 85.873,
+            "paired_median_reduction_percent": 85.873
+          },
+          "cached_input_tokens": {
+            "reference_sum": 1224832,
+            "variant_sum": 159232,
+            "reduction_percent": 87.0,
+            "paired_median_reduction_percent": 87.0
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 46116,
+            "variant_sum": 20319,
+            "reduction_percent": 55.939,
+            "paired_median_reduction_percent": 55.939
+          },
+          "output_tokens": {
+            "reference_sum": 7018,
+            "variant_sum": 2940,
+            "reduction_percent": 58.108,
+            "paired_median_reduction_percent": 58.108
+          },
+          "total_tokens": {
+            "reference_sum": 1277966,
+            "variant_sum": 182491,
+            "reduction_percent": 85.72,
+            "paired_median_reduction_percent": 85.72
+          }
+        }
+      }
+    },
+    "go": {
+      "reference": "catalog_compact",
+      "variant": "brief",
+      "reference_attempts": 1,
+      "variant_attempts": 1,
+      "reference_failures": 0,
+      "variant_failures": 0,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 492013,
+            "variant_sum": 324447,
+            "reduction_percent": 34.057,
+            "paired_median_reduction_percent": 34.057
+          },
+          "cached_input_tokens": {
+            "reference_sum": 452096,
+            "variant_sum": 301312,
+            "reduction_percent": 33.352,
+            "paired_median_reduction_percent": 33.352
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 39917,
+            "variant_sum": 23135,
+            "reduction_percent": 42.042,
+            "paired_median_reduction_percent": 42.042
+          },
+          "output_tokens": {
+            "reference_sum": 6154,
+            "variant_sum": 3730,
+            "reduction_percent": 39.389,
+            "paired_median_reduction_percent": 39.389
+          },
+          "total_tokens": {
+            "reference_sum": 498167,
+            "variant_sum": 328177,
+            "reduction_percent": 34.123,
+            "paired_median_reduction_percent": 34.123
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 492013,
+            "variant_sum": 324447,
+            "reduction_percent": 34.057,
+            "paired_median_reduction_percent": 34.057
+          },
+          "cached_input_tokens": {
+            "reference_sum": 452096,
+            "variant_sum": 301312,
+            "reduction_percent": 33.352,
+            "paired_median_reduction_percent": 33.352
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 39917,
+            "variant_sum": 23135,
+            "reduction_percent": 42.042,
+            "paired_median_reduction_percent": 42.042
+          },
+          "output_tokens": {
+            "reference_sum": 6154,
+            "variant_sum": 3730,
+            "reduction_percent": 39.389,
+            "paired_median_reduction_percent": 39.389
+          },
+          "total_tokens": {
+            "reference_sum": 498167,
+            "variant_sum": 328177,
+            "reduction_percent": 34.123,
+            "paired_median_reduction_percent": 34.123
+          }
+        }
+      }
+    },
+    "java": {
+      "reference": "catalog_compact",
+      "variant": "brief",
+      "reference_attempts": 1,
+      "variant_attempts": 1,
+      "reference_failures": 0,
+      "variant_failures": 0,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 1220304,
+            "variant_sum": 271083,
+            "reduction_percent": 77.786,
+            "paired_median_reduction_percent": 77.786
+          },
+          "cached_input_tokens": {
+            "reference_sum": 1122048,
+            "variant_sum": 245376,
+            "reduction_percent": 78.131,
+            "paired_median_reduction_percent": 78.131
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 98256,
+            "variant_sum": 25707,
+            "reduction_percent": 73.837,
+            "paired_median_reduction_percent": 73.837
+          },
+          "output_tokens": {
+            "reference_sum": 11617,
+            "variant_sum": 5301,
+            "reduction_percent": 54.369,
+            "paired_median_reduction_percent": 54.369
+          },
+          "total_tokens": {
+            "reference_sum": 1231921,
+            "variant_sum": 276384,
+            "reduction_percent": 77.565,
+            "paired_median_reduction_percent": 77.565
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 1220304,
+            "variant_sum": 271083,
+            "reduction_percent": 77.786,
+            "paired_median_reduction_percent": 77.786
+          },
+          "cached_input_tokens": {
+            "reference_sum": 1122048,
+            "variant_sum": 245376,
+            "reduction_percent": 78.131,
+            "paired_median_reduction_percent": 78.131
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 98256,
+            "variant_sum": 25707,
+            "reduction_percent": 73.837,
+            "paired_median_reduction_percent": 73.837
+          },
+          "output_tokens": {
+            "reference_sum": 11617,
+            "variant_sum": 5301,
+            "reduction_percent": 54.369,
+            "paired_median_reduction_percent": 54.369
+          },
+          "total_tokens": {
+            "reference_sum": 1231921,
+            "variant_sum": 276384,
+            "reduction_percent": 77.565,
+            "paired_median_reduction_percent": 77.565
+          }
+        }
+      }
+    },
+    "rust": {
+      "reference": "catalog_compact",
+      "variant": "brief",
+      "reference_attempts": 1,
+      "variant_attempts": 1,
+      "reference_failures": 0,
+      "variant_failures": 0,
+      "unmatched_pairs": 0,
+      "missing_usage_pairs": 0,
+      "configuration_mismatch_pairs": 0,
+      "all_complete_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 703537,
+            "variant_sum": 277791,
+            "reduction_percent": 60.515,
+            "paired_median_reduction_percent": 60.515
+          },
+          "cached_input_tokens": {
+            "reference_sum": 658048,
+            "variant_sum": 251136,
+            "reduction_percent": 61.836,
+            "paired_median_reduction_percent": 61.836
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 45489,
+            "variant_sum": 26655,
+            "reduction_percent": 41.403,
+            "paired_median_reduction_percent": 41.403
+          },
+          "output_tokens": {
+            "reference_sum": 6718,
+            "variant_sum": 3727,
+            "reduction_percent": 44.522,
+            "paired_median_reduction_percent": 44.522
+          },
+          "total_tokens": {
+            "reference_sum": 710255,
+            "variant_sum": 281518,
+            "reduction_percent": 60.364,
+            "paired_median_reduction_percent": 60.364
+          }
+        }
+      },
+      "joint_success_pairs": {
+        "pairs": 1,
+        "metrics": {
+          "input_tokens": {
+            "reference_sum": 703537,
+            "variant_sum": 277791,
+            "reduction_percent": 60.515,
+            "paired_median_reduction_percent": 60.515
+          },
+          "cached_input_tokens": {
+            "reference_sum": 658048,
+            "variant_sum": 251136,
+            "reduction_percent": 61.836,
+            "paired_median_reduction_percent": 61.836
+          },
+          "uncached_input_tokens": {
+            "reference_sum": 45489,
+            "variant_sum": 26655,
+            "reduction_percent": 41.403,
+            "paired_median_reduction_percent": 41.403
+          },
+          "output_tokens": {
+            "reference_sum": 6718,
+            "variant_sum": 3727,
+            "reduction_percent": 44.522,
+            "paired_median_reduction_percent": 44.522
+          },
+          "total_tokens": {
+            "reference_sum": 710255,
+            "variant_sum": 281518,
+            "reduction_percent": 60.364,
+            "paired_median_reduction_percent": 60.364
+          }
+        }
+      }
+    }
+  },
+  "limits": [
+    "Whole-document output inclusion does not prove model consumption, understanding, skill activation, CLI execution or runtime API reuse.",
+    "This is a separate post-run audit. It does not replace or correct original automated reading counts, outcomes, timing or token metrics.",
+    "Only nonempty strict UTF-8 files smaller than 2000000 bytes in a fixed stack-specific whitelist are candidates; symlinks and partial or normalized matches are excluded.",
+    "Identical source and packaged bytes share one content hash; output alone cannot identify which identical path emitted the content.",
+    "A failed compound command can emit complete earlier documents. Successful, failed and unknown command outcomes are counted separately.",
+    "Complete selected context data was observed in tool output. This does not prove CLI execution, model consumption, understanding, skill activation or runtime API reuse; echoing the data can also produce this evidence.",
+    "This separate post-run audit supplements strict CLI argv evidence and never overwrites original metrics. Failed compound commands can contain valid earlier context output.",
+    "Only complete JSON objects matching the captured 0.4.0 package, stack, feature/profile, source commit and packaged document-reference hashes are counted. Quoted JSON strings and partial/malformed objects are excluded.",
+    "Counts are output events, deduplicated within each mode/feature and by terminal event ID. Unique selections ignore full/compact rendering mode. Reference matching checks captured metadata, not command origin.",
+    "Four complete pairs, one per language, on a fixed similar task with adaptive guidance. Shared caches and order effects remain; not a population or cost estimate.",
+    "This post-run audit does not overwrite original outcomes, traces, timings or token counts."
+  ],
+  "runs": [
+    {
+      "trial": "go-brief-trial-1",
+      "stack": "go",
+      "condition": "brief",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": true,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "42c43956fd421f0c8e64e24ee4651931397c2424200e85bc64412c0b5829262d",
+            "paths": [
+              "examples/core-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "84dd218bf1b94b047f7b7a3f049c266e0058f97a95c86fc98fdff6016448829a",
+            "paths": [
+              "catalog/package/snapshot/docs/ai-briefs/go.md",
+              "docs/ai-briefs/go.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "go-catalog_compact-trial-1",
+      "stack": "go",
+      "condition": "catalog_compact",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": false,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "318137a2244df5381e82696f997f794a9985b406c8017384ff31ccb1a59d5fd0",
+            "paths": [
+              "catalog/package/snapshot/implementations/go-net-http/README.md",
+              "implementations/go-net-http/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6b250c5685b62d61454564b26971ddc4f67a8c772eb0f76d04c8c5de29e9e8bf",
+            "paths": [
+              "catalog/package/snapshot/examples/core-go/README.md",
+              "examples/core-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6e35cedebbdc4bec006424c0961cdd1ae30c9d8a083dc4ce37b7ae0784db1078",
+            "paths": [
+              "catalog/package/snapshot/libraries/go/README.md",
+              "libraries/go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a19b7daa014029dc36e9b7765a8b6420eb3d0b6772ed98daaed0ed3135c8ea2b",
+            "paths": [
+              "catalog/package/snapshot/docs/core-standards.md",
+              "docs/core-standards.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d3ae282c9390f6755b13228f8c0df29bae5d710cf4f450a0ac8efa9105020088",
+            "paths": [
+              "examples/consumer-go/main.go"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "de309c0578b6efae77d70b636a7a320253c0a579360ad652d3eda2d5e0ff5d84",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-go/README.md",
+              "examples/consumer-go/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "java-brief-trial-1",
+      "stack": "java",
+      "condition": "brief",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": true,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "40b69b2c59573187fe8e52564490ca0155c1776205f391c5b8c972a7d8f41ec2",
+            "paths": [
+              "catalog/package/snapshot/docs/ai-briefs/java.md",
+              "docs/ai-briefs/java.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "647ac99592f008db618ae9bc23d7815ca504b0fc8d2a94e7f578e331c01854ad",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreController.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "c19d0184b92cd2536fb12bc8a1eedddb192b887acdd782cff9fd013eb03e613d",
+            "paths": [
+              "examples/core-java/src/main/java/dev/featurestandards/examples/core/CoreApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "java-catalog_compact-trial-1",
+      "stack": "java",
+      "condition": "catalog_compact",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": false,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3f804950d8049616e8f4dd0098e6a9cbbe66dbbf8a45d303acb4a87f8f0bb4b0",
+            "paths": [
+              "catalog/package/snapshot/implementations/java-spring/README.md",
+              "implementations/java-spring/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "51d818f3cac67352246e0f35d0bb4bc66fe41790fe784a03f86f41faf62bf73d",
+            "paths": [
+              "catalog/package/snapshot/libraries/java/README.md",
+              "libraries/java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "5c8b68cf357ca38dcd1b9a7219b4435f3594f51a632dca4319b1e61ea5d06ace",
+            "paths": [
+              "catalog/package/snapshot/examples/core-java/README.md",
+              "examples/core-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a39ae7ef560e1ab20e64e8cee8abf366153f7dd32a41281fb0d5b5c04365e372",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-java/README.md",
+              "examples/consumer-java/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "bab365dd11bca106072400f51975c547bba7ae3751bbfbc6717a2c25cf2faaac",
+            "paths": [
+              "examples/consumer-java/src/main/java/dev/featurestandards/examples/ConsumerApplication.java"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 4
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 3,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "python-brief-trial-1",
+      "stack": "python",
+      "condition": "brief",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": true,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "064812f98f8a2ef0511f6056cbcc71caae8a28b845f30891feb87861eff7bf83",
+            "paths": [
+              "catalog/package/snapshot/docs/ai-briefs/python.md",
+              "docs/ai-briefs/python.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "b54958bf1d2ecb1a9d7ddd14e765b0f1417416d0fedc01a2a9b12f6861c46621",
+            "paths": [
+              "examples/core-python/app.py"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 2
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "python-catalog_compact-trial-1",
+      "stack": "python",
+      "condition": "catalog_compact",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": false,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "396cb845826e2abe67577087dc64e6de3ca1da22982eb4d5d8c32ba3f70bac48",
+            "paths": [
+              "catalog/package/snapshot/examples/core-python/README.md",
+              "examples/core-python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4b6734b3e040591fd5ccfe4a23e15111925ace0c4da4e27b4de5a9659c189414",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-python-react/README.md",
+              "examples/consumer-python-react/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "a58dbad57ca567ec490c37e24f148921a818a0d8dfebaeaad31fbdb2e31e7254",
+            "paths": [
+              "catalog/package/snapshot/implementations/python-fastapi/README.md",
+              "implementations/python-fastapi/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "b54958bf1d2ecb1a9d7ddd14e765b0f1417416d0fedc01a2a9b12f6861c46621",
+            "paths": [
+              "examples/core-python/app.py"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "d1c11bbf2593c6b7881a14de9b6c849948ce523b0040258d003d5dd1168aebb9",
+            "paths": [
+              "catalog/package/snapshot/libraries/python/README.md",
+              "libraries/python/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "rust-brief-trial-1",
+      "stack": "rust",
+      "condition": "brief",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": true,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "74cea92e8ac850d45a77b2d04c343aafeed1fa57f62f69ee69497ac72ee9afe0",
+            "paths": [
+              "examples/core-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "ccc7f27ea36efb9ba5a918bb3ce47705636df78035f9d3e87ee5f7d973f71ca7",
+            "paths": [
+              "catalog/package/snapshot/docs/ai-briefs/rust.md",
+              "docs/ai-briefs/rust.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 3
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 0,
+        "snapshot_provenance_available": true
+      }
+    },
+    {
+      "trial": "rust-catalog_compact-trial-1",
+      "stack": "rust",
+      "condition": "catalog_compact",
+      "source_fingerprint_matches": true,
+      "whole_brief_output_observed": false,
+      "whole_document_output": {
+        "documents": [
+          {
+            "sha256": "037d9368841b5f59903801aa208dfe3a2e4ee84abf979055c36418ac51e8ea6a",
+            "paths": [
+              "catalog/package/snapshot/examples/consumer-rust/README.md",
+              "examples/consumer-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "15d731bbd364063e5dc77b4bfe856c55030e2f1e8b581a71db7fef0d5abc9c7a",
+            "paths": [
+              "catalog/package/snapshot/features/listing/specification.md",
+              "features/listing/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "2dfadc2b5c7148d9f1bb9481c796d05fe4373a0c9f7f803d119a3a34bb26ab83",
+            "paths": [
+              "examples/consumer-rust/src/main.rs"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "3418c535d2fd2298a7d1387bb19f90011c093f5c23cad0caf311ff21c0455315",
+            "paths": [
+              "catalog/package/snapshot/examples/core-rust/README.md",
+              "examples/core-rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 2,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "4a698a1e8fbdefc869b02de4f8b071d2ff20858cc4bb0d08eb56947327eaf731",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-core/SKILL.md",
+              "skills/integrate-core/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "6175eadc164f1598a8f79680d22a0abb153997dc99f6e609de74d0e070807c36",
+            "paths": [
+              "catalog/package/snapshot/implementations/rust-axum/README.md",
+              "implementations/rust-axum/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "633684c87cc0de2a17a82e52f44bfe6d48b546f21587e3d51d0c75837d3da6e8",
+            "paths": [
+              "catalog/package/snapshot/libraries/rust/README.md",
+              "libraries/rust/README.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aa9572ba52e66839a50ba014553cedb9f7ed40383645c19c2406ca08817c2000",
+            "paths": [
+              "catalog/package/snapshot/skills/integrate-auth/SKILL.md",
+              "skills/integrate-auth/SKILL.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "adfacc1d5540b7a891a8fecc697544330d54690dc29a47425d8b3039a8808a80",
+            "paths": [
+              "examples/consumer-rust/src/lib.rs"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          {
+            "sha256": "aee1aa4d09285a38f5d3872c5c05fdc2d722e6a53c63d9ec40107f98219841d8",
+            "paths": [
+              "catalog/package/snapshot/features/authorization/specification.md",
+              "features/authorization/specification.md"
+            ],
+            "output_event_counts": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        ],
+        "events": 5
+      },
+      "selected_context_output": {
+        "evidence_kind": "complete_selected_context_output_observed",
+        "full_context": {
+          "successful": 0,
+          "failed": 0,
+          "unknown": 0
+        },
+        "compact_context": {
+          "successful": 1,
+          "failed": 0,
+          "unknown": 0
+        },
+        "by_feature": {
+          "auth": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "authorization": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          },
+          "listing": {
+            "full_context": {
+              "successful": 0,
+              "failed": 0,
+              "unknown": 0
+            },
+            "compact_context": {
+              "successful": 1,
+              "failed": 0,
+              "unknown": 0
+            }
+          }
+        },
+        "unique_selected_contexts": 3,
+        "snapshot_provenance_available": true
+      }
+    }
+  ]
+}

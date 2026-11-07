@@ -1,0 +1,242 @@
+{
+  "suite": "core-discovery-v1",
+  "catalog_version": "0.4.0",
+  "catalog_sha256": "7ab98af2d4854743bd1641d38f101df9464cad129a409179f402b9f46105b71b",
+  "catalog_kind": "local-source-candidate",
+  "catalog_public_download_verified": false,
+  "candidate_source_commit": "78686cc60ec18c13e093158a1330e323d8b7c893",
+  "source_commit": "78686cc60ec18c13e093158a1330e323d8b7c893",
+  "source_dirty": false,
+  "implementation_source_sha256": "de31f56bda5bd870905acae2f4ed02204327d59376e5bfa0c0a576ad529e2622",
+  "source_sha256": "a791255b99ffbef101d9c0080aff39bc68782302099132c0e2a4fba59dbee171",
+  "catalog_snapshot_sha256": "8d1466453a3b566dca8320f653e047c4666e694d6064f0d0e72fdfbb6f0ecd86",
+  "upstream_source_sha256": "5de5d0c9242bcf6de2a5bec0cd75bc1b7fc89fe6c17c19a4c34b0188d6d6423b",
+  "upstream_implementation_source_sha256": "1071e8ca732678ee92e55c1ed27948b9634bb246754395fe5636437921c9bd4c",
+  "instruction_overlay": "neutral-discovery",
+  "discovery_agents_sha256": "10525ad904dc24c2ca2e762e3724529892278abc2c98b8b365db5d4cd3958566",
+  "requested_model": "gpt-6.1-sol",
+  "timeout_seconds": 600,
+  "tasks_sha256": "6d4471fcdac0a3692fe64e2d26c82f3f2f5506d11cd4657606ca5c795ddfd5f2",
+  "runner_sha256": "be5fb12d4943882c159f12f35b6cf62b8dc85fbaded39203a6afd8ac9a3f89c5",
+  "auth_runner_sha256": "c080283d516fb4342ce0b0978044d13917b8d3872a7899809cb3b089b45f62ac",
+  "core_runner_sha256": "3e35573bd76c53be2a6b9ea178982508d4d22bb29f524b43173332b55bcb82cd",
+  "reading_runner_sha256": "739f91a973bece57e2b6704a20b393e14a8b2a3d8995873a7464ff234f4a422e",
+  "trace_runner_sha256": "a834805b2b18a8960be96c26cc4d3b28bebd299d3a018e1dd5aaff6925242174",
+  "source_evidence_sha256": "bc51f949f97fca63132b6a45a1336a57dc4f2b307b458f35dffe0560f117ec62",
+  "runner_source_commit": "30d5e600393f2f245110d46bbb45f6ca77fd5fce",
+  "limits": [
+    "One observation per language in a provided repository is not external adoption or a population estimate.",
+    "Implementation choice is unconstrained; HTTP success, static calls and exact file copies are separate evidence.",
+    "Static calls and matching file bytes do not prove reachable runtime API use or model understanding.",
+    "Conventional tool caches and files of 200 bytes or less are excluded from exact source-copy evidence.",
+    "Do not pool these calls or tokens with the instructed reading experiment or infer a causal effect between them.",
+    "Shared dependency/prompt caches, server model weights and host load are not controlled; missing usage/model identities remain unknown."
+  ],
+  "planned_model_calls": 4,
+  "actual_model_calls": 4,
+  "passed": 3,
+  "blocked": null,
+  "complete": true,
+  "runs": [
+    {
+      "stack": "python",
+      "sequence": 1,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "source_unchanged": true,
+      "original_result_sha256": "9ff6364452d36ffc1b0b3b7ea79bf633f6c1f31239ad5c65c1f251225adf3edd",
+      "prompt_sha256": "e690b3b1dcf347899eb57f71da6fff020ed4680e2aff0cab8c7bc885bec228a6",
+      "trace_sha256": "a73dc4676a9d761c0ca97bc933083b1f243a282aa50e897363be0c60e2707f22",
+      "agent_seconds": 119.531,
+      "elapsed_seconds": 119.942,
+      "model_selection": "not_reported",
+      "cli_version": "codex-cli 0.167.0",
+      "tokens": {
+        "input_tokens": 185682,
+        "cached_input_tokens": 171136,
+        "output_tokens": 5333,
+        "uncached_input_tokens": 14546,
+        "total_tokens": 191015
+      },
+      "http_assertions": 143,
+      "reported_models": [],
+      "static_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "auth_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "feature_hints": {
+        "authorization": false,
+        "listing": "candidate"
+      },
+      "route_review": "pending-independent-source-review",
+      "exact_copy_counts": {
+        "auth": 0,
+        "core": 0
+      },
+      "reading_counts": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "unclassified_commands": 5
+      }
+    },
+    {
+      "stack": "go",
+      "sequence": 2,
+      "passed": false,
+      "original_http_passed": false,
+      "original_error_code": "generated-source-too-large",
+      "error_code": "postprocessing-failed",
+      "source_unchanged": true,
+      "original_result_sha256": "edacf1438237b54bb226d4724e771fb78765e7a1bcd906ecee5ec09ccc9aed7e",
+      "prompt_sha256": "2f00dbbd6b42980b625cae54428b5644fd17e09d15e6a9843a9cbb72156ea5dc",
+      "trace_sha256": "4731aa5bd25c7546cd3d2b33ede311e8e022a6b03dfbff6387fbcd065b150c5a",
+      "agent_seconds": 153.907,
+      "elapsed_seconds": 154.093,
+      "model_selection": "not_reported",
+      "cli_version": "codex-cli 0.167.0",
+      "tokens": {
+        "input_tokens": 267572,
+        "cached_input_tokens": 246016,
+        "output_tokens": 6521,
+        "uncached_input_tokens": 21556,
+        "total_tokens": 274093
+      },
+      "http_assertions": 0,
+      "reported_models": [],
+      "static_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "auth_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "feature_hints": {
+        "authorization": null,
+        "listing": null
+      },
+      "route_review": "pending-independent-source-review",
+      "exact_copy_counts": {
+        "auth": 0,
+        "core": 0
+      },
+      "reading_counts": {
+        "list": null,
+        "full_context": null,
+        "compact_context": null,
+        "doc_read_commands": null,
+        "doc_search_commands": null,
+        "unclassified_commands": null
+      }
+    },
+    {
+      "stack": "java",
+      "sequence": 3,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "source_unchanged": true,
+      "original_result_sha256": "5b657de2cf4df33efc0c8886c28a700bbda93f64dc0b0afae63c4b271ba1b5a4",
+      "prompt_sha256": "aab8edb1cd60390df5bef6b406acb851092e96a9cf28e20f15aacfd07202fbc9",
+      "trace_sha256": "d0ee4050addadbe523eb96876e641f9484fbad1b6a31854512790a58248e1446",
+      "agent_seconds": 195.586,
+      "elapsed_seconds": 197.107,
+      "model_selection": "not_reported",
+      "cli_version": "codex-cli 0.167.0",
+      "tokens": {
+        "input_tokens": 373422,
+        "cached_input_tokens": 336768,
+        "output_tokens": 8313,
+        "uncached_input_tokens": 36654,
+        "total_tokens": 381735
+      },
+      "http_assertions": 143,
+      "reported_models": [],
+      "static_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "auth_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "feature_hints": {
+        "authorization": false,
+        "listing": false
+      },
+      "route_review": "pending-independent-source-review",
+      "exact_copy_counts": {
+        "auth": 0,
+        "core": 0
+      },
+      "reading_counts": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "unclassified_commands": 10
+      }
+    },
+    {
+      "stack": "rust",
+      "sequence": 4,
+      "passed": true,
+      "original_http_passed": true,
+      "original_error_code": null,
+      "error_code": null,
+      "source_unchanged": true,
+      "original_result_sha256": "31a1e4fc0706e82ce72af1677681a0453f524574c27684fb2a20532d4bf03498",
+      "prompt_sha256": "250b85fe022f25ac9c63534fe65a6116a8364ffae176dd38b2e0111d3605e4cc",
+      "trace_sha256": "5b38613bd923c434eb85c5f1e773d14f36341387183a0fa506a419ceb894daad",
+      "agent_seconds": 205.628,
+      "elapsed_seconds": 206.627,
+      "model_selection": "not_reported",
+      "cli_version": "codex-cli 0.167.0",
+      "tokens": {
+        "input_tokens": 483829,
+        "cached_input_tokens": 463744,
+        "output_tokens": 8316,
+        "uncached_input_tokens": 20085,
+        "total_tokens": 492145
+      },
+      "http_assertions": 143,
+      "reported_models": [],
+      "static_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "auth_reuse": {
+        "passed": false,
+        "runtime_causality_proven": false
+      },
+      "feature_hints": {
+        "authorization": false,
+        "listing": false
+      },
+      "route_review": "pending-independent-source-review",
+      "exact_copy_counts": {
+        "auth": 0,
+        "core": 0
+      },
+      "reading_counts": {
+        "list": 0,
+        "full_context": 0,
+        "compact_context": 0,
+        "doc_read_commands": 0,
+        "doc_search_commands": 0,
+        "unclassified_commands": 14
+      }
+    }
+  ]
+}

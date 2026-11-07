@@ -49,6 +49,30 @@ The fixed requested model and source do not prove immutable server weights. Comp
 
 A single repeat gives **n=1 per stack/condition**. It can expose integration failures and verify that the harness runs; it cannot establish a general speed/token improvement, statistical significance, production readiness, browser UI correctness, DB-listing support or a security audit. Future efficiency claims need repeated controlled comparisons with the same recorded configuration.
 
+## Candidate reading, discovery and transfer observations
+
+The [2026-11-08 reading study](../../docs/validation-ai-reading-2026-11-08.md) preserves 24 fresh Codex exec sessions against the same clean source and local CLI 0.4.0 archive. Original independent HTTP outcomes are **23/24**, separately from corrected static evidence **24/24**. Compact guidance reduced paired input-token sums by 19.032% versus manual guidance, while uncached input increased by 16.927% and output by 12.933%. This is not a cost-saving guarantee or a registry-publication result. The [original sanitized summary](results/2026-11-08-reading-candidate-v1.json) retains every attempt; the [post-run audit](results/2026-11-08-reading-postrun-audit-v1.json) never overwrites it.
+
+These entrypoints require an explicit local archive SHA-256, matching source commit, requested model, new private output directory and the available language toolchains:
+
+```sh
+uv run --frozen --project tools python tools/core_reading_eval.py \
+  --artifact /absolute/path/feature-standards-0.4.0.tgz \
+  --artifact-sha256 <sha256> --source-commit <40-character-commit> \
+  --model gpt-6.1-sol --stack all --repeats 2 --timeout 600 \
+  --output eval-results/reading-NEW
+```
+
+Use `tools/core_discovery_eval.py` with the same artifact/source/model/output flags for four observations without prescribed library reuse. It permits independent implementations and exact copies through the HTTP boundary, then reports copies and candidate API signals separately. A source review must connect each feature to the actual product routes. These are choices in a supplied checkout, not external adoption statistics.
+
+Use `tools/core_transfer_eval.py --repeats 1` for eight separate observations comparing compact guidance with bundled `docs/ai-briefs/<stack>.md` on the fixed similar notes task. Both conditions must receive the same new archive including identical source and packaged briefs. The task changes route and permission labels, not the whole problem family; do not pool it with the original 24 sessions.
+
+Use `tools/core_postgres_eval.py --stack python --repeats 1` for one separate Python source-candidate integration observation. It requires owned PostgreSQL binaries (`FEATURE_STANDARDS_LISTING_PG_BIN` when absent from PATH) and refuses external database configuration. The grader alone creates a private cluster, seeds rows and supplies a SELECT-only app role after the model finishes. It captures task bytes, hashes runtime fixture inputs and refuses changes. The HTTP checks cover the existing 143 assertions plus six checks at the 10,003-visible-row/offset-10,000 boundary. This is neither a token comparison nor a load test.
+
+Fresh sessions do not equal internal API request counts. Raw usage includes cached input; reasoning output is not added twice. Tool-output inclusion, actual CLI argv, static public calls and HTTP behavior remain separate evidence tiers. Keep raw traces and generated programs private.
+
+The completed 2026-11-08 follow-ups are separate datasets: [unprescribed discovery](results/2026-11-08-discovery-v1.json) with [route review](results/2026-11-08-discovery-route-audit-v1.json), the [eight-session notes pilot](results/2026-11-08-notes-brief-v1.json) with [per-language/output audit](results/2026-11-08-notes-brief-postrun-audit-v1.json), and the [original PostgreSQL attempt](results/2026-11-08-postgres-candidate-v1.json) with [two artifact-only diagnostics](results/2026-11-08-postgres-artifact-diagnostics-v1.json). The notes pilot passed 8/8 with paired input-token sums 71.442% lower under brief guidance; it has only one pair per backend. All four discovery programs implemented the three features independently. The PostgreSQL original stopped at a factory-alias checker false positive; after the narrow checker fix, one diagnostic failed for a missing offline build backend and a second passed 149 checks after preparing that cache. The original model failure stays unchanged. These phases total 37 fresh model sessions; diagnostics add zero.
+
 ## Actual smoke on 2026-11-07
 
 The [original eight-call smoke](results/2026-11-07-catalog-smoke-v1.json) requested `gpt-6.1-sol` with Codex CLI `0.167.0` and a 600-second per-trial limit. All token records were complete; the trace did not report the actual model identity. The exact executed runner is preserved at commit `6036df67f750a4fdd01eae82898ae0ec6f303827`, separately from implementation source `752e4e4` and published catalog `0.3.2`.

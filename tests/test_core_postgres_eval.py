@@ -31,6 +31,16 @@ store = PostgresListing(schema=schema, table=table, columns=columns,
 def documents(user=Depends(current_user)):
     return store.page(connection, raw_query, VisibilityScope("tenant-a", user["id"]))
 """
+FACTORY_VALID = (
+    VALID.split("store = ", 1)[0]
+    + """def adapter():
+    return PostgresListing(schema=schema, table=table, columns=columns,
+                           tenant_column="tenant_id", owner_column="owner_id")
+def documents(user=Depends(current_user)):
+    store = adapter()
+    return store.page(connection, raw_query, VisibilityScope("tenant-a", user["id"]))
+"""
+)
 
 
 class SourceAndPromptTests(unittest.TestCase):
@@ -161,6 +171,55 @@ class ReuseTests(unittest.TestCase):
         text = (ROOT / "examples/core-python-postgres/app.py").read_text()
         result = self.evidence(text)
         self.assertTrue(result["passed"], result)
+
+    def test_zero_argument_top_level_factory_page_flow_is_recognized(self):
+        for text in (
+            FACTORY_VALID,
+            FACTORY_VALID.replace(
+                "def adapter():\n", 'def adapter():\n    """Fresh public reader."""\n'
+            ),
+            FACTORY_VALID.replace(
+                "from feature_standards.postgres_listing import PostgresListing, VisibilityScope",
+                "from feature_standards import postgres_listing as db",
+            )
+            .replace("PostgresListing(", "db.PostgresListing(")
+            .replace("VisibilityScope(", "db.VisibilityScope("),
+        ):
+            with self.subTest(shape="simple factory"):
+                evidence = self.evidence(text)
+                self.assertTrue(evidence["passed"], evidence)
+                self.assertIn("PostgresListing.page", evidence["public_api_calls"])
+                self.assertFalse(evidence["runtime_causality_proven"])
+
+    def test_factory_inference_rejects_unsupported_return_and_call_shapes(self):
+        for text in (
+            FACTORY_VALID.replace("def adapter():", "@decorate\ndef adapter():"),
+            FACTORY_VALID.replace("def adapter():", "async def adapter():"),
+            FACTORY_VALID.replace("def adapter():", "def adapter(option=None):"),
+            FACTORY_VALID.replace("store = adapter()", "store = adapter(option=True)"),
+            FACTORY_VALID.replace("store = adapter()", "store = adapter(1)"),
+            FACTORY_VALID.replace(
+                "    return PostgresListing(",
+                "    if condition:\n        return PostgresListing(",
+            ),
+            FACTORY_VALID.replace(
+                "def adapter():\n    return PostgresListing(",
+                "def outer():\n    def adapter():\n        return PostgresListing(",
+            ),
+            FACTORY_VALID.replace(
+                "def adapter():\n", "def adapter():\n    prepare()\n"
+            ),
+        ):
+            with self.subTest(shape="unsupported factory"):
+                self.assertFalse(self.evidence(text)["passed"])
+
+    def test_unrelated_local_page_is_not_credited_as_factory_adapter_page(self):
+        text = FACTORY_VALID.replace(
+            "def adapter():\n    return PostgresListing(",
+            "def adapter():\n    return LocalReader( ",
+        )
+        text += "\nunused = PostgresListing(schema=schema)\nclass LocalReader:\n    def __init__(self, **kwargs): pass\n    def page(self, *args): return {}\n"
+        self.assertFalse(self.evidence(text)["passed"])
 
     def test_strings_imports_and_unrelated_page_are_not_reuse(self):
         for text in (
