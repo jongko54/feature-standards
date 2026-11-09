@@ -1,0 +1,2273 @@
+{
+  "schemaVersion": 1,
+  "reportDate": "2026-11-10",
+  "timezone": "Asia/Seoul",
+  "sourceRepository": "https://github.com/jongko54/feature-standards",
+  "sourceCommit": "5119bad602dc6354824adf055c36f6922cdd115c",
+  "observationWindow": {
+    "firstTimestampedRequestUtc": "2026-11-09T15:06:09.791Z",
+    "lastNetworkObservationUtc": "2026-11-09T15:10:31.692327+00:00",
+    "clockVerifiedUtc": "2026-11-09T15:10:45Z",
+    "localDate": "2026-11-10",
+    "preliminaryUntimestampedSearch": true,
+    "notAnActivityPeriod": "A read-only discovery snapshot, not a count of executions during this window."
+  },
+  "summary": {
+    "confirmedExternalDeclaredRepositories": 0,
+    "confirmedExternalSourceIntegratedRepositories": 0,
+    "confirmedExternalRuntimeDeclarations": 0,
+    "confirmedExternalDevelopmentToolDeclarations": 0,
+    "confirmedExternalTransitiveOnlyRepositories": 0,
+    "actualRuntimeExecutions": null,
+    "totalExternalAdoptingProjects": null,
+    "adoptionRate": null,
+    "eligiblePopulationDenominator": null,
+    "coverageComplete": false,
+    "exactPackageMatchedExternalRepositories": 2,
+    "exactPackageMatchedExternalRepositoriesExcluded": 2,
+    "reviewedExternalCandidateRepositories": 8,
+    "excludedSelfRepositories": [
+      "jongko54/feature-standards"
+    ],
+    "interpretation": "No external public repository dependency declaration or product API call was proven in this bounded snapshot. Unknown/private/unindexed use remains unknown; this is not total adoption of zero."
+  },
+  "definitions": {
+    "unit": "Canonical repository URL, case-insensitive owner/name; multiple target packages and subprojects in the same repository count once.",
+    "declared": "A target's exact registry identity or Git module URL appears in a downstream manifest, explicitly classified as runtime/dev/optional/peer/build/test and direct/transitive.",
+    "sourceIntegrated": "A downstream non-example product source imports the identified package and calls its API on an application path. Import-only, generated scaffolds and dependency locks alone are insufficient.",
+    "runtimeExecuted": "Requires separate execution/production evidence; source inspection alone cannot establish it.",
+    "unknown": "Search failure, absent index entry, unsupported ecosystem or unavailable runtime evidence is null/unknown rather than zero.",
+    "exclusions": [
+      "Owner jongko54, upstream repository, upstream examples/templates, maintainer experiments",
+      "Forks and mirrors without independent product integration",
+      "Tutorial/sample-only material, package listings, registry metadata and mentions",
+      "Name collisions and partial import-token matches",
+      "Downloads, stars, clones, views and agent benchmark runs",
+      "Private source, unauthenticated private account data, telemetry"
+    ]
+  },
+  "packages": [
+    {
+      "ecosystem": "npm",
+      "name": "feature-standards",
+      "role": "context-cli",
+      "manifest": "packages/feature-standards/package.json",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/npm-release-0.3.2.json",
+      "registryUrl": "https://registry.npmjs.org/feature-standards",
+      "observedAt": "2026-11-09T15:10:30.435725+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.3.2",
+      "registryVersions": [
+        "0.0.0-stage",
+        "0.0.0-bootstrap",
+        "0.1.0",
+        "0.2.0",
+        "0.3.0",
+        "0.3.1",
+        "0.3.2"
+      ],
+      "manifestVersion": "0.4.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/packages/feature-standards/package.json#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/npm-release-0.3.2.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.0.0-stage": "staging_prerelease",
+        "0.0.0-bootstrap": "bootstrap",
+        "0.1.0": "non_prerelease_release",
+        "0.2.0": "non_prerelease_release",
+        "0.3.0": "non_prerelease_release",
+        "0.3.1": "non_prerelease_release",
+        "0.3.2": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": false
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@ugauga/create-feature-auth",
+      "role": "scaffold-generator",
+      "manifest": "packages/create-feature-auth/package.json",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/npm-workflow-release-2026-11-04.json",
+      "registryUrl": "https://registry.npmjs.org/@ugauga%2fcreate-feature-auth",
+      "observedAt": "2026-11-09T15:10:30.436051+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.2.0",
+      "registryVersions": [
+        "0.0.0-stage",
+        "0.1.0",
+        "0.1.1",
+        "0.2.0"
+      ],
+      "manifestVersion": "0.2.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/packages/create-feature-auth/package.json#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/npm-workflow-release-2026-11-04.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.0.0-stage": "staging_prerelease",
+        "0.1.0": "non_prerelease_release",
+        "0.1.1": "non_prerelease_release",
+        "0.2.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@ugauga/feature-standards-react-auth",
+      "role": "runtime-auth-sdk",
+      "manifest": "clients/react/package.json",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/npm-product-release-2026-11-03.json",
+      "registryUrl": "https://registry.npmjs.org/@ugauga%2ffeature-standards-react-auth",
+      "observedAt": "2026-11-09T15:10:30.436002+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.4",
+      "registryVersions": [
+        "0.0.0-stage",
+        "0.1.0",
+        "0.1.1",
+        "0.1.4"
+      ],
+      "manifestVersion": "0.1.4",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/clients/react/package.json#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/npm-product-release-2026-11-03.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.0.0-stage": "staging_prerelease",
+        "0.1.0": "non_prerelease_release",
+        "0.1.1": "non_prerelease_release",
+        "0.1.4": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "npm",
+      "name": "@ugauga/feature-standards-core",
+      "role": "runtime-core-sdk",
+      "manifest": "libraries/typescript/package.json",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/core-release-0.1.0.json",
+      "registryUrl": "https://registry.npmjs.org/@ugauga%2ffeature-standards-core",
+      "observedAt": "2026-11-09T15:10:30.436096+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.0",
+      "registryVersions": [
+        "0.0.0-stage",
+        "0.1.0"
+      ],
+      "manifestVersion": "0.1.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/libraries/typescript/package.json#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/core-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.0.0-stage": "staging_prerelease",
+        "0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "pypi",
+      "name": "feature-standards-python-auth",
+      "role": "runtime-auth-sdk",
+      "manifest": "implementations/python-fastapi/pyproject.toml",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/python-release-0.2.0.json",
+      "registryUrl": "https://pypi.org/pypi/feature-standards-python-auth/json",
+      "observedAt": "2026-11-09T15:10:30.693333+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.2.0",
+      "registryVersions": [
+        "0.2.0"
+      ],
+      "manifestVersion": "0.2.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/implementations/python-fastapi/pyproject.toml#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/python-release-0.2.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.2.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "pypi",
+      "name": "feature-standards-core",
+      "role": "runtime-core-sdk",
+      "manifest": "libraries/python/pyproject.toml",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/core-release-0.1.0.json",
+      "registryUrl": "https://pypi.org/pypi/feature-standards-core/json",
+      "observedAt": "2026-11-09T15:10:30.730022+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.0",
+      "registryVersions": [
+        "0.1.0"
+      ],
+      "manifestVersion": "0.2.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/libraries/python/pyproject.toml#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/core-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": false
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "feature-standards-auth",
+      "role": "runtime-auth-sdk",
+      "manifest": "implementations/rust-axum/Cargo.toml",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/rust-release-0.1.0.json",
+      "registryUrl": "https://crates.io/api/v1/crates/feature-standards-auth",
+      "observedAt": "2026-11-09T15:10:30.870625+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.0",
+      "registryVersions": [
+        "0.1.0"
+      ],
+      "manifestVersion": "0.1.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/implementations/rust-axum/Cargo.toml#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/rust-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "cargo",
+      "name": "feature-standards-core",
+      "role": "runtime-core-sdk",
+      "manifest": "libraries/rust/Cargo.toml",
+      "manifestLine": 2,
+      "releaseReceipt": "docs/core-release-0.1.0.json",
+      "registryUrl": "https://crates.io/api/v1/crates/feature-standards-core",
+      "observedAt": "2026-11-09T15:10:30.870935+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.0",
+      "registryVersions": [
+        "0.1.0"
+      ],
+      "manifestVersion": "0.1.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/libraries/rust/Cargo.toml#L2",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/core-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "go",
+      "name": "github.com/jongko54/feature-standards/implementations/go-net-http",
+      "role": "runtime-auth-sdk",
+      "manifest": "implementations/go-net-http/go.mod",
+      "manifestLine": 1,
+      "releaseReceipt": "docs/go-release-0.1.0.json",
+      "registryUrl": "https://proxy.golang.org/github.com/jongko54/feature-standards/implementations/go-net-http/@v/list",
+      "observedAt": "2026-11-09T15:10:30.871233+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": null,
+      "registryVersions": [
+        "v0.1.0"
+      ],
+      "manifestVersion": null,
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/implementations/go-net-http/go.mod#L1",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/go-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "v0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": null
+    },
+    {
+      "ecosystem": "go",
+      "name": "github.com/jongko54/feature-standards/libraries/go",
+      "role": "runtime-core-sdk",
+      "manifest": "libraries/go/go.mod",
+      "manifestLine": 1,
+      "releaseReceipt": "docs/core-release-0.1.0.json",
+      "registryUrl": "https://proxy.golang.org/github.com/jongko54/feature-standards/libraries/go/@v/list",
+      "observedAt": "2026-11-09T15:10:31.226273+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": null,
+      "registryVersions": [
+        "v0.1.0"
+      ],
+      "manifestVersion": null,
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/libraries/go/go.mod#L1",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/core-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "v0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": null
+    },
+    {
+      "ecosystem": "maven",
+      "name": "io.github.jongko54:java-spring-auth",
+      "role": "runtime-auth-sdk",
+      "manifest": "implementations/java-spring/pom.xml",
+      "manifestLine": 7,
+      "releaseReceipt": "docs/java-release-1.0.0.json",
+      "registryUrl": "https://repo.maven.apache.org/maven2/io/github/jongko54/java-spring-auth/maven-metadata.xml",
+      "observedAt": "2026-11-09T15:10:31.526350+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "1.0.0",
+      "registryVersions": [
+        "1.0.0"
+      ],
+      "manifestVersion": "1.0.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/implementations/java-spring/pom.xml#L7",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/java-release-1.0.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "1.0.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    },
+    {
+      "ecosystem": "maven",
+      "name": "io.github.jongko54:feature-standards-core",
+      "role": "runtime-core-sdk",
+      "manifest": "libraries/java/pom.xml",
+      "manifestLine": 5,
+      "releaseReceipt": "docs/core-release-0.1.0.json",
+      "registryUrl": "https://repo.maven.apache.org/maven2/io/github/jongko54/feature-standards-core/maven-metadata.xml",
+      "observedAt": "2026-11-09T15:10:31.692327+00:00",
+      "authentication": "anonymous",
+      "httpStatus": 200,
+      "registryLatest": "0.1.0",
+      "registryVersions": [
+        "0.1.0"
+      ],
+      "manifestVersion": "0.1.0",
+      "manifestUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/libraries/java/pom.xml#L5",
+      "releaseReceiptUrl": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/docs/core-release-0.1.0.json",
+      "publicPackageState": "registry_observed",
+      "versionCategories": {
+        "0.1.0": "non_prerelease_release"
+      },
+      "sourceVersionIsPublished": true
+    }
+  ],
+  "versionCoverage": {
+    "registryPackages": 12,
+    "registryVersionsObserved": 25,
+    "depsDevSupportedPackagesQueried": 10,
+    "depsDevVersionsQueried": 23,
+    "depsDevNonPrereleaseVersionsQueried": 18,
+    "depsDevStagingPrereleasesQueried": 4,
+    "depsDevBootstrapVersionsQueried": 1,
+    "goVersionsCoveredByProxyAndPkgGoDev": 2,
+    "notes": "23 deps.dev queries count package versions, not projects. Role is recorded on each package: context CLI, scaffold generator, auth SDK, core SDK."
+  },
+  "publicGraphs": {
+    "depsDev": [
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.0.0-stage:dependents",
+        "observedAt": "2026-11-09T15:07:39.252717+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.0.0-bootstrap:dependents",
+        "observedAt": "2026-11-09T15:07:39.253011+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.253092+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.2.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.253144+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.3.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.253187+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.3.1:dependents",
+        "observedAt": "2026-11-09T15:07:39.519716+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/feature-standards/versions/0.3.2:dependents",
+        "observedAt": "2026-11-09T15:07:39.567389+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-react-auth/versions/0.0.0-stage:dependents",
+        "observedAt": "2026-11-09T15:07:39.634864+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-react-auth/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.684183+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-react-auth/versions/0.1.1:dependents",
+        "observedAt": "2026-11-09T15:07:39.717295+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-react-auth/versions/0.1.4:dependents",
+        "observedAt": "2026-11-09T15:07:39.720554+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Fcreate-feature-auth/versions/0.0.0-stage:dependents",
+        "observedAt": "2026-11-09T15:07:39.724244+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Fcreate-feature-auth/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.832119+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Fcreate-feature-auth/versions/0.1.1:dependents",
+        "observedAt": "2026-11-09T15:07:39.956099+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Fcreate-feature-auth/versions/0.2.0:dependents",
+        "observedAt": "2026-11-09T15:07:39.956405+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-core/versions/0.0.0-stage:dependents",
+        "observedAt": "2026-11-09T15:07:40.015188+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/npm/packages/%40ugauga%2Ffeature-standards-core/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.041465+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/pypi/packages/feature-standards-core/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.041700+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/pypi/packages/feature-standards-python-auth/versions/0.2.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.072230+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/cargo/packages/feature-standards-core/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.092235+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/cargo/packages/feature-standards-auth/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.147465+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/maven/packages/io.github.jongko54%3Afeature-standards-core/versions/0.1.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.180236+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      },
+      {
+        "url": "https://api.deps.dev/v3alpha/systems/maven/packages/io.github.jongko54%3Ajava-spring-auth/versions/1.0.0:dependents",
+        "observedAt": "2026-11-09T15:07:40.208113+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependentCount": 0,
+          "directDependentCount": 0,
+          "indirectDependentCount": 0
+        }
+      }
+    ],
+    "cratesReverseDependencies": [
+      {
+        "url": "https://crates.io/api/v1/crates/feature-standards-core/reverse_dependencies?page=1&per_page=100",
+        "observedAt": "2026-11-09T15:07:40.255168+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependencies": [],
+          "versions": [],
+          "meta": {
+            "total": 0
+          }
+        }
+      },
+      {
+        "url": "https://crates.io/api/v1/crates/feature-standards-auth/reverse_dependencies?page=1&per_page=100",
+        "observedAt": "2026-11-09T15:07:40.293091+00:00",
+        "authentication": "anonymous",
+        "status": 200,
+        "rateLimit": {},
+        "body": {
+          "dependencies": [],
+          "versions": [],
+          "meta": {
+            "total": 0
+          }
+        }
+      }
+    ],
+    "goImportedBy": [
+      {
+        "url": "https://pkg.go.dev/github.com/jongko54/feature-standards/libraries/go/authorization?tab=importedby",
+        "observedAt": "2026-11-09T15:08:27.315649+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "noKnownImportersObserved": true,
+        "note": "Index observation, not total project population."
+      },
+      {
+        "url": "https://pkg.go.dev/github.com/jongko54/feature-standards/libraries/go/listing?tab=importedby",
+        "observedAt": "2026-11-09T15:08:27.698537+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "noKnownImportersObserved": true,
+        "note": "Index observation, not total project population."
+      },
+      {
+        "url": "https://pkg.go.dev/github.com/jongko54/feature-standards/implementations/go-net-http/auth?tab=importedby",
+        "observedAt": "2026-11-09T15:08:27.704508+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "noKnownImportersObserved": true,
+        "note": "Index observation, not total project population."
+      }
+    ],
+    "githubDependents": [
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents",
+        "observedAt": "2026-11-09T15:08:26.034005+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "default",
+        "visiblePackageOptions": [
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg2NTg0MDgw",
+            "label": "feature-standards"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg2NTg0MDkz",
+            "label": "@ugauga/create-feature-auth"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk4MjI0MDkz",
+            "label": "@ugauga/feature-standards-core"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03MjgzMTc5NTY0",
+            "label": "@ugauga/feature-standards-react-auth"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03MjkzMTI0NjM1",
+            "label": "feature-standards-auth"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk2MjM0NDI1",
+            "label": "feature-standards-core"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg0NjQ1ODgz",
+            "label": "github.com/jongko54/feature-standards/implementations/go-net-http"
+          },
+          {
+            "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk2NDA3NDk1",
+            "label": "github.com/jongko54/feature-standards/libraries/go"
+          }
+        ],
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg2NTg0MDgw",
+        "observedAt": "2026-11-09T15:08:26.473590+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "feature-standards",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg2NTg0MDkz",
+        "observedAt": "2026-11-09T15:08:26.473847+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "@ugauga/create-feature-auth",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk4MjI0MDkz",
+        "observedAt": "2026-11-09T15:08:26.474082+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "@ugauga/feature-standards-core",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03MjgzMTc5NTY0",
+        "observedAt": "2026-11-09T15:08:26.852666+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "@ugauga/feature-standards-react-auth",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03MjkzMTI0NjM1",
+        "observedAt": "2026-11-09T15:08:26.881627+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "feature-standards-auth",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk2MjM0NDI1",
+        "observedAt": "2026-11-09T15:08:26.893629+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "feature-standards-core",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjg0NjQ1ODgz",
+        "observedAt": "2026-11-09T15:08:27.295265+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "github.com/jongko54/feature-standards/implementations/go-net-http",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      },
+      {
+        "url": "https://github.com/jongko54/feature-standards/network/dependents?package_id=UGFja2FnZS03Mjk2NDA3NDk1",
+        "observedAt": "2026-11-09T15:08:27.311035+00:00",
+        "status": 200,
+        "authentication": "anonymous",
+        "selectedPackage": "github.com/jongko54/feature-standards/libraries/go",
+        "noDependentsBlankStateObserved": true,
+        "paginationLinks": [],
+        "note": "HTML blank state observed; no repository count inferred for missing package selectors."
+      }
+    ],
+    "limitations": [
+      "deps.dev counts distinct public dependent packages by version, not distinct application repositories or users; do not sum across versions or ecosystems.",
+      "deps.dev GetDependents currently documents npm/Cargo/Maven/PyPI, not Go.",
+      "GitHub exposed eight package choices; selectors did not independently label PyPI or Maven entries. Same package names across ecosystems remain ambiguous.",
+      "The Go module root is not a substitute for actual package importers; authorization, listing and auth subpackages were checked."
+    ]
+  },
+  "candidates": [
+    {
+      "repository": "szabgab/pydigger-data",
+      "repositoryUrl": "https://github.com/szabgab/pydigger-data",
+      "status": "excluded_metadata_collection",
+      "targetPackages": [
+        "pypi:feature-standards-core",
+        "pypi:feature-standards-python-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_applicable",
+      "directness": "not_applicable",
+      "reason": "PyPI package name, version and upstream repository metadata JSON. These records are package listings, not application dependency manifests or API calls.",
+      "evidence": [
+        {
+          "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json#L1-L4",
+          "commit": "75eaaf042600f2e24342f9d31d2676fa90958f2d",
+          "path": "data/pypi/fe/feature-standards-core.json",
+          "lineStart": 1,
+          "lineEnd": 4,
+          "blobSha": "180e3d86e8493527035a3c3d09cfc343d2f3818f",
+          "identifierOrShortEvidence": "name=feature-standards-core; version=0.1.0"
+        },
+        {
+          "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json#L10-L20",
+          "commit": "75eaaf042600f2e24342f9d31d2676fa90958f2d",
+          "path": "data/pypi/fe/feature-standards-core.json",
+          "lineStart": 10,
+          "lineEnd": 20,
+          "blobSha": "180e3d86e8493527035a3c3d09cfc343d2f3818f",
+          "identifierOrShortEvidence": "author/repository/project_urls are upstream metadata"
+        },
+        {
+          "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json#L1-L4",
+          "commit": "75eaaf042600f2e24342f9d31d2676fa90958f2d",
+          "path": "data/pypi/fe/feature-standards-python-auth.json",
+          "lineStart": 1,
+          "lineEnd": 4,
+          "blobSha": "088e8ee234f2407dda998ae11d90e00a9fadd2d2",
+          "identifierOrShortEvidence": "name=feature-standards-python-auth; version=0.2.0"
+        }
+      ],
+      "publicRepositoryMetadata": {
+        "observedAt": "2026-11-09T15:09:55.823879+00:00",
+        "fork": false,
+        "mirrorUrl": null
+      },
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "rust-lang/crates.io-index",
+      "repositoryUrl": "https://github.com/rust-lang/crates.io-index",
+      "status": "excluded_registry_index",
+      "targetPackages": [
+        "cargo:feature-standards-core",
+        "cargo:feature-standards-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_applicable",
+      "directness": "not_applicable",
+      "reason": "Official crates.io index entries describe the target crates themselves and their dependencies. They are not downstream dependents.",
+      "evidence": [
+        {
+          "url": "https://github.com/rust-lang/crates.io-index/blob/866dcc269703607801fc412bfbe7a56d5aa0141d/fe/at/feature-standards-core#L1-L1",
+          "commit": "866dcc269703607801fc412bfbe7a56d5aa0141d",
+          "path": "fe/at/feature-standards-core",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "blobSha": "036d84ef62bc751db9fe34ead5fdc315f6fe1f64",
+          "identifierOrShortEvidence": "name=feature-standards-core; vers=0.1.0"
+        },
+        {
+          "url": "https://github.com/rust-lang/crates.io-index/blob/866dcc269703607801fc412bfbe7a56d5aa0141d/fe/at/feature-standards-auth#L1-L1",
+          "commit": "866dcc269703607801fc412bfbe7a56d5aa0141d",
+          "path": "fe/at/feature-standards-auth",
+          "lineStart": 1,
+          "lineEnd": 1,
+          "blobSha": "e9f5b6512101895de72ef71a0a0cb766f15232c7",
+          "identifierOrShortEvidence": "name=feature-standards-auth; vers=0.1.0"
+        }
+      ],
+      "publicRepositoryMetadata": {
+        "observedAt": "2026-11-09T15:09:56.544437+00:00",
+        "fork": false,
+        "mirrorUrl": null
+      },
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "azens1995/java-spring-auth",
+      "repositoryUrl": "https://github.com/azens1995/java-spring-auth",
+      "status": "excluded_name_collision",
+      "targetPackages": [
+        "maven:io.github.jongko54:java-spring-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_established",
+      "directness": "not_established",
+      "reason": "The matched term names this repository's own different Maven artifact. Full target coordinates were not evidenced by this match; this is not a repository-wide absence claim.",
+      "evidence": [
+        {
+          "url": "https://github.com/azens1995/java-spring-auth/blob/239560cc34097df9ef1b653e9acbf5e15cdf9f36/pom.xml#L12-L14",
+          "commit": "239560cc34097df9ef1b653e9acbf5e15cdf9f36",
+          "path": "pom.xml",
+          "lineStart": 12,
+          "lineEnd": 14,
+          "blobSha": "e0c34d2038b308c98869411baa7f8957b99023b5",
+          "identifierOrShortEvidence": "dev.eklak:java-spring-auth"
+        }
+      ],
+      "publicRepositoryMetadata": null,
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "azens1995/java-spring-auth-features",
+      "repositoryUrl": "https://github.com/azens1995/java-spring-auth-features",
+      "status": "excluded_name_collision",
+      "targetPackages": [
+        "maven:io.github.jongko54:java-spring-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_established",
+      "directness": "not_established",
+      "reason": "The matched term names this repository's own different Maven artifact. Full target coordinates were not evidenced by this match; this is not a repository-wide absence claim.",
+      "evidence": [
+        {
+          "url": "https://github.com/azens1995/java-spring-auth-features/blob/e85baf03d61817f9543c7ea7d5ad93a65e5db2b5/pom.xml#L12-L14",
+          "commit": "e85baf03d61817f9543c7ea7d5ad93a65e5db2b5",
+          "path": "pom.xml",
+          "lineStart": 12,
+          "lineEnd": 14,
+          "blobSha": "0c2eb90ec1d78c8a9f620df613f932678d5ac9a4",
+          "identifierOrShortEvidence": "dev.eklak:java-spring-auth-features"
+        }
+      ],
+      "publicRepositoryMetadata": null,
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "Cr2do/spring-boot-authentication",
+      "repositoryUrl": "https://github.com/Cr2do/spring-boot-authentication",
+      "status": "excluded_name_collision",
+      "targetPackages": [
+        "maven:io.github.jongko54:java-spring-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_established",
+      "directness": "not_established",
+      "reason": "The matched term names this repository's own different Maven artifact. Full target coordinates were not evidenced by this match; this is not a repository-wide absence claim.",
+      "evidence": [
+        {
+          "url": "https://github.com/Cr2do/spring-boot-authentication/blob/5013c747cd80df1f2e25b4b15ca46c094fbedb3c/pom.xml#L11-L13",
+          "commit": "5013c747cd80df1f2e25b4b15ca46c094fbedb3c",
+          "path": "pom.xml",
+          "lineStart": 11,
+          "lineEnd": 13,
+          "blobSha": "e47445c32cba647db0e3fa37955449706ecd1a13",
+          "identifierOrShortEvidence": "com.example:java-spring-authentication"
+        }
+      ],
+      "publicRepositoryMetadata": null,
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "wavekanit/Java-Spring-Authen-System",
+      "repositoryUrl": "https://github.com/wavekanit/Java-Spring-Authen-System",
+      "status": "excluded_name_collision",
+      "targetPackages": [
+        "maven:io.github.jongko54:java-spring-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_established",
+      "directness": "not_established",
+      "reason": "The matched term names this repository's own different Maven artifact. Full target coordinates were not evidenced by this match; this is not a repository-wide absence claim.",
+      "evidence": [
+        {
+          "url": "https://github.com/wavekanit/Java-Spring-Authen-System/blob/dacdb1ccaf984970689fa735dbb226d4544bbd53/pom.xml#L12-L14",
+          "commit": "dacdb1ccaf984970689fa735dbb226d4544bbd53",
+          "path": "pom.xml",
+          "lineStart": 12,
+          "lineEnd": 14,
+          "blobSha": "c694fa3e0f459bc3540fe7cd57bb9346a578813e",
+          "identifierOrShortEvidence": "com.wavekanit:Java-Spring-Authen-System"
+        }
+      ],
+      "publicRepositoryMetadata": null,
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "Daniel112300/my-website",
+      "repositoryUrl": "https://github.com/Daniel112300/my-website",
+      "status": "excluded_local_module_collision",
+      "targetPackages": [
+        "pypi:feature-standards-python-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_applicable_to_target",
+      "directness": "local_module_not_target_package",
+      "reason": "The feature_auth import resolves to a local Flask Blueprint module. The target publishes a FastAPI package; a shared import token alone is not identity evidence.",
+      "evidence": [
+        {
+          "url": "https://github.com/Daniel112300/my-website/blob/d32a982be172dc79bc04309164496b94eaa981f3/main_end/my-website-main/smart-energy/app.py#L32-L33",
+          "commit": "d32a982be172dc79bc04309164496b94eaa981f3",
+          "path": "main_end/my-website-main/smart-energy/app.py",
+          "lineStart": 32,
+          "lineEnd": 33,
+          "blobSha": "ceb375308aebc504f9273f67f9e113133815cf21",
+          "identifierOrShortEvidence": "from feature_auth import bp; register_blueprint"
+        },
+        {
+          "url": "https://github.com/Daniel112300/my-website/blob/d32a982be172dc79bc04309164496b94eaa981f3/main_end/my-website-main/smart-energy/feature_auth.py#L1-L5",
+          "commit": "d32a982be172dc79bc04309164496b94eaa981f3",
+          "path": "main_end/my-website-main/smart-energy/feature_auth.py",
+          "lineStart": 1,
+          "lineEnd": 5,
+          "blobSha": "ca03f04ddf0fc9a4a9974af18acb9c2bc17c69f5",
+          "identifierOrShortEvidence": "Local feature_auth.py imports Flask Blueprint and declares bp"
+        },
+        {
+          "url": "https://github.com/Daniel112300/my-website/blob/d32a982be172dc79bc04309164496b94eaa981f3/main_end/my-website-main/smart-energy/requirements.txt#L1-L9",
+          "commit": "d32a982be172dc79bc04309164496b94eaa981f3",
+          "path": "main_end/my-website-main/smart-energy/requirements.txt",
+          "lineStart": 1,
+          "lineEnd": 9,
+          "blobSha": "e1a013f6673e9735bf19a053420fde3a528dd6ab",
+          "identifierOrShortEvidence": "Flask application dependency list; no target package declaration in this file"
+        }
+      ],
+      "publicRepositoryMetadata": {
+        "observedAt": "2026-11-09T15:09:54.277212+00:00",
+        "fork": false,
+        "mirrorUrl": null
+      },
+      "countedAsExternalAdopter": false
+    },
+    {
+      "repository": "Shadow-linux/agent-loop",
+      "repositoryUrl": "https://github.com/Shadow-linux/agent-loop",
+      "status": "excluded_substring_collision",
+      "targetPackages": [
+        "pypi:feature-standards-python-auth"
+      ],
+      "declaredDependencyEvidence": [],
+      "observedProductCallEvidence": [],
+      "dependencyKind": "not_applicable",
+      "directness": "not_applicable",
+      "reason": "REST phrase query matched feature_authority_support, not the feature_auth module. Three matches belong to one repository.",
+      "evidence": [
+        {
+          "url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-feature-context.py#L21-L30",
+          "commit": "48a8460b92130b20edd132ceb19884cf8e9c8145",
+          "path": "scripts/check-feature-context.py",
+          "lineStart": 21,
+          "lineEnd": 30,
+          "blobSha": "cf8e84dc1ca52010d52751f4d22a000ab9b6a838",
+          "identifierOrShortEvidence": "from feature_authority_support import ..."
+        },
+        {
+          "url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-concept-foundation-trace.py#L20-L23",
+          "commit": "48a8460b92130b20edd132ceb19884cf8e9c8145",
+          "path": "scripts/check-concept-foundation-trace.py",
+          "lineStart": 20,
+          "lineEnd": 23,
+          "blobSha": "fc967b1d638eef91c8fd529010a583d4c073c2c0",
+          "identifierOrShortEvidence": "from feature_authority_support import ..."
+        },
+        {
+          "url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-requirement-product-definition.py#L22-L25",
+          "commit": "48a8460b92130b20edd132ceb19884cf8e9c8145",
+          "path": "scripts/check-requirement-product-definition.py",
+          "lineStart": 22,
+          "lineEnd": 25,
+          "blobSha": "263fc66806f788bd80ecb13ec5f6c30009eba24a",
+          "identifierOrShortEvidence": "from feature_authority_support import ..."
+        }
+      ],
+      "publicRepositoryMetadata": {
+        "observedAt": "2026-11-09T15:09:55.341706+00:00",
+        "fork": false,
+        "mirrorUrl": null
+      },
+      "countedAsExternalAdopter": false
+    }
+  ],
+  "excludedSelf": [
+    {
+      "repository": "jongko54/feature-standards",
+      "repositoryUrl": "https://github.com/jongko54/feature-standards",
+      "status": "excluded_self",
+      "reason": "Upstream repository, examples, generated consumer templates and maintainer experiments share one owner and are excluded.",
+      "evidence": [
+        {
+          "url": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/examples/core-go/go.mod#L5-L8",
+          "commit": "5119bad602dc6354824adf055c36f6922cdd115c",
+          "path": "examples/core-go/go.mod",
+          "lineStart": 5,
+          "lineEnd": 8,
+          "identifierOrShortEvidence": "Direct require declarations for both project Go modules; local replace lines 21-23"
+        },
+        {
+          "url": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/examples/core-go/main.go#L135-L153",
+          "commit": "5119bad602dc6354824adf055c36f6922cdd115c",
+          "path": "examples/core-go/main.go",
+          "lineStart": 135,
+          "lineEnd": 153,
+          "identifierOrShortEvidence": "policy.Decide, listing.ParseQuery, listing.Page in upstream example"
+        }
+      ],
+      "countedAsExternalAdopter": false
+    }
+  ],
+  "confirmedExternalProjects": [],
+  "searches": {
+    "connector": [
+      {
+        "provider": "GitHub connector",
+        "query": "feature-standards",
+        "observedAt": null,
+        "timestampNote": "Preliminary discovery before first timestamped request; no exact tool timestamp retained",
+        "topn": 100,
+        "pagination": "No cursor/page; top 100 only",
+        "returnedFileCount": 100,
+        "totalMatchCount": null,
+        "searchCapReached": true,
+        "resultReferences": [
+          {
+            "url": "https://github.com/rust-lang/crates.io-index/blob/56678295beb3cead4889cd59862d4e6b06ba5bca/fe/at/feature-standards-core",
+            "path": "fe/at/feature-standards-core"
+          },
+          {
+            "url": "https://github.com/rust-lang/crates.io-index/blob/56678295beb3cead4889cd59862d4e6b06ba5bca/fe/at/feature-standards-auth",
+            "path": "fe/at/feature-standards-auth"
+          },
+          {
+            "url": "https://github.com/0xbow-io/privacy-pools-v2-monorepo/blob/61fac03acd1fc306164ddc234f7fac4147d04493/.claude/agents/feature-standards-auditor.md",
+            "path": ".claude/agents/feature-standards-auditor.md"
+          },
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json",
+            "path": "data/pypi/fe/feature-standards-core.json"
+          },
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json",
+            "path": "data/pypi/fe/feature-standards-python-auth.json"
+          }
+        ],
+        "savedReferencesTruncated": true
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "@ugauga/feature-standards-react-auth",
+        "observedAt": "2026-11-09T15:06:44.594Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "@ugauga/feature-standards-core",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "@ugauga/create-feature-auth",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature-standards-python-auth",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 1,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json",
+            "path": "data/pypi/fe/feature-standards-python-auth.json"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature-standards-core",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 2,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/rust-lang/crates.io-index/blob/56678295beb3cead4889cd59862d4e6b06ba5bca/fe/at/feature-standards-core",
+            "path": "fe/at/feature-standards-core"
+          },
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json",
+            "path": "data/pypi/fe/feature-standards-core.json"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature-standards-auth",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 1,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/rust-lang/crates.io-index/blob/56678295beb3cead4889cd59862d4e6b06ba5bca/fe/at/feature-standards-auth",
+            "path": "fe/at/feature-standards-auth"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "github.com/jongko54/feature-standards",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 2,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json",
+            "path": "data/pypi/fe/feature-standards-core.json"
+          },
+          {
+            "url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json",
+            "path": "data/pypi/fe/feature-standards-python-auth.json"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "io.github.jongko54",
+        "observedAt": "2026-11-09T15:06:09.798Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 9,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/jongko54/webEmbedding/blob/50c9ecf81fbb43e269e27c1962a2cbc031d691c0/llms.txt",
+            "path": "llms.txt"
+          },
+          {
+            "url": "https://github.com/jongko54/webEmbedding/blob/50c9ecf81fbb43e269e27c1962a2cbc031d691c0/README.md",
+            "path": "README.md"
+          },
+          {
+            "url": "https://github.com/jongko54/webEmbedding/blob/50c9ecf81fbb43e269e27c1962a2cbc031d691c0/docs/ai-distribution.md",
+            "path": "docs/ai-distribution.md"
+          },
+          {
+            "url": "https://github.com/jongko54/webEmbedding/blob/50c9ecf81fbb43e269e27c1962a2cbc031d691c0/server.json",
+            "path": "server.json"
+          },
+          {
+            "url": "https://github.com/decocms/mcps/blob/aaa10ee2f2a3e45ce503d20b207a86781e253c9c/registry/server/lib/allowlist.ts",
+            "path": "registry/server/lib/allowlist.ts"
+          },
+          {
+            "url": "https://github.com/shigeki7777/sasame-mcp-observatory/blob/6461befa3a22f5ca2936c41af56bcd33ed112270/PORTFOLIOS/devtools.md",
+            "path": "PORTFOLIOS/devtools.md"
+          },
+          {
+            "url": "https://github.com/jongko54/webEmbedding/blob/50c9ecf81fbb43e269e27c1962a2cbc031d691c0/package.json",
+            "path": "package.json"
+          },
+          {
+            "url": "https://github.com/GautamTalksDev/Plumbline/blob/c8cb398b3a9f1877033278b72770b319c01ddc0f/site/log/servers/ca.json",
+            "path": "site/log/servers/ca.json"
+          },
+          {
+            "url": "https://github.com/YugantM/hvtracker/blob/dc89306f34604b2dd097eaeba061b6b6632fa649/blog_static/who-ships-your-mcp-servers/sample.csv",
+            "path": "blog_static/who-ships-your-mcp-servers/sample.csv"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "github.com/jongko54/feature-standards/libraries/go",
+        "observedAt": "2026-11-09T15:06:45.406Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "github.com/jongko54/feature-standards/implementations/go-net-http",
+        "observedAt": "2026-11-09T15:06:46.162Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "java-spring-auth",
+        "observedAt": "2026-11-09T15:06:46.778Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 21,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/Ventixz/daily-projects/blob/b031d8d7bea73348d7a6f23f72e3b0a2ae8cca82/2026-09-15-java-spring-auth/LEARNING.md",
+            "path": "2026-09-15-java-spring-auth/LEARNING.md"
+          },
+          {
+            "url": "https://github.com/gabriel-q7/java-spring-auth/blob/f644f3326e117b1cb7b69975fbc58318341cfd1c/README.md",
+            "path": "README.md"
+          },
+          {
+            "url": "https://github.com/azens1995/java-spring-auth-features/blob/e85baf03d61817f9543c7ea7d5ad93a65e5db2b5/pom.xml",
+            "path": "pom.xml"
+          },
+          {
+            "url": "https://github.com/azens1995/java-spring-auth/blob/239560cc34097df9ef1b653e9acbf5e15cdf9f36/pom.xml",
+            "path": "pom.xml"
+          },
+          {
+            "url": "https://github.com/KKloudTarus/synapse-ce/blob/4c6fc8036a8b6b08ab3bb1e37a160a277904706e/scripts/langpack/specs_java_spring_dep.py",
+            "path": "scripts/langpack/specs_java_spring_dep.py"
+          },
+          {
+            "url": "https://github.com/adyen-examples/adyen-java-spring-online-payments/blob/16d8df1215fe5ef46c7035753d06807d2bc13d72/authorisation-adjustment-example/startDocker.sh",
+            "path": "authorisation-adjustment-example/startDocker.sh"
+          },
+          {
+            "url": "https://github.com/Shusmoy108/Java-Spring-Authentication-Module/blob/d7039dd05b244c5c4d0c60db2e61941470caf27e/README.md",
+            "path": "README.md"
+          },
+          {
+            "url": "https://github.com/Pedro85/java-spring-authentication-jwt/blob/22957c4b19361756db04b887d48939bea7846027/README.md",
+            "path": "README.md"
+          },
+          {
+            "url": "https://github.com/leekh8/leekh8.github.io/blob/c62d8e31006bc1e14ca71bf4c0b37e9bcefa34a2/legacy-redirects.js",
+            "path": "legacy-redirects.js"
+          },
+          {
+            "url": "https://github.com/Cr2do/spring-boot-authentication/blob/5013c747cd80df1f2e25b4b15ca46c094fbedb3c/pom.xml",
+            "path": "pom.xml"
+          },
+          {
+            "url": "https://github.com/KKloudTarus/synapse-ce/blob/4c6fc8036a8b6b08ab3bb1e37a160a277904706e/scripts/langpack/.generated_keys.json",
+            "path": "scripts/langpack/.generated_keys.json"
+          },
+          {
+            "url": "https://github.com/leekh8/leekh8.github.io/blob/c62d8e31006bc1e14ca71bf4c0b37e9bcefa34a2/contents/posts/Security/owasp-top10-2025/index.md",
+            "path": "contents/posts/Security/owasp-top10-2025/index.md"
+          },
+          {
+            "url": "https://github.com/wavekanit/Java-Spring-Authen-System/blob/dacdb1ccaf984970689fa735dbb226d4544bbd53/pom.xml",
+            "path": "pom.xml"
+          },
+          {
+            "url": "https://github.com/TobiahRex/zeplar/blob/731a7b56c5d44409e6424fbb52570084f6716183/src/data/patterns/oauth-2-0.ts",
+            "path": "src/data/patterns/oauth-2-0.ts"
+          },
+          {
+            "url": "https://github.com/leekh8/leekh8.github.io/blob/c62d8e31006bc1e14ca71bf4c0b37e9bcefa34a2/contents/posts/Security/http-security-headers/index.md",
+            "path": "contents/posts/Security/http-security-headers/index.md"
+          },
+          {
+            "url": "https://github.com/leekh8/leekh8.github.io/blob/c62d8e31006bc1e14ca71bf4c0b37e9bcefa34a2/contents/posts/Security/owasp-api-security-2023/index.md",
+            "path": "contents/posts/Security/owasp-api-security-2023/index.md"
+          },
+          {
+            "url": "https://github.com/leekh8/leekh8.github.io/blob/c62d8e31006bc1e14ca71bf4c0b37e9bcefa34a2/contents/posts/Security/jwt-oauth-session-security/index.md",
+            "path": "contents/posts/Security/jwt-oauth-session-security/index.md"
+          },
+          {
+            "url": "https://github.com/Cr2do/spring-boot-authentication/blob/5013c747cd80df1f2e25b4b15ca46c094fbedb3c/src/main/resources/application.yml",
+            "path": "src/main/resources/application.yml"
+          },
+          {
+            "url": "https://github.com/wakamex/github/blob/f886dbd8003ac6840b03c7d934c61d37cea0c197/users/thescown.csv",
+            "path": "users/thescown.csv"
+          },
+          {
+            "url": "https://github.com/wavekanit/Java-Spring-Authen-System/blob/dacdb1ccaf984970689fa735dbb226d4544bbd53/src/main/resources/application.properties",
+            "path": "src/main/resources/application.properties"
+          },
+          {
+            "url": "https://github.com/KKloudTarus/synapse-ce/blob/4c6fc8036a8b6b08ab3bb1e37a160a277904706e/internal/infrastructure/rulecatalog/testdata/rule_keys.txt",
+            "path": "internal/infrastructure/rulecatalog/testdata/rule_keys.txt"
+          }
+        ],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature_standards_core",
+        "observedAt": "2026-11-09T15:06:47.935Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature_standards_python_auth",
+        "observedAt": "2026-11-09T15:06:49.089Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature_auth",
+        "observedAt": "2026-11-09T15:08:27.042Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 100,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": true,
+        "resultReferences": [
+          {
+            "url": "https://github.com/mathiasertl/django-xmpp-server-list/blob/9ba39e313a7cf1b6987fda303992c7ffdb921443/xmpp/plugins/auth.py",
+            "path": "xmpp/plugins/auth.py"
+          },
+          {
+            "url": "https://github.com/flowork-dev/Flowork-OS/blob/4e3a16c7d92474e4ecdec72bd6b94841bb61e503/agent/feature_auth.go",
+            "path": "agent/feature_auth.go"
+          },
+          {
+            "url": "https://github.com/DanielLavrushin/b4/blob/5fc0a14a13eacdf5180c58976299e3c1f3183bd4/installer/features/auth.sh",
+            "path": "installer/features/auth.sh"
+          },
+          {
+            "url": "https://github.com/smartwe-jp/StellaVia-App/blob/e91e9a990e41317d3e21bac83ce037e3f5f1d17f/fundex/docs/feature_auth_walkthrough.md",
+            "path": "fundex/docs/feature_auth_walkthrough.md"
+          },
+          {
+            "url": "https://github.com/transilienceai/communitytools/blob/95fdc128af4ca1ae16b3226f9430f1bad97b0656/benchmarks/OVERVIEW.md",
+            "path": "benchmarks/OVERVIEW.md"
+          }
+        ],
+        "savedReferencesTruncated": true,
+        "notes": "Broad alias or multiword search; returned excerpts contain unrelated terms; no exact import proven by this query."
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "dev.featurestandards.core",
+        "observedAt": "2026-11-09T15:08:27.042Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature_standards_auth",
+        "observedAt": "2026-11-09T15:08:27.042Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "create-feature-auth",
+        "observedAt": "2026-11-09T15:08:27.042Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature-standards-core io.github.jongko54",
+        "observedAt": "2026-11-09T15:08:27.042Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "feature_standards",
+        "observedAt": "2026-11-09T15:08:43.530Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 90,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/LesFrPinter/ProDoc/blob/ebbdd71d1635c347d19bab3d142bdd2ef46f7764/Views/Feature_Standards.xaml.cs",
+            "path": "Views/Feature_Standards.xaml.cs"
+          },
+          {
+            "url": "https://github.com/ruhi16/CoopSolutions/blob/961c56a693a906295df87e3976d90f018cbe66d4/database/migrations/2025_07_05_062345_create_ec07_loan_scheme_feature_standards_table.php",
+            "path": "database/migrations/2025_07_05_062345_create_ec07_loan_scheme_feature_standards_table.php"
+          },
+          {
+            "url": "https://github.com/pletka-io/pletka/blob/9f745c5436e506d8b581293579ff1cdfc7af91a8/pkg/weave/content/pages/home.en.md",
+            "path": "pkg/weave/content/pages/home.en.md"
+          },
+          {
+            "url": "https://github.com/astro/collectd/blob/e479531c6ebe1b21630685a26b4805b37ccef362/configure.in",
+            "path": "configure.in"
+          },
+          {
+            "url": "https://github.com/pletka-io/pletka/blob/9f745c5436e506d8b581293579ff1cdfc7af91a8/pkg/weave/content/pages-edits/home.nl.md",
+            "path": "pkg/weave/content/pages-edits/home.nl.md"
+          }
+        ],
+        "savedReferencesTruncated": true,
+        "notes": "Broad alias or multiword search; returned excerpts contain unrelated terms; no exact import proven by this query."
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "from feature_auth import",
+        "observedAt": "2026-11-09T15:08:43.530Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 100,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": true,
+        "resultReferences": [
+          {
+            "url": "https://github.com/mathiasertl/django-xmpp-server-list/blob/9ba39e313a7cf1b6987fda303992c7ffdb921443/xmpp/plugins/auth.py",
+            "path": "xmpp/plugins/auth.py"
+          },
+          {
+            "url": "https://github.com/teklund/barrel_file_lints/blob/94d0bc1ec2e022e16ce0d677d2d0179a575c225d/lib/src/rules/avoid_self_barrel_import.dart",
+            "path": "lib/src/rules/avoid_self_barrel_import.dart"
+          },
+          {
+            "url": "https://github.com/teklund/barrel_file_lints/blob/94d0bc1ec2e022e16ce0d677d2d0179a575c225d/lib/src/fixes/replace_with_barrel_import.dart",
+            "path": "lib/src/fixes/replace_with_barrel_import.dart"
+          },
+          {
+            "url": "https://github.com/dbd-fish/templete_web_system/blob/1feb604e171975e7b34b14d22ff2cd0e6df6e1d3/backend/api/v1/features/feature_auth/security.py",
+            "path": "backend/api/v1/features/feature_auth/security.py"
+          },
+          {
+            "url": "https://github.com/no3sis-lattice/no3sis/blob/58ba751bcc7c8815e3b42a9676abd0c475b125ee/scripts/learn_patterns_from_boss.py",
+            "path": "scripts/learn_patterns_from_boss.py"
+          }
+        ],
+        "savedReferencesTruncated": true,
+        "notes": "Broad alias or multiword search; returned excerpts contain unrelated terms; no exact import proven by this query."
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "from feature_standards import",
+        "observedAt": "2026-11-09T15:08:43.530Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 34,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [
+          {
+            "url": "https://github.com/TranscendComputing/TopStackMessageAgent/blob/97da381e932b5ad0257dbcb108ad32caa049f599/configure.in",
+            "path": "configure.in"
+          },
+          {
+            "url": "https://github.com/edf-hpc/pkg-collectd/blob/4e844920f81e73518c1564e6ffe682ec89a6ea27/configure.ac",
+            "path": "configure.ac"
+          },
+          {
+            "url": "https://github.com/archashikamal/url-visibility-predictor/blob/6812339e812fd870722800a5e5353df8ce157ec3/predictor.py",
+            "path": "predictor.py"
+          },
+          {
+            "url": "https://github.com/LeoRlucena/pipeline-churn-telco/blob/490dc39578ba51603a9e3bc5ddacbac82bfb60ff/notebooks/04_Feature_Importance_StandardScaler.ipynb",
+            "path": "notebooks/04_Feature_Importance_StandardScaler.ipynb"
+          },
+          {
+            "url": "https://github.com/CRAJKUMARSINGH/legal-luminaire/blob/bda89ce6227e7f70b9f45af3f4e5f818b0571f92/.kiro/specs/standards-explorer/tasks.md",
+            "path": ".kiro/specs/standards-explorer/tasks.md"
+          }
+        ],
+        "savedReferencesTruncated": true,
+        "notes": "Broad alias or multiword search; returned excerpts contain unrelated terms; no exact import proven by this query."
+      },
+      {
+        "provider": "GitHub connector",
+        "query": "dev.featurestandards.auth",
+        "observedAt": "2026-11-09T15:08:43.530Z",
+        "scope": "default branch code search; connector-visible public results",
+        "topn": 100,
+        "pagination": "No page/cursor argument provided by tool; result cap 100",
+        "returnedFileCount": 0,
+        "totalMatchCount": null,
+        "incompleteResultsFlag": null,
+        "searchCapReached": false,
+        "resultReferences": [],
+        "savedReferencesTruncated": false,
+        "notes": null
+      }
+    ],
+    "connectorCalibration": {
+      "query": "feature-standards",
+      "repository_name": "jongko54/feature-standards",
+      "topn": 5,
+      "returnedFileCount": 0,
+      "fetchControl": {
+        "url": "https://github.com/jongko54/feature-standards/blob/5119bad602dc6354824adf055c36f6922cdd115c/packages/feature-standards/package.json#L1-L4",
+        "blobSha": "6662240cd6da455fe25d7ecd9f3b32a9570a471c",
+        "observedVersion": "0.4.0",
+        "fetchSucceeded": true
+      },
+      "interpretation": "Known positive file fetch succeeded but search did not return it. Negative search results cannot prove absence."
+    },
+    "githubRest": [
+      {
+        "query": "\"@ugauga/feature-standards-core\"",
+        "url": "https://api.github.com/search/code?q=%22%40ugauga/feature-standards-core%22&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:07:17.194330+00:00",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "page": 1,
+        "perPage": 100,
+        "total_count": 0,
+        "incomplete_results": false,
+        "items": [],
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 9",
+          "X-Ratelimit-Resource: code_search"
+        ]
+      },
+      {
+        "observedAt": "2026-11-09T15:07:50.568112+00:00",
+        "query": "\"@ugauga/feature-standards-react-auth\"",
+        "url": "https://api.github.com/search/code?q=%22%40ugauga/feature-standards-react-auth%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 8",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 2"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "observedAt": "2026-11-09T15:07:50.569263+00:00",
+        "query": "\"@ugauga/create-feature-auth\"",
+        "url": "https://api.github.com/search/code?q=%22%40ugauga/create-feature-auth%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 7",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 3"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "observedAt": "2026-11-09T15:07:51.044760+00:00",
+        "query": "\"feature-standards\" path:package.json",
+        "url": "https://api.github.com/search/code?q=%22feature-standards%22%20path%3Apackage.json&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 5",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 5"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "observedAt": "2026-11-09T15:07:51.112613+00:00",
+        "query": "\"feature_standards_core\"",
+        "url": "https://api.github.com/search/code?q=%22feature_standards_core%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 6",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 4"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "observedAt": "2026-11-09T15:07:51.658646+00:00",
+        "query": "\"feature-standards-python-auth\"",
+        "url": "https://api.github.com/search/code?q=%22feature-standards-python-auth%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 4",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 6"
+        ],
+        "total_count": 1,
+        "incomplete_results": false,
+        "message": null,
+        "items": [
+          {
+            "repository": "szabgab/pydigger-data",
+            "path": "data/pypi/fe/feature-standards-python-auth.json",
+            "blobSha": "088e8ee234f2407dda998ae11d90e00a9fadd2d2",
+            "html_url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json"
+          }
+        ]
+      },
+      {
+        "observedAt": "2026-11-09T15:07:51.568616+00:00",
+        "query": "\"github.com/jongko54/feature-standards\"",
+        "url": "https://api.github.com/search/code?q=%22github.com/jongko54/feature-standards%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 3",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 7"
+        ],
+        "total_count": 2,
+        "incomplete_results": false,
+        "message": null,
+        "items": [
+          {
+            "repository": "szabgab/pydigger-data",
+            "path": "data/pypi/fe/feature-standards-core.json",
+            "blobSha": "180e3d86e8493527035a3c3d09cfc343d2f3818f",
+            "html_url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json"
+          },
+          {
+            "repository": "szabgab/pydigger-data",
+            "path": "data/pypi/fe/feature-standards-python-auth.json",
+            "blobSha": "088e8ee234f2407dda998ae11d90e00a9fadd2d2",
+            "html_url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-python-auth.json"
+          }
+        ]
+      },
+      {
+        "observedAt": "2026-11-09T15:07:51.939710+00:00",
+        "query": "\"io.github.jongko54\" \"java-spring-auth\"",
+        "url": "https://api.github.com/search/code?q=%22io.github.jongko54%22%20%22java-spring-auth%22&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 2",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 8"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "observedAt": "2026-11-09T15:07:52.296570+00:00",
+        "query": "\"feature-standards\" repo:jongko54/feature-standards",
+        "url": "https://api.github.com/search/code?q=%22feature-standards%22%20repo%3Ajongko54/feature-standards&per_page=100&page=1",
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "page": 1,
+        "perPage": 100,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 1",
+          "X-Ratelimit-Reset: 1794236896",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 9"
+        ],
+        "total_count": 0,
+        "incomplete_results": true,
+        "message": null,
+        "items": []
+      },
+      {
+        "query": "\"feature-standards-core\"",
+        "url": "https://api.github.com/search/code?q=%22feature-standards-core%22&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:09.233779+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 8",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 2"
+        ],
+        "total_count": 2,
+        "incomplete_results": false,
+        "message": null,
+        "items": [
+          {
+            "repository": "rust-lang/crates.io-index",
+            "path": "fe/at/feature-standards-core",
+            "blobSha": "036d84ef62bc751db9fe34ead5fdc315f6fe1f64",
+            "html_url": "https://github.com/rust-lang/crates.io-index/blob/866dcc269703607801fc412bfbe7a56d5aa0141d/fe/at/feature-standards-core"
+          },
+          {
+            "repository": "szabgab/pydigger-data",
+            "path": "data/pypi/fe/feature-standards-core.json",
+            "blobSha": "180e3d86e8493527035a3c3d09cfc343d2f3818f",
+            "html_url": "https://github.com/szabgab/pydigger-data/blob/75eaaf042600f2e24342f9d31d2676fa90958f2d/data/pypi/fe/feature-standards-core.json"
+          }
+        ]
+      },
+      {
+        "query": "\"feature-standards-auth\"",
+        "url": "https://api.github.com/search/code?q=%22feature-standards-auth%22&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:09.239301+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 9",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 1"
+        ],
+        "total_count": 1,
+        "incomplete_results": false,
+        "message": null,
+        "items": [
+          {
+            "repository": "rust-lang/crates.io-index",
+            "path": "fe/at/feature-standards-auth",
+            "blobSha": "e9f5b6512101895de72ef71a0a0cb766f15232c7",
+            "html_url": "https://github.com/rust-lang/crates.io-index/blob/866dcc269703607801fc412bfbe7a56d5aa0141d/fe/at/feature-standards-auth"
+          }
+        ]
+      },
+      {
+        "query": "\"from feature_standards\" language:Python",
+        "url": "https://api.github.com/search/code?q=%22from%20feature_standards%22%20language%3APython&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:09.949167+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 6",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 4"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "query": "\"from feature_auth\" language:Python",
+        "url": "https://api.github.com/search/code?q=%22from%20feature_auth%22%20language%3APython&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:10.397397+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 7",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 3"
+        ],
+        "total_count": 4,
+        "incomplete_results": false,
+        "message": null,
+        "items": [
+          {
+            "repository": "Daniel112300/my-website",
+            "path": "main_end/my-website-main/smart-energy/app.py",
+            "blobSha": "ceb375308aebc504f9273f67f9e113133815cf21",
+            "html_url": "https://github.com/Daniel112300/my-website/blob/d32a982be172dc79bc04309164496b94eaa981f3/main_end/my-website-main/smart-energy/app.py"
+          },
+          {
+            "repository": "Shadow-linux/agent-loop",
+            "path": "scripts/check-feature-context.py",
+            "blobSha": "cf8e84dc1ca52010d52751f4d22a000ab9b6a838",
+            "html_url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-feature-context.py"
+          },
+          {
+            "repository": "Shadow-linux/agent-loop",
+            "path": "scripts/check-concept-foundation-trace.py",
+            "blobSha": "fc967b1d638eef91c8fd529010a583d4c073c2c0",
+            "html_url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-concept-foundation-trace.py"
+          },
+          {
+            "repository": "Shadow-linux/agent-loop",
+            "path": "scripts/check-requirement-product-definition.py",
+            "blobSha": "263fc66806f788bd80ecb13ec5f6c30009eba24a",
+            "html_url": "https://github.com/Shadow-linux/agent-loop/blob/48a8460b92130b20edd132ceb19884cf8e9c8145/scripts/check-requirement-product-definition.py"
+          }
+        ]
+      },
+      {
+        "query": "\"dev.featurestandards\"",
+        "url": "https://api.github.com/search/code?q=%22dev.featurestandards%22&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:10.771706+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 5",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 5"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "query": "\"feature-standards\" filename:package.json",
+        "url": "https://api.github.com/search/code?q=%22feature-standards%22%20filename%3Apackage.json&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:11.748613+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 4",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 6"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "query": "\"github.com/jongko54/feature-standards/libraries/go\"",
+        "url": "https://api.github.com/search/code?q=%22github.com/jongko54/feature-standards/libraries/go%22&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:11.153569+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 3",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 7"
+        ],
+        "total_count": 0,
+        "incomplete_results": false,
+        "message": null,
+        "items": []
+      },
+      {
+        "query": "\"feature-standards\" repo:jongko54/feature-standards",
+        "url": "https://api.github.com/search/code?q=%22feature-standards%22%20repo%3Ajongko54/feature-standards&per_page=100&page=1",
+        "observedAt": "2026-11-09T15:09:11.800177+00:00",
+        "page": 1,
+        "perPage": 100,
+        "authentication": "existing GitHub CLI authorization; no account changes",
+        "exitCode": 0,
+        "headers": [
+          "HTTP/2.0 200 OK",
+          "X-Ratelimit-Limit: 10",
+          "X-Ratelimit-Remaining: 2",
+          "X-Ratelimit-Reset: 1794237008",
+          "X-Ratelimit-Resource: code_search",
+          "X-Ratelimit-Used: 8"
+        ],
+        "total_count": 0,
+        "incomplete_results": true,
+        "message": null,
+        "items": []
+      }
+    ],
+    "web": {
+      "provider": "web search",
+      "timestampPrecision": "During timestamped observation window; tool does not expose exact request timestamps",
+      "queries": [
+        "\"feature-standards\" \"ugauga\"",
+        "\"feature-standards-core\" -\"jongko54/feature-standards\"",
+        "\"feature-standards-python-auth\"",
+        "\"@ugauga/feature-standards-react-auth\"",
+        "\"@ugauga/feature-standards-core\"",
+        "\"github.com/jongko54/feature-standards/libraries/go\"",
+        "\"io.github.jongko54\" \"java-spring-auth\""
+      ],
+      "pagination": "First returned search batch only; total match population not exposed",
+      "targetIdentityMentionsFound": [
+        "https://pypi.org/project/feature-standards-python-auth/",
+        "https://central.sonatype.com/artifact/io.github.jongko54/java-spring-auth",
+        "https://nichedb.dev/c/packages?tag=java"
+      ],
+      "interpretation": "Registry/listing mentions only. NicheDB result was an indexed snippet; a live first-page fetch had moved on to newer entries. No application adoption inferred."
+    },
+    "failedSupplementarySources": [
+      {
+        "url": "https://grep.app/api/search?q=feature-standards",
+        "observedAt": "2026-11-09T15:07:40.860999+00:00",
+        "status": 429,
+        "error": "HTTP 429 / Vercel challenge; no code results obtained",
+        "interpretation": "Unavailable, not zero."
+      }
+    ],
+    "rateLimitEvents": [
+      {
+        "provider": "GitHub connector",
+        "observedAt": "2026-11-09T15:06:09.791Z",
+        "query": "@ugauga/feature-standards-react-auth",
+        "status": 429,
+        "retryAfterSeconds": 10,
+        "retriedAt": "2026-11-09T15:06:44.594Z",
+        "retrySucceeded": true
+      }
+    ],
+    "paginationReview": "GitHub REST queries returned at most four files and no Link pagination; page 1 was sufficient for returned totals. Both own-repository calibration calls returned incomplete_results=true. Broad connector queries hit topn=100 and were not exhaustive."
+  },
+  "limitations": [
+    "No denominator of eligible external projects exists in this investigation; adoption percentage cannot be computed.",
+    "Public code search omitted the known upstream positive control; two REST control queries explicitly returned incomplete_results=true.",
+    "Connector provides ranked capped excerpts with no total/incomplete/pagination metadata. Broad aliases return unrelated text and cannot close coverage gaps.",
+    "Private repositories, non-GitHub source, unindexed/default-branch-excluded files, dynamic installation, one-off CLI/npx runs, vendored/renamed/copied implementations and actual runtime execution are not established.",
+    "Reverse-dependency indexes cover indexed published package relationships and can lag; zero graph rows do not establish zero application use.",
+    "No AI authorship, autonomous model choice, active users, retention or production execution is inferred from public source or graph metadata.",
+    "Unpublished source versions differ from registry versions: CLI manifest 0.4.0 vs npm latest 0.3.2, Python core manifest 0.2.0 vs PyPI latest 0.1.0. Searches used actual published identifiers and versions."
+  ],
+  "methodSources": [
+    {
+      "url": "https://docs.deps.dev/api/v3alpha/#getdependents",
+      "supports": "GetDependents supported ecosystems and indicative public-package counts"
+    },
+    {
+      "url": "https://docs.deps.dev/api/v3/#coverage",
+      "supports": "Coverage restrictions for registries, Go mirror and associated hosted projects"
+    },
+    {
+      "url": "https://docs.github.com/en/rest/search/search#search-code",
+      "supports": "Search authentication, code-search limit 10/min, max 1000 results and incomplete_results"
+    },
+    {
+      "url": "https://docs.github.com/en/search-github/github-code-search/understanding-github-code-search-syntax",
+      "supports": "Token/path matches and need for identity validation"
+    }
+  ],
+  "verification": {
+    "jsonParsed": true,
+    "countsReconciled": true,
+    "sourceLinksReviewed": "Candidate permalinks fetched at recorded commits; registry/graph URLs fetched read-only. Web references use provider results.",
+    "publicSafetyReview": "No credentials, local absolute paths, contact identifiers, telemetry identifiers, or source-file bodies are included.",
+    "scope": "Only this JSON and companion Markdown were written. No source, Git mutations, CI, deployment, messages, account settings, or model experiments."
+  }
+}

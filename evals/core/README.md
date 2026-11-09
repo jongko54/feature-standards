@@ -73,6 +73,23 @@ Fresh sessions do not equal internal API request counts. Raw usage includes cach
 
 The completed 2026-11-08 follow-ups are separate datasets: [unprescribed discovery](results/2026-11-08-discovery-v1.json) with [route review](results/2026-11-08-discovery-route-audit-v1.json), the [eight-session notes pilot](results/2026-11-08-notes-brief-v1.json) with [per-language/output audit](results/2026-11-08-notes-brief-postrun-audit-v1.json), and the [original PostgreSQL attempt](results/2026-11-08-postgres-candidate-v1.json) with [two artifact-only diagnostics](results/2026-11-08-postgres-artifact-diagnostics-v1.json). The notes pilot passed 8/8 with paired input-token sums 71.442% lower under brief guidance; it has only one pair per backend. All four discovery programs implemented the three features independently. The PostgreSQL original stopped at a factory-alias checker false positive; after the narrow checker fix, one diagnostic failed for a missing offline build backend and a second passed 149 checks after preparing that cache. The original model failure stays unchanged. These phases total 37 fresh model sessions; diagnostics add zero.
 
+## Unprescribed multi-model choice protocol
+
+`tools/core_choice_eval.py` fixes Python/FastAPI, Go/net/http, Java/Spring Boot and Rust/Axum while leaving feature-library use optional. Two requested models, two fixed similar task variants and two repeats across the four backends produce 32 serial sessions. Dependency and prompt caches remain shared. The [protocol plan](../../docs/superpowers/plans/2026-11-10-adoption-observation.md) records the frozen source and artifact; model availability probes are separate from integration attempts.
+
+```sh
+uv run --frozen --project tools python tools/core_choice_eval.py run \
+  --artifact /absolute/path/feature-standards-0.4.0.tgz \
+  --artifact-sha256 <sha256> --source-commit <40-character-commit> \
+  --models gpt-6.1-sol gpt-6-astra --stack all \
+  --scenarios documents notes --repeats 2 --timeout 600 \
+  --output eval-results/choice-NEW
+```
+
+Both task variants use the existing 143 HTTP assertions. All submitted attempts are retained, including failures after observable work starts. Prework infrastructure rejection and unknown starts have separate counts. No source review means unknown choice, not zero adoption. Imports and static call hints do not establish a product-route connection. Review each feature's build/start and handler path against the retained source, then supply file hashes and line evidence through `report --input eval-results/choice-NEW --reviews /private/path/reviews.json --output eval-results/choice-REVIEWED-NEW`. Reporting verifies the original result, trace, analysis and source hashes without rerunning or rewriting the programs.
+
+These are observations inside a supplied checkout. They measure package/API reuse separately from HTTP correctness and do not measure internet discovery, use of the standards' ideas, external adoption or general token savings. The [public-project investigation](../../docs/adoption/2026-11-10-public-projects.md) is a separate source of evidence.
+
 ## Actual smoke on 2026-11-07
 
 The [original eight-call smoke](results/2026-11-07-catalog-smoke-v1.json) requested `gpt-6.1-sol` with Codex CLI `0.167.0` and a 600-second per-trial limit. All token records were complete; the trace did not report the actual model identity. The exact executed runner is preserved at commit `6036df67f750a4fdd01eae82898ae0ec6f303827`, separately from implementation source `752e4e4` and published catalog `0.3.2`.

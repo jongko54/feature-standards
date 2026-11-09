@@ -236,7 +236,8 @@ def update_membership(path: Path, value, *, raw=False):
         os.fsync(stream.fileno())
 
 
-def core_http_grade(port, origin, deadline, membership_file):
+def core_http_grade(port, origin, deadline, membership_file, *, requester=None):
+    request = auth_eval.request if requester is None else requester
     checks = auth_eval.http_grade(port, origin, deadline)
 
     def expect(name, actual, expected):
@@ -245,7 +246,7 @@ def core_http_grade(port, origin, deadline, membership_file):
         checks.append(name)
 
     def get(path, *, cookie=None, headers=None):
-        return auth_eval.request(
+        return request(
             port, "GET", path, origin, deadline, cookie=cookie, extra_headers=headers
         )
 
@@ -277,7 +278,7 @@ def core_http_grade(port, origin, deadline, membership_file):
             "UNAUTHENTICATED",
             "core-forged-session-401",
         )
-    status, headers, session = auth_eval.request(
+    status, headers, session = request(
         port,
         "POST",
         "/auth/login",
@@ -397,7 +398,7 @@ def core_http_grade(port, origin, deadline, membership_file):
     expect("core-provider-recovery", get("/api/documents", cookie=cookie)[0], 200)
     expect(
         "core-logout-204",
-        auth_eval.request(
+        request(
             port, "POST", "/auth/logout", origin, deadline, cookie=cookie, csrf=csrf
         )[0],
         204,
