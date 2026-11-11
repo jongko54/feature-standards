@@ -1,6 +1,9 @@
 {
   "name": "feature-standards",
   "version": "0.4.0",
+  "featureStandards": {
+    "coreStarterProtocolVersion": 1
+  },
   "description": "Cross-language reusable feature contracts and AI integration context by jongko54",
   "type": "module",
   "license": "MIT",
@@ -35,6 +38,13 @@
     "src/cli.mjs",
     "src/index.mjs",
     "src/workflow.mjs",
+    "src/core-generator.mjs",
+    "src/core-project.mjs",
+    "src/core-protocol.mjs",
+    "src/core-source.mjs",
+    "src/core-process.mjs",
+    "src/core-check.mjs",
+    "templates/core",
     "snapshot",
     "README.md",
     "LICENSE"
@@ -45,6 +55,8 @@
     "pretest": "npm run build",
     "test": "node --test test/*.test.mjs",
     "check:pack": "node test/packed.mjs",
+    "check:core-generated": "node test/core-generated.mjs",
+    "check:core-installed": "node test/core-installed.mjs",
     "pack:bootstrap": "node scripts/pack-bootstrap.mjs",
     "check:bootstrap": "node test/bootstrap.mjs"
   },

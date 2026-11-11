@@ -48,7 +48,21 @@ In a separate eight-session similar-task pilot, the optional briefs achieved 8/8
 
 ## Generate and check an application
 
-The explicit workflow commands support `auth` only and require a trusted source checkout containing `@ugauga/create-feature-auth` version 0.2.0 or later. The source checkout is separate from this npm package. Requests to initialize `authorization` or `listing` fail before importing a generator or creating a target. Their contexts provide reusable API entrypoints and explicit source conformance commands. Existing targets, linked paths, unsupported selections, and older runners that only check memory v1 are refused.
+The source candidate supports a three-feature `--template core` and the existing authentication-only workflow. Core requires a trusted source checkout declaring `featureStandards.coreStarterProtocolVersion: 1` and connects the original memory-auth/RBAC/materialized-listing SDKs in Python, Go, Java or Rust. It does not copy SDK runtime implementations. Existing `--feature auth` requires `@ugauga/create-feature-auth` 0.2.0 or later and retains its v1/v2/v3 checks. Single-feature authorization/listing generation, React generation, and core database profiles remain unsupported. Existing targets, linked paths, ambiguous selectors and older source capabilities are refused before generation.
+
+```sh
+# Source candidate only; this option is not part of published CLI 0.3.2.
+feature-standards init --template core \
+  --source /absolute/physical/path/to/feature-standards \
+  --stack python --dest /absolute/physical/path/to/new-core-app --check
+
+# In the generated project:
+node project.mjs demo
+```
+
+Core's normal `start` uses Secure non-demo memory authentication and denies product access until a trusted membership provider is connected. Only explicit `demo` and `check` use sample identities, roles and documents on loopback. The core receipt requires all 12 HTTP/origin check categories and both actual SDK dependency origins. No database, SMTP, browser UI or production checks are included. See the [core starter guide](https://github.com/jongko54/feature-standards/blob/main/docs/core-starter.md). The main snapshot now bundles the optional stack connection cards; compatible compact contexts put the card first. These functional changes do not establish a new AI token-saving or adoption result.
+
+The authentication-only workflow remains:
 
 ```sh
 feature-standards init --feature auth \

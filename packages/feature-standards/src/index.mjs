@@ -87,6 +87,15 @@ export function getContext(options = {}) {
   const doc = path => document(provenance, path);
   const ref = (path, directory = false) => checkoutReference(provenance, path, directory);
   const profileIndex = manifest.profiles.findIndex(candidate => candidate.id === profile.id);
+  const coreCompatible = stack.role === 'backend' && ['browser-session-v1', 'rbac-v1', 'offset-list-v1'].includes(profile.id);
+  const coreStarter = coreCompatible ? {
+    supportedForStack: true,
+    template: 'core',
+    features: ['auth', 'authorization', 'listing'],
+    scope: 'source-checkout', cwd: '.', executed: false,
+    argv: ['node', 'packages/feature-standards/src/cli.mjs', 'init', '--template', 'core', '--source', '<absolute-checkout>', '--stack', stack.id, '--dest', '<new-directory-outside-checkout>'],
+    note: 'Optional three-feature composition. Requires a trusted checkout declaring coreStarterProtocolVersion 1. Generation and checks run only when explicitly requested.',
+  } : undefined;
   return {
     schemaVersion: 1,
     package: { name: packageMetadata.name, version: packageMetadata.version },
@@ -106,6 +115,7 @@ export function getContext(options = {}) {
       consumerGuide: doc(stack.consumer + '/README.md'),
       integrationSkill: doc(selected.integration_skill),
       integrationGuide: doc(selected.integration_guide),
+      ...(coreCompatible ? { sdkConnectionCard: doc('docs/ai-entry/' + stack.id + '.md'), coreStarterGuide: doc('docs/core-starter.md') } : {}),
       ...(isAuth ? { generatorGuide: doc('docs/create-feature-auth.md') } : { releaseReceipt: doc('docs/core-release-0.1.0.json') }),
       profileReferences: [
         ...(isAuth && profileIndex >= 1 ? [doc('skills/integrate-auth/references/postgres.md')] : []),
@@ -129,6 +139,7 @@ export function getContext(options = {}) {
       environment: profile.environment,
       install: commands(stack.install),
       checks: commands([...stack.checks, ...profile.checks]),
+      ...(coreStarter ? { coreStarter } : {}),
       generator: isAuth && stack.role === 'backend' ? {
         supportedForStack: true,
         scope: 'source-checkout',
@@ -139,7 +150,7 @@ export function getContext(options = {}) {
       } : {
         supportedForStack: false,
         note: isAuth ? 'The existing generator supports backend consumers. Use the React consumer guide for client integration.'
-          : 'The existing generator supports auth only. Integrate these reusable APIs explicitly and run the listed source conformance checks.',
+          : 'Single-feature initialization is not supported. The optional coreStarter combines auth, authorization and materialized listing; otherwise integrate these APIs explicitly.',
       },
     },
     optionalAddons: (isAuth ? manifest.addons : []).filter(addon => addon.requires_profile === profile.id).map(addon => ({
@@ -180,7 +191,8 @@ export function getCompactContext(options = {}) {
     feature: selected.feature,
     profile: selected.profile,
     stack: selected.stack,
-    readFirst: [documents.apiGuide, documents.consumerGuide, documents.integrationSkill].map(reference),
+    readFirst: [documents.sdkConnectionCard, documents.apiGuide, documents.consumerGuide, documents.integrationSkill].filter(Boolean).map(reference),
+    ...(selected.sourceCheckout.coreStarter ? { coreStarter: selected.sourceCheckout.coreStarter } : {}),
     contract: Object.fromEntries(
       ['specification', 'openapi', 'scenarios', 'profileGuide', 'manifest', 'releaseReceipt']
         .filter(key => documents[key]).map(key => [key, reference(documents[key])]),

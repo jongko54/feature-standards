@@ -74,6 +74,6 @@ try {
   assert.equal(run(['--help']).status, 0);
   assert.deepEqual(readFileSync(join(PACKAGE, 'package.json')), mainBefore);
   assert.match(main.version, /^\d+\.\d+\.\d+$/);
-  assert.deepEqual(main.files, ['src/cli.mjs', 'src/index.mjs', 'src/workflow.mjs', 'snapshot', 'README.md', 'LICENSE']);
-  console.log(JSON.stringify({ package: receipt.package, version: receipt.version, tag: receipt.tag, files: 3, artifactVerified: true, noRuntimeOrSecrets: true, preservesExistingOutput: true, mainVersion: main.version, mainPackWhitelistUnchanged: true, published: false, sha256: receipt.sha256 }, null, 2));
+  assert.deepEqual(main.files, ['src/cli.mjs', 'src/index.mjs', 'src/workflow.mjs', 'src/core-generator.mjs', 'src/core-project.mjs', 'src/core-protocol.mjs', 'src/core-source.mjs', 'src/core-process.mjs', 'src/core-check.mjs', 'templates/core', 'snapshot', 'README.md', 'LICENSE']);
+  console.log(JSON.stringify({ package: receipt.package, version: receipt.version, tag: receipt.tag, files: 3, artifactVerified: true, noRuntimeOrSecrets: true, preservesExistingOutput: true, mainVersion: main.version, mainPackWhitelistChecked: true, published: false, sha256: receipt.sha256 }, null, 2));
 } finally { rmSync(scratch, { recursive: true, force: true }); }

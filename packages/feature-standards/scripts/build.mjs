@@ -1,4 +1,4 @@
-// Build-time only: no implementation source, binaries or execution traces are copied.
+// Snapshot build: no SDK implementation source, binaries or execution traces are copied.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { chmodSync, lstatSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
@@ -41,6 +41,12 @@ export const SOURCE_FILES = Object.freeze([
   'features/listing/openapi-postgres.json',
   'features/listing/scenarios-postgres.json',
   'docs/ai-integration.md',
+  'docs/ai-entry/README.md',
+  'docs/ai-entry/python.md',
+  'docs/ai-entry/go.md',
+  'docs/ai-entry/java.md',
+  'docs/ai-entry/rust.md',
+  'docs/core-starter.md',
   'docs/ai-briefs/python.md',
   'docs/ai-briefs/go.md',
   'docs/ai-briefs/java.md',

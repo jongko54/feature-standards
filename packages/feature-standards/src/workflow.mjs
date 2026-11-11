@@ -1,6 +1,8 @@
 import { lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { isAbsolute, join, dirname, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { CORE_CHECK_PROTOCOL_VERSION, CORE_FEATURES, CORE_PROFILES, CORE_REQUIRED_CHECKS } from './core-protocol.mjs';
+import { coreSelection, inspectProject as inspectCoreProject, inspectSource as inspectCoreSource } from './core-source.mjs';
 
 const GENERATOR = '@ugauga/create-feature-auth';
 const STACKS = ['python', 'go', 'java', 'rust'];
@@ -87,6 +89,13 @@ function destination(value, source) {
 
 function generatedProject(value) {
   const project = directory(value, 'project');
+  const present = name => {
+    try { lstatSync(join(project, name)); return true; }
+    catch (error) { if (error.code === 'ENOENT') return false; throw error; }
+  };
+  const core = present('feature-core.json');
+  if (core && present('feature-auth.json')) throw new Error('ambiguous-project-metadata');
+  if (core) return { project, core: inspectCoreProject(project), runner: regularFile(project, 'project.mjs', 'project-runner') };
   const metadata = readJson(regularFile(project, 'feature-auth.json', 'project-metadata'), 'project-metadata');
   if (!metadata || metadata.generator !== GENERATOR || !currentGenerator(metadata.generatorVersion) || metadata.checkProtocolVersion !== 1) {
     throw new Error('project-check-protocol-unsupported: regenerate with create-feature-auth >=0.2.0');
@@ -114,19 +123,46 @@ function checkReceipt(receipt, selected) {
   return receipt;
 }
 
+function coreReceipt(receipt, selected) {
+  const invalid = () => { throw new Error('invalid-core-check-receipt'); };
+  if (!receipt || receipt.schemaVersion !== 1 || receipt.template !== 'core'
+      || receipt.coreCheckProtocolVersion !== CORE_CHECK_PROTOCOL_VERSION
+      || receipt.stack !== selected.stack || receipt.profile !== CORE_PROFILES.auth || receipt.passed !== true
+      || JSON.stringify(receipt.features) !== JSON.stringify(CORE_FEATURES)
+      || !receipt.profiles || Object.keys(receipt.profiles).length !== CORE_FEATURES.length
+      || CORE_FEATURES.some(feature => receipt.profiles[feature] !== CORE_PROFILES[feature])
+      || !Array.isArray(receipt.checks) || receipt.checks.some(check => typeof check !== 'string' || !check)
+      || new Set(receipt.checks).size !== receipt.checks.length
+      || CORE_REQUIRED_CHECKS.some(check => !receipt.checks.includes(check))
+      || receipt.database?.used !== false || receipt.database?.isolated !== false
+      || !receipt.dependencyOrigins || Object.keys(receipt.dependencyOrigins).length !== 2) invalid();
+  for (const name of ['auth', 'core']) {
+    const origin = receipt.dependencyOrigins[name];
+    if (!origin || origin.kind !== 'source' || origin.verified !== true
+        || origin.expectedPath !== selected.dependencies[name] || origin.resolvedPath !== selected.dependencies[name]
+        || typeof origin.method !== 'string' || !origin.method) invalid();
+  }
+  return receipt;
+}
+
 /** Explicitly execute a generated project's trusted runner. Never called by list/context. */
 export async function checkProject(options) {
   optionsObject(options, ['project']);
   const inspected = generatedProject(options.project);
   const runner = await import(pathToFileURL(inspected.runner).href);
   if (typeof runner.runProject !== 'function') throw new Error('project-runner-api-unavailable');
+  if (inspected.core) {
+    const receipt = coreReceipt(await runner.runProject('check', inspected.project), inspected.core);
+    return { ...receipt, executed: true, project: inspected.project };
+  }
   const receipt = checkReceipt(await runner.runProject('check', inspected.project), inspected.selected);
   return { ...receipt, feature: 'auth', executed: true, project: inspected.project };
 }
 
 /** Explicitly create an application using a trusted source checkout's existing generator. */
 export async function initFeature(options) {
-  optionsObject(options, ['feature', 'stack', 'profile', 'source', 'dest', 'check']);
+  optionsObject(options, ['feature', 'stack', 'profile', 'source', 'dest', 'check', 'template']);
+  if (options.template !== undefined) return initCore(options);
   const selected = selection(options);
   if (options.check !== undefined && typeof options.check !== 'boolean') throw new Error('invalid-check-option');
   const checkout = sourceCheckout(options.source, selected);
@@ -142,4 +178,22 @@ export async function initFeature(options) {
   }
   const checked = options.check ? await checkProject({ project: target }) : { executed: false };
   return { schemaVersion: 1, feature: selected.feature, ...result, check: checked };
+}
+
+async function initCore(options) {
+  const selected = coreSelection(options);
+  if (options.check !== undefined && typeof options.check !== 'boolean') throw new Error('invalid-check-option');
+  const checkout = inspectCoreSource(options.source, selected.stack);
+  const target = destination(options.dest, checkout.source);
+  const generator = await import(pathToFileURL(regularFile(checkout.source, 'packages/feature-standards/src/core-generator.mjs', 'core-generator-entrypoint')).href);
+  if (typeof generator.generateCore !== 'function') throw new Error('core-generator-api-unavailable');
+  const result = await generator.generateCore({ ...selected, source: checkout.source, dest: target });
+  if (!result || result.destination !== target || result.stack !== selected.stack || result.profile !== selected.profile
+      || result.template !== 'core' || JSON.stringify(result.features) !== JSON.stringify(CORE_FEATURES)
+      || JSON.stringify(result.profiles) !== JSON.stringify(CORE_PROFILES)
+      || !Array.isArray(result.files) || !result.files.every(file => typeof file === 'string')) throw new Error('invalid-core-generation-result');
+  const created = generatedProject(target);
+  if (!created.core || created.core.source !== checkout.source || created.core.stack !== selected.stack) throw new Error('generated-core-selection-mismatch');
+  const checked = options.check ? await checkProject({ project: target }) : { executed: false };
+  return { schemaVersion: 1, ...result, check: checked };
 }

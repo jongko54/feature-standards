@@ -8,7 +8,15 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 The current source adds real three-feature HTTP consumers for [Go](examples/core-go/README.md), [Java](examples/core-java/README.md) and [Rust](examples/core-rust/README.md), plus a Python-only [PostgreSQL listing profile](docs/postgres-listing.md). Catalog `0.4.0` and Python core `0.2.0` are source candidates; the published versions below retain their recorded behavior. The source catalog exposes 26 supported contexts and preserves the 10,000-row materialized profile separately from database listing. The opt-in compact routing mode reduces the JSON payload while retaining document hashes and trust limits; see the [validation scope and measurements](docs/validation-core-hardening-2026-11-07.md).
 
-Optional [SDK connection cards](docs/ai-entry/README.md) show the session, permission, visibility and listing flow for Python, Go, Java and Rust. These cards are available in the source checkout; they are not included in the packed catalog snapshot.
+Optional [SDK connection cards](docs/ai-entry/README.md) show the session, permission, visibility and listing flow for Python, Go, Java and Rust. The current source candidate bundles these cards in the main catalog snapshot and leads with them in compatible compact contexts. Runtime SDKs still require the separate source checkout.
+
+The source candidate also adds a [three-feature starter](docs/core-starter.md): `init --template core` generates an application connected to the original authentication, authorization and listing SDKs in all four backends. Normal startup denies product access until trusted membership is connected; explicit `demo` and `check` modes use isolated loopback samples. The existing authentication-only v1/v2/v3 workflow remains available. This functionality has not been published as a new registry version or measured as an AI adoption improvement.
+
+```sh
+node packages/feature-standards/src/cli.mjs init --template core \
+  --source "$PWD" --stack python \
+  --dest /absolute/physical/path/outside-the-checkout/new-core-app --check
+```
 
 The [2026-11-11 SDK guidance pilot](docs/adoption/2026-11-11-sdk-guidance.md) compared an optional card-path pointer with the same task without that pointer in **32 fresh sessions** across four backends and documents/tickets workflows. Original HTTP outcomes were **29/32**. No app connected the original SDK dependencies; one used a copied listing API, and 31 implemented all three features directly. Across **14 complete usage pairs**, input-token sums were **7.461% lower**, uncached input **9.618% lower**, and output **1.373% higher** with the pointer. Two timeout pairs had missing usage. These small, shared-cache, one-requested-model observations are not whole-run cost savings, external adoption or a general efficiency guarantee.
 

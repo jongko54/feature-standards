@@ -22,7 +22,7 @@ python3 tools/feature_catalog.py --check
 python3 tools/check_core_features.py --feature all --stack all
 ```
 
-Use the CLI command declared in its package.json if invoking from another checkout. `init` and the generated-application `check` workflow still support authentication only. Integrate core APIs through their pinned registry packages when the matching receipt verifies publication, or use a local path for checkout development. Unsupported generation fails before creating files.
+Use the CLI command declared in its package.json if invoking from another checkout. The source candidate's `init --template core` combines memory authentication, RBAC and materialized listing in Python, Go, Java or Rust through original source SDK dependencies. `check --project` verifies the generated application's HTTP behavior and dependency origins. See the [core starter guide](core-starter.md). Existing `init --feature auth` retains its v1/v2/v3 workflow; single-feature authorization/listing initialization remains unsupported. Integrate core APIs through pinned registry packages when the matching receipt verifies publication, or use a local path for checkout development. Unsupported generation fails before creating files.
 
 ## Compose authentication and permissions
 

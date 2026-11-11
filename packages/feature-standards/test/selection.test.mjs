@@ -37,6 +37,7 @@ test('compact context routes to selected documents without emitting the full com
   assert.equal(card.readOnly, true);
   assert.equal(card.profile, original.profile);
   assert.deepEqual(card.readFirst.map(doc => doc.readPath), [
+    original.packagedDocuments.sdkConnectionCard.readPath,
     original.packagedDocuments.apiGuide.readPath,
     original.packagedDocuments.consumerGuide.readPath,
     original.packagedDocuments.integrationSkill.readPath,

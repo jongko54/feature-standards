@@ -1,0 +1,9 @@
+[project]
+name = "feature-core-generated"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["feature-standards-python-auth", "feature-standards-core", "uvicorn"]
+
+[tool.uv.sources]
+feature-standards-python-auth = { path = {{AUTH_PATH}}, editable = true }
+feature-standards-core = { path = {{CORE_PATH}}, editable = true }

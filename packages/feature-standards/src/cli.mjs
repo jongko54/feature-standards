@@ -7,6 +7,7 @@ import { checkProject, getCompactContext, getContext, initFeature, listFeatures 
 const HELP = `feature-standards list
 feature-standards context --stack python|go|java|rust|react [--feature auth|authorization|listing] [--profile PROFILE] [--compact]
 feature-standards init --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--feature auth] [--profile browser-session-v1|browser-session-v2|browser-session-v3] [--check]
+feature-standards init --template core --source CHECKOUT --stack python|go|java|rust --dest NEW_DIRECTORY [--profile browser-session-v1] [--check]
 feature-standards check --project GENERATED_DIRECTORY
 
 Read-only list/context select feature contracts and AI integration context, emitted as JSON.
@@ -14,7 +15,8 @@ Available features: auth (browser-session-v1/v2/v3), authorization (rbac-v1), li
 Feature defaults to auth; profile defaults to the selected feature's first profile.
 --compact gives selected reading paths first; full context retains source command/environment guidance.
 Packaged document read paths are separate from source-checkout API entrypoints and command guidance.
-Explicit init supports auth only and creates a new project through a trusted source checkout's generator >=0.2.0.
+Auth init uses a trusted source checkout's generator >=0.2.0. The core template combines memory authentication, authorization and materialized listing through original source SDK dependencies.
+Core requires a source checkout declaring coreStarterProtocolVersion 1. --template and --feature cannot be combined.
 Explicit check or init --check executes trusted project code and toolchains for the selected profile.
 Database checks require FEATURE_STANDARDS_TEST_DATABASE_URL and use a new isolated test database.
 list/context never execute checks, migrations, installation, generation or project edits.
@@ -30,7 +32,7 @@ export function parseArguments(argv) {
     return { command };
   }
   const result = { command };
-  const flags = command === 'check' ? ['--project'] : ['--feature', '--stack', '--profile', ...(command === 'init' ? ['--source', '--dest'] : [])];
+  const flags = command === 'check' ? ['--project'] : ['--feature', '--stack', '--profile', ...(command === 'init' ? ['--source', '--dest', '--template'] : [])];
   for (let index = 0; index < rest.length; index++) {
     const argument = rest[index];
     if (command === 'init' && argument === '--check') {

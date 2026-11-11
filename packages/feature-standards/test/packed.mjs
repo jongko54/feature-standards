@@ -10,7 +10,6 @@ import { fixtureSource } from './workflow-fixture.mjs';
 
 const PACKAGE = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const scratch = realpathSync(mkdtempSync(join(tmpdir(), 'feature-standards-pack-')));
-const expectedFiles = ['package.json', 'README.md', 'LICENSE', 'src/cli.mjs', 'src/index.mjs', 'src/workflow.mjs', 'snapshot/provenance.json', ...SOURCE_FILES.map(path => 'snapshot/' + path)].sort();
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const run = (command, argv, cwd = PACKAGE, env = process.env) => {
   const result = spawnSync(command, argv, { cwd, env, encoding: 'utf8', timeout: 120000, maxBuffer: 8 * 1024 * 1024 });
@@ -19,6 +18,10 @@ const run = (command, argv, cwd = PACKAGE, env = process.env) => {
   return result.stdout;
 };
 const files = root => readdirSync(root, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(join(root, entry.name)).map(path => entry.name + '/' + path) : [entry.name]);
+const expectedFiles = ['package.json', 'README.md', 'LICENSE',
+  ...['cli', 'index', 'workflow', 'core-generator', 'core-project', 'core-protocol', 'core-source', 'core-process', 'core-check'].map(name => 'src/' + name + '.mjs'),
+  ...files(join(PACKAGE, 'templates/core')).map(path => 'templates/core/' + path),
+  'snapshot/provenance.json', ...SOURCE_FILES.map(path => 'snapshot/' + path)].sort();
 
 try {
   // Stale/unexpected files in the generated tree must not survive a real prepack.
