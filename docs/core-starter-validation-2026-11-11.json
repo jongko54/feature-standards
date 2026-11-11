@@ -1,0 +1,114 @@
+{
+  "implementation_commit": "472a1fce5f46a07d5d0398038c11b2d40b396556",
+  "packed_source_commit": "472a1fce5f46a07d5d0398038c11b2d40b396556",
+  "packed_source_dirty": false,
+  "packed_snapshot_dirty": false,
+  "local_tarball_sha256": "59a5df1e73b05d321aa3298307a612790028167808598ca1283fbc1152b60d60",
+  "batches": {
+    "source_cli": {
+      "runs": [
+        {
+          "stack": "python",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "python-import",
+            "core": "python-import"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "go",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "go-module",
+            "core": "go-module"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "java",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "java-runtime-code-source",
+            "core": "java-runtime-code-source"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "rust",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "cargo-metadata",
+            "core": "cargo-metadata"
+          },
+          "database_used": false
+        }
+      ],
+      "source_sdk_fingerprints_unchanged": true
+    },
+    "installed_cli": {
+      "runs": [
+        {
+          "stack": "python",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "python-import",
+            "core": "python-import"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "go",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "go-module",
+            "core": "go-module"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "java",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "java-runtime-code-source",
+            "core": "java-runtime-code-source"
+          },
+          "database_used": false
+        },
+        {
+          "stack": "rust",
+          "passed": true,
+          "check_categories": 12,
+          "sdk_origin_methods": {
+            "auth": "cargo-metadata",
+            "core": "cargo-metadata"
+          },
+          "database_used": false
+        }
+      ],
+      "source_sdk_fingerprints_unchanged": true
+    }
+  },
+  "native_generated_apps": 8,
+  "main_node_unit": {
+    "passed": 52,
+    "failed": 0
+  },
+  "python_unit": {
+    "discovered": 357,
+    "passed": 324,
+    "skipped": 33,
+    "failed": 0
+  },
+  "registry_published": false,
+  "ai_model_runs_added": 0,
+  "browser_ui_tested_locally": false,
+  "production_security_audit": false
+}
