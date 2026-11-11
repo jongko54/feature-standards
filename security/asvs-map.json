@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "scope": "Selected requirements only; all unlisted ASVS requirements are unassessed.",
+  "assessment": "Reference mapping only, not execution evidence, ASVS level attainment or certification.",
+  "upstream": {
+    "version": "5.0.0",
+    "release": "https://github.com/OWASP/ASVS/releases/tag/v5.0.0_release",
+    "csv": "https://github.com/OWASP/ASVS/releases/download/v5.0.0_release/OWASP_Application_Security_Verification_Standard_5.0.0_en.csv",
+    "sha256": "6124dba176dc563f66363a11ae0c47f9b86b8a4a84c66a793670bd196ed86cd5",
+    "totalRequirements": 345,
+    "selectedRequirementIds": [
+      "v5.0.0-1.2.4",
+      "v5.0.0-11.4.2",
+      "v5.0.0-11.5.1",
+      "v5.0.0-12.2.1",
+      "v5.0.0-12.3.2",
+      "v5.0.0-14.3.2",
+      "v5.0.0-15.2.1",
+      "v5.0.0-15.2.4",
+      "v5.0.0-16.2.5",
+      "v5.0.0-16.5.1",
+      "v5.0.0-16.5.2",
+      "v5.0.0-16.5.3",
+      "v5.0.0-3.3.1",
+      "v5.0.0-3.3.2",
+      "v5.0.0-3.3.3",
+      "v5.0.0-3.3.4",
+      "v5.0.0-3.5.1",
+      "v5.0.0-6.1.1",
+      "v5.0.0-6.2.12",
+      "v5.0.0-6.2.4",
+      "v5.0.0-6.2.8",
+      "v5.0.0-6.2.9",
+      "v5.0.0-6.3.1",
+      "v5.0.0-7.2.1",
+      "v5.0.0-7.2.3",
+      "v5.0.0-7.2.4",
+      "v5.0.0-7.4.1",
+      "v5.0.0-7.4.3",
+      "v5.0.0-8.1.1",
+      "v5.0.0-8.2.1",
+      "v5.0.0-8.2.2",
+      "v5.0.0-8.2.3",
+      "v5.0.0-8.3.1",
+      "v5.0.0-8.3.2"
+    ]
+  },
+  "controls": [
+    {
+      "id": "session-cookie",
+      "asvs": [
+        "v5.0.0-3.3.1",
+        "v5.0.0-3.3.2",
+        "v5.0.0-3.3.3",
+        "v5.0.0-3.3.4"
+      ],
+      "state": "partial",
+      "description": "Secure, HttpOnly and SameSite session cookie attributes.",
+      "references": [
+        "features/auth/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_02_cookie_policy"
+        }
+      ],
+      "limits": "fs_session lacks ASVS __Host-/__Secure- cookie prefixes; no claim of full cookie requirements compliance. Loopback demo is explicit."
+    },
+    {
+      "id": "csrf-origin",
+      "asvs": [
+        "v5.0.0-3.5.1"
+      ],
+      "state": "mapped",
+      "description": "Origin validation and session-bound CSRF on state-changing authentication.",
+      "references": [
+        "features/auth/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_06_origin_required_for_login"
+        },
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_12_csrf_failure_preserves_session"
+        },
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_16_csrf_is_bound_to_session"
+        }
+      ],
+      "limits": "Mapped regression declarations are not a proof against every CSRF or frontend attack."
+    },
+    {
+      "id": "login-abuse",
+      "asvs": [
+        "v5.0.0-6.1.1",
+        "v5.0.0-6.3.1"
+      ],
+      "state": "partial",
+      "description": "Documented peer-based login failure limits.",
+      "references": [
+        "SECURITY.md",
+        "features/auth/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_19_rate_limit_ignores_untrusted_forwarded_address"
+        }
+      ],
+      "limits": "Trusted proxy, distributed abuse prevention, bot and DDoS controls need deployment design."
+    },
+    {
+      "id": "password-blocklist",
+      "asvs": [
+        "v5.0.0-6.2.4",
+        "v5.0.0-6.2.12"
+      ],
+      "state": "gap",
+      "description": "Common and breached-password rejection is not implemented.",
+      "references": [
+        "SECURITY.md"
+      ],
+      "tests": [],
+      "limits": "Existing minimum length does not supply common/breached-password detection."
+    },
+    {
+      "id": "password-preservation",
+      "asvs": [
+        "v5.0.0-6.2.8",
+        "v5.0.0-6.2.9"
+      ],
+      "state": "mapped",
+      "description": "Passwords are not trimmed; long UTF-8 inputs have explicit bounds.",
+      "references": [
+        "features/auth/specification.md",
+        "features/auth/account-session-v3.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_09_utf8_field_limits"
+        },
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_10_password_is_not_trimmed"
+        }
+      ],
+      "limits": "v1 configured-user setup and v3 registration have different length policies."
+    },
+    {
+      "id": "password-hash",
+      "asvs": [
+        "v5.0.0-11.4.2"
+      ],
+      "state": "mapped",
+      "description": "Use Argon2id with documented parameters and validated stored PHC.",
+      "references": [
+        "SECURITY.md",
+        "implementations/python-fastapi/feature_auth/core.py",
+        "features/auth/postgres-session-v2.md"
+      ],
+      "tests": [],
+      "limits": "Source/contract mapping only; cryptographic implementation is not independently audited."
+    },
+    {
+      "id": "session-randomness",
+      "asvs": [
+        "v5.0.0-7.2.3",
+        "v5.0.0-11.5.1"
+      ],
+      "state": "mapped",
+      "description": "Generate independent high-entropy session and CSRF values with platform CSPRNGs.",
+      "references": [
+        "features/auth/specification.md",
+        "implementations/go-net-http/auth/server.go"
+      ],
+      "tests": [],
+      "limits": "Randomness quality is a source-review property; HTTP output checks cannot prove entropy."
+    },
+    {
+      "id": "trusted-session",
+      "asvs": [
+        "v5.0.0-7.2.1"
+      ],
+      "state": "mapped",
+      "description": "Validate session identity in the backend.",
+      "references": [
+        "features/auth/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_03_me_and_forged_session"
+        }
+      ],
+      "limits": "Applies to the shipped session profile, not arbitrary consumer middleware."
+    },
+    {
+      "id": "session-rotation",
+      "asvs": [
+        "v5.0.0-7.2.4"
+      ],
+      "state": "mapped",
+      "description": "New authentication rotates and invalidates the previous browser session.",
+      "references": [
+        "features/auth/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_11_session_rotation_revokes_previous_cookie"
+        }
+      ],
+      "limits": "Re-authentication of sensitive product actions is outside the reference scope."
+    },
+    {
+      "id": "session-termination",
+      "asvs": [
+        "v5.0.0-7.4.1",
+        "v5.0.0-7.4.3"
+      ],
+      "state": "mapped",
+      "description": "Logout/expiry reject replay; password reset atomically revokes user sessions.",
+      "references": [
+        "features/auth/specification.md",
+        "features/auth/account-session-v3.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_14_logout_revokes_stolen_cookie_and_is_idempotent"
+        },
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_18_absolute_expiry_is_not_extended_by_reads"
+        },
+        {
+          "path": "tests/account_conformance.py",
+          "class": "AccountContract",
+          "method": "test_05_reset_revokes_all_sessions"
+        }
+      ],
+      "limits": "Reset intentionally revokes all sessions; operator session-management UI is not provided."
+    },
+    {
+      "id": "explicit-permissions",
+      "asvs": [
+        "v5.0.0-8.1.1",
+        "v5.0.0-8.2.1",
+        "v5.0.0-8.2.2"
+      ],
+      "state": "mapped",
+      "description": "Explicit role grants, tenant boundaries and owner checks.",
+      "references": [
+        "features/authorization/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_owner_tenant_and_nonexistent_resources"
+        },
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_authorized_rows_precede_totals_and_pagination"
+        }
+      ],
+      "limits": "Product-specific action definitions and membership persistence belong to the consuming application."
+    },
+    {
+      "id": "trusted-authorization",
+      "asvs": [
+        "v5.0.0-8.3.1"
+      ],
+      "state": "mapped",
+      "description": "Server-owned membership; client headers/query cannot grant roles.",
+      "references": [
+        "features/authorization/specification.md",
+        "docs/core-starter.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_headers_and_query_cannot_grant_roles"
+        },
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_membership_provider_cannot_rewrite_authenticated_subject"
+        }
+      ],
+      "limits": "Browser helpers are presentation advice and cannot enforce access."
+    },
+    {
+      "id": "current-membership",
+      "asvs": [
+        "v5.0.0-8.3.2"
+      ],
+      "state": "mapped",
+      "description": "Membership revocation affects existing sessions on the next request.",
+      "references": [
+        "docs/core-standards.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_role_revocation_applies_to_existing_session"
+        }
+      ],
+      "limits": "Requires a trusted current membership provider; the starter defaults to denial."
+    },
+    {
+      "id": "field-authorization",
+      "asvs": [
+        "v5.0.0-8.2.3"
+      ],
+      "state": "gap",
+      "description": "General field-level read/write authorization is not provided.",
+      "references": [
+        "docs/core-standards.md"
+      ],
+      "tests": [],
+      "limits": "Explicit document projection is not a general field-level authorization engine."
+    },
+    {
+      "id": "fail-closed",
+      "asvs": [
+        "v5.0.0-16.5.1",
+        "v5.0.0-16.5.2",
+        "v5.0.0-16.5.3"
+      ],
+      "state": "mapped",
+      "description": "Membership failure and invalid trusted data fail closed with generic errors.",
+      "references": [
+        "features/authorization/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_provider_failure_is_generic_and_fails_closed"
+        },
+        {
+          "path": "tests/core_consumer_conformance.py",
+          "class": "CoreConsumerContract",
+          "method": "test_missing_trusted_data_returns_fixed_error"
+        }
+      ],
+      "limits": "Infrastructure availability and every unhandled consumer exception are not assessed."
+    },
+    {
+      "id": "cache-protection",
+      "asvs": [
+        "v5.0.0-14.3.2"
+      ],
+      "state": "mapped",
+      "description": "Authentication and sensitive product HTTP responses disable browser caching.",
+      "references": [
+        "features/auth/specification.md",
+        "features/authorization/specification.md"
+      ],
+      "tests": [
+        {
+          "path": "tests/conformance.py",
+          "class": "AuthContract",
+          "method": "test_01_login_user_shape_and_cache"
+        }
+      ],
+      "limits": "Reverse proxies and CDNs must preserve these headers."
+    },
+    {
+      "id": "database-injection",
+      "asvs": [
+        "v5.0.0-1.2.4"
+      ],
+      "state": "partial",
+      "description": "Typed allowlists and parameterized PostgreSQL listing queries.",
+      "references": [
+        "docs/postgres-listing.md",
+        "features/auth/postgres/001_initial.sql"
+      ],
+      "tests": [],
+      "limits": "Python-only PostgreSQL listing candidate; no general consumer SQL injection assurance."
+    },
+    {
+      "id": "log-protection",
+      "asvs": [
+        "v5.0.0-16.2.5"
+      ],
+      "state": "partial",
+      "description": "Document prohibited secrets in logs and publish only sanitized scanner metadata.",
+      "references": [
+        "SECURITY.md",
+        "tools/security_audit.py"
+      ],
+      "tests": [],
+      "limits": "Production application logging and external collectors require separate review."
+    },
+    {
+      "id": "transport",
+      "asvs": [
+        "v5.0.0-12.2.1",
+        "v5.0.0-12.3.2"
+      ],
+      "state": "deployment-owned",
+      "description": "Configure public HTTPS and verify service certificates.",
+      "references": [
+        "SECURITY.md",
+        "docs/smtp-delivery.md"
+      ],
+      "tests": [],
+      "limits": "Local fixtures do not establish public ingress, proxy or every database driver TLS configuration."
+    },
+    {
+      "id": "dependency-updates",
+      "asvs": [
+        "v5.0.0-15.2.1",
+        "v5.0.0-15.2.4"
+      ],
+      "state": "partial",
+      "description": "Pinned scanners, known-vulnerability checks and release-commit binding.",
+      "references": [
+        "security/tools.json",
+        "tools/security_audit.py",
+        "tools/verify-release-ci.mjs"
+      ],
+      "tests": [],
+      "limits": "No commercial response SLA; known-vulnerability matching is not dependency-confusion or malicious-code proof."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "rules": [
+    {"id": "python-dynamic-eval", "languages": ["python"], "severity": "ERROR", "message": "Review dynamic code execution at the trust boundary.", "pattern-either": [{"pattern": "eval(...)"}, {"pattern": "exec(...)"}]},
+    {"id": "python-shell-command", "languages": ["python"], "severity": "ERROR", "message": "Use an argument array and shell=False.", "pattern": "subprocess.$CALL(..., shell=True, ...)"},
+    {"id": "python-unsafe-deserialization", "languages": ["python"], "severity": "ERROR", "message": "Do not deserialize executable pickle data in application code.", "pattern-either": [{"pattern": "pickle.loads(...)"}, {"pattern": "pickle.load(...)"}]},
+    {"id": "python-disable-tls", "languages": ["python"], "severity": "ERROR", "message": "Do not disable outbound certificate verification.", "pattern-either": [{"pattern": "requests.$CALL(..., verify=False, ...)"}, {"pattern": "httpx.$CALL(..., verify=False, ...)"}, {"pattern": "ssl._create_unverified_context(...)"}]},
+    {"id": "go-disable-tls", "languages": ["go"], "severity": "ERROR", "message": "Do not disable outbound certificate verification.", "pattern": "tls.Config{..., InsecureSkipVerify: true, ...}"},
+    {"id": "go-shell-command", "languages": ["go"], "severity": "ERROR", "message": "Review shell command construction; prefer direct argument arrays.", "pattern-either": [{"pattern": "exec.Command(\"sh\", \"-c\", ...)"}, {"pattern": "exec.Command(\"bash\", \"-c\", ...)"}]},
+    {"id": "java-shell-command", "languages": ["java"], "severity": "ERROR", "message": "Review shell command construction.", "pattern-either": [{"pattern": "new ProcessBuilder(\"sh\", \"-c\", ...)"}, {"pattern": "new ProcessBuilder(\"bash\", \"-c\", ...)"}]},
+    {"id": "java-weak-password-digest", "languages": ["java"], "severity": "ERROR", "message": "Do not introduce MD5 or SHA-1 digests into application security code.", "pattern-either": [{"pattern": "MessageDigest.getInstance(\"MD5\")"}, {"pattern": "MessageDigest.getInstance(\"SHA-1\")"}]},
+    {"id": "rust-disable-tls", "languages": ["rust"], "severity": "ERROR", "message": "Do not accept invalid TLS certificates or hostnames.", "pattern-either": [{"pattern": "$CLIENT.danger_accept_invalid_certs(true)"}, {"pattern": "$CLIENT.danger_accept_invalid_hostnames(true)"}]},
+    {"id": "javascript-dynamic-eval", "languages": ["javascript", "typescript"], "severity": "ERROR", "message": "Review dynamic code execution in application code.", "pattern-either": [{"pattern": "eval(...)"}, {"pattern": "new Function(...)"}]},
+    {"id": "javascript-disable-tls", "languages": ["javascript", "typescript"], "severity": "ERROR", "message": "Do not disable TLS certificate verification.", "pattern": "{..., rejectUnauthorized: false, ...}"},
+    {"id": "rust-shell-command", "languages": ["rust"], "severity": "ERROR", "message": "Review shell command construction; prefer direct argument arrays.", "pattern-either": [{"pattern": "Command::new(\"sh\").arg(\"-c\")"}, {"pattern": "Command::new(\"bash\").arg(\"-c\")"}]}
+  ]
+}

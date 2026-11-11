@@ -1,0 +1,67 @@
+name: Security evidence
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        with:
+          version: '0.10.4'
+      - name: Validate mapping and fail-closed report behavior
+        run: |
+          python tools/security_audit.py --check-mapping --verify-asvs-upstream
+          python -m unittest discover -s tests -p 'test_security_*.py'
+          node --test tools/verify-release-ci.test.mjs
+      - name: Install exact scanner versions and checksum-verified binaries
+        run: |
+          uv sync --frozen --project security
+          python tools/install_security_tools.py --dest "$RUNNER_TEMP/security-tools"
+      - name: Exercise all local static rules and narrow secret exceptions
+        run: python tools/security_selftest.py --bin-dir "$RUNNER_TEMP/security-tools"
+      - name: Scan dependencies source and secret history
+        run: python tools/security_audit.py --bin-dir "$RUNNER_TEMP/security-tools" --out "$RUNNER_TEMP/security-evidence"
+      - name: Preserve setup failure as unverified evidence
+        if: always()
+        run: |
+          python tools/security_audit.py --record-setup-failure --out "$RUNNER_TEMP/security-evidence"
+          cat "$RUNNER_TEMP/security-evidence/security-report.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve sanitized evidence even when findings block the gate
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: security-evidence
+          path: |
+            ${{ runner.temp }}/security-evidence/security-report.json
+            ${{ runner.temp }}/security-evidence/security-report.md
+            ${{ runner.temp }}/security-evidence/dependencies.cdx.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Verify workflow template parity
+        if: always()
+        run: cmp .github/workflows/security.yml ci/security.yml

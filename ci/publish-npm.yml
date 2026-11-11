@@ -113,7 +113,16 @@ jobs:
       - name: Require the full CI to have passed for this source commit
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node tools/verify-release-ci.mjs
+        run: node tools/verify-release-ci.mjs --receipt "$RUNNER_TEMP/source-verification.json"
+      - name: Bind exact reviewed package bytes to source security evidence
+        run: python tools/security_release.py --receipt "$RUNNER_TEMP/source-verification.json" --artifacts release --out "$RUNNER_TEMP/release-security.json"
+      - name: Preserve pre-publication security references and artifact hashes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: npm-release-security
+          path: ${{ runner.temp }}/release-security.json
+          if-no-files-found: error
+          retention-days: 90
       - name: Publish using GitHub OIDC
         run: npm exec --yes --package=npm@12.2.1 -- npm publish "$GITHUB_WORKSPACE/release/"*.tgz --access public --tag latest
       - name: Verify registry version and artifact integrity

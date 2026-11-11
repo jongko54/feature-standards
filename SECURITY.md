@@ -28,6 +28,14 @@ v1 메모리, v2 PostgreSQL과 v3 계정 생명주기는 동작을 비교하고 
 
 [v2 공통 harness](tests/postgres_conformance.py), [v3 harness](tests/account_conformance.py), [소비 앱 harness](tests/consumer_conformance.py)는 `feature_auth` 스키마를 초기화합니다. 외부 DB는 loopback·명시적 포트·ASCII `feature_standards_test*` 이름을 검사하며 작업 전용 DB에서만 실행합니다. fixture는 `sslmode=disable` 외 query와 값이 있는 `PG*` 환경도 거절합니다. 이는 앱의 TLS URI 정책과 다른 테스트 대상 보호 규칙입니다. 운영 DB와 기존 사용자 데이터에는 실행하지 마세요.
 
+## Automated evidence and release policy
+
+[보안 검증 안내](docs/security.md)와 [선택한 ASVS 매핑](security/asvs-map.json)을 공개합니다. ASVS 5.0.0의 전체 345개 중 34개 요구사항에 대한 20개 로컬 통제 매핑이며, 전체 ASVS 준수·등급·인증을 뜻하지 않습니다. 매핑의 파일·테스트 선언 확인과 실제 테스트 실행은 별도 근거입니다. 쿠키 이름 접두사, 일반/유출 비밀번호 차단, 일반 필드별 권한 등 미충족·미검증 항목을 유지합니다.
+
+전용 security workflow는 의존성(OSV), 제한된 로컬 정적 규칙(Semgrep), Git 이력·현재 파일의 시크릿 패턴(Gitleaks)을 검사합니다. 발견 사항, 검사 오류와 범위 누락은 모두 게이트 실패입니다. 보고서는 시각·커밋·도구 버전·범위·입력 해시와 한계를 기록하며 원문 시크릿·소스 줄·환경 변수를 게시하지 않습니다. 기존 공개 콘텐츠 해시에 대한 정확한 값 예외만 두고 파일 전체를 제외하지 않습니다.
+
+자동 npm/PyPI/crates.io 게시에는 같은 main 소스 커밋의 기능 CI와 72시간 이내 성공한 보안 검사가 필요합니다. 게시 전 실제 아카이브 해시와 검증한 workflow 참조를 남기며, 수동 Go/Maven 게시와 직접 로컬 게시는 이 자동 게이트의 범위 밖입니다. 이 기록은 서명된 증명·실제 게시 확인·운영 보안 감사가 아닙니다. 의존성 검사 결과도 실제 취약 코드의 도달 가능성·악용 여부와 구분해 검토합니다.
+
 ## Private vulnerability reporting
 
 GitHub private vulnerability reporting is enabled for this public repository. Use [Report a vulnerability](https://github.com/jongko54/feature-standards/security/advisories/new) to contact the maintainer privately. Include the affected commit or package version, profile, deployment assumptions, impact, and a minimal reproduction with synthetic credentials. Do not post secrets or exploitable details in public issues.

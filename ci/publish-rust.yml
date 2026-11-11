@@ -67,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python tools/release_metadata.py rust --tag "$RELEASE_TAG" --github-output >> "$GITHUB_OUTPUT"
-          node tools/verify-release-ci.mjs
+          node tools/verify-release-ci.mjs --receipt "$RUNNER_TEMP/source-verification.json"
       - name: Install Rust toolchain
         run: |
           rustup toolchain install 1.93.1 --profile minimal
@@ -84,6 +84,15 @@ jobs:
         run: |
           cargo package --locked --registry crates-io
           cmp "target/package/$PACKAGE_NAME-$PACKAGE_VERSION.crate" "$RUNNER_TEMP/rust-release-artifact/$PACKAGE_NAME-$PACKAGE_VERSION.crate"
+      - name: Bind exact reviewed package bytes to source security evidence
+        run: python tools/security_release.py --receipt "$RUNNER_TEMP/source-verification.json" --artifacts "$RUNNER_TEMP/rust-release-artifact" --out "$RUNNER_TEMP/release-security.json"
+      - name: Preserve pre-publication security references and artifact hashes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rust-release-security
+          path: ${{ runner.temp }}/release-security.json
+          if-no-files-found: error
+          retention-days: 90
       - name: Obtain a temporary crates.io publishing token
         id: auth
         uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1.0.6

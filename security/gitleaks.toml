@@ -1,0 +1,12 @@
+title = "Feature Standards secret detection"
+
+[extend]
+useDefault = true
+
+# Only exact reviewed public digest values; no path or generic hex exclusion.
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "Exact reviewed public content digests in historical receipts"
+regexTarget = "secret"
+regexes = ['^(?:1501be7427798c79bbc4e6273c992740d1ef3f91dbc26970d78881ec15ac5411|323597957adcd6d70af7a551fafcea5d798aef5bf31074a117dd0c1873e06391|75413f01e585b1d3a7965898c0365a4dcd52a1f2ec84d773b2313f4ee11cb03d|951d886c8ff3dc3d595adf64efc8ee29f0740c42bdd636471de8a87136a80fd2|b7af6bd4802e06ad4014f5d14b510441743504da703a3f819f58e31bfe562543|ba03ec700bff340a0f44f796246167a05139a651c9ad16c1b3b3a1c7832925e2|c080283d516fb4342ce0b0978044d13917b8d3872a7899809cb3b089b45f62ac)$']
