@@ -92,6 +92,24 @@ These are observations inside a supplied checkout. They measure package/API reus
 
 The [completed 2026-11-10 study](../../docs/adoption/2026-11-10-ai-choice.md) retained all **32 supported starts** and reviewed **96 feature paths**. Original-library dependency connections occurred in **1/32** apps, copied/vendored source in **13/32**, and all-direct implementations in **18/32**. Copied SDK APIs were actually used and remain source reuse, distinct from connecting the unchanged reference or registry dependency. Overall provided-code reuse was **14/32**; original HTTP passes were **27/32**. The [sanitized reviewed record](results/2026-11-10-choice-v1.json) keeps the two build failures, two scoped-total failures and one model timeout. The report explains the collection/read wording ambiguity, 31/32 complete usage records, unknown actual model identities and the separate availability probes. These counts do not estimate population adoption, rank languages/models or establish new savings.
 
+## Optional SDK pointer A/B protocol
+
+`tools/core_guidance_eval.py` keeps the v1 choice records unchanged and defines a separate `core-guidance-v2` experiment. A single explicit requested model, four backends, documents/tickets, baseline/sdk-pointer and two repeats produce **32 serial integration sessions**. Each condition receives the same frozen source, neutral AGENTS, four optional [SDK connection cards](../../docs/ai-entry/README.md), packed candidate and build requirements. Only the optional card-path sentence differs in the prompt. SDK dependencies, copied/vendored code and direct implementations remain accepted choices.
+
+Documents explicitly requires owner read visibility for both collection and detail and retains the existing **143 HTTP assertions**. Tickets adds distinct fields, viewer/dispatcher scopes, a whole-inbox summary and private synthetic data loaded on each product request, with **727 HTTP assertions**. The tickets seed/data is fixed per matched pair, injected only after generation, and validated again from the retained fixture. Generator logic is public; this is not an OS security boundary or a wholly hidden grader. Empty summary query text, including a bare `?`, is treated consistently across frameworks.
+
+```sh
+uv run --frozen --project tools python tools/core_guidance_eval.py run \
+  --artifact /absolute/path/feature-standards-0.4.0.tgz \
+  --artifact-sha256 <sha256> --source-commit <40-character-commit> \
+  --model gpt-6.1-sol --stack all --scenarios documents tickets \
+  --repeats 2 --timeout 600 --output eval-results/guidance-NEW
+```
+
+Use the source-review schema from the v1 protocol with `report --input eval-results/guidance-NEW --reviews /absolute/path/reviews.json --output eval-results/guidance-REVIEWED-NEW`. The report validates source/module/card/prompt/assignment/result/trace/analysis and actual private fixture hashes. Keep the executed tool modules unchanged through reporting. Unknown source choices remain unknown; timeouts and post-start failures remain in the denominator. Original dependency connections, copied API use and full working HTTP outcomes have separate counts.
+
+Paired usage includes only complete, comparable records with unchanged source, equal fixture/provenance and the same known CLI version. HTTP failure alone does not remove a complete usage pair; joint-working pairs are a separate diagnostic. Missing usage stays null. Record requested/observed or unknown model identity and shared-cache limitations. This is a small one-model synthetic-workflow pilot, not an external adoption rate, production audit or general token-saving claim. The [execution plan](../../docs/superpowers/plans/2026-11-11-guidance-ab-v2.md) records the fixed design and preflight boundaries.
+
 ## Actual smoke on 2026-11-07
 
 The [original eight-call smoke](results/2026-11-07-catalog-smoke-v1.json) requested `gpt-6.1-sol` with Codex CLI `0.167.0` and a 600-second per-trial limit. All token records were complete; the trace did not report the actual model identity. The exact executed runner is preserved at commit `6036df67f750a4fdd01eae82898ae0ec6f303827`, separately from implementation source `752e4e4` and published catalog `0.3.2`.
