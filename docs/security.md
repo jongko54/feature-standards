@@ -5,6 +5,9 @@ security regression tests and a scoped automated security baseline. It has not
 received an independent security audit or ASVS certification. A successful
 functional CI run does not establish the absence of vulnerabilities.
 
+The [2026-11-11 baseline](security-baseline-2026-11-11.md) records actual local
+results, including unresolved dependency matches that block the release gate.
+
 ## What is assessed
 
 The [selected ASVS map](../security/asvs-map.json) connects **20 local controls**

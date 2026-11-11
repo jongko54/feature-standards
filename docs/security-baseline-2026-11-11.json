@@ -1,0 +1,497 @@
+{
+  "schemaVersion": 1,
+  "kind": "dated-local-security-baseline",
+  "assessedCommit": "f88ce701b24bfc70ae40ffb4a42275caf0829505",
+  "assessedTree": "c261f1519fcbf68786cf9ff640a770c5a2f76c06",
+  "sourceDirty": false,
+  "finishedAt": "2026-11-11T13:50:54.577115+00:00",
+  "status": "findings",
+  "tools": {
+    "osv-scanner": "2.7.1",
+    "gitleaks": "8.30.1",
+    "semgrep": "1.185.0"
+  },
+  "mapping": {
+    "validation": "references-only",
+    "controls": 20,
+    "selectedRequirements": 34,
+    "states": {
+      "mapped": 12,
+      "partial": 5,
+      "gap": 2,
+      "deployment-owned": 1
+    },
+    "asvsLevelClaim": null,
+    "runtimeTestsExecuted": false,
+    "upstreamVerified": false
+  },
+  "checks": {
+    "dependencies": {
+      "status": "findings",
+      "manifestInputs": 23,
+      "packageOccurrences": 1102,
+      "uniqueInventoryComponents": 466,
+      "findingOccurrences": 74,
+      "uniqueAdvisoryPackageVersionCombinations": 29,
+      "ecosystems": [
+        "Go",
+        "Maven",
+        "PyPI",
+        "crates.io",
+        "npm"
+      ]
+    },
+    "static": {
+      "status": "passed",
+      "filesScanned": 147,
+      "localRules": 12,
+      "findings": 0
+    },
+    "secrets": {
+      "status": "passed",
+      "currentFilesScanned": 536,
+      "reachableGitRefs": true,
+      "findings": 0,
+      "historicalPublicDigestOccurrencesReviewed": 13
+    }
+  },
+  "validation": {
+    "repositoryPython": {
+      "discovered": 369,
+      "passed": 336,
+      "environmentSkips": 33,
+      "failed": 0
+    },
+    "releaseGateNode": {
+      "passed": 5,
+      "failed": 0
+    },
+    "existingRegistryNode": {
+      "passedIncludingSubtests": 25,
+      "failed": 0
+    },
+    "mainCatalogNode": {
+      "passed": 52,
+      "failed": 0
+    },
+    "actualRuleFixtures": {
+      "staticRules": 12,
+      "languages": 5,
+      "negativeFixtures": 5,
+      "newSecretAndKnownDigest": "passed"
+    },
+    "actionlint": "1.7.12 passed",
+    "workflowMirrors": "passed",
+    "cycloneDx16Schema": "passed",
+    "mainTarballFreshInstallAnd26Contexts": "passed before commit with dirty provenance explicitly recorded",
+    "namespaceBootstrap": "passed; not published"
+  },
+  "evidenceHashes": {
+    "security-report.json": "c8ca650607afebdc4d02399d9fdcd1024771fe36c082e2cab909ade2f4e76ed8",
+    "security-report.md": "8fad275638fb5b646dd442e64e92790328107e675f97df352d284e52e97f8080",
+    "dependencies.cdx.json": "217d0f1fc624a39bec42da085be13b72b20434cf340ea5a75dc8f837f80cf5fc"
+  },
+  "findings": [
+    {
+      "id": "GO-2026-5932",
+      "ecosystem": "Go",
+      "package": "golang.org/x/crypto",
+      "version": "0.58.0",
+      "severity": "UNKNOWN",
+      "sources": [
+        "examples/consumer-go/go.mod",
+        "examples/core-go/go.mod",
+        "implementations/go-net-http/go.mod"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GO-2026-5932"
+    },
+    {
+      "id": "GHSA-7hhh-6rmp-j9qf",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-core",
+      "version": "2.21.4",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-7hhh-6rmp-j9qf"
+    },
+    {
+      "id": "GHSA-p6pp-m3f8-5c89",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-core",
+      "version": "2.21.4",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-p6pp-m3f8-5c89"
+    },
+    {
+      "id": "GHSA-5gvw-p9qm-jgwh",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-5gvw-p9qm-jgwh"
+    },
+    {
+      "id": "GHSA-5jmj-h7xm-6q6v",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-5jmj-h7xm-6q6v"
+    },
+    {
+      "id": "GHSA-cxp5-3px4-pw24",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-cxp5-3px4-pw24"
+    },
+    {
+      "id": "GHSA-gx83-3vf8-gh7j",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-gx83-3vf8-gh7j"
+    },
+    {
+      "id": "GHSA-mhm7-754m-9p8w",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-mhm7-754m-9p8w"
+    },
+    {
+      "id": "GHSA-q4xh-88c3-wmh7",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-q4xh-88c3-wmh7"
+    },
+    {
+      "id": "GHSA-vvgp-rfg2-7rr6",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-vvgp-rfg2-7rr6"
+    },
+    {
+      "id": "GHSA-wjgm-6hv5-3cvf",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-wjgm-6hv5-3cvf"
+    },
+    {
+      "id": "GHSA-wv8q-qhhj-9h54",
+      "ecosystem": "Maven",
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.4",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-wv8q-qhhj-9h54"
+    },
+    {
+      "id": "GHSA-qv9r-c865-cp47",
+      "ecosystem": "Maven",
+      "package": "org.apache.logging.log4j:log4j-api",
+      "version": "2.24.3",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-qv9r-c865-cp47"
+    },
+    {
+      "id": "GHSA-5v3h-fjv2-54fg",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "MODERATE",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-5v3h-fjv2-54fg"
+    },
+    {
+      "id": "GHSA-9xv2-5v5q-p794",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-9xv2-5v5q-p794"
+    },
+    {
+      "id": "GHSA-f525-44xv-f2qj",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-f525-44xv-f2qj"
+    },
+    {
+      "id": "GHSA-gcx9-497g-6cp6",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-gcx9-497g-6cp6"
+    },
+    {
+      "id": "GHSA-h3x4-894j-xpx5",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-h3x4-894j-xpx5"
+    },
+    {
+      "id": "GHSA-h792-v28v-ppgr",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-h792-v28v-ppgr"
+    },
+    {
+      "id": "GHSA-mqg3-r7h5-24x4",
+      "ecosystem": "Maven",
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.55",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-mqg3-r7h5-24x4"
+    },
+    {
+      "id": "GHSA-j92g-9f8w-j867",
+      "ecosystem": "Maven",
+      "package": "org.postgresql:postgresql",
+      "version": "42.7.11",
+      "severity": "HIGH",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-j92g-9f8w-j867"
+    },
+    {
+      "id": "GHSA-j9f9-w8pj-32f8",
+      "ecosystem": "Maven",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-j9f9-w8pj-32f8"
+    },
+    {
+      "id": "GHSA-pc63-qcmh-9cmg",
+      "ecosystem": "Maven",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-pc63-qcmh-9cmg"
+    },
+    {
+      "id": "GHSA-5h93-6whr-6q8j",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-5h93-6whr-6q8j"
+    },
+    {
+      "id": "GHSA-84m7-p3x7-pcfv",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-84m7-p3x7-pcfv"
+    },
+    {
+      "id": "GHSA-rwrf-2pqf-9j8j",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-rwrf-2pqf-9j8j"
+    },
+    {
+      "id": "GHSA-w4fh-qvv9-3v23",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-w4fh-qvv9-3v23"
+    },
+    {
+      "id": "GHSA-xcq7-p3pf-p88h",
+      "ecosystem": "PyPI",
+      "package": "opentelemetry-api",
+      "version": "1.37.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-xcq7-p3pf-p88h"
+    },
+    {
+      "id": "RUSTSEC-2026-0385",
+      "ecosystem": "crates.io",
+      "package": "ctutils",
+      "version": "0.4.2",
+      "severity": "UNKNOWN",
+      "sources": [
+        "implementations/rust-axum/Cargo.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/RUSTSEC-2026-0385"
+    }
+  ],
+  "limits": [
+    "Known dependency matches do not establish reachable exploitation; some belong to security tools.",
+    "Maven dependencies are resolver-inferred rather than verified against actual built classpaths.",
+    "The selected ASVS mapping is not a full assessment, level attainment or certification.",
+    "Static rules are limited intrafile guardrails; no exhaustive code audit or new penetration testing.",
+    "No production deployment, registry publication, signed attestation or independent security audit.",
+    "Remote workflow results are separate evidence; inspect the workflow for the exact pushed commit."
+  ]
+}
