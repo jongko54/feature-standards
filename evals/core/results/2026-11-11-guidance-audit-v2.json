@@ -1,0 +1,1064 @@
+{
+  "schema_version": 1,
+  "suite": "core-guidance-v2",
+  "reviewed_summary_sha256": "b2320bd8c8f1a48d651eec33a51df864f1ff276827e14896b5917b7586e14816",
+  "command_reference_observations": {
+    "schema_version": 1,
+    "suite": "core-guidance-v2",
+    "observation_kind": "command_metadata_card_reference_candidates",
+    "observed_utc": "2026-11-11T08:34:46.457396+00:00",
+    "source_commit": "575a911f1cfd76a9ff967118b2f02eb7fdd60166",
+    "reading_trace_parser_sha256": "a834805b2b18a8960be96c26cc4d3b28bebd299d3a018e1dd5aaff6925242174",
+    "experiment_complete": true,
+    "experiment_blocked": null,
+    "planned_model_calls": 32,
+    "guide_delivery": {
+      "artifact_sha256": "a34588431e7416e487153b840c3d7d3d65021c4e00f718f1a063b198b59267c0",
+      "packaged_ai_entry_file_count": 0,
+      "packaged_ai_brief_file_count": 4,
+      "card_delivery": "source-checkout"
+    },
+    "frozen_module_card_hashes_matched": true,
+    "completed_trials_observed": 32,
+    "latest_sequence_observed": 32,
+    "raw_result_trace_analysis_unchanged": true,
+    "reasoning_text_and_tool_outputs_inspected": false,
+    "fixture_files_and_seeds_inspected": false,
+    "limits": [
+      "Only command-execution metadata was inspected; reasoning, assistant text, tool output and fixture files/seeds were not inspected or quoted.",
+      "The existing reading_trace _commands/_reader/_relative helpers were reused. reading_evidence/_original_snapshot were not called because they inspect command output to infer an absolute working directory.",
+      "Body-read and content-search entries are conservative command candidates, not proof of displayed bytes, full-card consumption, understanding, SDK use, runtime calls or causality.",
+      "ls, rg --files and rg -l are separate from body-read candidates. Directory searches cannot prove an individual card was read.",
+      "Indirect scripts, unsupported shell syntax, ambiguous absolute paths and changed/unverified working directories remain unknown. No evidence is not evidence of no reading.",
+      "Only item.completed command_execution items with successful command metadata can become body-read/search candidates. Other tool-call item types are counted as uninspected if present.",
+      "Relative-path resolution follows the parser default generated working-directory assumption; no command output was used to infer original absolute paths.",
+      "Observation covers completed trials in the recorded progress snapshot. Complete final coverage requires experiment_complete=true; blocked runs retain partial coverage. This is not a source-route audit.",
+      "The SDK cards were supplied through the source checkout only. The pinned npm packed snapshot/CLI context does not include docs/ai-entry; this does not evaluate npm-install or CLI-context guide delivery."
+    ],
+    "condition_observations": [
+      {
+        "condition": "baseline",
+        "completed_trials_observed": 16,
+        "expected_card_explicit_reference_trials": 0,
+        "successful_command_reference_trials": 0,
+        "non_success_or_unconfirmed_reference_trials": 0,
+        "expected_card_body_read_candidate_trials": 0,
+        "expected_card_content_search_candidate_trials": 0,
+        "filename_discovery_signal_invocations": 0,
+        "unknown_reference_signal_invocations": 0
+      },
+      {
+        "condition": "sdk-pointer",
+        "completed_trials_observed": 16,
+        "expected_card_explicit_reference_trials": 16,
+        "successful_command_reference_trials": 14,
+        "non_success_or_unconfirmed_reference_trials": 2,
+        "expected_card_body_read_candidate_trials": 0,
+        "expected_card_content_search_candidate_trials": 0,
+        "filename_discovery_signal_invocations": 0,
+        "unknown_reference_signal_invocations": 16
+      }
+    ],
+    "runs": [
+      {
+        "trial": "m01-python-documents-baseline-trial-1",
+        "sequence": 1,
+        "stack": "python",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "89f623bf1aff7b22eb41521ee002e8c010a9466b22dacfffb3cfc251d5c5ee3f",
+        "command_execution_count": 25,
+        "unsupported_shell_command_count": 22,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-python-documents-sdk-pointer-trial-1",
+        "sequence": 2,
+        "stack": "python",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "3478b0264616135364681dee96ffe11e1a286ab78ca162d105136b6adda3d62e",
+        "command_execution_count": 16,
+        "unsupported_shell_command_count": 13,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/python.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-python-tickets-baseline-trial-1",
+        "sequence": 3,
+        "stack": "python",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "f023b8dab6a56c35b7811717a66116bc0030f3aaf6c6e33a3121be7dfd492929",
+        "command_execution_count": 15,
+        "unsupported_shell_command_count": 8,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-python-tickets-sdk-pointer-trial-1",
+        "sequence": 4,
+        "stack": "python",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "c49c74ee9968dc15acabde4415c14a765721317c2a2cadb81d4ebbbde8c575f6",
+        "command_execution_count": 18,
+        "unsupported_shell_command_count": 13,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/python.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-go-documents-sdk-pointer-trial-1",
+        "sequence": 5,
+        "stack": "go",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "2b88686da2b155b14383dd816da80b0155a312a53d1bfed257afa4dc7150952e",
+        "command_execution_count": 16,
+        "unsupported_shell_command_count": 7,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/go.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-go-tickets-baseline-trial-1",
+        "sequence": 6,
+        "stack": "go",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "e2b92155144410a38f590d09fffda9b35e6263b0bbae46fa59e8c308fce7f3b7",
+        "command_execution_count": 9,
+        "unsupported_shell_command_count": 8,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-go-tickets-sdk-pointer-trial-1",
+        "sequence": 7,
+        "stack": "go",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "227736dae0fa96d6b0254582c319e4eb08a47128b58d18b4962c7036f96f745c",
+        "command_execution_count": 7,
+        "unsupported_shell_command_count": 6,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/go.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-go-documents-baseline-trial-1",
+        "sequence": 8,
+        "stack": "go",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "42d72672d43fb99863b8e8c147c4a20deb8bc1df1c496dc560ec86d8a5572c2c",
+        "command_execution_count": 9,
+        "unsupported_shell_command_count": 8,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-java-tickets-baseline-trial-1",
+        "sequence": 9,
+        "stack": "java",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "9431e92eb8e2843d6ded261580c68170af04f0b73cb4a322afde09439246c06e",
+        "command_execution_count": 14,
+        "unsupported_shell_command_count": 13,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-java-tickets-sdk-pointer-trial-1",
+        "sequence": 10,
+        "stack": "java",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "a18e61253f81bd47eb6a1f16fc47753fd45184e4c72880bbe76bfbc08a68f7cd",
+        "command_execution_count": 20,
+        "unsupported_shell_command_count": 19,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 1,
+            "event_index": 5,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/java.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-java-documents-baseline-trial-1",
+        "sequence": 11,
+        "stack": "java",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "41beb127e03d27388092351a8ae16f178dd2fed59a4d2922b0aa2c2f4b2a311a",
+        "command_execution_count": 20,
+        "unsupported_shell_command_count": 16,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-java-documents-sdk-pointer-trial-1",
+        "sequence": 12,
+        "stack": "java",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "5647c99a10a2db9975f033eb06b412338ec58dba2b854933beec63e425f6f7f6",
+        "command_execution_count": 19,
+        "unsupported_shell_command_count": 18,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/java.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": false,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-rust-tickets-sdk-pointer-trial-1",
+        "sequence": 13,
+        "stack": "rust",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "d51990a6be686667502048c1d4d99ee5f8ed0468009beaa423a472ada50aebae",
+        "command_execution_count": 15,
+        "unsupported_shell_command_count": 11,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/rust.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-rust-documents-baseline-trial-1",
+        "sequence": 14,
+        "stack": "rust",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "128948bd7c650d543237b8b730f647b04b799e7310e81d60c5e62e778a456c49",
+        "command_execution_count": 16,
+        "unsupported_shell_command_count": 15,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-rust-documents-sdk-pointer-trial-1",
+        "sequence": 15,
+        "stack": "rust",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 1,
+        "trace_sha256": "792348ce52e979613d47ef637e66d5f95cfa0fe26a4f173898a9bed82db36ee7",
+        "command_execution_count": 12,
+        "unsupported_shell_command_count": 11,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 2,
+            "event_index": 7,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/rust.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-rust-tickets-baseline-trial-1",
+        "sequence": 16,
+        "stack": "rust",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 1,
+        "trace_sha256": "220a245df305497af932f33c6c23f49b792401b739de9f72f5014796aa0b0aba",
+        "command_execution_count": 15,
+        "unsupported_shell_command_count": 14,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-python-tickets-sdk-pointer-trial-2",
+        "sequence": 17,
+        "stack": "python",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "18465e1de993a87a35afabfa47d82127410d781f240f68b8c64251c6060bd349",
+        "command_execution_count": 35,
+        "unsupported_shell_command_count": 28,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/python.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-python-tickets-baseline-trial-2",
+        "sequence": 18,
+        "stack": "python",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "e930180c890242854a378848244be16417e67c76c9efeb5286a150154c682c6f",
+        "command_execution_count": 11,
+        "unsupported_shell_command_count": 9,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-python-documents-sdk-pointer-trial-2",
+        "sequence": 19,
+        "stack": "python",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "029d76b32169be6c4604db437c93d68de56e49110dcd577ea2ddf93529dfeb82",
+        "command_execution_count": 15,
+        "unsupported_shell_command_count": 10,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/python.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-python-documents-baseline-trial-2",
+        "sequence": 20,
+        "stack": "python",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "17704f1ec945bd7f47e61846be4b3094b87ac2df050c37efd512309ae68d18d6",
+        "command_execution_count": 17,
+        "unsupported_shell_command_count": 15,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-go-documents-baseline-trial-2",
+        "sequence": 21,
+        "stack": "go",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "499f7e0b0d70129f16d9288a2d1d694d06ec5244c5f669c2ba27c5778e0e8ca5",
+        "command_execution_count": 10,
+        "unsupported_shell_command_count": 10,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-go-tickets-sdk-pointer-trial-2",
+        "sequence": 22,
+        "stack": "go",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "166d0859ed321ac103c52971fe7e704250461e25f1c1119b5c1dc89f1151fe47",
+        "command_execution_count": 9,
+        "unsupported_shell_command_count": 8,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/go.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-go-tickets-baseline-trial-2",
+        "sequence": 23,
+        "stack": "go",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "7ece2b1c828da9f3c48dae4dca534cbf9efd3d5e223399fd28fa6fdd02bb0be3",
+        "command_execution_count": 8,
+        "unsupported_shell_command_count": 7,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-go-documents-sdk-pointer-trial-2",
+        "sequence": 24,
+        "stack": "go",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "bb7c9168db77dba5081ebf7303fbb01589d2837bae5acf813cc9eb08030a4fe3",
+        "command_execution_count": 7,
+        "unsupported_shell_command_count": 6,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/go.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-java-documents-sdk-pointer-trial-2",
+        "sequence": 25,
+        "stack": "java",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "18dc5c849b227ea7a3c72e45fc8707a775339bcf06ee80b27b3200a324c6707e",
+        "command_execution_count": 18,
+        "unsupported_shell_command_count": 17,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 10,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/java.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": false,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-java-documents-baseline-trial-2",
+        "sequence": 26,
+        "stack": "java",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "1a27a24243a947c02cee967227724181df3fd714d47c93b7ddf9f828c329ed55",
+        "command_execution_count": 25,
+        "unsupported_shell_command_count": 23,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-java-tickets-sdk-pointer-trial-2",
+        "sequence": 27,
+        "stack": "java",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "2ad11d1ae969f6887a7dfbf01987d54f32e782ab3f5004e41482b280fd408792",
+        "command_execution_count": 20,
+        "unsupported_shell_command_count": 17,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 2,
+            "event_index": 7,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/java.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-java-tickets-baseline-trial-2",
+        "sequence": 28,
+        "stack": "java",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "91970c626a03393deb56351209e9b1da8cffdf2bcb055f4b2c23d5aa01baad87",
+        "command_execution_count": 18,
+        "unsupported_shell_command_count": 18,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-rust-tickets-baseline-trial-2",
+        "sequence": 29,
+        "stack": "rust",
+        "scenario": "tickets",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "a4b01836d1bc4a1ca7742a5da2ed179f3d51a7f37dbd7b27d6fd8079eef4b8e6",
+        "command_execution_count": 21,
+        "unsupported_shell_command_count": 19,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-rust-documents-sdk-pointer-trial-2",
+        "sequence": 30,
+        "stack": "rust",
+        "scenario": "documents",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "8487434cf7b79a5d93a527f366a64b225ff3f7d5fb9db7e1e6549e8551642a1b",
+        "command_execution_count": 19,
+        "unsupported_shell_command_count": 18,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/rust.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      },
+      {
+        "trial": "m01-rust-documents-baseline-trial-2",
+        "sequence": 31,
+        "stack": "rust",
+        "scenario": "documents",
+        "condition": "baseline",
+        "repeat": 2,
+        "trace_sha256": "9f071e774635940319dbbcbc24e01430d3aaec7df049ff31bae18346cb9f6860",
+        "command_execution_count": 15,
+        "unsupported_shell_command_count": 13,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {},
+        "signal_invocation_counts": {},
+        "signals": [],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": false,
+        "ever_successful_expected_card_reference": false
+      },
+      {
+        "trial": "m01-rust-tickets-sdk-pointer-trial-2",
+        "sequence": 32,
+        "stack": "rust",
+        "scenario": "tickets",
+        "condition": "sdk-pointer",
+        "repeat": 2,
+        "trace_sha256": "af5de9fdb30664febb8ee7c941dc2c400c7315c36e6b15399a2a7d6229cff222",
+        "command_execution_count": 16,
+        "unsupported_shell_command_count": 13,
+        "uninspected_other_tool_call_count": 0,
+        "malformed_event_count": 0,
+        "signal_record_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signal_invocation_counts": {
+          "explicit_reference_unknown": 1
+        },
+        "signals": [
+          {
+            "command_index": 3,
+            "event_index": 9,
+            "event_type": "item.completed",
+            "item_type": "command_execution",
+            "classification": "explicit_reference_unknown",
+            "relative_document_path": "docs/ai-entry/rust.md",
+            "origin": "unresolved",
+            "reason": "unsupported-shell-control",
+            "successful_command_metadata": true,
+            "expected_stack_card": true
+          }
+        ],
+        "ever_body_read_candidate": false,
+        "ever_content_search_candidate": false,
+        "ever_explicit_expected_card_reference": true,
+        "ever_successful_expected_card_reference": true
+      }
+    ]
+  },
+  "read_only_original_failure_observations": [
+    {
+      "trial": "m01-rust-tickets-baseline-trial-1",
+      "original_error_code": "build-failed",
+      "diagnostic_kind": "read-only-original-build-log-and-source",
+      "build_log_sha256": "06ef4f02d96c21b8bedf53b95f3aa1854b688d9284c70aa970ce05b017f7d3ec",
+      "observed_compiler_error": "E0277: Axum Router::fallback(handle) Handler trait bound not satisfied",
+      "source": {
+        "path": "src/main.rs",
+        "line": 515,
+        "sha256": "824d516dc8bdfb633e5c6ebc9ff793937153c8e12101421162fd2cbec82e3f45"
+      },
+      "deeper_cause": "not-verified-by-reproduction",
+      "cargo_cache_permission_messages": "warnings-separate-from-observed-compilation-error",
+      "original_http_graded": false,
+      "replayed": false,
+      "original_modified": false
+    },
+    {
+      "trial": "m01-python-tickets-sdk-pointer-trial-2",
+      "original_error_code": "timeout",
+      "diagnostic_kind": "read-only-retained-completion-and-usage-metadata",
+      "original_result_sha256": "9e5f10f63ba5090b506a5b1d85523c355ce6ea2b06b483406c0f704c1096cfeb",
+      "trace_sha256": "18465e1de993a87a35afabfa47d82127410d781f240f68b8c64251c6060bd349",
+      "agent_seconds": 402.023,
+      "elapsed_seconds": 402.168,
+      "cli_turn_completed": false,
+      "usage_complete": false,
+      "observed_usage": null,
+      "ticket_fixture_state": "not-created",
+      "deeper_cause": "not-established",
+      "original_http_graded": false,
+      "replayed": false,
+      "original_modified": false
+    },
+    {
+      "trial": "m01-java-tickets-sdk-pointer-trial-2",
+      "original_error_code": "timeout",
+      "diagnostic_kind": "read-only-retained-completion-and-usage-metadata",
+      "original_result_sha256": "c370af449879fe7d1469728f343e8c3fc699f74aa4deaa299c12fec19e2f9088",
+      "trace_sha256": "2ad11d1ae969f6887a7dfbf01987d54f32e782ab3f5004e41482b280fd408792",
+      "agent_seconds": 402.124,
+      "elapsed_seconds": 402.278,
+      "cli_turn_completed": false,
+      "usage_complete": false,
+      "observed_usage": null,
+      "ticket_fixture_state": "not-created",
+      "deeper_cause": "not-established",
+      "original_http_graded": false,
+      "replayed": false,
+      "original_modified": false
+    }
+  ],
+  "independent_arithmetic_validation": {
+    "root_standard_library_check": "PASS",
+    "separate_agent_standard_library_check": "PASS",
+    "source_classifications_and_usage_totals_matched": true,
+    "agent_harness_or_validator_functions_used": false,
+    "independent_calculation_record_sha256": "57d67ca0826b2fbc2d1638fecf6a05183fe152600a4a7389626332f4b80c18b9"
+  },
+  "limits": [
+    "Command references are separate from document reading, understanding, runtime API causality and external adoption.",
+    "The two timeout usage pairs remain missing; complete-pair totals are not whole-run cost.",
+    "Supplemental wrapper checks are review-time evidence; original raw traces, programs, fixtures and seeds stay private.",
+    "Preflight toolchains are initial inputs; generated wrappers may select another installed JDK, so actual build/runtime versions were not uniformly controlled or attested."
+  ],
+  "native_toolchain_scope": {
+    "preflight_and_initial_injected_jdk": "Temurin 21.0.13+9",
+    "observed_generated_wrapper_selection": "installed Java 17 when its executable is available",
+    "all_actual_build_runtime_versions_attested": false,
+    "original_results_and_pair_membership_unchanged": true,
+    "evidence_timing": "review-time-only",
+    "supplemental_wrapper_evidence": [
+      {
+        "trial": "m01-java-documents-baseline-trial-1",
+        "path": "build.sh",
+        "line": 4,
+        "sha256": "d9f040d76d279832cc910a0c49f46d92983536ee9fb2701186cfd246373a57a6"
+      },
+      {
+        "trial": "m01-java-documents-baseline-trial-1",
+        "path": "start.sh",
+        "line": 4,
+        "sha256": "7abfa1a6fbcae433411a83692fb004ab178e71ddee275f22694099cccde720b2"
+      }
+    ]
+  }
+}
