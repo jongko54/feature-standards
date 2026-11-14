@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "kind": "compatible-dependency-remediation",
+  "date": "2026-11-14",
+  "baselineCommit": "d68593e5b73a811f2cd9c1bedeafdeba4f331d5c",
+  "assessedCommit": "66482364d56cef473508ac1df3d20dfe4f43db23",
+  "assessedTree": "b6b5d9971c202084a0f9d9970f88c546389254b6",
+  "sourceDirty": false,
+  "finishedAt": "2026-11-14T14:27:38.406779+00:00",
+  "gateStatus": "findings",
+  "before": {
+    "uniqueFindingCombinations": 30,
+    "manifestOccurrences": 75,
+    "tools": {
+      "osv-scanner": "2.7.1",
+      "gitleaks": "8.30.1",
+      "semgrep": "1.185.0"
+    }
+  },
+  "after": {
+    "uniqueFindingCombinations": 8,
+    "manifestOccurrences": 12,
+    "tools": {
+      "osv-scanner": "2.7.1",
+      "gitleaks": "8.30.1",
+      "semgrep": "1.185.0"
+    },
+    "staticStatus": "passed",
+    "staticFilesScanned": 147,
+    "secretStatus": "passed",
+    "secretFilesScanned": 539
+  },
+  "removedUniqueCombinations": 22,
+  "scannerPolicyWeakened": false,
+  "newVulnerabilityIgnores": 0,
+  "registryVersionsPublished": false,
+  "compatibleUpdates": {
+    "golang.org/x/crypto": [
+      "0.58.0",
+      "0.59.0"
+    ],
+    "golang.org/x/sync": [
+      "0.24.0",
+      "0.25.0"
+    ],
+    "golang.org/x/sys": [
+      "0.49.0",
+      "0.50.0"
+    ],
+    "golang.org/x/text": [
+      "0.43.0",
+      "0.44.0"
+    ],
+    "ctutils": [
+      "0.4.2",
+      "0.4.8"
+    ],
+    "jackson-bom": [
+      "2.21.4",
+      "2.21.8"
+    ],
+    "tomcat": [
+      "10.1.55",
+      "10.1.61"
+    ],
+    "log4j2": [
+      "2.24.3",
+      "2.25.5"
+    ],
+    "consumer-managed-postgresql": [
+      "42.7.11",
+      "42.7.14"
+    ]
+  },
+  "actualMavenResolvedDependencies": [
+    {
+      "groupId": "org.postgresql",
+      "artifactId": "postgresql",
+      "version": "42.7.14",
+      "scope": "compile"
+    },
+    {
+      "groupId": "org.apache.logging.log4j",
+      "artifactId": "log4j-api",
+      "version": "2.25.5",
+      "scope": "compile"
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-databind",
+      "version": "2.21.8",
+      "scope": "compile"
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-core",
+      "version": "2.21.8",
+      "scope": "compile"
+    },
+    {
+      "groupId": "org.apache.tomcat.embed",
+      "artifactId": "tomcat-embed-core",
+      "version": "10.1.61",
+      "scope": "compile"
+    },
+    {
+      "groupId": "org.springframework",
+      "artifactId": "spring-webmvc",
+      "version": "6.2.19",
+      "scope": "compile"
+    }
+  ],
+  "validation": {
+    "goAuthRaceAndVet": "passed",
+    "goAuthConsumerRace": "passed",
+    "goCoreConsumerRace": "passed",
+    "rustAuth": {
+      "unitPassed": 24,
+      "integrationPassed": 3,
+      "databaseOrTlsIgnored": 3,
+      "failed": 0
+    },
+    "javaAuth": {
+      "tests": 88,
+      "passed": 71,
+      "skipped": 17,
+      "failures": 0,
+      "errors": 0
+    },
+    "commonHttp": {
+      "backends": 4,
+      "passedPerBackend": 19,
+      "totalPassed": 76
+    },
+    "realBrowser": {
+      "backends": 4,
+      "passedPerBackend": 8,
+      "totalPassed": 32
+    },
+    "coreHttpConsumers": {
+      "backends": 4,
+      "status": "passed"
+    },
+    "mainCatalogNode": {
+      "passed": 52,
+      "failed": 0
+    },
+    "sourceCoreStarterApps": {
+      "count": 4,
+      "status": "passed"
+    },
+    "freshTarballInstalledCoreStarterApps": {
+      "count": 4,
+      "status": "passed"
+    },
+    "repositoryPython": {
+      "discovered": 369,
+      "passed": 336,
+      "environmentalSkips": 33,
+      "failed": 0
+    },
+    "releaseAndRegistryNode": {
+      "passedIncludingSubtests": 30,
+      "failed": 0
+    }
+  },
+  "ciMirrorRecovery": {
+    "sourceCommit": "679602472c5627b802d6927c343cfb78430dbee9",
+    "runId": 43604423762,
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/43604423762",
+    "previousFailedAttempts": 2,
+    "previousReason": "Azure Ubuntu mirror DNS failure during Playwright OS dependency installation",
+    "installerPassedOnRemote": true,
+    "notEvidenceForPatchedDependencies": true
+  },
+  "unresolvedFindings": [
+    {
+      "id": "GHSA-j9f9-w8pj-32f8",
+      "ecosystem": "Maven",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-j9f9-w8pj-32f8"
+    },
+    {
+      "id": "GHSA-pc63-qcmh-9cmg",
+      "ecosystem": "Maven",
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "severity": "CRITICAL",
+      "sources": [
+        "examples/consumer-java/pom.xml",
+        "examples/core-java/pom.xml",
+        "implementations/java-spring/pom.xml"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-pc63-qcmh-9cmg"
+    },
+    {
+      "id": "GHSA-5h93-6whr-6q8j",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-5h93-6whr-6q8j"
+    },
+    {
+      "id": "GHSA-84m7-p3x7-pcfv",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-84m7-p3x7-pcfv"
+    },
+    {
+      "id": "GHSA-rwrf-2pqf-9j8j",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-rwrf-2pqf-9j8j"
+    },
+    {
+      "id": "GHSA-w4fh-qvv9-3v23",
+      "ecosystem": "PyPI",
+      "package": "mcp",
+      "version": "1.29.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-w4fh-qvv9-3v23"
+    },
+    {
+      "id": "GHSA-mf5v-w3w3-f6cg",
+      "ecosystem": "PyPI",
+      "package": "opentelemetry-api",
+      "version": "1.37.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-mf5v-w3w3-f6cg"
+    },
+    {
+      "id": "GHSA-xcq7-p3pf-p88h",
+      "ecosystem": "PyPI",
+      "package": "opentelemetry-api",
+      "version": "1.37.0",
+      "severity": "MODERATE",
+      "sources": [
+        "security/uv.lock"
+      ],
+      "reachabilityAssessed": false,
+      "advisory": "https://osv.dev/vulnerability/GHSA-xcq7-p3pf-p88h"
+    }
+  ],
+  "limits": [
+    "Eight known dependency combinations remain and continue to block the security gate.",
+    "Spring 6.2.20 security fixes are enterprise-only; Spring 7 migration is outside this compatibility-preserving patch.",
+    "Semgrep 1.185.0 pins MCP 1.29.0 and OpenTelemetry 1.37.x; unsupported dependency overrides are not applied.",
+    "Maven OSV graphs remain resolver-inferred; actual dependency tree was independently checked for the Java auth source.",
+    "Published packages and existing consumer applications are not updated by this source commit.",
+    "Local runtime coverage is distinct from exact-ref remote CI; inspect the pushed commit workflow results.",
+    "No ASVS certification, external security audit, full production assessment or vulnerability-free claim."
+  ],
+  "evidenceHashes": {
+    "before": {
+      "security-report.json": "83059b17d2913fecaaf0f81de6ed123a29c55e6818b04e26adebd80c1bc11e3a",
+      "security-report.md": "fcca751ca5a8e439a076976d1889a28980c3b1106fc35debc577c53780aedb9a",
+      "dependencies.cdx.json": "2af4169f14c9307f677dc0431a2549ae0279066090f2ddb53086872b47d3971d"
+    },
+    "after": {
+      "security-report.json": "aa2e0536b0cdebfc3e7139eb598b5bf373cd9aa5e502f5b07baa350e8507d3ed",
+      "security-report.md": "a2dd71f68a09d7a7c4a1cafe144beeb815c25872b25005ecfa400b46dffd52e0",
+      "dependencies.cdx.json": "6c755bea5cb89de4457f92735323d837d4580c50052830b7f9d67ac9dee7b614"
+    }
+  }
+}

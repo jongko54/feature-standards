@@ -8,7 +8,7 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 [Security evidence and limits](docs/security.md) describes a selected ASVS 5.0.0 mapping, pinned dependency/static/secret checks, and source-bound pre-publication reports. Findings or scanner failures block the automated release gate. This experimental project has not received an independent security audit or ASVS certification; a workflow badge does not guarantee vulnerability-free software.
 
-The [2026-11-11 security baseline](docs/security-baseline-2026-11-11.md) records unresolved dependency matches; release is blocked pending review and remediation.
+The [2026-11-14 compatible security patches](docs/security-remediation-2026-11-14.md) reduced 30 unique dependency finding combinations to eight in the unpublished source. Automated release remains blocked by the remaining Spring and scanner-tool dependencies. The [2026-11-11 baseline](docs/security-baseline-2026-11-11.md) remains available as dated evidence.
 
 **Three feature standards are available: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. Core `0.1.0` is published in all five ecosystems; [the registry receipt](docs/core-release-0.1.0.json) verifies public downloads and fresh consumers independently. These are experimental core APIs. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
