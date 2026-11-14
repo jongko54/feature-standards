@@ -9,7 +9,12 @@
   <licenses><license><name>MIT License</name><url>https://opensource.org/license/mit</url><distribution>repo</distribution></license></licenses>
   <developers><developer><id>jongko54</id><name>jongko54</name><url>https://github.com/jongko54</url></developer></developers>
   <scm><connection>scm:git:https://github.com/jongko54/feature-standards.git</connection><developerConnection>scm:git:ssh://git@github.com/jongko54/feature-standards.git</developerConnection><url>https://github.com/jongko54/feature-standards</url></scm>
-  <properties><java.version>21</java.version><project.build.outputTimestamp>2026-11-06T00:00:00Z</project.build.outputTimestamp></properties>
+  <properties><java.version>21</java.version><project.build.outputTimestamp>2026-11-06T00:00:00Z</project.build.outputTimestamp>
+    <jackson-bom.version>2.21.8</jackson-bom.version>
+    <tomcat.version>10.1.61</tomcat.version>
+    <log4j2.version>2.25.5</log4j2.version>
+    <postgresql.version>42.7.14</postgresql.version>
+  </properties>
   <dependencies>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
     <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId><scope>test</scope></dependency>

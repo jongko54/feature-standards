@@ -4,7 +4,12 @@
   <parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.5.16</version><relativePath/></parent>
   <groupId>dev.featurestandards.examples</groupId><artifactId>core-java</artifactId><version>0.1.0</version>
   <name>Authentication authorization and listing HTTP consumer</name>
-  <properties><java.version>21</java.version><project.build.outputTimestamp>2026-11-07T00:00:00Z</project.build.outputTimestamp></properties>
+  <properties><java.version>21</java.version><project.build.outputTimestamp>2026-11-07T00:00:00Z</project.build.outputTimestamp>
+    <jackson-bom.version>2.21.8</jackson-bom.version>
+    <tomcat.version>10.1.61</tomcat.version>
+    <log4j2.version>2.25.5</log4j2.version>
+    <postgresql.version>42.7.14</postgresql.version>
+  </properties>
   <dependencies>
     <dependency><groupId>io.github.jongko54</groupId><artifactId>java-spring-auth</artifactId><version>1.0.0</version><classifier>library</classifier></dependency>
     <dependency><groupId>io.github.jongko54</groupId><artifactId>feature-standards-core</artifactId><version>0.1.0</version></dependency>
