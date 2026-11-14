@@ -189,6 +189,11 @@ jobs:
           retention-days: 14
       - name: Verify a signed Maven Central bundle without uploading
         run: uv run --frozen --project tools python tools/check_maven_release.py
+      - name: Use official Ubuntu archives for browser system dependencies
+        run: |
+          # Both prior runs failed resolving the runner's Azure mirror.
+          printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          printf '%s\n' 'Acquire::Retries "2";' 'Acquire::http::Timeout "30";' 'Acquire::https::Timeout "30";' | sudo tee /etc/apt/apt.conf.d/99-feature-standards-ci >/dev/null
       - name: Install and build React client
         working-directory: clients/react
         run: |
