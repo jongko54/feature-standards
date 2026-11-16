@@ -8,6 +8,8 @@ Feature Standards organizes a feature's behavior, public APIs, stack guides, and
 
 The [2026-11-16 discovery update](docs/adoption/2026-11-16-discovery.md) adds frozen Korean/English prompts and reviewed observation bookkeeping. The actual Gemini CLI attempt stopped at authentication before a model response; it establishes no new recommendation or SDK-adoption result.
 
+The [2026-11-17 Gemini web observations](docs/adoption/2026-11-17-gemini-observation.md) used three fresh conversations for unbranded, named and supplied-URL prompts. Each completed answer reported unavailable web tools, with no verified retrieval trace; they remain blocked observations, not zero adoption or proof that the project is unindexed. The separate CLI retry still stopped at authentication.
+
 [![Security checks](https://github.com/jongko54/feature-standards/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/jongko54/feature-standards/actions/workflows/security.yml)
 
 [Security evidence and limits](docs/security.md) describes a selected ASVS 5.0.0 mapping, pinned dependency/static/secret checks, and source-bound pre-publication reports. Findings or scanner failures block the automated release gate. This experimental project has not received an independent security audit or ASVS certification; a workflow badge does not guarantee vulnerability-free software.

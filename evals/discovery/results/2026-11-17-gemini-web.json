@@ -1,0 +1,50 @@
+[
+  {
+    "id": "gemini-web-20261117-unbranded-ko-1",
+    "provider": "google",
+    "interface": "gemini-web-app",
+    "requestedModel": "configured-default-auto",
+    "observedModel": null,
+    "caseId": "web-features-ko",
+    "stage": "unbranded",
+    "sessionId": "e09e983adc9e48afef98c8a468dd07dbc7b6fe4e317bc8ba6065c27f39b8869d",
+    "freshSession": true,
+    "startedAt": "2026-11-16T15:39:34.479Z",
+    "outcome": "blocked",
+    "promptSha256": "8ecb462723e035818be2b23689b518d178fa345974e8c0807187fa3444b67a4f",
+    "transcriptSha256": "233982674be6e0555b57fc47015c2e97457149c488ddbe9d7599ed10de425683",
+    "review": null
+  },
+  {
+    "id": "gemini-web-20261117-named-ko-1",
+    "provider": "google",
+    "interface": "gemini-web-app",
+    "requestedModel": "configured-default-auto",
+    "observedModel": null,
+    "caseId": "web-features-ko",
+    "stage": "named",
+    "sessionId": "ee0aacbe4d2b1734fc2545eda1f3aee9a28b7bd05d6b2ef446c6f497cee6f55d",
+    "freshSession": true,
+    "startedAt": "2026-11-16T15:41:38.803Z",
+    "outcome": "blocked",
+    "promptSha256": "238e3755d458bd152936b64e8e6ca4a46f5612b4eefe6670506242d4cdeaefa5",
+    "transcriptSha256": "8cfcf0c39d4dd10f23478a62c93ed19e8df351beac3ef66e9d256e0e623c57f1",
+    "review": null
+  },
+  {
+    "id": "gemini-web-20261117-supplied_url-ko-1",
+    "provider": "google",
+    "interface": "gemini-web-app",
+    "requestedModel": "configured-default-auto",
+    "observedModel": null,
+    "caseId": "web-features-ko",
+    "stage": "supplied_url",
+    "sessionId": "5bf4358a128001889c38f600cb027c2e0a2d7a34f4eae1909f7758980d9967bd",
+    "freshSession": true,
+    "startedAt": "2026-11-16T15:42:56.920Z",
+    "outcome": "blocked",
+    "promptSha256": "9157b1432de59a5b3980844239e824810a4e08dd7d81c9a468dc0750cb03f175",
+    "transcriptSha256": "43da3d0741b8008d06e77dac7f53f46baeb447791c612958f7576c127777a79b",
+    "review": null
+  }
+]

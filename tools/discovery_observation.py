@@ -94,7 +94,7 @@ def load_protocol(path):
             not re.search(
                 r"feature[-_ ]standards|jongko54|ugauga|https?://",
                 prompts["unbranded"],
-                re.I,
+                re.IGNORECASE,
             ),
             "unbranded prompt leaks a target hint",
         )
@@ -178,7 +178,7 @@ def validate_record(row, cases):
         "unknown outcome",
     )
     try:
-        started = datetime.fromisoformat(row["startedAt"].replace("Z", "+00:00"))
+        started = datetime.fromisoformat(row["startedAt"])
         require(started.tzinfo is not None, "timestamp needs a timezone")
     except (ValueError, TypeError, AttributeError):
         raise ValueError("invalid observation timestamp") from None
