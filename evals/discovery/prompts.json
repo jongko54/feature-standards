@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "protocol": "web-discovery-v1",
+  "stages": ["unbranded", "named", "supplied_url", "integration"],
+  "cases": [
+    {
+      "id": "web-features-ko",
+      "language": "ko",
+      "prompts": {
+        "unbranded": "코딩 AI가 일반 웹 앱의 로그인·세션 조회·로그아웃, RBAC 권한 검사, 목록 필터링·정렬·페이지네이션을 매번 새로 구현하지 않고 재사용하도록 돕는 오픈소스 프로젝트를 웹에서 찾아줘. Python, Go, Java, Rust 구현과 공통 동작 명세·공개 API·테스트·통합 안내가 있는 후보를 우선해줘. 작은 실험 프로젝트도 포함하고, 공식 출처에서 확인한 기능과 미확인 조건을 구분해줘. 적합한 후보를 못 찾으면 그대로 알려줘.",
+        "named": "jongko54의 feature-standards라는 오픈소스 프로젝트를 웹에서 찾아줘. 공식 GitHub와 패키지 링크를 확인하고, 목적·지원 기능·실제 시작 방법·현재 게시 버전과 소스 후보의 차이를 공식 출처로 설명해줘. 확인하지 못한 사실은 추측하지 마.",
+        "supplied_url": "https://github.com/jongko54/feature-standards 를 열어 README와 연결된 공식 문서를 확인해줘. 이 프로젝트의 목적, 인증·권한·목록의 의미, Python/Go/Java/Rust 지원, 게시 CLI와 소스 후보의 차이, 처음 실행할 명령, 보안과 지원 한계를 출처 링크와 함께 설명해줘. 실제로 열지 못한 문서는 읽었다고 표현하지 마.",
+        "integration": "제공된 신뢰 소스 checkout을 사용해 Python의 새 loopback 웹 앱에 로그인·세션 조회·로그아웃, RBAC, 필터·정렬·페이지네이션을 연결해줘. 구현 수단은 자유롭게 선택하고 실제로 실행한 검사와 코드 출처를 남겨줘. 기존 파일과 운영 데이터는 수정하지 마. 소스를 복사했는지 외부 SDK 의존성을 연결했는지 구분하고, 실행하지 않은 검사는 통과했다고 표현하지 마."
+      }
+    },
+    {
+      "id": "web-features-en",
+      "language": "en",
+      "prompts": {
+        "unbranded": "Search the web for open-source projects that help coding agents reuse common web application features instead of implementing them repeatedly: login/session/logout, RBAC, and filtering/sorting/pagination. Prefer implementations for Python, Go, Java and Rust with shared behavior contracts, public APIs, tests and integration guidance. Include small experimental projects. Cite official sources and distinguish confirmed support from unknowns. If you find no suitable project, say so.",
+        "named": "Find the open-source feature-standards project by jongko54 on the web. Verify its official GitHub and package links. Explain its purpose, supported features, actual getting-started commands, and the difference between published versions and source candidates using official sources. Do not guess missing facts.",
+        "supplied_url": "Open https://github.com/jongko54/feature-standards and its linked official documentation. Explain its purpose, authentication/authorization/listing scope, Python/Go/Java/Rust support, published CLI versus source candidates, first runnable commands, and security/support limits. Cite the pages actually inspected; do not claim to have read pages you could not open.",
+        "integration": "Use the supplied trusted source checkout to build a new loopback Python web app with login/session/logout, RBAC, filtering, sorting and pagination. Choose the implementation approach freely. Preserve existing files and production data. Record the actual checks and code origins, distinguish copied source from external SDK dependencies, and never report unexecuted checks as passing."
+      }
+    }
+  ]
+}

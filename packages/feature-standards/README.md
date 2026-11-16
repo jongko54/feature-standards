@@ -2,6 +2,8 @@
 
 Reusable feature standards for AI-assisted development across languages: authentication, authorization, and pagination/sorting/filtering. Authentication has Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum, and React integrations. The new authorization and listing standards have framework-independent Python, Go, Java, Rust, and browser JavaScript/TypeScript libraries.
 
+Start with [what the project does and its actual getting-started commands](https://github.com/jongko54/feature-standards/blob/main/docs/what-is-feature-standards.md). The same explainer is bundled as `snapshot/docs/what-is-feature-standards.md` in this source candidate. It distinguishes application-record listing, AI coding reuse, published commands and source-only SDK starters. Public availability does not establish search-engine indexing or an AI recommendation.
+
 This main package distributes a curated contract snapshot, a read-only context selector, and explicit `init` / `check` entry points. It gives an AI the selected specification, OpenAPI, scenarios, schema SQL, public API guides, and integration guidance. Application generation delegates to an existing trusted source checkout; selected-profile checks execute the generated application's runner. The API implementations and conformance harnesses live in the [source repository](https://github.com/jongko54/feature-standards). The React runtime is a separate package.
 
 ## Use the CLI

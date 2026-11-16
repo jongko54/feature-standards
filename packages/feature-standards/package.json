@@ -4,7 +4,7 @@
   "featureStandards": {
     "coreStarterProtocolVersion": 1
   },
-  "description": "Cross-language reusable feature contracts and AI integration context by jongko54",
+  "description": "Reusable login/session, RBAC and pagination contracts, SDK guidance and app starters for AI coding agents across Python, Go, Java and Rust by jongko54",
   "type": "module",
   "license": "MIT",
   "author": {
@@ -23,7 +23,12 @@
     "go",
     "java",
     "rust",
-    "react"
+    "react",
+    "ai-coding",
+    "code-reuse",
+    "session-authentication",
+    "rbac",
+    "pagination"
   ],
   "engines": {
     "node": ">=22.12.0"

@@ -1,8 +1,12 @@
 # Feature Standards
 
-**Shared feature contracts and reusable implementations across languages, so AI agents can integrate existing libraries and verify the result.**
+**Reusable login/session, RBAC and filtering/sorting/pagination contracts and SDKs for AI coding agents across Python, Go, Java and Rust, with React/TypeScript integrations.**
 
 Feature Standards organizes a feature's behavior, public APIs, stack guides, and conformance checks in one place. An agent chooses the feature, profile, and stack; reads the relevant contract and API; reuses the implementation; and checks the integration against the same behavior across stacks. The goal is to reduce repeated implementation and unnecessary exploration during AI-assisted development.
+
+[What the project does and how to start](docs/what-is-feature-standards.md) explains the supported web features, published commands and source starter. Listing means application-record filtering, sorting and pagination. [Discovery and SDK selection evaluation](evals/discovery/README.md) separates finding the project on the web, reading supplied URLs and actually connecting its SDKs.
+
+The [2026-11-16 discovery update](docs/adoption/2026-11-16-discovery.md) adds frozen Korean/English prompts and reviewed observation bookkeeping. The actual Gemini CLI attempt stopped at authentication before a model response; it establishes no new recommendation or SDK-adoption result.
 
 [![Security checks](https://github.com/jongko54/feature-standards/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/jongko54/feature-standards/actions/workflows/security.yml)
 

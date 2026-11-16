@@ -41,6 +41,7 @@ export const SOURCE_FILES = Object.freeze([
   'features/listing/openapi-postgres.json',
   'features/listing/scenarios-postgres.json',
   'docs/ai-integration.md',
+  'docs/what-is-feature-standards.md',
   'docs/ai-entry/README.md',
   'docs/ai-entry/python.md',
   'docs/ai-entry/go.md',

@@ -11,6 +11,8 @@
 
 All four package manifests identify their author as [jongko54](https://github.com/jongko54), include the `jongko54` and `feature-standards` keywords, and contain the handle in their descriptions. Their package READMEs link the author. This metadata supports discovery; it does not change the package IDs or guarantee an npm search position.
 
+For the concrete product role, start with [the web-feature reuse explainer](what-is-feature-standards.md). The main source candidate description names login/session, RBAC, pagination and AI coding agents. Source metadata changes do not alter the existing npm 0.3.2 release. Use the [frozen external-discovery protocol](../evals/discovery/README.md) to distinguish an unbranded recommendation, name lookup, supplied-URL reading and independently verified SDK integration; none is implied by `npm search` results.
+
 Search the public registry with:
 
 ```sh

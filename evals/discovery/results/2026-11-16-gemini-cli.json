@@ -1,0 +1,18 @@
+[
+  {
+    "id": "gemini-cli-20261116-unbranded-ko-1",
+    "provider": "google",
+    "interface": "gemini-cli",
+    "requestedModel": "configured-default",
+    "observedModel": null,
+    "caseId": "web-features-ko",
+    "stage": "unbranded",
+    "sessionId": "new-cli-process-20261116-01",
+    "freshSession": true,
+    "startedAt": "2026-11-16T13:26:31.323275+00:00",
+    "outcome": "blocked",
+    "promptSha256": "8ecb462723e035818be2b23689b518d178fa345974e8c0807187fa3444b67a4f",
+    "transcriptSha256": null,
+    "review": null
+  }
+]
