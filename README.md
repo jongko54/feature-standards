@@ -40,7 +40,7 @@ The [2026-11-10 unprescribed choice study](docs/adoption/2026-11-10-ai-choice.md
 
 ## Start with the feature catalog
 
-The main npm entry point is **[`feature-standards`](https://www.npmjs.com/package/feature-standards)**. Version 0.4.0 provides 26 contexts, compact reading cards and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The historical [0.3.2 receipt](docs/npm-release-0.3.2.json) verifies that earlier public archive and its 25 contexts; new publication requires its own tagged release verification.
+The main npm entry point is **[`feature-standards@0.4.0`](https://www.npmjs.com/package/feature-standards/v/0.4.0)**. It provides 26 contexts, compact reading cards and explicit application generation and profile checks. The [0.4.0 release receipt](docs/npm-release-0.4.0.md) records matching CI/registry bytes, successful source CI/security checks and a fresh registry consumer with all 26 contexts, compact cards and a real Python starter. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The historical [0.3.2 receipt](docs/npm-release-0.3.2.json) preserves that earlier archive and its 25 contexts.
 
 Run catalog 0.4.0:
 

@@ -5,10 +5,14 @@ security regression tests and a scoped automated security baseline. It has not
 received an independent security audit or ASVS certification. A successful
 functional CI run does not establish the absence of vulnerabilities.
 
-The [2026-11-14 remediation](security-remediation-2026-11-14.md) records compatible
-source dependency patches, reducing 30 unique finding combinations to eight.
-Those remaining findings still block the release gate. The
-[2026-11-11 baseline](security-baseline-2026-11-11.md) is preserved as dated evidence.
+The [0.4.0 release receipt](npm-release-0.4.0.md) records successful exact-source
+functional and security CI, matching public artifact bytes and a fresh registry
+consumer. Its source scan found no advisories in 1,021 manifest package entries,
+no local static-rule findings across 151 source files and no secret-pattern findings.
+The [November 18 follow-up](security-remediation-2026-11-18-react-build.md) explains
+the demo dependency replacement and resolved Maven inventory. The earlier
+[November 14 remediation](security-remediation-2026-11-14.md) and
+[November 11 baseline](security-baseline-2026-11-11.md) remain dated evidence.
 
 ## What is assessed
 

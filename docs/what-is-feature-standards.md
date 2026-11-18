@@ -75,9 +75,9 @@ Custom mutation routes need their own Origin, CSRF and permission enforcement.
 
 ## Availability, evidence and limits
 
-- **Catalog 0.4.0:** 26 feature/stack/profile contexts, compact routing and a
-  three-feature starter. Publication requires the tagged release workflow and
-  a matching public artifact. Core 0.1.0 has separate distributions in five
+- **Published catalog 0.4.0:** 26 feature/stack/profile contexts, compact routing and a
+  three-feature starter. The [release receipt](npm-release-0.4.0.md) verifies
+  the public artifact and fresh registry consumer. Core 0.1.0 has separate distributions in five
   ecosystems, with historical [registry and consumer evidence](core-release-0.1.0.json).
 - **Separate source candidates:** Python core 0.2.0 / PostgreSQL listing and
   Java auth 2.0.0 / Spring 7. Publishing the catalog does not publish these SDKs.

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-18T14:10:43.485Z",
+  "package": "feature-standards",
+  "version": "0.4.0",
+  "sourceCommit": "988d7a9ecbf0b62f728f7575ece2217aa61486bb",
+  "tag": "feature-standards-v0.4.0",
+  "publicationRun": 44320618986,
+  "functionalRun": 44317333610,
+  "securityRun": 44317333598,
+  "securityReportSha256": "24925e1daae911e50fe5547ca1cc17e64b6e86890b50560ae74486aa91a235ea",
+  "registryTarball": "https://registry.npmjs.org/feature-standards/-/feature-standards-0.4.0.tgz",
+  "integrity": "sha512-NLOrUtKSInUZ9bfPynVJxkFxqJC1tD9byIeC2rs/ti2WZwZgwDGU32NJU+nU4Oau7oIbbao5azzBU9ioB4QAJQ==",
+  "registryMatchesCiBytes": true,
+  "archiveSha256": "8ef56f30fe72a69fce5347a5968942e59226f60c5886a7706d9fad88e2620ab8",
+  "freshRegistryInstall": true,
+  "contexts": 26,
+  "compactContexts": 26,
+  "provenanceClean": true,
+  "publicNodeExports": true,
+  "generatedPythonCore": {
+    "passed": true,
+    "checks": [
+      "selected-profile-health",
+      "actual-sdk-dependency-origins",
+      "normal-start-denies-sample-access",
+      "anonymous-and-forged-protected-access",
+      "login-shared-protected-identity",
+      "independent-sessions",
+      "origin-and-csrf-rejection",
+      "owner-and-tenant-isolation",
+      "authorization-before-list-totals",
+      "typed-filter-sort-pagination",
+      "strict-raw-query-errors",
+      "logout-revokes-copied-cookie"
+    ],
+    "actualSdkOrigins": true,
+    "databaseUsed": false
+  },
+  "independentSecurityAudit": false,
+  "registryPublished": true,
+  "npmAttestationsUrl": "https://registry.npmjs.org/-/npm/v1/attestations/feature-standards@0.4.0",
+  "npmAttestationSignatureIndependentlyVerified": false,
+  "publicationWorkflow": {
+    "url": "https://github.com/jongko54/feature-standards/actions/runs/44320618986",
+    "conclusion": "success",
+    "method": "GitHub OIDC"
+  },
+  "sourceVerification": {
+    "schemaVersion": 1,
+    "kind": "verified-source-workflow-references",
+    "status": "passed",
+    "repository": "jongko54/feature-standards",
+    "sourceCommit": "988d7a9ecbf0b62f728f7575ece2217aa61486bb",
+    "verifiedAt": "2026-11-18T14:07:32.399Z",
+    "securityMaxAgeHours": 72,
+    "checks": {
+      "functional": {
+        "workflow": "ci.yml",
+        "runId": 44317333610,
+        "runAttempt": 1,
+        "createdAt": "2026-11-18T13:47:38Z",
+        "url": "https://github.com/jongko54/feature-standards/actions/runs/44317333610",
+        "conclusion": "success"
+      },
+      "security": {
+        "workflow": "security.yml",
+        "runId": 44317333598,
+        "runAttempt": 1,
+        "createdAt": "2026-11-18T13:47:38Z",
+        "url": "https://github.com/jongko54/feature-standards/actions/runs/44317333598",
+        "conclusion": "success"
+      }
+    }
+  },
+  "prePublicationArtifactBinding": {
+    "kind": "release-artifact-digest-binding",
+    "createdAt": "2026-11-18T14:07:33.629147+00:00",
+    "sourceCommit": "988d7a9ecbf0b62f728f7575ece2217aa61486bb",
+    "artifacts": [
+      {
+        "path": "feature-standards-0.4.0.tgz",
+        "bytes": 192322,
+        "sha256": "8ef56f30fe72a69fce5347a5968942e59226f60c5886a7706d9fad88e2620ab8"
+      }
+    ],
+    "scope": "Artifact byte hashes bound to verified source workflow references; artifacts are not independently vulnerability-scanned here."
+  },
+  "releaseSourceChecks": {
+    "functionalStepsPassed": 56,
+    "dependencies": {
+      "status": "passed",
+      "manifestPackageEntries": 1021,
+      "findings": 0,
+      "mavenCoverage": {
+        "status": "passed",
+        "projects": [
+          {
+            "sourcePom": "implementations/java-spring/pom.xml",
+            "status": "passed",
+            "expectedPackages": 72,
+            "scannedPackages": 72
+          },
+          {
+            "sourcePom": "libraries/java/pom.xml",
+            "status": "passed",
+            "expectedPackages": 12,
+            "scannedPackages": 12
+          },
+          {
+            "sourcePom": "examples/consumer-java/pom.xml",
+            "status": "passed",
+            "expectedPackages": 73,
+            "scannedPackages": 73
+          },
+          {
+            "sourcePom": "examples/core-java/pom.xml",
+            "status": "passed",
+            "expectedPackages": 74,
+            "scannedPackages": 74
+          }
+        ]
+      }
+    },
+    "static": {
+      "status": "passed",
+      "filesScanned": 151,
+      "findings": 0
+    },
+    "secrets": {
+      "status": "passed",
+      "findings": 0
+    }
+  },
+  "limits": [
+    "Publication target is the main npm catalog/CLI, with runtime SDK distributions verified separately",
+    "Fresh registry checks exercised memory auth/RBAC/materialized listing; DB and SMTP evidence is in release-source CI",
+    "Dependency scan excludes Maven build plugins, JDK and scanner binary internals",
+    "Metadata exposes an npm provenance URL; this receipt did not independently verify its signatures",
+    "This is not an independent security audit or certification"
+  ]
+}
