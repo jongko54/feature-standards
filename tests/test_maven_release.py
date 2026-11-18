@@ -23,7 +23,7 @@ from check_maven_release import (
 )
 
 SOURCE = ROOT / "implementations/java-spring"
-EXPECTED = ("io.github.jongko54", "java-spring-auth", "1.0.0")
+EXPECTED = ("io.github.jongko54", "java-spring-auth", "2.0.0")
 
 
 class MavenReleaseTests(unittest.TestCase):
@@ -183,7 +183,7 @@ class MavenReleaseTests(unittest.TestCase):
             bundle = work / "bundle.zip"
             with zipfile.ZipFile(bundle, "w") as archive:
                 archive.writestr(
-                    "io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom",
+                    "io/github/jongko54/java-spring-auth/2.0.0/java-spring-auth-2.0.0.pom",
                     b"pom",
                 )
             with self.assertRaisesRegex(ValueError, "missing-artifact-or-signature"):
@@ -195,7 +195,7 @@ class MavenReleaseTests(unittest.TestCase):
             bundle = work / "bundle.zip"
             with zipfile.ZipFile(bundle, "w") as archive:
                 archive.writestr(
-                    "io/github/jongko54/java-spring-auth/1.0.0/unexpected.jar", b"jar"
+                    "io/github/jongko54/java-spring-auth/2.0.0/unexpected.jar", b"jar"
                 )
             with self.assertRaisesRegex(ValueError, "unexpected-bundle-artifact"):
                 inspect_bundle(bundle, EXPECTED, work / "gpg", "unavailable-gpg", {})
@@ -205,7 +205,7 @@ class MavenReleaseTests(unittest.TestCase):
             work = Path(temporary)
             bundle = work / "bundle.zip"
             name = (
-                "io/github/jongko54/java-spring-auth/1.0.0/java-spring-auth-1.0.0.pom"
+                "io/github/jongko54/java-spring-auth/2.0.0/java-spring-auth-2.0.0.pom"
             )
             with zipfile.ZipFile(bundle, "w") as archive:
                 archive.writestr(name, b"pom")

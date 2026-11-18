@@ -38,7 +38,7 @@ automatically evidence for a new release.
 | Check | Pinned tool | Scope and boundary |
 | --- | --- | --- |
 | Known dependency vulnerabilities | OSV-Scanner 2.7.1 | Explicit npm/Cargo/uv locks, Go modules and Maven POMs; all five ecosystems must return inventory |
-| Static guardrails | Semgrep CE 1.185.0 | 12 checked-in intrafile rules across Python, Go, Java, Rust and JS/TS, including maintained tools and templates |
+| Static guardrails | OpenGrep 2.0.0 | The same 12 checked-in Semgrep-compatible intrafile rules across Python, Go, Java, Rust and JS/TS, including maintained tools and templates |
 | Secret patterns | Gitleaks 8.30.1 | Reachable local Git refs and current tracked/unignored files; sanitized metadata only |
 
 The rules reject selected dynamic execution, shell construction, unsafe Python
@@ -58,10 +58,15 @@ account settings are not assessed. Template dependencies are represented by
 their source projects; template lockfiles are not independently scanned.
 
 Scanner executables are version-pinned and official binary downloads are
-SHA-256 checked. Semgrep's Python environment has a committed uv lockfile.
+SHA-256 checked before execution, with a 200 MB download bound. OpenGrep 2.0.0
+uses its self-contained native engine; the previous Semgrep Python environment
+and its unused dependency lock are removed. This is an engine replacement,
+not a dependency exclusion: all remaining source manifests are still scanned,
+and the same real positive/negative fixtures must pass. Dependencies embedded
+in native scanner binaries are not inventoried by the source dependency scan.
 Local rules avoid a mutable remote ruleset. Scanner subprocesses receive a
-restricted environment without inherited application/account tokens; Semgrep
-metrics and version checks are disabled. Dependency package identities/versions
+restricted environment without inherited application/account tokens. Only
+the checked-in rules are selected; dependency package identities/versions
 are sent to OSV/deps.dev for online matching and resolution.
 
 The initial Gitleaks run flagged 13 occurrences of public content digests. The
@@ -138,11 +143,11 @@ describes that run and scope.
 
 ## Reproduce locally
 
-Use a new destination outside the checkout. Node 22.12+ and uv/Python 3.12 or
-3.13 are needed. Only macOS arm64 and Linux x86-64 scanner downloads are pinned.
+Use a new destination outside the checkout. Node 22.12+ and Python 3.12 or
+3.13 are needed. No separate scanner Python environment is installed. Only
+macOS arm64 and Linux x86-64 scanner downloads are pinned.
 
 ```sh
-uv sync --frozen --project security
 python3 tools/install_security_tools.py --dest /physical/new/scanner-directory
 python3 tools/security_audit.py --check-mapping --verify-asvs-upstream
 python3 tools/security_selftest.py --bin-dir /physical/new/scanner-directory
@@ -157,6 +162,6 @@ when source files are unchanged.
 Sources: [OWASP ASVS 5.0.0 release](https://github.com/OWASP/ASVS/releases/tag/v5.0.0_release),
 [OSV source-scanning documentation](https://github.com/google/osv-scanner/blob/v2.7.1/docs/scan-source.md),
 [OSV format coverage](https://github.com/google/osv-scanner/blob/v2.7.1/docs/supported_languages_and_lockfiles.md),
-[Semgrep local rules](https://docs.semgrep.dev/running-rules),
+[OpenGrep 2.0.0 native engine](https://github.com/opengrep/opengrep/releases/tag/v2.0.0),
 [Gitleaks 8.30.1](https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1),
 [SLSA provenance scope](https://slsa.dev/spec/v1.2/provenance).

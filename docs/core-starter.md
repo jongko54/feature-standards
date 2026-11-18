@@ -1,6 +1,6 @@
 # 세 기능을 연결한 SDK starter
 
-현재 소스 후보의 main CLI는 인증·권한·목록을 함께 연결한 새 프로젝트를 생성한다. Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum을 지원한다. 선택은 `browser-session-v1` + `rbac-v1` + `offset-list-v1`이다. 기존 인증 전용 `init --feature auth`와 v1/v2/v3 검사는 유지된다.
+main CLI 0.4.0은 인증·권한·목록을 함께 연결한 새 프로젝트를 생성한다. Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum을 지원한다. 선택은 `browser-session-v1` + `rbac-v1` + `offset-list-v1`이다. 기존 인증 전용 `init --feature auth`와 v1/v2/v3 검사는 유지된다.
 
 ```sh
 node packages/feature-standards/src/cli.mjs init --template core \
@@ -12,7 +12,7 @@ node project.mjs check
 node project.mjs demo
 ```
 
-Node 22.12+와 선택 언어의 도구가 필요하다. Python은 3.12+와 uv, Go는 1.26+, Java는 JDK 21+와 checkout의 Maven wrapper, Rust는 1.93.1+와 Cargo를 사용한다. Java 도구 선택은 `JAVA_HOME`으로 명시할 수 있다. 새 기능을 지원하는 source checkout을 명시해야 하며, main package는 `featureStandards.coreStarterProtocolVersion: 1` capability를 검사한다. 생성만으로 의존성 설치·빌드·서버·DB 작업을 실행하지 않는다. `--check` 또는 `check --project`는 생성 앱의 신뢰한 코드와 빌드 도구를 명시적으로 실행한다. 이 기능은 소스 후보이며 기존 npm 0.3.2의 기능이나 새 registry 게시 기록이 아니다.
+Node 22.12+와 선택 언어의 도구가 필요하다. Python은 3.12+와 uv, Go는 1.26+, Java는 JDK 21+와 checkout의 Maven wrapper, Rust는 1.93.1+와 Cargo를 사용한다. 현재 Java 소스는 Spring Boot 4 / Spring 7 및 auth 2.0.0 후보를 함께 사용하며 과거 Maven 1.0.0과 구분한다. Java 도구 선택은 `JAVA_HOME`으로 명시할 수 있다. 새 기능을 지원하는 source checkout을 명시해야 하며, main package는 `featureStandards.coreStarterProtocolVersion: 1` capability를 검사한다. 생성만으로 의존성 설치·빌드·서버·DB 작업을 실행하지 않는다. `--check` 또는 `check --project`는 생성 앱의 신뢰한 코드와 빌드 도구를 명시적으로 실행한다. 기존 npm CLI 0.3.2는 core starter를 지원하지 않는다. CLI와 각 SDK의 실제 registry 게시 기록은 별도다.
 
 ## 무엇이 생성되는가
 

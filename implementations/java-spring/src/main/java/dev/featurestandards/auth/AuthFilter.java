@@ -1,6 +1,7 @@
 package dev.featurestandards.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
@@ -15,7 +16,7 @@ import org.springframework.http.MediaType;
 
 /** Own the small HTTP contract instead of inheriting framework-specific error/HEAD/OPTIONS responses. */
 public final class AuthFilter implements Filter {
-    private static final ObjectMapper JSON = new ObjectMapper();
+    private static final ObjectMapper JSON = JsonMapper.builder().build();
     private final AuthConfig config;
     private final AuthService service;
     public AuthFilter(AuthConfig config, AuthService service) { this.config = config; this.service = service; }

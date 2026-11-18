@@ -2,7 +2,7 @@
 
 Reusable feature standards for AI-assisted development across languages: authentication, authorization, and pagination/sorting/filtering. Authentication has Python/FastAPI, Go/net/http, Java/Spring Boot, Rust/Axum, and React integrations. The new authorization and listing standards have framework-independent Python, Go, Java, Rust, and browser JavaScript/TypeScript libraries.
 
-Start with [what the project does and its actual getting-started commands](https://github.com/jongko54/feature-standards/blob/main/docs/what-is-feature-standards.md). The same explainer is bundled as `snapshot/docs/what-is-feature-standards.md` in this source candidate. It distinguishes application-record listing, AI coding reuse, published commands and source-only SDK starters. Public availability does not establish search-engine indexing or an AI recommendation.
+Start with [what the project does and its actual getting-started commands](https://github.com/jongko54/feature-standards/blob/main/docs/what-is-feature-standards.md). The same explainer is bundled as `snapshot/docs/what-is-feature-standards.md`. It distinguishes application-record listing, AI coding reuse, catalog commands and SDK starters connected to a trusted checkout. Public availability does not establish search-engine indexing or an AI recommendation.
 
 This main package distributes a curated contract snapshot, a read-only context selector, and explicit `init` / `check` entry points. It gives an AI the selected specification, OpenAPI, scenarios, schema SQL, public API guides, and integration guidance. Application generation delegates to an existing trusted source checkout; selected-profile checks execute the generated application's runner. The API implementations and conformance harnesses live in the [source repository](https://github.com/jongko54/feature-standards). The React runtime is a separate package.
 
@@ -11,13 +11,13 @@ This main package distributes a curated contract snapshot, a read-only context s
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# The registry release is separate from this source snapshot.
+# Latest verified registry release; 0.4.0 is still a source candidate.
 npm install --save-dev feature-standards@0.3.2
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-**This checkout is source candidate 0.4.0, with 26 supported contexts.** The installation command above selects the separately published 0.3.2 catalog, which has 25 contexts. Use the source build commands below for the new Python-only `postgres-list-v1` profile. Python core 0.2.0 is also a source candidate; its captured publication flag is false. The bundled historical core receipt verifies npm, Python, Rust, Java and Go `0.1.0`. `recordedPublishedVersion` distinguishes that prior release from the selected source version. Publication fields are captured evidence, not live registry queries.
+**Source candidate 0.4.0 provides 26 supported contexts**, compact reading cards and a three-feature application starter. Its publication remains blocked by the repository security gate; see the [November 18 report](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-18.md). The verified catalog 0.3.2 has 25 contexts and lacks the compact/starter options. The Python-only `postgres-list-v1` adapter (core 0.2.0) and Spring 7 Java auth 2.0.0 are separate source candidates; their captured publication flags are false. The catalog supplies guidance and generators, rather than publishing these SDKs. The bundled historical core receipt verifies npm, Python, Rust, Java and Go `0.1.0`. `recordedPublishedVersion` distinguishes that prior core release from a selected source version. Publication fields are captured evidence, not live registry queries.
 
 `list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
 
@@ -28,9 +28,9 @@ npx feature-standards context --feature auth --stack python --profile browser-se
 | `listing` | `offset-list-v1` | `python`, `go`, `java`, `rust`, `react` |
 | `listing` | `postgres-list-v1` (source candidate) | `python` |
 
-In source 0.4.0, `list` includes `profiles` on each stack. Iterate these stack-specific profiles rather than taking the Cartesian product of every feature profile and stack; unsupported database selections fail explicitly.
+In 0.4.0, `list` includes `profiles` on each stack. Iterate these stack-specific profiles rather than taking the Cartesian product of every feature profile and stack; unsupported database selections fail explicitly.
 
-Source 0.4.0 also adds an opt-in compact reading card:
+Version 0.4.0 also adds an opt-in compact reading card:
 
 ```sh
 node packages/feature-standards/src/cli.mjs context --feature authorization --stack go --compact
@@ -50,10 +50,10 @@ In a separate eight-session similar-task pilot, the optional briefs achieved 8/8
 
 ## Generate and check an application
 
-The source candidate supports a three-feature `--template core` and the existing authentication-only workflow. Core requires a trusted source checkout declaring `featureStandards.coreStarterProtocolVersion: 1` and connects the original memory-auth/RBAC/materialized-listing SDKs in Python, Go, Java or Rust. It does not copy SDK runtime implementations. Existing `--feature auth` requires `@ugauga/create-feature-auth` 0.2.0 or later and retains its v1/v2/v3 checks. Single-feature authorization/listing generation, React generation, and core database profiles remain unsupported. Existing targets, linked paths, ambiguous selectors and older source capabilities are refused before generation.
+Version 0.4.0 supports a three-feature `--template core` and the existing authentication-only workflow. Core requires a trusted source checkout declaring `featureStandards.coreStarterProtocolVersion: 1` and connects the original memory-auth/RBAC/materialized-listing SDKs in Python, Go, Java or Rust. It does not copy SDK runtime implementations. Existing `--feature auth` requires `@ugauga/create-feature-auth` 0.2.0 or later and retains its v1/v2/v3 checks. Single-feature authorization/listing generation, React generation, and core database profiles remain unsupported. Existing targets, linked paths, ambiguous selectors and older source capabilities are refused before generation.
 
 ```sh
-# Source candidate only; this option is not part of published CLI 0.3.2.
+# Requires CLI 0.4.0 and a compatible trusted source checkout.
 feature-standards init --template core \
   --source /absolute/physical/path/to/feature-standards \
   --stack python --dest /absolute/physical/path/to/new-core-app --check

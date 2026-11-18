@@ -12,7 +12,7 @@ from security_audit import (
     mapping_check,
     normalize_gitleaks,
     normalize_osv,
-    normalize_semgrep,
+    normalize_static,
     overall_status,
     record_setup_failure,
     scan_environment,
@@ -105,14 +105,14 @@ class SecurityReceiptTests(unittest.TestCase):
         self.assertEqual(len(cyclonedx(result["inventory"])["components"]), 1)
         self.assertEqual(normalize_osv(data, 127)["status"], "error")
 
-    def test_semgrep_zero_coverage_or_parse_error_cannot_pass(self):
+    def test_static_zero_coverage_or_parse_error_cannot_pass(self):
         empty = {"results": [], "errors": [], "paths": {"scanned": []}}
-        self.assertEqual(normalize_semgrep(empty, 0)["status"], "error")
+        self.assertEqual(normalize_static(empty, 0)["status"], "error")
         empty["paths"]["scanned"] = ["app.py"]
-        self.assertEqual(normalize_semgrep(empty, 0)["status"], "passed")
-        self.assertEqual(normalize_semgrep(empty, 1)["status"], "error")
+        self.assertEqual(normalize_static(empty, 0)["status"], "passed")
+        self.assertEqual(normalize_static(empty, 1)["status"], "error")
         empty["errors"] = [{"type": "ParseError", "message": "private source line"}]
-        result = normalize_semgrep(empty, 0)
+        result = normalize_static(empty, 0)
         self.assertEqual(result["status"], "error")
         self.assertNotIn("private source line", json.dumps(result))
 

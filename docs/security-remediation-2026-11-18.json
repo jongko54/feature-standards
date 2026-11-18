@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-18",
+  "scope": "Local integrated source verification; not an exact clean commit CI receipt or registry publication",
+  "sourceCommit": "d025d1c423b9a97d7fe90b23ffef431832c4b8a0",
+  "sourceDirty": true,
+  "scanStartedAt": "2026-11-18T02:06:22.215603+00:00",
+  "scanFinishedAt": "2026-11-18T02:06:48.108393+00:00",
+  "localSecurityReportSha256": "e1e92113efaa66655a07b7a28e35a264d521a06a3a96949056b21ed8d50891e0",
+  "tools": {"osv-scanner": "2.7.1", "opengrep": "2.0.0", "gitleaks": "8.30.1"},
+  "javaSource": {
+    "authVersion": "2.0.0",
+    "mavenPublished": false,
+    "jdk": 21,
+    "springBoot": "4.1.2",
+    "springFramework": "7.0.10",
+    "springSecurity": "7.1.2",
+    "jackson": "3.1.7",
+    "tomcat": "11.0.27"
+  },
+  "checks": {
+    "dependencies": {"status": "findings", "manifestInputs": 18, "manifestPackageEntries": 920, "ecosystems": 5, "findingOccurrences": 2, "uniqueAdvisoryPackageVersionCombinations": 1},
+    "static": {"status": "passed", "filesScanned": 148, "exactCoverage": true, "findings": 0, "errors": 0},
+    "secrets": {"status": "passed", "findings": 0},
+    "realStaticFixtures": {"rules": 12, "languages": 5, "negativeFixtures": 5, "passed": true},
+    "pythonRepositoryTests": {"total": 387, "passed": 354, "skipped": 33},
+    "javaAuthTests": {"total": 88, "passed": 71, "skipped": 17},
+    "javaCoreTests": {"passed": 5},
+    "javaAuthConsumerTests": {"passed": 4},
+    "javaCoreHttpTests": {"passed": 9},
+    "javaCommonHttpTests": {"passed": 19},
+    "javaChromiumTests": {"passed": 8},
+    "generatedJavaAuth": {"passed": true, "checks": 6},
+    "generatedJavaCore": {"passed": true, "checks": 12, "actualSdkOrigins": true},
+    "mainCatalogNodeTests": {"passed": 52},
+    "authGeneratorNodeTests": {"passed": 14},
+    "releaseAndRegistryNodeTests": {"passed": 30},
+    "localTarball": {"passed": true, "contexts": 26, "registryInstall": false}
+  },
+  "remainingFindings": [
+    {"id": "GHSA-fc5q-39xc-vjpf", "cve": "CVE-2026-112366", "ecosystem": "npm", "name": "picomatch", "version": "4.0.7", "severity": "HIGH", "source": "clients/react/package-lock.json", "developmentDependency": true},
+    {"id": "GHSA-fc5q-39xc-vjpf", "cve": "CVE-2026-112366", "ecosystem": "npm", "name": "picomatch", "version": "4.0.7", "severity": "HIGH", "source": "examples/consumer-python-react/package-lock.json", "developmentDependency": true}
+  ],
+  "publication": {"package": "feature-standards", "targetVersion": "0.4.0", "lastVerifiedRegistryVersion": "0.3.2", "releaseAllowed": false, "published": false, "reason": "Repository-wide security gate still finds an advisory with no supported patched picomatch release"},
+  "limits": ["Local scan used a dirty integrated tree", "Advisory matches do not establish exploitability", "Native scanner embedded dependencies are not inventoried by source manifests", "DB-dependent tests require dedicated fixtures", "Functional and security CI must pass for the exact main SHA before publication", "No independent security audit or certification"]
+}

@@ -113,7 +113,7 @@ def normalize_osv(data: dict, code: int) -> dict:
     }
 
 
-def normalize_semgrep(data: dict, code: int) -> dict:
+def normalize_static(data: dict, code: int) -> dict:
     scanned = data.get("paths", {}).get("scanned", [])
     errors = data.get("errors", [])
     if not all(isinstance(v, list) for v in (scanned, errors, data.get("results"))):
@@ -371,7 +371,8 @@ def version(binary: Path, name: str, expected: str) -> None:
         raise ValueError("scanner version mismatch")
 
 
-def audit(out: Path, binaries: Path, semgrep: Path) -> dict:
+def audit(out: Path, binaries: Path, static_engine: Path | None = None) -> dict:
+    static_engine = static_engine or binaries / "opengrep"
     if out.is_symlink() or out.exists() or out.resolve().is_relative_to(ROOT):
         raise ValueError("evidence destination must be new")
     out.mkdir(parents=True, mode=0o700)
@@ -425,6 +426,7 @@ def audit(out: Path, binaries: Path, semgrep: Path) -> dict:
             "templateDependencies": "resolved source manifests; template lockfiles not independently scanned",
             "mavenLimit": "Resolver-inferred dependencies, not the actual built classpath; Maven transitive test dependencies are not covered",
             "goLimit": "Module dependencies only; Go compiler and standard library vulnerabilities are not assessed",
+            "scannerBinaryLimit": "Pinned native scanner downloads are checksum-verified; their embedded dependencies are not inventoried by the source dependency scan",
             "staticLimit": "local intrafile rules only; no whole-program authorization proof",
             "externalAudit": False,
             "productionAssessment": False,
@@ -453,7 +455,7 @@ def audit(out: Path, binaries: Path, semgrep: Path) -> dict:
             for name, binary in (
                 ("osv-scanner", binaries / "osv-scanner"),
                 ("gitleaks", binaries / "gitleaks"),
-                ("semgrep", semgrep),
+                ("opengrep", static_engine),
             ):
                 version(binary, name, config[name]["version"])
             osv = [
@@ -477,12 +479,10 @@ def audit(out: Path, binaries: Path, semgrep: Path) -> dict:
                 dependency["status"] = "error"
                 dependency["coverageError"] = "missing-required-ecosystem"
             static = [
-                str(semgrep),
+                str(static_engine),
                 "scan",
                 "--config",
                 "security/semgrep-rules.json",
-                "--metrics=off",
-                "--disable-version-check",
                 "--strict",
                 "--error",
                 "--json",
@@ -490,7 +490,7 @@ def audit(out: Path, binaries: Path, semgrep: Path) -> dict:
                 *sources,
             ]
             report["checks"]["static"] = scanner_run(
-                static, private, "static", normalize_semgrep
+                static, private, "static", normalize_static
             )
             if set(report["checks"]["static"].get("scannedPaths", [])) != set(sources):
                 report["checks"]["static"]["status"] = "error"
@@ -637,7 +637,7 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=Path)
     parser.add_argument("--bin-dir", type=Path)
     parser.add_argument(
-        "--semgrep", type=Path, default=ROOT / "security/.venv/bin/semgrep"
+        "--static-engine", type=Path, help="Override the pinned native OpenGrep binary path"
     )
     parser.add_argument("--check-mapping", action="store_true")
     parser.add_argument("--record-setup-failure", action="store_true")
@@ -650,7 +650,7 @@ if __name__ == "__main__":
     elif args.out and args.bin_dir:
         raise SystemExit(
             0
-            if audit(args.out, args.bin_dir, args.semgrep)["status"] == "passed"
+            if audit(args.out, args.bin_dir, args.static_engine)["status"] == "passed"
             else 1
         )
     else:

@@ -26,7 +26,8 @@ NEGATIVE = {
 }
 
 
-def selftest(binaries: Path, semgrep: Path) -> None:
+def selftest(binaries: Path, static_engine: Path | None = None) -> None:
+    static_engine = static_engine or binaries / "opengrep"
     expected = {
         rule["id"]
         for rule in json.loads((ROOT / "security/semgrep-rules.json").read_text())[
@@ -42,12 +43,10 @@ def selftest(binaries: Path, semgrep: Path) -> None:
                 (directory / name).write_text(content)
             result = subprocess.run(
                 [
-                    str(semgrep),
+                    str(static_engine),
                     "scan",
                     "--config",
                     str(ROOT / "security/semgrep-rules.json"),
-                    "--metrics=off",
-                    "--disable-version-check",
                     "--no-git-ignore",
                     "--strict",
                     "--json",
@@ -126,7 +125,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bin-dir", required=True, type=Path)
     parser.add_argument(
-        "--semgrep", default=ROOT / "security/.venv/bin/semgrep", type=Path
+        "--static-engine", type=Path, help="Override the pinned native OpenGrep binary path"
     )
     args = parser.parse_args()
-    selftest(args.bin_dir, args.semgrep)
+    selftest(args.bin_dir, args.static_engine)

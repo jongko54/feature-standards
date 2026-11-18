@@ -2,6 +2,8 @@
 
 Building, publishing, and installing from a public registry are separate verification steps. A local distribution check does not imply a public release.
 
+The current Java source is auth **2.0.0**, a Spring Boot 4 / Framework 7 candidate using Java 21 and Jackson 3. It has not been published to Maven Central. The table and registry example below describe the historical auth 1.0.0 release; use a matching local 2.0.0 install for current source consumers. An npm catalog release does not publish the Java candidate.
+
 | Stack | Package / version | Distribution | Registry status / prerequisite |
 |---|---|---|---|
 | Python | `feature-standards-python-auth` 0.2.0 | wheel + sdist | Published on PyPI and independently installed; [receipt](python-release-0.2.0.json) |

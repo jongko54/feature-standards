@@ -30,9 +30,6 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
-      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
-        with:
-          version: '0.10.4'
       - name: Validate mapping and fail-closed report behavior
         run: |
           python tools/security_audit.py --check-mapping --verify-asvs-upstream
@@ -40,7 +37,6 @@ jobs:
           node --test tools/verify-release-ci.test.mjs
       - name: Install exact scanner versions and checksum-verified binaries
         run: |
-          uv sync --frozen --project security
           python tools/install_security_tools.py --dest "$RUNNER_TEMP/security-tools"
       - name: Exercise all local static rules and narrow secret exceptions
         run: python tools/security_selftest.py --bin-dir "$RUNNER_TEMP/security-tools"

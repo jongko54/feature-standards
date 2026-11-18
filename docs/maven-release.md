@@ -1,6 +1,8 @@
 # Maven Central releases
 
-The Java package is `io.github.jongko54:java-spring-auth:1.0.0`. Its reusable JAR has classifier `library`; the main artifact remains the executable reference server. Sources, Javadoc, the POM, and MIT license metadata are included. Version 1.0.0 was published on Maven Central on 2026-11-05. The [release receipt](java-release-1.0.0.json) records all 30 matching public files and a separate registry consumer's four passing HTTP/library tests.
+The published Java package is `io.github.jongko54:java-spring-auth:1.0.0`. Its reusable JAR has classifier `library`; the main artifact remains the executable reference server. Sources, Javadoc, the POM, and MIT license metadata are included. Version 1.0.0 was published on Maven Central on 2026-11-05. The [release receipt](java-release-1.0.0.json) records all 30 matching public files and a separate registry consumer's four passing HTTP/library tests.
+
+The current source is the unpublished auth **2.0.0** candidate for Java 21, Spring Boot 4.1.2 / Framework 7.0.10, Servlet 6.1 and Jackson 3. Consumers of the checked-out source must use its matching library JAR and platform. Publishing the npm catalog does not publish this Maven candidate or update the historical 1.0.0 artifact. Install the candidate locally as described in the [Java guide](../implementations/java-spring/README.md); the registry example below describes the historical release.
 
 ## Verified namespace and signing identity
 

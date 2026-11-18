@@ -1,6 +1,6 @@
 # Java 소비 프로젝트
 
-인증 코드를 복사하지 않고 `io.github.jongko54:java-spring-auth:1.0.0:jar:library`를 가져오는 별도 Maven 프로젝트다. 공개 `AuthConfig`, `AuthService`, `AuthFilter`를 조합하고 소비 앱의 `GET /api/profile`만 구현한다. JDK 21 이상을 사용한다.
+인증 코드를 복사하지 않고 현재 소스의 `io.github.jongko54:java-spring-auth:2.0.0:jar:library`를 로컬 설치해 가져오는 별도 Maven 프로젝트다. 공개 `AuthConfig`, `AuthService`, `AuthFilter`를 조합하고 소비 앱의 `GET /api/profile`만 구현한다. JDK 21 이상, Spring Boot 4.1.2 / Spring 7 / Servlet 6.1을 사용한다. 2.0.0은 소스 후보이며 Maven Central 게시 여부를 뜻하지 않는다. Boot 3.x 앱은 프레임워크·컨테이너 전환이 필요하다.
 
 ## 설치·검증
 

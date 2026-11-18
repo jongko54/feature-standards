@@ -1,6 +1,7 @@
 package dev.featurestandards.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 class AuthHttpTest {
     static final String ORIGIN = "http://127.0.0.1:5173";
     static final String LOGIN = "{\"email\":\"demo@example.com\",\"password\":\"correct-horse-battery-staple\"}";
-    static final ObjectMapper JSON = new ObjectMapper();
+    static final ObjectMapper JSON = JsonMapper.builder().build();
     @LocalServerPort int port;
     final HttpClient client = HttpClient.newHttpClient();
     HttpResponse<String> initial;

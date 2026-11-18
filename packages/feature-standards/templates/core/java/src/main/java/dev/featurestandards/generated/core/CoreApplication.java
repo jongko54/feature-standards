@@ -1,6 +1,7 @@
 package dev.featurestandards.generated.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import dev.featurestandards.auth.AuthConfig;
 import dev.featurestandards.auth.AuthFilter;
 import dev.featurestandards.auth.AuthService;
@@ -25,7 +26,7 @@ public class CoreApplication {
     public static void main(String[] args) {
         if (args.length == 1 && args[0].equals("--sdk-origins")) {
             try {
-                System.out.println(new ObjectMapper().writeValueAsString(Map.of(
+                System.out.println(JsonMapper.builder().build().writeValueAsString(Map.of(
                     "auth", AuthService.class.getProtectionDomain().getCodeSource().getLocation().toExternalForm(),
                     "authorization", AuthorizationPolicy.class.getProtectionDomain().getCodeSource().getLocation().toExternalForm(),
                     "listing", Listing.class.getProtectionDomain().getCodeSource().getLocation().toExternalForm()

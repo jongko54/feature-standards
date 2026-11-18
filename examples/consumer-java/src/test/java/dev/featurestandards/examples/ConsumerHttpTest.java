@@ -1,6 +1,7 @@
 package dev.featurestandards.examples;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import dev.featurestandards.auth.AuthService;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.*;
     "AUTH_ALLOWED_ORIGIN=http://127.0.0.1:5173", "AUTH_SESSION_TTL_SECONDS=1800"
 })
 class ConsumerHttpTest {
-    static final ObjectMapper JSON = new ObjectMapper();
+    static final ObjectMapper JSON = JsonMapper.builder().build();
     static final String ORIGIN = "http://127.0.0.1:5173";
     static final String LOGIN = "{\"email\":\"demo@example.com\",\"password\":\"correct-horse-battery-staple\"}";
     @LocalServerPort int port;
@@ -26,7 +27,7 @@ class ConsumerHttpTest {
 
     @Test void dependencyUsesInstalledPlainJar() throws Exception {
         var location = AuthService.class.getProtectionDomain().getCodeSource().getLocation();
-        assertThat(location.toString()).endsWith("java-spring-auth-1.0.0-library.jar");
+        assertThat(location.toString()).endsWith("java-spring-auth-2.0.0-library.jar");
         try (var jar = new JarFile(Path.of(location.toURI()).toFile())) {
             assertThat(jar.getEntry("dev/featurestandards/auth/AuthService.class")).isNotNull();
             assertThat(jar.getEntry("BOOT-INF/classes/dev/featurestandards/auth/AuthService.class")).isNull();

@@ -1,6 +1,6 @@
 # Java authentication + authorization + listing consumer
 
-This separate Spring Boot application imports `java-spring-auth:1.0.0:library` and the plain `feature-standards-core:0.1.0` JAR. It exposes `GET /api/documents` and `GET /api/documents/{id}` while the existing authentication filter owns `/auth/*`. Authentication implementation code is never copied into the application.
+This separate Spring Boot 4.1.2 application imports the current source candidate `java-spring-auth:2.0.0:library` and the plain `feature-standards-core:0.1.0` JAR. It uses Spring 7, Servlet 6.1 and Jackson 3. It exposes `GET /api/documents` and `GET /api/documents/{id}` while the existing authentication filter owns `/auth/*`. Authentication implementation code is never copied into the application. Boot 3.x consumers must migrate the framework and container before adopting the authentication 2.0.0 source candidate.
 
 Use JDK 21. From the repository root, verify the current source with an isolated Maven repository:
 
@@ -13,7 +13,7 @@ implementations/java-spring/mvnw -q -Dmaven.repo.local="$core_maven_repo" -f exa
 AUTH_DEMO=true AUTH_STORE=memory AUTH_ACCOUNT_LIFECYCLE=false AUTH_COOKIE_SECURE=false AUTH_ALLOWED_ORIGIN=http://127.0.0.1:5173 PORT=8012 java -jar examples/core-java/target/core-java.jar
 ```
 
-The runnable example binds `127.0.0.1` and requires explicit memory-demo configuration. `PORT` overrides `AUTH_PORT`. To exercise the pinned published JARs instead, start with a new empty Maven repository and omit the two source-library installation commands; Maven then resolves the dependencies from Maven Central. Source-consumer tests and registry publication verification remain distinct evidence.
+The runnable example binds `127.0.0.1` and requires explicit memory-demo configuration. `PORT` overrides `AUTH_PORT`. The authentication 2.0.0 source candidate requires the local installation above; its availability on Maven Central is not asserted. The historical 1.0.0 authentication and 0.1.0 core publication receipts remain separate from this Spring 7 source-consumer check.
 
 Login through `POST /auth/login` with the existing demo credentials and exact Origin. Keep the HttpOnly `fs_session` cookie for both product routes. Logout uses the existing Origin and session-CSRF contract. Product routes accept GET only and return no-store/nosniff headers, including error responses.
 

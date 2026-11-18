@@ -1,7 +1,8 @@
 package dev.featurestandards.core.authorization;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AuthorizationPolicyTest {
     @Test void sharedVectors() throws Exception {
-        JsonNode fixture = new ObjectMapper().readTree(Path.of("../../features/authorization/scenarios.json").toFile());
+        JsonNode fixture = JsonMapper.builder().build().readTree(Path.of("../../features/authorization/scenarios.json").toFile());
         for (JsonNode c : fixture.get("cases")) {
             List<Grant> grants = new ArrayList<>();
             for (JsonNode grant : c.get("grants")) grants.add(new Grant(grant.get("role").asText(),grant.get("permission").asText(),grant.get("scope").asText()));

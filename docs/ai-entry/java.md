@@ -4,13 +4,13 @@ If you choose the original SDKs, start with [the controller](../../examples/core
 
 ## Dependency and import boundary
 
-The consumer uses JDK 21 and Spring Boot 3.5.16. Its runtime libraries are:
+The current source consumer uses JDK 21 and Spring Boot 4.1.2 / Spring Framework 7.0.10. Its runtime libraries are:
 
 ```xml
 <dependency>
   <groupId>io.github.jongko54</groupId>
   <artifactId>java-spring-auth</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <classifier>library</classifier>
 </dependency>
 <dependency>
@@ -19,6 +19,8 @@ The consumer uses JDK 21 and Spring Boot 3.5.16. Its runtime libraries are:
   <version>0.1.0</version>
 </dependency>
 ```
+
+Auth 2.0.0 is an unpublished source candidate for the Spring 7 / Servlet 6.1 platform. Install it from this trusted checkout before resolving the consumer. The historical Maven Central auth 1.0.0 release uses Spring Boot 3 and is a separate artifact; the npm catalog release does not publish a Maven SDK. Core 0.1.0 retains its framework-independent API.
 
 The [auth POM](../../implementations/java-spring/pom.xml) attaches a plain `library` classifier JAR, excluding the reference `AuthApplication` and `application.properties`. The executable `auth-server.jar` and a `sources` JAR serve different purposes. The [core POM](../../libraries/java/pom.xml) produces a plain JAR without a Spring runtime dependency.
 

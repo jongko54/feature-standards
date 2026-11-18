@@ -1,6 +1,7 @@
 package dev.featurestandards.examples;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import dev.featurestandards.auth.AuthService;
 import dev.featurestandards.auth.AuthStore;
 import dev.featurestandards.auth.StorageUnavailableException;
@@ -28,7 +29,7 @@ class UnavailableStoreHttpTest {
                 .header("Cookie", "fs_session=opaque-test-token").GET().build();
         var response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         assertThat(response.statusCode()).isEqualTo(503);
-        assertThat(new ObjectMapper().readTree(response.body()).path("error").path("code").asText())
+        assertThat(JsonMapper.builder().build().readTree(response.body()).path("error").path("code").asText())
                 .isEqualTo("STORAGE_UNAVAILABLE");
         assertThat(response.headers().firstValue("Set-Cookie")).isEmpty();
         assertThat(response.headers().firstValue("Cache-Control")).contains("no-store");

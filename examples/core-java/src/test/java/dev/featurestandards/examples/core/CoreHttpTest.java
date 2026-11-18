@@ -1,7 +1,8 @@
 package dev.featurestandards.examples.core;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import dev.featurestandards.auth.AuthService;
 import dev.featurestandards.core.authorization.AuthorizationPolicy;
 import dev.featurestandards.core.authorization.Principal;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.*;
         "AUTH_ALLOWED_ORIGIN=http://127.0.0.1:5173", "AUTH_RATE_LIMIT_MAX=1000"
     })
 class CoreHttpTest {
-    static final ObjectMapper JSON = new ObjectMapper();
+    static final ObjectMapper JSON = JsonMapper.builder().build();
     static final String ORIGIN = "http://127.0.0.1:5173";
     static final String LOGIN = "{\"email\":\"demo@example.com\",\"password\":\"correct-horse-battery-staple\"}";
     @LocalServerPort int port;
@@ -49,7 +50,7 @@ class CoreHttpTest {
     }
 
     @Test void dependencyUsesExternalLibraryJars() {
-        assertThat(AuthService.class.getProtectionDomain().getCodeSource().getLocation().toString()).endsWith("java-spring-auth-1.0.0-library.jar");
+        assertThat(AuthService.class.getProtectionDomain().getCodeSource().getLocation().toString()).endsWith("java-spring-auth-2.0.0-library.jar");
         assertThat(AuthorizationPolicy.class.getProtectionDomain().getCodeSource().getLocation().toString()).endsWith("feature-standards-core-0.1.0.jar");
     }
 

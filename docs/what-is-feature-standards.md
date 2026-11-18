@@ -41,12 +41,12 @@ npx feature-standards@0.3.2 context --feature listing --stack go
 
 These commands return JSON guidance and bundled document paths. They do not
 install a server, generate an application or execute verification. Published
-CLI 0.3.2 has the full context format; it does not support `--compact` or the
-three-feature `--template core` option below.
+CLI 0.3.2 has only the full context format and auth-only generation. Source
+candidate 0.4.0 adds compact context and the three-feature starter below.
 
 ## Next: connect all three SDKs from a trusted source checkout
 
-The current **0.4.0 source candidate** provides a starter for Python, Go, Java
+The **0.4.0 source candidate** provides a starter for Python, Go, Java
 and Rust. From the root of the trusted source checkout:
 
 ```sh
@@ -77,15 +77,19 @@ Custom mutation routes need their own Origin, CSRF and permission enforcement.
 
 - **Published catalog:** CLI 0.3.2. Core 0.1.0 has separate distributions in five
   ecosystems, with historical [registry and consumer evidence](core-release-0.1.0.json).
-- **Source candidates:** CLI 0.4.0, Python core 0.2.0, compact routing, the
-  three-feature starter and Python PostgreSQL listing are not established as
-  new registry releases by a source change.
+- **Catalog source candidate 0.4.0:** 26 feature/stack/profile contexts, compact
+  routing and a three-feature starter. Its publication remains blocked by the
+  [November 18 security findings](security-remediation-2026-11-18.md).
+- **Separate source candidates:** Python core 0.2.0 / PostgreSQL listing and
+  Java auth 2.0.0 / Spring 7. Publishing the catalog does not publish these SDKs.
 - **AI observations:** supplied-checkout [reading](https://github.com/jongko54/feature-standards/blob/main/docs/validation-ai-reading-2026-11-08.md)
   and [SDK choice](https://github.com/jongko54/feature-standards/blob/main/docs/adoption/2026-11-11-sdk-guidance.md) studies are separate from
   internet discovery, external adoption and guaranteed token/cost savings.
-- **Security:** the current [dated security report](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-14.md)
-  retains unresolved dependency findings and blocked automated publication.
-  There is no independent security-audit or certification claim.
+- **Security:** automated publication requires functional and security CI for
+  the exact source commit. The [November 14 report](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-14.md)
+  preserves the earlier Spring 6 / Python-scanner findings. The current source
+  uses Spring 7 and native OpenGrep; the November 18 scan still finds an unpatched
+  React build dependency. There is no independent security-audit or certification claim.
 
 ## 한국어로 찾는 경우
 

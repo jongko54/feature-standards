@@ -1,6 +1,8 @@
 # Java / Spring Boot 참조 구현
 
-`browser-session-v1`(기본 메모리)과 `browser-session-v2`(PostgreSQL)의 Java 구현이다. Java 21 이상과 Maven wrapper를 사용한다. Spring Boot 3.5.16의 내장 Tomcat, Spring Security Crypto 6.5.11의 `Argon2PasswordEncoder`, Bouncy Castle 1.86, PostgreSQL JDBC 42.7.14를 사용한다. HTTP 동작의 기준은 [v1 공통 명세](../../features/auth/specification.md)와 [v2 저장소 계약](../../features/auth/postgres-session-v2.md)이다.
+`browser-session-v1`(기본 메모리)과 `browser-session-v2`(PostgreSQL)의 Java 구현이다. Java 21 이상과 Maven wrapper를 사용한다. 현재 소스 후보 2.0.0은 Spring Boot 4.1.2 / Spring Framework 7.0.10 / Servlet 6.1을 기준으로 하며, Boot BOM이 관리하는 Tomcat 11.0.27, Jackson 3.1.7, Spring Security Crypto 7.1.2와 Bouncy Castle 1.86, PostgreSQL JDBC 42.7.14를 사용한다. HTTP 동작의 기준은 [v1 공통 명세](../../features/auth/specification.md)와 [v2 저장소 계약](../../features/auth/postgres-session-v2.md)이다.
+
+2.0.0은 Spring Boot 3.x 소비 앱에서 의존성 버전만 바꾸는 호환 업데이트가 아니다. Boot 4 / Spring 7 / Servlet 6.1로 소비 앱과 컨테이너를 함께 전환해야 한다. Jackson 3의 `tools.jackson` API를 사용하되 중복 필드·후행 JSON·잘못된 UTF-8·허용하지 않은 필드 거절과 기존 쿠키·CSRF·오류 응답 계약은 유지한다. 기존에 게시된 1.0.0과 현재 소스 후보의 게시 상태를 구분한다.
 
 ## 빌드와 실행
 
@@ -44,7 +46,7 @@ DB 모드에서는 `AUTH_USER_EMAIL`과 `AUTH_USER_PASSWORD`를 요구하거나 
 
 ### 라이브러리로 가져오기
 
-`./mvnw -q install -DskipTests`는 기존 실행 파일 `target/auth-server.jar`와 일반 클래스 경로의 `target/auth-server-library.jar`를 함께 빌드하고 로컬 Maven 캐시에 설치한다. 다른 프로젝트는 `io.github.jongko54:java-spring-auth:1.0.0:jar:library`를 의존성으로 지정한다. 일반 JAR에는 참조 서버의 `AuthApplication`과 `application.properties`를 넣지 않으므로 소비 앱의 component scan·설정을 덮어쓰지 않는다. Maven Central 게시를 수행하지 않는다.
+`./mvnw -q install -DskipTests`는 기존 실행 파일 `target/auth-server.jar`와 일반 클래스 경로의 `target/auth-server-library.jar`를 함께 빌드하고 로컬 Maven 캐시에 설치한다. 현재 소스를 사용하는 다른 프로젝트는 `io.github.jongko54:java-spring-auth:2.0.0:jar:library`를 의존성으로 지정하며 먼저 이 로컬 설치를 수행한다. 일반 JAR에는 참조 서버의 `AuthApplication`과 `application.properties`를 넣지 않으므로 소비 앱의 component scan·설정을 덮어쓰지 않는다. 이 명령은 Maven Central 게시를 수행하지 않으며 2.0.0의 레지스트리 제공을 의미하지 않는다.
 
 공개 `AuthConfig.password(env, demo)`는 메모리 사용 시 참조 구현과 같은 비밀번호 선택 규칙을 제공한다. PostgreSQL 모드는 비밀번호 인자를 null로 전달하며 기존 설정·schema 검사를 사용한다. Servlet 어댑터를 재사용할 때 `AuthFilter`를 `/auth/*`, `/healthz`에 등록하고 소비 앱의 경로는 해당 앱에서 처리한다. 보호 API는 `AuthService.session(token)`의 유효 세션만 사용하고 저장소 실패를 성공이나 익명 상태로 감추지 않는다. 실제 별도 의존성 설치·보호 API·로그아웃 후 쿠키 폐기는 [Java 소비 예제](../../examples/consumer-java/README.md)에서 검증한다.
 
@@ -96,7 +98,7 @@ schema 2의 `enabled`는 관리자 허용과 이메일 확인 여부로 계산�
 
 ## 버전과 API 근거
 
-- [Spring Boot 3.5.16 시스템 요구 사항](https://docs.spring.io/spring-boot/3.5/system-requirements.html): Java 17 이상 지원 중 이 참조 구현의 빌드 대상은 Java 21이다. 공식 문서의 안정 유지보수 버전과 Maven Central 아티팩트를 확인하고 고정했다.
+- [Spring Boot 4 전환 안내](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide): Spring Framework 7과 Servlet 6.1, Jackson 3 및 모듈별 웹·테스트 starter를 사용한다. 이 참조 구현의 빌드 대상은 Java 21이다. 안정 버전 4.1.2와 해당 BOM을 Maven Central에서 확인하고 고정했다.
 - [Spring Security Argon2](https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-argon2): Bouncy Castle 기반 `Argon2PasswordEncoder`.
 - [Apache Maven Wrapper](https://maven.apache.org/tools/wrapper/): Maven 및 wrapper 버전과 배포 체크섬 고정.
 - [PostgreSQL JDBC](https://jdbc.postgresql.org/): 안정 릴리스 42.7.14 고정. [연결 문서](https://jdbc.postgresql.org/documentation/use/)의 JDBC URL·Properties와 유한 connect/socket timeout을 따른다.

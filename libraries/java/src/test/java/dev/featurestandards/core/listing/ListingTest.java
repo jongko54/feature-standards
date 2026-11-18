@@ -1,9 +1,10 @@
 package dev.featurestandards.core.listing;
 
 import static org.junit.jupiter.api.Assertions.*;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class ListingTest {
-    private static final ObjectMapper JSON = new ObjectMapper();
+    private static final ObjectMapper JSON = JsonMapper.builder().build();
     private static Listing.Schema schema() { return new Listing.Schema(Map.of("id", "string", "name", "string", "count", "integer", "active", "boolean"), Map.of("name", "string", "count", "integer", "active", "boolean")); }
     private static Path fixture() throws Exception {
         Path directory = Path.of(ListingTest.class.getProtectionDomain().getCodeSource().getLocation().toURI());
