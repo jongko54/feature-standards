@@ -105,6 +105,25 @@ class SecurityReceiptTests(unittest.TestCase):
         self.assertEqual(len(cyclonedx(result["inventory"])["components"]), 1)
         self.assertEqual(normalize_osv(data, 127)["status"], "error")
 
+    def test_only_exact_generated_maven_sbom_paths_can_alias_source_poms(self):
+        generated = "/private/generated/project-0.cdx.json"
+        source = "implementations/java-spring/pom.xml"
+        data = {"results": [{"source": {"path": generated}, "packages": [{"package": {
+            "name": "example:library", "version": "1.2.3", "ecosystem": "Maven",
+        }}]}]}
+        result = normalize_osv(data, 0, {generated: source})
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(result["sourcesScanned"], [source])
+        self.assertEqual(normalize_osv(data, 127, {generated: source})["status"], "error")
+        with self.assertRaises(ValueError):
+            normalize_osv(data, 0)
+        with self.assertRaises(ValueError):
+            normalize_osv(data, 0, {generated + ".other": source})
+        with self.assertRaises(ValueError):
+            normalize_osv(data, 0, {generated: "../outside/pom.xml"})
+        with self.assertRaises(ValueError):
+            normalize_osv(data, 0, {"relative.cdx.json": source})
+
     def test_static_zero_coverage_or_parse_error_cannot_pass(self):
         empty = {"results": [], "errors": [], "paths": {"scanned": []}}
         self.assertEqual(normalize_static(empty, 0)["status"], "error")

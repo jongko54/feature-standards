@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-18",
+  "scope": "Local integrated precommit checks; not remote exact-SHA CI or registry publication",
+  "sourceCommit": "4aa50ffaafc3de30a284ac7dd8b63e5c7b68033a",
+  "sourceDirty": true,
+  "scanStartedAt": "2026-11-18T13:43:50.317704+00:00",
+  "scanFinishedAt": "2026-11-18T13:44:35.822254+00:00",
+  "localSecurityReportSha256": "f055ac7442d806a5992e88d3658a627e3929b1b3b54c72116b54c1c16422128f",
+  "tools": {"osv-scanner": "2.7.1", "gitleaks": "8.30.1", "opengrep": "2.0.0", "maven-dependency-plugin": "3.11.0", "esbuild": "0.28.2"},
+  "checks": {
+    "dependencies": {"status": "passed", "declaredInputs": 22, "mavenProjects": 4, "manifestPackageEntries": 1021, "ecosystems": 5, "findings": 0, "mavenExactCoverage": [72, 12, 73, 74]},
+    "static": {"status": "passed", "filesScanned": 151, "findings": 0},
+    "secrets": {"status": "passed", "findings": 0},
+    "frontendBoundaryTests": {"passed": 15},
+    "reactApiTests": {"passed": 8},
+    "actualFrontendBuilds": {"passed": 2},
+    "fourBackendCommonHttp": {"passed": 76},
+    "fourBackendChromium": {"passed": 32},
+    "preview4173PythonChromium": {"passed": 8},
+    "pythonRepositoryTests": {"total": 400, "passed": 367, "skipped": 33},
+    "mainCatalogNodeTests": {"passed": 52},
+    "sdkTarballConsumer": {"passed": true, "files": 5}
+  },
+  "remediation": {"actualDemoDependencyChainRemoved": true, "vulnerabilityExclusionsAdded": false, "dependencyOverridesAdded": false, "mavenSourceBuildsUsePrivateRepositoryAndBlankSettings": true, "generatedSbomsBoundToSourcePomHashes": true, "gateRequiresExactMavenPackageIdentities": true},
+  "limits": ["Precommit sourceDirty was true", "React editing uses full reload instead of Fast Refresh", "Environment and HTML changes need a dev-server restart", "API timeout bounds socket inactivity rather than total DNS/request lifetime", "Dependency inventory does not include Maven build plugins, JDK or scanner binary internals", "Dedicated DB and SMTP regression coverage is separate from these local checks", "No independent security audit or certification"]
+}

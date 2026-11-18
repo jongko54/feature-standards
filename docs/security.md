@@ -37,7 +37,7 @@ automatically evidence for a new release.
 
 | Check | Pinned tool | Scope and boundary |
 | --- | --- | --- |
-| Known dependency vulnerabilities | OSV-Scanner 2.7.1 | Explicit npm/Cargo/uv locks, Go modules and Maven POMs; all five ecosystems must return inventory |
+| Known dependency vulnerabilities | OSV-Scanner 2.7.1 | Explicit npm/Cargo/uv locks, Go modules and isolated resolved Maven inventories; all five ecosystems must return inventory |
 | Static guardrails | OpenGrep 2.0.0 | The same 12 checked-in Semgrep-compatible intrafile rules across Python, Go, Java, Rust and JS/TS, including maintained tools and templates |
 | Secret patterns | Gitleaks 8.30.1 | Reachable local Git refs and current tracked/unignored files; sanitized metadata only |
 
@@ -51,8 +51,17 @@ Known dependency findings are **package/version matches**, not proof of reachabl
 exploitation. Counts distinguish repeated manifest occurrences from unique
 `(advisory ID, ecosystem, package, version)` combinations. Tooling dependencies
 are included and must be distinguished from deployed runtime dependencies.
-OSV's Maven graph is resolver-inferred, not the actual built classpath, and does
-not cover all transitive test dependencies. Go toolchain/standard-library
+For all four source Maven POMs, a checksum-pinned Maven wrapper and the official
+dependency plugin 3.11.0 resolve dependencies in a fresh private repository,
+using blank user/global settings and an environment without publisher/runtime
+credentials. Source authentication and core artifacts are installed locally;
+unpublished source candidates are not assumed to exist in Maven Central.
+Each complete resolved tree, including transitive test dependencies, becomes
+a CycloneDX input. Its exact generated path maps only to its original POM.
+POM/tree/SBOM and copied-source hashes, the pinned command and scopes are
+recorded; every Maven package identity/version must appear in OSV's response.
+Any build, resolution, parsing or coverage error blocks the gate. Maven build
+plugins and the JDK are not inventoried. Go toolchain/standard-library
 vulnerabilities, containers, infrastructure, external services and registry
 account settings are not assessed. Template dependencies are represented by
 their source projects; template lockfiles are not independently scanned.
@@ -61,7 +70,7 @@ Scanner executables are version-pinned and official binary downloads are
 SHA-256 checked before execution, with a 200 MB download bound. OpenGrep 2.0.0
 uses its self-contained native engine; the previous Semgrep Python environment
 and its unused dependency lock are removed. This is an engine replacement,
-not a dependency exclusion: all remaining source manifests are still scanned,
+not a dependency exclusion: all remaining source manifests are still represented,
 and the same real positive/negative fixtures must pass. Dependencies embedded
 in native scanner binaries are not inventoried by the source dependency scan.
 Local rules avoid a mutable remote ruleset. Scanner subprocesses receive a
@@ -143,8 +152,11 @@ describes that run and scope.
 
 ## Reproduce locally
 
-Use a new destination outside the checkout. Node 22.12+ and Python 3.12 or
-3.13 are needed. No separate scanner Python environment is installed. Only
+Use a new destination outside the checkout. Node 22.12+, Python 3.12 or
+3.13 and a JDK 21 selected with `JAVA_HOME` are needed. Maven source builds
+require network access and keep their fresh repository/logs in a private
+temporary directory without altering the shared Maven cache. No separate
+scanner Python environment is installed. Only
 macOS arm64 and Linux x86-64 scanner downloads are pinned.
 
 ```sh
@@ -163,5 +175,6 @@ Sources: [OWASP ASVS 5.0.0 release](https://github.com/OWASP/ASVS/releases/tag/v
 [OSV source-scanning documentation](https://github.com/google/osv-scanner/blob/v2.7.1/docs/scan-source.md),
 [OSV format coverage](https://github.com/google/osv-scanner/blob/v2.7.1/docs/supported_languages_and_lockfiles.md),
 [OpenGrep 2.0.0 native engine](https://github.com/opengrep/opengrep/releases/tag/v2.0.0),
+[Maven dependency tree](https://maven.apache.org/plugins/maven-dependency-plugin/tree-mojo.html),
 [Gitleaks 8.30.1](https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1),
 [SLSA provenance scope](https://slsa.dev/spec/v1.2/provenance).

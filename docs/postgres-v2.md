@@ -91,7 +91,7 @@ npx playwright install chromium
 cd ../..
 ```
 
-[소비 앱 harness](../tests/consumer_conformance.py)가 전용 DB를 명시적으로 migrate·seed하고 임시 Python API와 포트 5174의 Vite를 실행합니다. `FEATURE_STANDARDS_PG_BIN` 또는 전용 테스트 DB 설정은 공통 PG harness와 같습니다.
+[소비 앱 harness](../tests/consumer_conformance.py)가 전용 DB를 명시적으로 migrate·seed하고 임시 Python API와 포트 5174의 개발 서버를 실행합니다. `FEATURE_STANDARDS_PG_BIN` 또는 전용 테스트 DB 설정은 공통 PG harness와 같습니다.
 
 ```sh
 uv run --frozen --project tools python tests/consumer_conformance.py

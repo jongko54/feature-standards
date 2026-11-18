@@ -18,6 +18,8 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
 
+from security_maven import MAVEN_POMS, create_inventory, maven_coverage
+
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {"dependencies", "static", "secrets"}
 LOCK_NAMES = {
@@ -74,12 +76,17 @@ def overall_status(checks: dict) -> str:
     )
 
 
-def normalize_osv(data: dict, code: int) -> dict:
+def normalize_osv(data: dict, code: int, source_aliases: dict | None = None) -> dict:
     if not isinstance(data, dict) or not isinstance(data.get("results"), list):
         raise TypeError("invalid dependency scanner report")
+    source_aliases = source_aliases or {}
+    for generated, source in source_aliases.items():
+        if not Path(generated).is_absolute() or source not in MAVEN_POMS:
+            raise ValueError("invalid-generated-source-alias")
     inventory, findings = [], []
     for group in data["results"]:
-        source = safe_path(group["source"]["path"])
+        raw_source = group["source"]["path"]
+        source = safe_path(source_aliases.get(raw_source, raw_source))
         for entry in group["packages"]:
             package = entry["package"]
             item = {key: str(package[key]) for key in ("name", "version", "ecosystem")}
@@ -424,7 +431,7 @@ def audit(out: Path, binaries: Path, static_engine: Path | None = None) -> dict:
             "directoryAliases": aliases,
             "secrets": ["all-local-git-refs", "current-tracked-and-unignored-files"],
             "templateDependencies": "resolved source manifests; template lockfiles not independently scanned",
-            "mavenLimit": "Resolver-inferred dependencies, not the actual built classpath; Maven transitive test dependencies are not covered",
+            "mavenLimit": "Actual resolved project dependency trees across all Maven scopes, including test, from isolated source builds; build plugins and the JDK are not inventoried",
             "goLimit": "Module dependencies only; Go compiler and standard library vulnerabilities are not assessed",
             "scannerBinaryLimit": "Pinned native scanner downloads are checksum-verified; their embedded dependencies are not inventoried by the source dependency scan",
             "staticLimit": "local intrafile rules only; no whole-program authorization proof",
@@ -458,6 +465,14 @@ def audit(out: Path, binaries: Path, static_engine: Path | None = None) -> dict:
                 ("opengrep", static_engine),
             ):
                 version(binary, name, config[name]["version"])
+            # Keep the fresh repository private and separate from disposable raw
+            # scanner files. Never load account settings or assume source-only
+            # candidate artifacts have already been published to a registry.
+            maven_work = Path(tempfile.mkdtemp(prefix="feature-security-maven-")) / "resolution"
+            sboms, source_aliases, maven_evidence = create_inventory(
+                ROOT, manifests, files, maven_work, config["maven-dependency-plugin"]
+            )
+            report["scope"]["mavenResolution"] = maven_evidence
             osv = [
                 str(binaries / "osv-scanner"),
                 "scan",
@@ -468,11 +483,19 @@ def audit(out: Path, binaries: Path, static_engine: Path | None = None) -> dict:
                 "--no-ignore",
             ]
             for path in manifests:
-                osv.extend(["--lockfile", path])
+                if Path(path).name != "pom.xml":
+                    osv.extend(["--lockfile", path])
+            for path in sboms:
+                osv.extend(["--lockfile", str(path)])
             report["checks"]["dependencies"] = scanner_run(
-                osv, private, "dependencies", normalize_osv
+                osv, private, "dependencies",
+                lambda data, code: normalize_osv(data, code, source_aliases),
             )
             dependency = report["checks"]["dependencies"]
+            dependency["mavenCoverage"] = maven_coverage(dependency.get("inventory", []), maven_evidence["projects"])
+            if dependency["mavenCoverage"]["status"] != "passed":
+                dependency["status"] = "error"
+                dependency["coverageError"] = "maven-package-coverage-mismatch"
             if not {"PyPI", "Go", "Maven", "crates.io", "npm"} <= set(
                 dependency.get("ecosystems", [])
             ):

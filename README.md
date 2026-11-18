@@ -14,13 +14,13 @@ The [2026-11-17 Gemini web observations](docs/adoption/2026-11-17-gemini-observa
 
 [Security evidence and limits](docs/security.md) describes a selected ASVS 5.0.0 mapping, pinned dependency/static/secret checks, and source-bound pre-publication reports. Findings or scanner failures block the automated release gate. This experimental project has not received an independent security audit or ASVS certification; a workflow badge does not guarantee vulnerability-free software.
 
-The [2026-11-14 compatible security patches](docs/security-remediation-2026-11-14.md) reduced 30 unique dependency finding combinations to eight and left publication blocked at that snapshot. The current source moves Java auth to Spring Boot 4 / Framework 7 and replaces the scanner's Python environment with checksum-pinned native OpenGrep. The [November 18 scan](docs/security-remediation-2026-11-18.md) no longer finds those eight combinations, but a newly updated, unpatched `picomatch` advisory still blocks publication. Publication requires successful functional and security CI for the exact source commit. The [2026-11-11 baseline](docs/security-baseline-2026-11-11.md) remains available as dated evidence.
+The [November 18 follow-up](docs/security-remediation-2026-11-18-react-build.md) replaces the two demo apps' vulnerable Vite dependency chain with esbuild and scans actual resolved Maven dependencies, including test scopes. Java auth uses Spring Boot 4 / Framework 7, and static checks use checksum-pinned native OpenGrep. The [earlier November 18 scan](docs/security-remediation-2026-11-18.md), [November 14 remediation](docs/security-remediation-2026-11-14.md) and [November 11 baseline](docs/security-baseline-2026-11-11.md) remain dated records. Publication requires successful functional and security CI for the exact source commit.
 
 **Three feature standards are available: authentication, authorization, and listing.** The new `authorization/rbac-v1` and `listing/offset-list-v1` libraries provide the same contracts in Python, Go, Java, Rust and JS/TS, with shared executable scenarios and a real Python HTTP composition. Core `0.1.0` is published in all five ecosystems; [the registry receipt](docs/core-release-0.1.0.json) verifies public downloads and fresh consumers independently. These are experimental core APIs. [Read the integration guide](docs/core-standards.md). Authentication retains its published FastAPI, Go, Spring, Axum and React packages.
 
 Catalog `0.4.0` adds real three-feature HTTP consumers for [Go](examples/core-go/README.md), [Java](examples/core-java/README.md) and [Rust](examples/core-rust/README.md), plus guidance for a Python-only [PostgreSQL listing profile](docs/postgres-listing.md). Python core `0.2.0` and Spring 7 Java auth `2.0.0` remain separate unpublished SDK candidates; publishing the catalog does not publish them. The catalog exposes 26 supported contexts and preserves the 10,000-row materialized profile separately from database listing. The opt-in compact routing mode reduces the JSON payload while retaining document hashes and trust limits; see the [validation scope and measurements](docs/validation-core-hardening-2026-11-07.md).
 
-Optional [SDK connection cards](docs/ai-entry/README.md) show the session, permission, visibility and listing flow for Python, Go, Java and Rust. The current source candidate bundles these cards in the main catalog snapshot and leads with them in compatible compact contexts. Runtime SDKs still require the separate source checkout.
+Optional [SDK connection cards](docs/ai-entry/README.md) show the session, permission, visibility and listing flow for Python, Go, Java and Rust. Catalog 0.4.0 bundles these cards in the main snapshot and leads with them in compatible compact contexts. Runtime SDKs still require the separate source checkout.
 
 Version `0.4.0` also adds a [three-feature starter](docs/core-starter.md): `init --template core` generates an application connected to the original authentication, authorization and listing SDKs in all four backends. Normal startup denies product access until trusted membership is connected; explicit `demo` and `check` modes use isolated loopback samples. The existing authentication-only v1/v2/v3 workflow remains available. Actual publication requires a matching registry artifact; these features have not been measured as an AI adoption improvement.
 
@@ -40,13 +40,13 @@ The [2026-11-10 unprescribed choice study](docs/adoption/2026-11-10-ai-choice.md
 
 ## Start with the feature catalog
 
-The main npm package is **[`feature-standards@0.3.2`](https://www.npmjs.com/package/feature-standards)**. It provides curated contracts, stack context, and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The [0.3.2 receipt](docs/npm-release-0.3.2.json) verifies the reviewed public archive and all 25 contexts from a fresh registry installation.
+The main npm entry point is **[`feature-standards`](https://www.npmjs.com/package/feature-standards)**. Version 0.4.0 provides 26 contexts, compact reading cards and explicit application generation and profile checks. Server libraries, runtime source, consumer applications, and executable conformance harnesses live in the source repository and have separate distribution requirements. The historical [0.3.2 receipt](docs/npm-release-0.3.2.json) verifies that earlier public archive and its 25 contexts; new publication requires its own tagged release verification.
 
-Run the published catalog:
+Run catalog 0.4.0:
 
 ```sh
-npx feature-standards@0.3.2 list
-npx feature-standards@0.3.2 context \
+npx feature-standards@0.4.0 list
+npx feature-standards@0.4.0 context \
   --feature auth --stack python --profile browser-session-v1
 ```
 

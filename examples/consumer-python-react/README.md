@@ -45,4 +45,6 @@ uv run --frozen uvicorn app:app --no-proxy-headers --host 127.0.0.1 --port 8000
 AUTH_API_TARGET=http://127.0.0.1:8000 npm run dev
 ```
 
-`http://127.0.0.1:5174`에서 공개 데모 계정 `demo@example.com` / `correct-horse-battery-staple`, 또는 `other@example.com` / `other-correct-horse-password`를 사용한다. Vite 프록시는 개발용이며 운영에서는 HTTPS와 같은 origin의 reverse proxy를 설정해야 한다.
+`http://127.0.0.1:5174`에서 공개 데모 계정 `demo@example.com` / `correct-horse-battery-staple`, 또는 `other@example.com` / `other-correct-horse-password`를 사용한다. esbuild 기반 프록시는 개발용이며 운영에서는 HTTPS와 같은 origin의 reverse proxy를 설정해야 한다. `/auth`, `/api`, `/healthz`는 지정한 서버로 전달하고 나머지는 생성한 화면을 제공한다.
+
+코드 변경 시 페이지 전체를 새로고침하므로 편집 중인 React 메모리 상태는 초기화된다. 계정 flag와 환경 파일 우선순위는 [React 개발 안내](../../clients/react/DEVELOPMENT.md)를 따른다. `npm run preview`는 먼저 빌드한 `dist`를 loopback 4173에서 제공한다. 미리보기로 인증하려면 백엔드 허용 origin도 `http://127.0.0.1:4173`으로 설정한다.

@@ -29,24 +29,24 @@ the resulting application. Its session contracts are not an OAuth/OIDC identity
 provider or an MCP authorization implementation. These are project-maintained
 contracts, not an externally ratified industry standard.
 
-## First: inspect the published catalog
+## First: inspect catalog 0.4.0
 
 With Node.js 22.12 or later:
 
 ```sh
-npx feature-standards@0.3.2 list
-npx feature-standards@0.3.2 context --feature authorization --stack python
-npx feature-standards@0.3.2 context --feature listing --stack go
+npx feature-standards@0.4.0 list
+npx feature-standards@0.4.0 context --feature authorization --stack python --compact
+npx feature-standards@0.4.0 context --feature listing --stack go
 ```
 
 These commands return JSON guidance and bundled document paths. They do not
-install a server, generate an application or execute verification. Published
-CLI 0.3.2 has only the full context format and auth-only generation. Source
-candidate 0.4.0 adds compact context and the three-feature starter below.
+install a server, generate an application or execute verification. CLI 0.4.0
+adds compact context and the three-feature starter below. Earlier CLI 0.3.2
+has only the full context format and auth-only generation.
 
 ## Next: connect all three SDKs from a trusted source checkout
 
-The **0.4.0 source candidate** provides a starter for Python, Go, Java
+CLI **0.4.0** provides a starter for Python, Go, Java
 and Rust. From the root of the trusted source checkout:
 
 ```sh
@@ -75,11 +75,10 @@ Custom mutation routes need their own Origin, CSRF and permission enforcement.
 
 ## Availability, evidence and limits
 
-- **Published catalog:** CLI 0.3.2. Core 0.1.0 has separate distributions in five
+- **Catalog 0.4.0:** 26 feature/stack/profile contexts, compact routing and a
+  three-feature starter. Publication requires the tagged release workflow and
+  a matching public artifact. Core 0.1.0 has separate distributions in five
   ecosystems, with historical [registry and consumer evidence](core-release-0.1.0.json).
-- **Catalog source candidate 0.4.0:** 26 feature/stack/profile contexts, compact
-  routing and a three-feature starter. Its publication remains blocked by the
-  [November 18 security findings](security-remediation-2026-11-18.md).
 - **Separate source candidates:** Python core 0.2.0 / PostgreSQL listing and
   Java auth 2.0.0 / Spring 7. Publishing the catalog does not publish these SDKs.
 - **AI observations:** supplied-checkout [reading](https://github.com/jongko54/feature-standards/blob/main/docs/validation-ai-reading-2026-11-08.md)
@@ -88,8 +87,9 @@ Custom mutation routes need their own Origin, CSRF and permission enforcement.
 - **Security:** automated publication requires functional and security CI for
   the exact source commit. The [November 14 report](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-14.md)
   preserves the earlier Spring 6 / Python-scanner findings. The current source
-  uses Spring 7 and native OpenGrep; the November 18 scan still finds an unpatched
-  React build dependency. There is no independent security-audit or certification claim.
+  uses Spring 7 and native OpenGrep. The [November 18 follow-up](security-remediation-2026-11-18-react-build.md)
+  removes the affected demo build dependency and scans actual Maven dependency
+  trees. There is no independent security-audit or certification claim.
 
 ## 한국어로 찾는 경우
 

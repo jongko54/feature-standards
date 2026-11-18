@@ -11,13 +11,19 @@ npm ci
 AUTH_API_TARGET=http://127.0.0.1:8000 npm run dev
 ```
 
-`http://127.0.0.1:5173`으로 접속한다. Vite는 `/auth`와 `/healthz`를 선택한 서버로 프록시한다. `Origin`은 원래 브라우저 주소로 유지한다. 서버만 교체하면 동일한 UI를 사용할 수 있다.
+`http://127.0.0.1:5173`으로 접속한다. esbuild 기반 개발 서버는 `/auth`와 `/healthz`를 선택한 서버로 프록시한다. `Origin`은 원래 브라우저 주소로 유지한다. 서버만 교체하면 동일한 UI를 사용할 수 있다.
+
+개발 도구는 공식 esbuild 0.28.2를 사용한다. 코드 변경 시 watch와 SSE로 페이지 전체를 새로고침하므로 편집 중인 React 메모리 상태는 초기화된다. React Fast Refresh는 제공하지 않는다. 정적 제공 범위는 생성물이며 서버는 loopback에 바인딩한다. 기존 `--host 127.0.0.1 --port 5173 --strictPort` 인자를 지원하고 포트가 사용 중이면 다른 포트로 우회하지 않고 실패한다.
+
+TSX/JavaScript/CSS 변경은 watch 대상이다. `.env`·flag·API target·HTML 설정을 바꾼 경우에는 개발 서버를 재시작한다.
+
+설정은 `.env`, `.env.local`, `.env.<mode>`, `.env.<mode>.local` 순서로 읽고 실행 프로세스의 환경 변수를 최우선으로 적용한다. 기본 mode는 dev에서 `development`, build/preview에서 `production`이며 `--mode`로 선택할 수 있다. `AUTH_API_TARGET`은 프록시의 서버 설정이며 브라우저 번들에는 넣지 않는다. 번들에 넣는 공개 flag는 `VITE_AUTH_ACCOUNT_LIFECYCLE`뿐이다.
 
 데모 계정은 `demo@example.com` / `correct-horse-battery-staple`이다. v1은 명시적 데모 모드에서 제공하며, v2는 별도 seed 도구로 직접 생성해야 한다. v2 앱은 데모 모드에서도 DB 계정을 자동 생성하지 않는다.
 
 ## 계정 화면 v3 선택
 
-먼저 [v3 실행 안내](../../docs/account-v3.md)에 따라 전용 DB를 schema 2로 명시적으로 이관하고 서버에 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`를 설정한다. 클라이언트의 flag는 Vite 개발 서버 또는 빌드 시 지정한다. 기본 false는 기존 화면을 유지한다.
+먼저 [v3 실행 안내](../../docs/account-v3.md)에 따라 전용 DB를 schema 2로 명시적으로 이관하고 서버에 `AUTH_STORE=postgres AUTH_ACCOUNT_LIFECYCLE=true`를 설정한다. 클라이언트의 flag는 개발 서버 또는 빌드 시 지정한다. 기존 이름 `VITE_AUTH_ACCOUNT_LIFECYCLE`을 유지하며 기본 false는 기존 화면을 유지한다.
 
 ```sh
 VITE_AUTH_ACCOUNT_LIFECYCLE=true AUTH_API_TARGET=http://127.0.0.1:8000 npm run dev
@@ -38,14 +44,15 @@ VITE_AUTH_ACCOUNT_LIFECYCLE=true npm run build
 ```sh
 npm test
 npm run build
+npm run test:frontend
 npx playwright install chromium
-# 위의 서버와 Vite를 실행한 상태에서:
+# 위의 서버와 개발 서버를 실행한 상태에서:
 BASE_URL=http://127.0.0.1:5173 npm run test:e2e
 ```
 
 단위 테스트는 API 요청 규격과 성공·오류 응답 해석을 검증한다. 브라우저 테스트는 실제 서버에서 로그인·쿠키·복원·로그아웃·잘못된 비밀번호를 검증하고, 네트워크/CSRF/만료/429 응답을 경계에서 주입해 UI의 실패 처리를 확인한다. 실제 서버의 만료·CSRF·rate limit 검증은 루트 공통 적합성 테스트가 담당한다.
 
-v3의 [계정 브라우저 설정](playwright.accounts.config.ts)은 `account-tests`를 실행한다. 단독 실행에는 v3 서버·flag가 켜진 Vite와 `FEATURE_STANDARDS_TEST_DATABASE_URL`의 같은 전용 DB가 필요하다.
+v3의 [계정 브라우저 설정](playwright.accounts.config.ts)은 `account-tests`를 실행한다. 단독 실행에는 v3 서버·flag가 켜진 개발 서버와 `FEATURE_STANDARDS_TEST_DATABASE_URL`의 같은 전용 DB가 필요하다.
 
 ```sh
 BASE_URL=http://127.0.0.1:5173 npx playwright test --config playwright.accounts.config.ts
@@ -57,12 +64,20 @@ BASE_URL=http://127.0.0.1:5173 npx playwright test --config playwright.accounts.
 uv run --frozen --project tools python tests/account_conformance.py --browser
 ```
 
+빌드된 4173 미리보기도 실제 Python 메모리 서버와 Chromium으로 별도 검사한다.
+먼저 `npm run build`와 Chromium 설치를 완료하고 저장소 루트에서 실행한다.
+도구가 새 loopback 서버·테스트 세션만 사용하며 DB·메일은 사용하지 않는다.
+
+```sh
+uv run --frozen --project tools python tests/frontend_preview.py
+```
+
 ## 동작과 적용 경계
 
 - 초기 `401 UNAUTHENTICATED`는 정상 비로그인 상태로 처리한다. 네트워크 실패는 별도로 표시한다.
 - 로그아웃 API가 성공하기 전에는 로그인 상태를 지우지 않는다. 실패하면 사용자 정보가 유지된다.
 - 새로고침 시 `/auth/me`로 세션과 CSRF 토큰을 복원한다. `세션 상태 확인`은 만료 상태를 반영하며 서버 세션 수명을 연장하지 않는다.
 - 이메일 입력은 `type="text"`와 `inputMode="email"`을 사용한다. 브라우저의 ASCII 중심 이메일 검증으로 계약이 허용하는 Unicode 이메일을 차단하지 않고, 최종 형식·바이트 길이는 서버가 검증한다.
-- Vite 프록시는 개발용이다. 빌드 결과를 배포할 때에는 `/auth`를 동일 origin의 서버로 전달하는 reverse proxy와 HTTPS가 필요하다.
+- 개발 프록시는 로컬 개발용이다. 빌드 결과를 배포할 때에는 `/auth`를 동일 origin의 서버로 전달하는 reverse proxy와 HTTPS가 필요하다.
 - `npm run preview`는 4173 포트를 사용한다. 미리보기에서 인증하려면 서버의 허용 origin도 정확히 `http://127.0.0.1:4173`으로 맞춘다.
 - 인증 계약과 상태 처리를 보존하면서 CSS와 화면 문구를 바꿀 수 있다. 로그인 여부만으로 서버 권한 검사를 대체하지 않는다.

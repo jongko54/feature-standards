@@ -4,7 +4,7 @@
 
 ## 배포본
 
-배포 파일은 `lib/api.js`, `lib/api.d.ts`, `README.md`, `LICENSE`, `package.json` 다섯 개다. `tsconfig.lib.json`은 API 모듈만 JavaScript·선언 파일로 빌드하며, Vite의 참조 화면 빌드와 별도로 동작한다. React·개발 도구는 devDependencies이고 배포 API에는 런타임 npm 의존성이 없다.
+배포 파일은 `lib/api.js`, `lib/api.d.ts`, `README.md`, `LICENSE`, `package.json` 다섯 개다. `tsconfig.lib.json`은 API 모듈만 JavaScript·선언 파일로 빌드하며, 참조 화면 빌드와 별도로 동작한다. React·개발 도구는 devDependencies이고 배포 API에는 런타임 npm 의존성이 없다.
 
 ```sh
 cd clients/react

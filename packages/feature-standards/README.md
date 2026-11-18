@@ -11,13 +11,13 @@ This main package distributes a curated contract snapshot, a read-only context s
 Node.js 22.12+ is required. There are no runtime npm dependencies.
 
 ```sh
-# Latest verified registry release; 0.4.0 is still a source candidate.
-npm install --save-dev feature-standards@0.3.2
+# Select the exact catalog version.
+npm install --save-dev feature-standards@0.4.0
 npx feature-standards list
 npx feature-standards context --feature auth --stack python --profile browser-session-v1
 ```
 
-**Source candidate 0.4.0 provides 26 supported contexts**, compact reading cards and a three-feature application starter. Its publication remains blocked by the repository security gate; see the [November 18 report](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-18.md). The verified catalog 0.3.2 has 25 contexts and lacks the compact/starter options. The Python-only `postgres-list-v1` adapter (core 0.2.0) and Spring 7 Java auth 2.0.0 are separate source candidates; their captured publication flags are false. The catalog supplies guidance and generators, rather than publishing these SDKs. The bundled historical core receipt verifies npm, Python, Rust, Java and Go `0.1.0`. `recordedPublishedVersion` distinguishes that prior core release from a selected source version. Publication fields are captured evidence, not live registry queries.
+**Version 0.4.0 provides 26 supported contexts**, compact reading cards and a three-feature application starter. The earlier catalog 0.3.2 has 25 contexts and lacks the compact/starter options. The Python-only `postgres-list-v1` adapter (core 0.2.0) and Spring 7 Java auth 2.0.0 are separate source candidates; their captured publication flags are false. The catalog supplies guidance and generators, rather than publishing these SDKs. The bundled historical core receipt verifies npm, Python, Rust, Java and Go `0.1.0`. `recordedPublishedVersion` distinguishes that prior core release from a selected source version. Publication fields are captured evidence, not live registry queries. The [November 18 follow-up](https://github.com/jongko54/feature-standards/blob/main/docs/security-remediation-2026-11-18-react-build.md) records source security changes and their validation scope.
 
 `list` and `context` emit JSON. `context` requires `--stack`; `--feature` defaults to `auth`. The profile defaults to the selected feature's default in the table. Use `--help` for usage. Unknown commands, flags, stacks, features, and profiles fail without silently choosing a replacement.
 
