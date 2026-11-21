@@ -210,6 +210,8 @@ A [three-feature catalog smoke](evals/core/README.md) ran eight actual model int
 
 An earlier paired AI evaluation passed **24/24 authentication integrations** across four backends, two context conditions, and three repeats per condition. It measured the earlier **v1** integration workflow. Time and token results were mixed and do not establish a general efficiency improvement or benchmark the new `feature-standards` package. See the [repeated evaluation and its source/sampling limits](docs/validation-ai-paired-2026-11-03.md). Reducing repeated work is the product goal; improvement must be measured for the actual workflow and environment.
 
+The [performance validation task plan](docs/superpowers/plans/2026-11-21-performance-validation.md) defines future API load, listing scale, installed-package AI workflow, and CLI measurements with acceptance criteria. These tasks have not been executed; the plan adds no new performance results.
+
 These specifications are experimental repository conventions, not an accredited international standard. In-memory state is lost on restart. Database mode has no automatic DDL, seeding, or in-memory fallback. The new core authorization library evaluates explicit role grants; role-management APIs and MFA are not included. Production integration needs review of HTTPS, proxy trust, secrets, database privileges and backups, observability, and outbox access and retention. SMTP acceptance does not prove inbox delivery. This project has not undergone a production security audit.
 
 See the [versioning policy](docs/versioning.md), [contribution guide](CONTRIBUTING.md), [security scope](SECURITY.md), and [prior research](docs/research.md). Created by [jongko54](https://github.com/jongko54). Licensed under [MIT](LICENSE).
